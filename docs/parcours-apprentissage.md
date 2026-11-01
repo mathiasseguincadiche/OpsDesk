@@ -33,3 +33,9 @@ Pour chaque tâche, produire des réponses courtes et concrètes :
 - **Retour d’expérience :** noter un choix initial incorrect et pourquoi la correction est meilleure.
 
 Écrire pour chaque exercice : **hypothèse, manipulation, observation, explication, limite**. Les 16 modules détaillés d’OpsDesk peuvent être approfondis dans Notion ; GitHub garde le code et les preuves.
+
+## Exemple de raisonnement : « l'application ne répond plus »
+
+**Hypothèse (à tester plus tard) :** l'application démarre avant que PostgreSQL soit prêt. Le bon réflexe n'est pas de redémarrer au hasard : vérifier d'abord l'état des deux services, les *healthchecks* et leurs journaux. Si la base n'accepte pas les connexions, corriger la gestion d'attente et **rejouer le test de création de ticket**.
+
+Ce cas montre la chaîne **symptôme → hypothèse → observation → correction → preuve**. Il est présenté comme un exercice, pas comme un incident déjà résolu.
