@@ -1,0 +1,44 @@
+# Identifiants, clés et configuration locale
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+id_rsa*
+id_ed25519*
+**/secrets/
+**/kubeconfig*
+
+# Terraform : les états peuvent contenir des secrets
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Données et sauvegardes
+*.dump
+*.sql.gz
+backups/
+data/
+
+# Développement
+__pycache__/
+.venv/
+node_modules/
+.pytest_cache/
+.coverage
+coverage/
+dist/
+build/
+.DS_Store
+.idea/
+.vscode/
