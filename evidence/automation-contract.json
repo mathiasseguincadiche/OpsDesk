@@ -1,0 +1,168 @@
+{
+  "checked_at_utc": "2026-11-03T13:37:46.993412+00:00",
+  "status": "PASS",
+  "scope": "Nonsecret contract in Terraform state + local Ansible JSON render only",
+  "environment": "Ubuntu WSL; Terraform 1.15.8 / Ansible core 2.20.1",
+  "infrastructure_provisioned": false,
+  "second_terraform_apply": "0 added, 0 changed, 0 destroyed",
+  "second_terraform_plan_exit_code": 0,
+  "second_ansible_render": "changed=0 unreachable=0 failed=0",
+  "negative_public_binding": "Plan refused as expected; no network resource exists",
+  "rendered_contract_sha256": "53f7c79d3d22dbf94a81d6c378585a67e0b8439562c95a770b8dfad8971f84a8",
+  "contract": {
+    "app_version": "0.1.0",
+    "authentication": "absent; fictional local data only",
+    "bind_address": "127.0.0.1",
+    "database_host": "db",
+    "database_name": "opsdesk",
+    "database_port": 5432,
+    "database_port_published": false,
+    "environment": "local-compose",
+    "http_port": 18081,
+    "k3s_status": "not-executed",
+    "project": "OpsDesk",
+    "scope": "contract-only; no infrastructure provisioned"
+  },
+  "steps": [
+    {
+      "step": "terraform-fmt",
+      "command": [
+        "terraform",
+        "-chdir=infra/terraform",
+        "fmt",
+        "-check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "step": "terraform-init",
+      "command": [
+        "terraform",
+        "-chdir=infra/terraform",
+        "init",
+        "-input=false",
+        "-no-color"
+      ],
+      "exit_code": 0
+    },
+    {
+      "step": "terraform-validate",
+      "command": [
+        "terraform",
+        "-chdir=infra/terraform",
+        "validate",
+        "-no-color"
+      ],
+      "exit_code": 0
+    },
+    {
+      "step": "terraform-plan",
+      "command": [
+        "terraform",
+        "-chdir=infra/terraform",
+        "plan",
+        "-input=false",
+        "-no-color",
+        "-out=../../.local/terraform/contract.tfplan"
+      ],
+      "exit_code": 0
+    },
+    {
+      "step": "terraform-apply",
+      "command": [
+        "terraform",
+        "-chdir=infra/terraform",
+        "apply",
+        "-input=false",
+        "-no-color",
+        "../../.local/terraform/contract.tfplan"
+      ],
+      "exit_code": 0
+    },
+    {
+      "step": "terraform-output",
+      "command": [
+        "terraform",
+        "-chdir=infra/terraform",
+        "output",
+        "-json",
+        "contract"
+      ],
+      "exit_code": 0
+    },
+    {
+      "step": "terraform-second-apply",
+      "command": [
+        "terraform",
+        "-chdir=infra/terraform",
+        "apply",
+        "-input=false",
+        "-auto-approve",
+        "-no-color"
+      ],
+      "exit_code": 0
+    },
+    {
+      "step": "terraform-second-plan",
+      "command": [
+        "terraform",
+        "-chdir=infra/terraform",
+        "plan",
+        "-input=false",
+        "-detailed-exitcode",
+        "-no-color"
+      ],
+      "exit_code": 0
+    },
+    {
+      "step": "terraform-negative-public-bind",
+      "command": [
+        "terraform",
+        "-chdir=infra/terraform",
+        "plan",
+        "-input=false",
+        "-no-color",
+        "-var=bind_address=0.0.0.0"
+      ],
+      "exit_code": 1
+    },
+    {
+      "step": "ansible-syntax",
+      "command": [
+        "ansible-playbook",
+        "-i",
+        "infra/ansible/inventory.yml",
+        "infra/ansible/render.yml",
+        "--syntax-check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "step": "ansible-first-render",
+      "command": [
+        "ansible-playbook",
+        "-i",
+        "infra/ansible/inventory.yml",
+        "infra/ansible/render.yml"
+      ],
+      "exit_code": 0
+    },
+    {
+      "step": "ansible-second-render",
+      "command": [
+        "ansible-playbook",
+        "-i",
+        "infra/ansible/inventory.yml",
+        "infra/ansible/render.yml"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "limits": [
+    "No VM, Linux package, service, container, firewall or cloud resource was provisioned",
+    "No Rocky/KVM/Fedora reception, reconstruction or remote-host idempotence qualified",
+    "State and rendered file contain no credential and are ignored by Git",
+    "NTFS/WSL mount permissions do not qualify Linux ACL protection for real secrets",
+    "This partial automation evidence does not validate the entire automation pillar"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "checked_at_utc": "2026-11-03T13:40:23.281633+00:00",
+  "application": {
+    "application": "OpsDesk",
+    "revision": "uncommitted-v42",
+    "version": "0.1.0"
+  },
+  "base_url": "http://127.0.0.1:18081",
+  "status": "PASS",
+  "persisted_ticket_id": 3,
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/version",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/health/live",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/health/ready",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/tickets",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/tickets",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/tickets/3",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/tickets",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/tickets/3",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/tickets/3",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/tickets/3",
+      "status": 409
+    },
+    {
+      "method": "POST",
+      "path": "/api/tickets",
+      "status": 400
+    },
+    {
+      "method": "GET",
+      "path": "/api/tickets/9223372036854775806",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/tickets",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/tickets",
+      "status": 400
+    },
+    {
+      "method": "GET",
+      "path": "/metrics",
+      "status": 200
+    }
+  ],
+  "limits": [
+    "Local synthetic data only; no authentication or Internet exposure",
+    "No CI, K3s, cloud or restore qualification implied"
+  ]
+}

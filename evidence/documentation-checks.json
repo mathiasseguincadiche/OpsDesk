@@ -1,0 +1,49 @@
+{
+  "checked_at_utc": "2026-11-03T13:46:46.238830+00:00",
+  "status": "PASS",
+  "scope": "Documentation relative paths, native draw.io cells, paired SVG geometry/text and Chrome render",
+  "relative_file_links_checked": 73,
+  "errors": [],
+  "diagrams": [
+    {
+      "family": "presentation",
+      "editable_vertices": 7,
+      "editable_edges": 2,
+      "matching_svg_geometry_and_text": true,
+      "drawio_sha256": "2e0013694dbd5936e0f1e2a6f25dfcea0ec313df354e8f506702c2ecc45498d0",
+      "svg_sha256": "4576210a4bc8dd995e2ac572720cf2f23a9293e3f10cfd9403b04552ac3778d1"
+    },
+    {
+      "family": "architecture-technique",
+      "editable_vertices": 8,
+      "editable_edges": 4,
+      "matching_svg_geometry_and_text": true,
+      "drawio_sha256": "2628cc6c5db5b6a7dd27c9a23888f3f9aab501f750b3f5a1a28a1747f99e0dc1",
+      "svg_sha256": "3e24af97168fa3b61c253f202ee1260af53be07cce39b047cb826244b9180014"
+    }
+  ],
+  "browser": {
+    "checked_at_utc": "2026-11-03T13:45:59.070Z",
+    "status": "PASS",
+    "browser": "Chrome/Playwright",
+    "diagrams": [
+      {
+        "name": "presentation",
+        "width": 1200,
+        "height": 690,
+        "text_overflow": []
+      },
+      {
+        "name": "architecture-technique",
+        "width": 1280,
+        "height": 860,
+        "text_overflow": []
+      }
+    ]
+  },
+  "visual_review": "Both SVGs inspected; technical HTTP label repositioned to avoid the network title; no clipping or overlap observed after correction",
+  "limits": [
+    "SVGs are generated from the same layout model as editable draw.io cells; no external diagrams.net export automation was used",
+    "Checks do not qualify the future infrastructure components illustrated as non-executed"
+  ]
+}

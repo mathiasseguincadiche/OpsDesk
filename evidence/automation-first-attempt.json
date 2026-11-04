@@ -1,0 +1,10 @@
+{
+  "recorded_at_utc": "2026-11-03T13:37:42.983970+00:00",
+  "status": "FAIL",
+  "scope": "First local Ansible contract-render attempt",
+  "command": "ansible-playbook -i infra/ansible/inventory.yml infra/ansible/render.yml",
+  "observed": "localhost unreachable=1 before render: module temporary directory under /home/mathias/.ansible/tmp could not be created",
+  "cause": "Default Ansible remote_tmp was outside writable workspace; ANSIBLE_LOCAL_TEMP only changes the controller temporary directory",
+  "correction": "Inventory now sets ansible_remote_tmp=/tmp/v42-opsdesk-ansible-remote; no change to HOME or host service",
+  "next_check": "Re-execute the render and check the second pass reports changed=0"
+}
