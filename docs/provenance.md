@@ -8,9 +8,9 @@
 | Énoncés, indices, corrigés séparés et évaluations | Préparation pédagogique Codex | Aide progressive, aucun niveau personnel attribué |
 | Infrastructure cible et opérations personnelles | À concevoir, écrire, exécuter et expliquer par Mathias | Réalisation personnelle à prouver |
 
-## Fichiers historiques identifiés, conservés localement
+## Chemins historiques identifiés et disponibilité actuelle
 
-Les chemins suivants décrivent l’antériorité locale V4.2. Ils ne sont pas des solutions personnelles déjà réalisées et ne sont pas tous inclus dans le lot applicatif proposé en PR/MR :
+Les chemins suivants décrivent l’antériorité locale V4.2 rapportée dans les notes et preuves. Au contrôle de `main` `51e1a489` le 4 novembre 2026, ces configurations et scripts InfraOps sont absents du dépôt ; les JSON sous `evidence/` y restent disponibles. La conservation de leurs originaux dans un autre espace local est **NON VÉRIFIÉE** dans cette passe. Ils ne sont pas des solutions personnelles réalisées :
 
 - Conteneurs : `Dockerfile`, `.dockerignore`, `compose.yaml`, `scripts/prepare-local.sh`.
 - Administration DB : `db/001-initial.sql`, qui mélange schéma et création/droits du rôle.
@@ -19,7 +19,7 @@ Les chemins suivants décrivent l’antériorité locale V4.2. Ils ne sont pas d
 - CI : `.github/workflows/verify.yml`, `.gitlab-ci.yml`, candidats non exécutés à distance.
 - Exploitation : `scripts/probe.py`, `scripts/recovery_lab.py`, contrôles et preuves sous `evidence/`.
 
-Aucun de ces fichiers n’est supprimé, déplacé, corrigé ou exécuté par la finalisation applicative V4.4. Les configurations Terraform ne créaient que des contrats locaux ; les rendus Ansible écrivaient des fichiers localhost ; aucun provisioning Rocky/KVM/cloud ou cluster K3s n’était reçu.
+La présente passe documentaire ne supprime, déplace, corrige ni exécute aucun de ces éléments. Elle conserve les chemins rapportés et les preuves présentes ; elle ne recrée pas les configurations absentes. Les configurations Terraform ne créaient que des contrats locaux ; les rendus Ansible écrivaient des fichiers localhost ; aucun provisioning Rocky/KVM/cloud ou cluster K3s n’était reçu.
 
 ## Usage pédagogique honnête
 

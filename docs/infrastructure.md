@@ -1,5 +1,7 @@
 # Infrastructure : contrat local et candidat K3s
 
+> **HISTORIQUE — référence Codex non exécutable depuis le dépôt courant.** Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), `infra/terraform/`, `infra/ansible/`, `infra/verify.py`, `infra/verify_k8s.py` et `k8s/` sont absents. Les blocs de commandes conservent les anciennes instructions pour comprendre l’essai Ubuntu/WSL ; ils ne sont pas prêts à copier et ne lancent pas le laboratoire personnel. Les versions et résultats qui suivent sont historiques. [Parcours actif V4.4](apprentissage/README.md) · [Pré-checks Fedora/KVM/Rocky](laboratoire-fedora-kvm-rocky.md).
+
 ## Référence historique Codex — cadre V4.4
 
 Ce corps conserve les procédures et résultats préparés sous V4.2. Les configurations et opérations InfraOps appartiennent désormais au travail personnel de Mathias ; elles ne sont pas relancées par Codex. Consulter d’abord le [contrat applicatif](contrat-applicatif.md) et la [provenance](provenance.md). Les niveaux techniques anciens de ce texte ne sont pas les niveaux personnels V4.4 : L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée. Les preuves de reprise plus récentes sont datées dans [STATUS](../STATUS.md), sans modifier rétrospectivement cet essai.
@@ -17,17 +19,17 @@ Avant de créer une machine, il faut s’accorder sur la cible : service, port, 
 | Apprendre state/plan/apply | Backend local ignoré de Git, aucun secret dans le contrat | Fausse VM ou fournisseur `null` présenté comme un provisionnement | Deuxième apply et plan sans changement ; aucune VM |
 | Préparer le cluster sans toucher un contexte existant | Manifests et rendu Kustomize hors ligne | Déployer dans le contexte par défaut non qualifié | Treize objets rendus ; aucune preuve d’admission ou d’exécution |
 
-## Rejouer le contrat
+## Ancienne procédure de contrat — lecture après tentative
 
 Pré-check : poste de travail autorisé, Terraform ≥1.6 et <2, Ansible core, Python 3 et répertoire du dépôt accessible en écriture. La preuve actuelle utilise Terraform **1.15.8** et Ansible core **2.20.1** sur Ubuntu/WSL. Aucune connexion réseau de provisionnement n’est nécessaire ; le fournisseur Terraform est intégré.
 
-Depuis la racine du dépôt :
+Commande historique depuis la racine du laboratoire Ubuntu/WSL, sans élévation ; elle écrivait états, plans, logs et JSON locaux. Script absent du dépôt courant :
 
 ```bash
 python3 infra/verify.py
 ```
 
-Le script lance réellement `fmt`, `init`, `validate`, `plan`, `apply`, un deuxième `apply`, un deuxième `plan`, un cas négatif puis le contrôle de syntaxe et les deux rendus Ansible. Il conserve états/plans/logs dans `.local/terraform/`, les rendus dans `.local/ansible/`, et une synthèse non secrète dans [automation-contract.json](../evidence/automation-contract.json).
+Le script historique lançait `fmt`, `init`, `validate`, `plan`, `apply`, un deuxième `apply`, un deuxième `plan`, un cas négatif puis le contrôle de syntaxe et les deux rendus Ansible. Il conserve états/plans/logs dans `.local/terraform/`, les rendus dans `.local/ansible/`, et une synthèse non secrète dans [automation-contract.json](../evidence/automation-contract.json).
 
 Critères : second apply `0 added, 0 changed, 0 destroyed` ; second plan code 0 ; second rendu `changed=0 unreachable=0 failed=0` ; une tentative `bind_address=0.0.0.0` doit être refusée au plan. Une variable refusée constitue un contrôle réussi, pas une exposition réseau.
 
@@ -35,13 +37,13 @@ L’état local et le répertoire `.terraform` ne sont pas publiés. Ils ne cont
 
 ## Diagnostic observé : Ansible ne peut pas créer son répertoire temporaire
 
-Le premier rendu a échoué avant toute génération : `localhost unreachable=1`, le répertoire temporaire par défaut sous le HOME n’étant pas accessible à l’exécution. Définir `ANSIBLE_LOCAL_TEMP` ne change que le temporaire du contrôleur. L’inventaire définit maintenant **`ansible_remote_tmp: /tmp/v42-opsdesk-ansible-remote`** pour cette connexion locale. La seconde exécution passe sans modification du HOME ni service hôte.
+Le premier rendu a échoué avant toute génération : `localhost unreachable=1`, le répertoire temporaire par défaut sous le HOME n’étant pas accessible à l’exécution. Définir `ANSIBLE_LOCAL_TEMP` ne change que le temporaire du contrôleur. L’inventaire de référence définissait **`ansible_remote_tmp: /tmp/v42-opsdesk-ansible-remote`** pour cette connexion locale. La seconde exécution passe sans modification du HOME ni service hôte.
 
 [Échec initial conservé](../evidence/automation-first-attempt.json) · [Revalidation et limites](../evidence/automation-contract.json).
 
 ## Ce que le candidat K3s contient
 
-Les ressources de `k8s/` restent **IMPLÉMENTÉES et rendues hors ligne ; NON EXÉCUTÉES sur cluster**. Aucun manifeste ne publie de NodePort, LoadBalancer ou Ingress. L’application sans authentification est destinée à un accès local temporaire sur un laboratoire dédié.
+Les ressources historiques de `k8s/` ont été **rapportées IMPLÉMENTÉES et rendues hors ligne ; NON EXÉCUTÉES sur cluster**. Le dossier est absent du dépôt courant ; la disponibilité de ses originaux hors dépôt est NON VÉRIFIÉE dans cette passe. Aucun manifeste ne publie de NodePort, LoadBalancer ou Ingress. L’application sans authentification est destinée à un accès local temporaire sur un laboratoire dédié.
 
 | Fichier | Rôle et prérequis |
 |---|---|
@@ -56,9 +58,9 @@ L’application et PostgreSQL s’exécutent sous identités numériques non roo
 
 Les images locales/taguées sont des candidats. Avant toute livraison, importer l’image construite et vérifiée ou remplacer son nom par un digest réellement accessible. La révision de travail de la première preuve ne devient pas un commit de livraison par ce remplacement.
 
-## Rendre sans utiliser le cluster
+## Ancien rendu hors cluster — lecture après tentative
 
-Depuis la racine :
+Commande historique depuis la racine du laboratoire Ubuntu/WSL ; elle régénérait un fichier puis rendait les manifests sans contacter de cluster. Script et sources absents du dépôt courant :
 
 ```bash
 python3 infra/verify_k8s.py
@@ -73,7 +75,7 @@ Ce script régénère `k8s/init-configmap.json` à partir du fichier canonique `
 1. Nommer explicitement le cluster et la machine autorisés ; ne jamais employer par réflexe le contexte courant.
 2. Contrôler version K3s/Kubernetes, nœuds, capacité, CNI/NetworkPolicy, StorageClass et droits du namespace. Aucun de ces résultats n’est acquis ici.
 3. Fixer les images par contenu vérifié ; relire les ressources et la version Pod Security. Contrôler que les secrets n’existent que sur le laboratoire privé.
-4. Créer les secrets avec les fichiers déjà générés, sans les imprimer. La base reçoit `db_owner_password` et `db_app_password` ; l’app reçoit uniquement `db_app_password` et `session_secret`.
+4. Préparer personnellement les fichiers secrets nécessaires à la cible, vérifier leur existence et leurs droits sans les imprimer ; aucune génération préalable n’est présumée. La base reçoit `db_owner_password` et `db_app_password` ; l’app reçoit uniquement `db_app_password` et `session_secret`.
 5. Relire la différence et qualifier séparément le plan de sauvegarde/retour arrière. Une PVC n’est pas une sauvegarde ; la suppression du namespace/PVC est une destruction, hors du parcours normal.
 6. Une fois le laboratoire autorisé, appliquer, attendre DB et app, contrôler live/ready/version, puis ouvrir/lire un ticket et vérifier les refus attendus. Capturer les sorties réelles avant tout statut VÉRIFIÉ.
 

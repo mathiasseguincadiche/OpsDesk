@@ -1,5 +1,7 @@
 # Cinq évaluations OpsDesk — preuves techniques et autonomie
 
+> **Registre historique — aucune note personnelle.** Les mentions L1/L2 dans les cellules ci-dessous décrivent l’ancien barème technique Codex, pas les niveaux L0–L3 de Mathias. Les cinq évaluations actives sont dans [apprentissage/evaluations.md](apprentissage/evaluations.md). Les observations anciennes restent datées ; le [statut consolidé](../STATUS.md) donne les preuves plus récentes et leurs limites. Les configurations InfraOps citées sont absentes de `main` `51e1a489` : aucune commande de ce registre n’est une procédure prête à copier.
+
 ## Référence historique Codex — cadre V4.4
 
 Ce corps conserve les procédures et résultats préparés sous V4.2. Les configurations et opérations InfraOps appartiennent désormais au travail personnel de Mathias ; elles ne sont pas relancées par Codex. Consulter d’abord le [contrat applicatif](contrat-applicatif.md) et la [provenance](provenance.md). Les niveaux techniques anciens de ce texte ne sont pas les niveaux personnels V4.4 : L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée. Les preuves de reprise plus récentes sont datées dans [STATUS](../STATUS.md), sans modifier rétrospectivement cet essai.
@@ -24,7 +26,7 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Pré-check.** Identifier le projet `v42opsdesk`, le port local 18081, le réseau et le volume ; vérifier ressources et absence d’accès public. Données fictives et secrets privés uniquement. La preuve initiale ne qualifie ni Fedora ni une VM Rocky. Ne pas employer le contexte Kubernetes existant.
 
-**Exécution réelle.** `docker compose up --build --detach --wait`, puis `python3 scripts/smoke.py --base-url http://127.0.0.1:18081` ont exercé la cible Compose. Le [rapport du 2 novembre 22:06:49 UTC](../evidence/business-smoke.json) vérifie création/relecture/transitions et 400/404/409 attendus ; [Chrome/Playwright](../evidence/browser.json) a affiché la liste le 3 novembre 03:41:03 UTC. `kubectl kustomize k8s` a seulement [rendu les objets hors ligne](../evidence/k8s-static.json).
+**Exécution réelle.** `docker compose up --build --detach --wait`, puis `python3 scripts/smoke.py --base-url http://127.0.0.1:18081` ont exercé la cible Compose. Le [rapport de smoke actualisé le 3 novembre à 13:40:23 UTC](../evidence/business-smoke.json) vérifie création/relecture/transitions et 400/404/409 attendus ; [Chrome/Playwright](../evidence/browser.json) a affiché la liste le 3 novembre 03:41:03 UTC. `kubectl kustomize k8s` a seulement [rendu les objets hors ligne](../evidence/k8s-static.json).
 
 **Attendu / observé.** Le ticket témoin est relu dans PostgreSQL et sa transition interdite est refusée. Effet utilisateur positif localement. Un volume persistant pendant cette requête ne démontre pas une reprise après perte de machine.
 

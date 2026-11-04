@@ -34,7 +34,7 @@ Combinaison vérifiée : Python 3.14.10, Flask/psycopg/Gunicorn aux versions ci-
 
 Préconditions : PostgreSQL accessible, base et rôle préparés, schéma métier présent, fichiers secrets locaux lisibles et port libre. Mathias préparera les accès et droits ; ce document n’exécute aucune administration de base.
 
-Depuis la racine du dépôt, une installation Python native peut utiliser :
+**NON VÉRIFIÉ de bout en bout — méthode native proposée, à préparer personnellement.** Cible : machine personnelle autorisée (la VM Rocky après réception si ce choix est retenu), racine du dépôt, utilisateur ordinaire sans `sudo`. La combinaison historique testée est Python 3.14.10/PostgreSQL 17.11 ; relever les versions de la nouvelle cible. Le premier bloc crée un environnement privé et installe les paquets verrouillés (accès aux paquets nécessaire), puis démarre Gunicorn sur la seule boucle locale de cette machine. Il ne prépare pas la DB, les rôles, le schéma ou les secrets :
 
 ```sh
 python3 -m venv .local/venv
@@ -43,6 +43,8 @@ PYTHONPATH=app .local/venv/bin/gunicorn --bind 127.0.0.1:18081 --workers 1 wsgi:
 ```
 
 Définir auparavant les paramètres de la section 11, en particulier les fichiers secrets et l’adresse réelle de PostgreSQL. Ces commandes constituent une méthode de développement ; l’installation native complète n’a pas été exécutée dans cette réception. Les tests V4.4 ont réutilisé ponctuellement l’image et le réseau du laboratoire existant, avec le code actuel monté en lecture seule, sans reconstruire ni redéployer le service. Les anciennes recettes conteneurs demeurent des références historiques de Codex.
+
+Validation attendue après préparation personnelle : `/version` identifie OpsDesk, `/health/ready` répond 200 et le parcours ticket fonctionne. Si le démarrage échoue, distinguer interpréteur/paquets, fichiers secrets, port occupé, nom/port DB, droits et schéma ; conserver l’erreur sans afficher les secrets. Un refus de readiness n’autorise ni désactivation de contrôle ni effacement de volume. Pour arrêter son propre processus lancé au premier plan, utiliser son interruption normale ; ne pas arrêter un service dont on n’a pas identifié le propriétaire. Ces vérifications sont NON EXÉCUTÉES sur le laboratoire personnel.
 
 ## 9. Ports et protocoles
 
@@ -88,7 +90,7 @@ Le ticket et ses dates/statuts sont les données durables. Les données sont str
 
 ## 16. Endpoints de santé
 
-`GET /health/live` vérifie le processus et retourne l’identité. `GET /health/ready` interroge la table métier ; indisponibilité PostgreSQL : 503. `GET /version` expose application/version/révision. `GET /metrics` fournit des compteurs par worker et `opsdesk_database_up`. Un code200 sur live ne démontre pas l’écriture d’un ticket ni une collecte Prometheus déjà construite.
+`GET /health/live` vérifie le processus et retourne l’identité. `GET /health/ready` interroge la table métier ; indisponibilité PostgreSQL : 503. `GET /version` expose application/version/révision. `GET /metrics` fournit des compteurs par worker et `opsdesk_database_up`. Un code 200 sur live ne démontre pas l’écriture d’un ticket ni une collecte Prometheus déjà construite.
 
 ## 17. Journaux applicatifs
 
@@ -96,7 +98,7 @@ Le code journalise méthode, nom de route, statut et durée. L’erreur DB publi
 
 ## 18. Tests unitaires
 
-`python3 -m unittest discover -s tests/unit -v` vérifie validations, limites et transitions, sans DB. La suite complète a exécuté26 tests (sept unitaires et dix-neuf HTTP/SQL). Le texte contenant NUL ou un substitut Unicode isolé est refusé en 400 avant PostgreSQL. Les nouveaux tests HTTP/SQL sont dans `tests/integration/test_http_postgres.py`. Le code de test ne doit pas être transformé en pipeline prêt à recopier : Mathias construira ses jobs à partir de commandes qu’il comprend.
+`python3 -m unittest discover -s tests/unit -v` vérifie validations, limites et transitions, sans DB. La suite complète a exécuté 26 tests (sept unitaires et dix-neuf HTTP/SQL). Le texte contenant NUL ou un substitut Unicode isolé est refusé en 400 avant PostgreSQL. Les nouveaux tests HTTP/SQL sont dans `tests/integration/test_http_postgres.py`. Le code de test ne doit pas être transformé en pipeline prêt à recopier : Mathias construira ses jobs à partir de commandes qu’il comprend.
 
 ## 19. Tests fonctionnels
 
@@ -104,13 +106,15 @@ Les tests de la source actuelle couvrent routes/API, formulaires CSRF dont entr�
 
 ## 20. Commandes de vérification
 
-Depuis la racine, avec l’environnement Python de la section 8, les dépendances et les paramètres déjà préparés :
+**ACTIF — fichiers de test disponibles ; environnement personnel à préparer, NON EXÉCUTÉ ici.** Depuis la racine de la machine choisie à la section 8, avec son environnement Python, ses dépendances et paramètres préparés, sans privilège système supplémentaire. La dernière commande contacte la boucle locale de cette même machine, qui doit héberger l’instance autorisée :
 
 ```sh
 PYTHONPATH=app .local/venv/bin/python -m unittest discover -s tests/unit -v
 PYTHONPATH=app .local/venv/bin/python -m unittest discover -s tests/integration -v
 .local/venv/bin/python scripts/smoke.py --base-url http://127.0.0.1:18081
 ```
+
+Attendu : sept tests unitaires puis dix-neuf tests HTTP/SQL sans échec ; le smoke affiche un JSON `status: PASS` seulement si son parcours complet réussit. Ce sont des critères attendus, pas un résultat personnel. En cas d’échec, lire d’abord le cas et son erreur, puis séparer paramètre/secret/DB de règle HTTP/métier ; conserver les refus négatifs attendus.
 
 La seconde commande nécessite une base de développement autorisée, des secrets présents et la permission TEMP pour ses tables de test (elle n’est pas un besoin du rôle runtime de production). Elle conserve un ticket témoin ; ne pas l’exécuter sur des données réelles. Lire le rapport `evidence/v44/application-tests.json` et son journal, en distinguant la source montée pour les tests du service historique déjà en cours. Aucun test de redémarrage, sauvegarde ou restauration n’a été relancé sous V4.4.
 

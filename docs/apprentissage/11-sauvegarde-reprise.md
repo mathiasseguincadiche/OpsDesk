@@ -2,85 +2,92 @@
 
 **Projet : OpsDesk · Pilier : Maintenir/rétablir · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
 
-## 1. Situation professionnelle
+Révision documentaire : 2026-11-04. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.
 
-L’équipe attend des demandes IT créées, consultables et suivies sans perdre les tickets. Définis ce qui doit être retrouvé pour un ticket témoin, puis écris et pratique ta sauvegarde/restauration sur une cible distincte. Le script historique reste un corrigé après tentative.
+## Situation et résultat à obtenir
 
-## 2. Objectif pédagogique
+L’équipe doit retrouver les tickets après une perte ou une erreur. Créer une archive n’apporte cette garantie que si sa restauration indépendante rend les mêmes références métier accessibles.
 
-Sauvegarder et restaurer en reliant décision, action, observation et explication. Tu peux demander une explication avant chaque étape ; rédige néanmoins toi-même le schéma, la configuration et les preuves.
+Définis ce qui doit être retrouvé pour un ticket témoin, puis écris et pratique ta sauvegarde/restauration sur une cible distincte. Le script historique reste un corrigé après tentative.
 
-## 3. Besoin applicatif
+**Livrable attendu :** Intégrité contrôlée, mêmes références métier et mesures expliquées ; source préservée et limites explicites. Le résultat est à produire, pas déjà obtenu.
 
-Un ticket identifié, son titre et son état doit rester contrôlable. Le contrat applicatif, pas une ancienne recette d’hébergement, définit les besoins du logiciel.
-
-## 4. Concepts à comprendre
+## Comprendre avant de choisir
 
 Une sauvegarde doit permettre une restauration utile. Un dump, ses médias, la configuration nécessaire et les identités doivent être cohérents. Âge de capture, perte réellement observée et durée de reprise sont des mesures distinctes.
 
-## 5. Prérequis
+Une **sauvegarde** conserve une copie récupérable selon une stratégie ; une **restauration** remet ses données sur une cible et vérifie leur utilité. Un **snapshot** capture un état selon le mécanisme de stockage et peut dépendre du support d’origine : il n’est pas automatiquement une copie indépendante et cohérente de PostgreSQL. Un **rollback d’image** change le programme ; une **reconstruction** recrée l’environnement à partir de sources et paramètres identifiés. Ces mécanismes peuvent se compléter, mais ne prouvent pas la même chose.
 
-Données témoins connues et état métier vérifié, source identifiée, destination distincte et clé privée disponibles selon la stratégie proposée. Vérifier l’espace et les droits avant l’archivage, puis les prérequis de reconstruction avant la reprise. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Pour le service actuel, les données métier sont dans PostgreSQL ; configuration et secrets nécessaires doivent pouvoir être reconstitués de façon sûre. OpsDesk ne gère pas de pièces jointes ni de médias utilisateur : ne pas inventer un jeu de fichiers à sauvegarder. Si un futur périmètre en ajoute, sa cohérence devra être traitée explicitement.
 
-## 6. Environnement et matériel
+Le **RPO** est l’objectif de perte de données admissible exprimée dans le temps ; le **RTO** est l’objectif de délai de reprise. Pour les comparer à l’observé, dater le point de capture, les écritures témoins et le début/fin du scénario. Retrouver un ticket connu prouve une référence ; cela ne mesure pas toutes les écritures perdues. Définir les bornes et rapporter les mesures réelles sans inventer de panne : une reprise d’exercice chronométrée reste différente d’une panne physique.
+
+**Question :** une archive est valide mais sa clé n’est disponible que sur la machine supposée perdue. Quelle dépendance empêche la reprise ? Une seconde VM sur le même disque protège-t-elle d’une panne du PC ?
+
+Référence : [sauvegarde logique et restauration PostgreSQL](https://www.postgresql.org/docs/current/backup-dump.html). Vérifier versions serveur/outils, contenu et droits avant de rédiger ta procédure ; aucun dump ni restore n’est lancé par cette fiche.
+
+## Préparer la bonne cible
+
+Données témoins connues et état métier vérifié, source identifiée, destination distincte et clé privée disponibles selon la stratégie proposée. Vérifier l’espace et les droits avant l’archivage, puis les prérequis de reconstruction avant la reprise.
 
 Identifier la VM source et une cible de reprise distincte, créée seulement lorsqu’elle est utile et selon les ressources vérifiées du PC Fedora 45/KVM. Ne pas restaurer sur la source. Relever version applicative, base, médias éventuels, configuration privée, emplacement d’archive et clés nécessaires. Un second disque virtuel sur le même PC n’est pas une sauvegarde hors site. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici. La VM invitée cible reste Rocky Linux 10.2 ; sa qualification est à vérifier avant cet exercice.
 
-## 7. Travail personnel
+Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
 
-Définir données, cohérence, chiffrement, destination, rétention et clé ; écrire ta procédure puis restaurer personnellement sur une cible isolée. Conserver la première proposition avant toute correction.
+## Réaliser soi-même et demander un indice
 
-## 8. Contraintes
+1. Identifier les références métier, versions, configuration et secrets nécessaires ; proposer cohérence, destination indépendante, chiffrement, disponibilité des clés et rétention.
+2. Écrire tes précontrôles d’espace, droits, intégrité et compatibilité ; nommer sans ambiguïté source, archive et destination de reprise. Définir les bornes RPO/RTO et critères d’arrêt.
+3. Après préparation et autorisation, restaurer personnellement sur une cible isolée distincte, sans effacer la source ; relire les mêmes tickets et expliquer perte observée, durée et limites.
 
-Application fictive sans authentification utilisateur ; accès local ; PostgreSQL durable ; santé live/ready et version distinctes. Identifier état initial, effet attendu et retour. Un cloud payant, une exposition réelle, un réseau sensible ou une panne/destruction exige un accord ciblé ; la lecture de cette fiche n’autorise pas ces actions.
+Conserver ta première proposition avant la revue. Les indices se lisent à la demande, du moins direct au plus ciblé.
 
-## 9. Indices progressifs
+<details>
+<summary>Indice 1 — orientation</summary>
 
-**Indice :** Identifier version, archive, clé, espace, accès, ordre DB/médias et référence attendue ; arrêter sur cible ou archive ambiguë.
+Identifier version, archive, clé, espace, accès, ordre DB/médias et référence attendue ; arrêter sur cible ou archive ambiguë.
 
-**Explication ciblée, sur demande :** relier le concept à un ticket identifié, son titre et son état, avec un exemple limité et un résultat observable.
+</details>
 
-**Correction accompagnée :** montrer ta tentative et le premier écart ; Codex corrige le point précis puis te demande de revalider et d’expliquer.
+<details>
+<summary>Indice 2 — mécanisme</summary>
 
-## 10. Vérifications à effectuer
+Avant d’accuser l’archive, comparer point de capture, version, rôle SQL, base cible et référence du ticket. L’intégrité d’un fichier ne prouve pas que le service a relu les données restaurées.
+
+</details>
+
+<details>
+<summary>Indice 3 — correction ciblée après tentative</summary>
+
+Présenter ta tentative, l’attendu, l’observé et le premier écart. Demander l’analyse du seul point bloquant ; tu modifies ensuite ta solution, tu retestes et tu expliques la correction. Une explication limitée peut être demandée avant l’action ; aucun fichier InfraOps définitif n’est fourni à recopier. Consigner le niveau d’aide reçu.
+
+</details>
+
+## Vérifier, puis diagnostiquer
 
 - Vérifier que l’archive, ses versions, ses données et sa clé permettent la reconstruction ; contrôler intégrité et cohérence, sans écraser une archive existante.
 - Restaurer sur une cible distincte et vérifier l’accès au service ainsi que les mêmes références métier ; une archive créée n’est pas une preuve de reprise.
 - Mesurer les bornes de capture, la perte de données et la durée de retour utiles ; distinguer RPO/RTO visés et réellement observés.
 - Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
 
-Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
+**Contrôle négatif sûr :** sur les métadonnées d’une copie de l’archive, détecter une version ou une destination incompatible et s’arrêter avant restauration. Ne pas corrompre l’unique archive, supprimer la source ou provoquer une perte pour mesurer la reprise.
 
-## 11. Résultat attendu
+**Erreurs fréquentes :** Stocker clé et archive au même endroit en parlant de hors-site ; oublier la configuration et les accès nécessaires ; prétendre une cohérence sous écritures continues non testée.
 
-Intégrité contrôlée, mêmes références métier et mesures expliquées ; source préservée et limites explicites. Le résultat est à produire, pas déjà obtenu.
+**Démarche en cas d’écart :** Si le service restauré démarre mais qu’un ticket manque, départager mauvais point de capture, mauvaise base cible et données incomplètes. Comparer référence, version et intégrité sur la cible de reprise ; conserver la source et la dernière archive connue.
 
-## 12. Erreurs fréquentes
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
 
-Stocker clé et archive au même endroit en parlant de hors-site ; restaurer seulement la DB ; prétendre cohérence sous écritures continues non testée. En cas d’écart, conserver les faits utiles sans secret et ne pas multiplier les modifications.
+## Expliquer et capitaliser
 
-## 13. Démarche de diagnostic
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
 
-Si le service restauré démarre mais qu’une donnée manque, départager mauvais point de capture, archive incomplète et média absent. Comparer référence, version et hash sur la cible de reprise ; conserver la source et la dernière archive connue.
+**Réutilisation :** Quelle preuve démontrerait une reprise utile après perte de la machine plutôt qu’un simple remplacement de conteneur ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
-Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
+Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication s’évaluent séparément. Aucun niveau personnel n’est attribué par cette fiche.
 
-## 14. Preuves à conserver
-
-Intégrité contrôlée, mêmes références métier et mesures expliquées ; source préservée et limites explicites. Ajouter date, environnement, version/commit, action personnelle, attendu/observé, difficulté, correction et aide reçue. Ne joindre aucun secret, cookie, token ou state privé.
-
-## 15. Synthèse
-
-En quelques phrases : quel besoin as-tu couvert, quelle décision as-tu prise et quel contrôle la soutient ? Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
-
-## 16. Réutilisation des acquis
-
-Quelle preuve démontrerait une reprise utile après perte de la machine plutôt qu’un simple remplacement de conteneur ? Relier ta réponse à un autre projet sans en recopier une solution complète.
-
-## 17. Validation et autonomie
-
-Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication sont vérifiés séparément. L0=découverte ; L1=compréhension ; L2=réalisation personnelle ; L3=adaptation/diagnostic d’un cas nouveau avec aide limitée. Aucun niveau n’est attribué par la présence de la fiche.
-
-## 18. Corrigé séparé
+## Corrigé après tentative
 
 Après une première tentative, consulter [les repères de correction](corriges.md#exercice-11) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+
+[← Exercice précédent](10-maintenance.md) · [Retour au parcours](README.md) · [Exercice suivant →](12-diagnostic.md)

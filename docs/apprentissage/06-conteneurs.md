@@ -2,87 +2,90 @@
 
 **Projet : OpsDesk · Pilier : Faciliter la livraison · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
 
-## 1. Situation professionnelle
+Révision documentaire : 2026-11-04. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.
 
-L’équipe attend des demandes IT créées, consultables et suivies sans perdre les tickets. Conteneurise le programme fourni ; montre quelle version répond et relis un ticket après le remplacement applicatif prévu, avec stockage conservé.
+## Situation et résultat à obtenir
 
-## 2. Objectif pédagogique
+Le même programme doit pouvoir être livré avec ses dépendances tout en conservant les tickets. Conteneuriser permet de séparer l’artefact applicatif, sa configuration d’exécution et les données durables.
 
-Conteneuriser en reliant décision, action, observation et explication. Tu peux demander une explication avant chaque étape ; rédige néanmoins toi-même le schéma, la configuration et les preuves.
+Conteneurise le programme fourni ; montre quelle version répond et relis un ticket après le remplacement applicatif prévu, avec stockage conservé.
 
-## 3. Besoin applicatif
+**Livrable attendu :** Recette personnelle, image identifiable, configuration privée et parcours métier vérifié. Le résultat est à produire, pas déjà obtenu.
 
-Un ticket identifié, son titre et son état doit rester contrôlable. Le contrat applicatif, pas une ancienne recette d’hébergement, définit les besoins du logiciel.
-
-## 4. Concepts à comprendre
+## Comprendre avant de choisir
 
 Une image fige le programme et ses dépendances ; un conteneur est un processus qui l’utilise. Réseau, volumes, paramètres et secrets déterminent son fonctionnement. L’image n’est pas une sauvegarde de la base.
 
-## 5. Prérequis
+L’image contient le programme et ses dépendances ; un conteneur en est une exécution avec ses propres paramètres. Un **tag** est un nom qui peut pointer vers un autre contenu ; le **digest** identifie le contenu de l’image. Un port écouté dans le conteneur n’est pas automatiquement accessible sur la VM ou le PC.
 
-Contrat applicatif compris, VM et accès qualifiés ; stratégie de stockage et de secrets proposée. Vérifier la compatibilité et la disponibilité du moteur choisi avant son installation. Aucun Dockerfile ou Compose historique n’est obligatoire. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Le volume conserve des données en dehors du cycle de vie du processus. Il doit être relié au bon service et posséder des droits adaptés ; sa simple existence ne prouve pas qu’il contient la bonne base. Les secrets sont fournis à l’exécution et restent hors de l’image, du dépôt et des journaux. Refaire l’image ne restaure pas PostgreSQL.
 
-## 6. Environnement et matériel
+**Question :** si l’application change mais pas le volume PostgreSQL, quelles identités et quel ticket permettront de vérifier la livraison et la persistance séparément ?
+
+## Préparer la bonne cible
+
+Contrat applicatif compris, VM et accès qualifiés ; stratégie de stockage et de secrets proposée. Vérifier la compatibilité et la disponibilité du moteur choisi avant son installation. Aucun Dockerfile ou Compose historique n’est obligatoire.
 
 Le poste de contrôle prévu est Fedora 45. Le moteur de conteneurs est préparé personnellement dans la VM Rocky Linux 10.2 qualifiée ; ne pas confondre un moteur Windows/WSL historique avec celui de la VM. Relever moteur, version, utilisateur, chemins persistants et ports réellement choisis. La recette du conteneur est à écrire à partir du contrat applicatif. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 Le moteur étudié dans ce projet est Docker dans la VM ; vérifier sa version et son accès avant de proposer Dockerfile/Compose. Le service sans authentification reste un démonstrateur privé de laboratoire.
 
-## 7. Travail personnel
+Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
 
-Écrire ta recette et ta configuration d’exécution à partir du contrat ; construire, identifier la version et contrôler la donnée persistante. Le moteur étudié dans ce projet est Docker dans la VM ; vérifier sa version et son accès avant de proposer Dockerfile/Compose. Le service sans authentification reste un démonstrateur privé de laboratoire. Conserver la première proposition avant toute correction.
+## Réaliser soi-même et demander un indice
 
-## 8. Contraintes
+1. À partir du contrat, lister sources nécessaires au build, commande d’exécution, dépendances, variables, secrets et données à exclure de l’image.
+2. Écrire personnellement ta recette et ta configuration d’exécution ; nommer les réseaux, ports et stockages avec leur cible réelle.
+3. Construire puis identifier ton image ; contrôler l’application et une donnée témoin. Préparer un remplacement applicatif borné en conservant les données et les moyens de retour.
 
-Application fictive sans authentification utilisateur ; accès local ; PostgreSQL durable ; santé live/ready et version distinctes. Identifier état initial, effet attendu et retour. Un cloud payant, une exposition réelle, un réseau sensible ou une panne/destruction exige un accord ciblé ; la lecture de cette fiche n’autorise pas ces actions.
+Conserver ta première proposition avant la revue. Les indices se lisent à la demande, du moins direct au plus ciblé.
 
-## 9. Indices progressifs
+<details>
+<summary>Indice 1 — orientation</summary>
 
-**Indice :** Séparer erreur de build, commande de lancement, droits, DNS, connexion DB et schéma ; regarder le premier message utile.
+Séparer erreur de build, commande de lancement, droits, DNS, connexion DB et schéma ; regarder le premier message utile.
 
-**Explication ciblée, sur demande :** relier le concept à un ticket identifié, son titre et son état, avec un exemple limité et un résultat observable.
+</details>
 
-**Correction accompagnée :** montrer ta tentative et le premier écart ; Codex corrige le point précis puis te demande de revalider et d’expliquer.
+<details>
+<summary>Indice 2 — mécanisme</summary>
 
-## 10. Vérifications à effectuer
+Pour un échec de démarrage, séparer build et runtime, puis lire commande, paramètres et premier message utile. Pour une connexion DB refusée, comparer nom/adresse, écoute et droits avant de toucher au stockage.
+
+</details>
+
+<details>
+<summary>Indice 3 — correction ciblée après tentative</summary>
+
+Présenter ta tentative, l’attendu, l’observé et le premier écart. Demander l’analyse du seul point bloquant ; tu modifies ensuite ta solution, tu retestes et tu expliques la correction. Une explication limitée peut être demandée avant l’action ; aucun fichier InfraOps définitif n’est fourni à recopier. Consigner le niveau d’aide reçu.
+
+</details>
+
+## Vérifier, puis diagnostiquer
 
 - Relier code/commit, version de l’application et image réellement exécutée ; distinguer tag et digest.
 - Vérifier séparément écoute, disponibilité des dépendances, paramètres privés et parcours utilisateur.
 - Contrôler la donnée témoin après le remplacement applicatif prévu, avec stockage préservé et sans supprimer un volume existant.
 - Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
 
-Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
+**Test négatif borné à préparer :** faire refuser une entrée métier invalide sur les données fictives de la cible autorisée, puis vérifier qu’aucun ticket invalide n’a été ajouté. Un test qui efface un volume n’est pas nécessaire.
 
-## 11. Résultat attendu
+**Erreurs fréquentes :** Inclure secrets/données dans l’image ; utiliser latest sans identité ; croire qu’un conteneur démarré prouve le métier.
 
-Recette personnelle, image identifiable, configuration privée et parcours métier vérifié. Le résultat est à produire, pas déjà obtenu.
+**Démarche en cas d’écart :** Si le conteneur est vivant mais le service inutilisable, distinguer port non écouté, dépendance non prête et mauvais paramètre. Lire les journaux du seul composant concerné et tester le chemin de dépendance ; ne pas supprimer les données pour obtenir un redémarrage propre.
 
-## 12. Erreurs fréquentes
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
 
-Inclure secrets/données dans l’image ; utiliser latest sans identité ; croire qu’un conteneur démarré prouve le métier. En cas d’écart, conserver les faits utiles sans secret et ne pas multiplier les modifications.
+## Expliquer et capitaliser
 
-## 13. Démarche de diagnostic
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
 
-Si le conteneur est vivant mais le service inutilisable, distinguer port non écouté, dépendance non prête et mauvais paramètre. Lire les journaux du seul composant concerné et tester le chemin de dépendance ; ne pas supprimer les données pour obtenir un redémarrage propre.
+**Réutilisation :** Comment donner au développeur un test reproductible sans lui donner les droits administrateur de l’hôte ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
-Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
+Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication s’évaluent séparément. Aucun niveau personnel n’est attribué par cette fiche.
 
-## 14. Preuves à conserver
-
-Recette personnelle, image identifiable, configuration privée et parcours métier vérifié. Ajouter date, environnement, version/commit, action personnelle, attendu/observé, difficulté, correction et aide reçue. Ne joindre aucun secret, cookie, token ou state privé.
-
-## 15. Synthèse
-
-En quelques phrases : quel besoin as-tu couvert, quelle décision as-tu prise et quel contrôle la soutient ? Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
-
-## 16. Réutilisation des acquis
-
-Comment donner au développeur un test reproductible sans lui donner les droits administrateur de l’hôte ? Relier ta réponse à un autre projet sans en recopier une solution complète.
-
-## 17. Validation et autonomie
-
-Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication sont vérifiés séparément. L0=découverte ; L1=compréhension ; L2=réalisation personnelle ; L3=adaptation/diagnostic d’un cas nouveau avec aide limitée. Aucun niveau n’est attribué par la présence de la fiche.
-
-## 18. Corrigé séparé
+## Corrigé après tentative
 
 Après une première tentative, consulter [les repères de correction](corriges.md#exercice-06) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+
+[← Exercice précédent](05-ansible.md) · [Retour au parcours](README.md) · [Exercice suivant →](07-k3s.md)

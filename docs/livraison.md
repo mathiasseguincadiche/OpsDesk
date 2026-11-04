@@ -1,5 +1,7 @@
 # Livrer une évolution : développeur et opérateur
 
+> **HISTORIQUE — référence Codex non exécutable depuis le dépôt courant.** Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), `compose.yaml` et `Dockerfile` sont absents. Les blocs de commandes conservent les anciennes instructions pour comprendre l’essai Ubuntu/WSL ; ils ne sont pas prêts à copier et ne lancent pas le laboratoire personnel. Les versions et résultats qui suivent sont historiques. [Parcours actif V4.4](apprentissage/README.md) · [Pré-checks Fedora/KVM/Rocky](laboratoire-fedora-kvm-rocky.md).
+
 ## Référence historique Codex — cadre V4.4
 
 Ce corps conserve les procédures et résultats préparés sous V4.2. Les configurations et opérations InfraOps appartiennent désormais au travail personnel de Mathias ; elles ne sont pas relancées par Codex. Consulter d’abord le [contrat applicatif](contrat-applicatif.md) et la [provenance](provenance.md). Les niveaux techniques anciens de ce texte ne sont pas les niveaux personnels V4.4 : L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée. Les preuves de reprise plus récentes sont datées dans [STATUS](../STATUS.md), sans modifier rétrospectivement cet essai.
@@ -8,9 +10,9 @@ Ce corps conserve les procédures et résultats préparés sous V4.2. Les config
 
 Le développeur fictif modifie le code métier et ses tests. L’opérateur InfraOps fournit l’image, la cible, les autorisations, les contrôles et le retour arrière. Le développeur ne devrait pas avoir besoin de SSH administrateur pour une livraison ordinaire ; **ce parcours CI autonome n’est pas encore démontré dans ce laboratoire**.
 
-## Ce qui est déjà rejouable localement
+## Chaîne de livraison historique — non rejouable depuis les fichiers courants
 
-Depuis la racine du dépôt :
+Ancienne chaîne depuis la racine du laboratoire Ubuntu/WSL, avec Docker 29.8.0, Compose 5.5.1, secrets, DB et accès moteur déjà préparés ; effet : construction puis remplacement de l’application et création de tickets fictifs. Ne pas la lancer depuis ce dépôt :
 
 ```bash
 python3 -m unittest discover -s tests/unit -v
@@ -27,7 +29,7 @@ Cette chaîne locale ne prouve pas un job GitHub exécuté, un push GHCR ou une 
 
 L’image reçoit `APP_VERSION` et `APP_REVISION` à sa construction. La version réellement servie se lit dans `/version`. La valeur `uncommitted-v42` de la première preuve signifie explicitement qu’aucun commit n’existait encore pour cette exécution.
 
-Après création d’un commit réel, sur une cible de laboratoire autorisée :
+Exemple historique de paramètres de livraison, conservé pour lecture. Il modifiait le service Compose du laboratoire préparé ; les fichiers requis sont absents du dépôt courant :
 
 ```bash
 APP_VERSION=0.1.1 APP_REVISION="$(git rev-parse HEAD)"   docker compose up --build --detach --wait
@@ -45,7 +47,7 @@ Ne pas exécuter cette commande si elle remplace sans préparation une instance 
 5. Vérification readiness **et** ticket métier dans une cible de test identifiée.
 6. Publication/promotion seulement avec permissions et autorisations réelles.
 
-La chaîne principale reste **GitHub Actions**. GitLab est un deuxième hébergement tant qu’une autre fonction n’a pas été implémentée et testée. Les deux plateformes ne doivent pas se concurrencer pour déployer la même cible ; aucune synchronisation automatique n’est revendiquée.
+**GitHub est la seule plateforme active.** GitHub Actions est le chantier personnel de l’exercice 08, sans résultat distant présumé. GitLab reste une référence historique facultative ; aucun miroir, synchronisation ou nouveau pipeline GitLab n’est à mettre en place.
 
 ## En cas d’échec
 

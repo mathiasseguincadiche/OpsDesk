@@ -1,86 +1,89 @@
 # 13 — Démontrer son autonomie
 
-**Projet : OpsDesk · Pilier : Transverse · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
+**Projet : OpsDesk · Pilier : Transverse · Accompagnement : limité et déclaré.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
 
-## 1. Situation professionnelle
+Révision documentaire : 2026-11-04. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.
 
-L’équipe attend des demandes IT créées, consultables et suivies sans perdre les tickets. Après les modules précédents, recevoir une nouvelle révision applicative identifiée et un symptôme borné différent de l’exemple. Proposer la livraison, la vérifier puis diagnostiquer avec une aide limitée.
+## Situation et résultat à obtenir
 
-## 2. Objectif pédagogique
+L’équipe doit pouvoir confier une adaptation nouvelle à un opérateur qui justifie ses choix. L’épreuve porte sur une situation définie après les tentatives guidées, avec un degré d’aide convenu et déclaré.
 
-Démontrer son autonomie en reliant décision, action, observation et explication. Tu peux demander une explication avant chaque étape ; rédige néanmoins toi-même le schéma, la configuration et les preuves.
+Après les modules précédents, recevoir une nouvelle révision applicative identifiée et un symptôme borné différent de l’exemple. Proposer la livraison, la vérifier puis diagnostiquer avec une aide limitée.
 
-## 3. Besoin applicatif
+**Livrable attendu :** Démonstration personnelle sur un cas proche nouveau, diagnostic et justification ; conclusion qualitative argumentée. Le résultat est à produire, pas déjà obtenu.
 
-Un ticket identifié, son titre et son état doit rester contrôlable. Le contrat applicatif, pas une ancienne recette d’hébergement, définit les besoins du logiciel.
-
-## 4. Concepts à comprendre
+## Comprendre avant de choisir
 
 L’autonomie se constate sur une tâche nouvelle : comprendre le besoin, adapter une méthode, vérifier et expliquer. Un pipeline vert ou un fichier généré par Codex ne donne pas un niveau personnel.
 
-## 5. Prérequis
+Réutiliser une méthode consiste à reconnaître le besoin et les contrôles qui restent valides, puis à adapter les éléments qui changent. L’autonomie ne signifie pas travailler sans documentation : elle exige de choisir les bonnes références, de tester ses hypothèses et d’expliquer ses limites.
 
-Travaux précédents et preuves personnelles disponibles ; limites et aide reçue déclarées. Le nouveau cas est défini avant toute intervention et doit différer de l’exemple déjà guidé. Un module non exécuté reste identifié comme tel. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Avant l’épreuve, définir la variante, les accès, les risques, le livrable et l’aide admise. Un exemple déjà résolu n’est pas une tâche nouvelle. Si une aide ciblée devient nécessaire, la consigner et réévaluer la portée du résultat ; une difficulté ne constitue pas un échec définitif du parcours.
 
-## 6. Environnement et matériel
+**Question préalable :** quelle différence entre le scénario connu et la variante obligera réellement à prendre une décision ou diagnostiquer ? Si tout peut être recopié sans raisonnement, reformuler la variante avant de commencer.
+
+## Préparer la bonne cible
+
+Travaux précédents et preuves personnelles disponibles ; limites et aide reçue déclarées. Le nouveau cas est défini avant toute intervention et doit différer de l’exemple déjà guidé. Un module non exécuté reste identifié comme tel.
 
 Le poste de contrôle prévu est Fedora 45. Reprendre un environnement personnel déjà qualifié et une variante nouvelle bornée ; identifier ce qui peut être réutilisé et ce qui doit être revalidé. Si une reconstruction est demandée, employer une cible neuve distincte et conserver l’ancienne. L’hôte, la VM invitée, la version et l’aide autorisée sont explicités avant l’épreuve. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici. La VM invitée cible reste Rocky Linux 10.2 ; sa qualification est à vérifier avant cet exercice.
 
-## 7. Travail personnel
+Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
 
-Proposer et réaliser une solution à un scénario nouveau ; demander seulement le niveau d’aide nécessaire et expliquer tes décisions. Conserver la première proposition avant toute correction.
+## Réaliser soi-même et demander un indice
 
-## 8. Contraintes
+1. Recevoir un cas nouveau borné et identifier ce qui est réutilisable ; proposer ta méthode et les critères de réussite avant de demander des indices.
+2. Réaliser et diagnostiquer personnellement sur la cible qualifiée ; noter chaque aide demandée et son effet sur la suite.
+3. Démontrer résultat technique, ticket témoin, diagnostic et justification ; rendre une conclusion qualitative sur les cinq responsabilités, avec limites et prochaine adaptation.
 
-Application fictive sans authentification utilisateur ; accès local ; PostgreSQL durable ; santé live/ready et version distinctes. Identifier état initial, effet attendu et retour. Un cloud payant, une exposition réelle, un réseau sensible ou une panne/destruction exige un accord ciblé ; la lecture de cette fiche n’autorise pas ces actions.
+Conserver ta première proposition avant la revue. Les indices se lisent à la demande, du moins direct au plus ciblé.
 
-## 9. Indices progressifs
+<details>
+<summary>Indice 1 — orientation</summary>
 
-**Indice :** Décrire le blocage et les observations avant de demander une correction ; conserver ce qui a fonctionné et revoir une hypothèse à la fois.
+Décrire le blocage et les observations avant de demander une correction ; conserver ce qui a fonctionné et revoir une hypothèse à la fois.
 
-**Explication ciblée, sur demande :** relier le concept à un ticket identifié, son titre et son état, avec un exemple limité et un résultat observable.
+</details>
 
-**Correction accompagnée :** montrer ta tentative et le premier écart ; Codex corrige le point précis puis te demande de revalider et d’expliquer.
+<details>
+<summary>Indice 2 — mécanisme</summary>
 
-## 10. Vérifications à effectuer
+Reprendre tes propres preuves et expliquer pourquoi leurs conditions s’appliquent encore. Pour le blocage nouveau, présenter les faits, deux hypothèses et le test envisagé avant une demande d’aide.
+
+</details>
+
+<details>
+<summary>Indice 3 — correction ciblée après tentative</summary>
+
+Présenter ta tentative, l’attendu, l’observé et le premier écart. Demander l’analyse du seul point bloquant ; tu modifies ensuite ta solution, tu retestes et tu expliques la correction. Une explication limitée peut être demandée avant l’action ; aucun fichier InfraOps définitif n’est fourni à recopier. Consigner le niveau d’aide reçu.
+
+</details>
+
+## Vérifier, puis diagnostiquer
 
 - Proposer sa démarche et ses risques avant l’aide, puis adapter la méthode à la variante nouvelle.
 - Montrer un résultat technique, un diagnostic représentatif et une explication de ses choix ; les sorties copiées du laboratoire Codex ne sont pas des preuves personnelles.
 - Déclarer l’assistance reçue et les points non vérifiés ; un L3 exige une adaptation ou un diagnostic nouveau avec aide limitée.
 - Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
 
-Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
+**Contre-épreuve :** expliquer quel fait montrerait que la solution connue ne convient plus. Si un corrigé complet a été consulté, conserver le travail réalisé avec assistance et prévoir une autre variante pour évaluer L3 ; ne pas attribuer un niveau à l’avance.
 
-## 11. Résultat attendu
+**Erreurs fréquentes :** Recopier une référence puis revendiquer L3 ; cacher l’aide reçue ; inventer une note de certification.
 
-Démonstration personnelle sur un cas proche nouveau, diagnostic et justification ; conclusion qualitative argumentée. Le résultat est à produire, pas déjà obtenu.
+**Démarche en cas d’écart :** La difficulté est une variante nouvelle, pas une panne forcée. Présenter les faits et ses hypothèses avant toute aide, choisir le test le plus discriminant et défendre la correction ; revalider le besoin utilisateur et déclarer ce qui n’a pas été couvert.
 
-## 12. Erreurs fréquentes
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
 
-Recopier une référence puis revendiquer L3 ; cacher l’aide reçue ; inventer une note de certification. En cas d’écart, conserver les faits utiles sans secret et ne pas multiplier les modifications.
+## Expliquer et capitaliser
 
-## 13. Démarche de diagnostic
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
 
-La difficulté est une variante nouvelle, pas une panne forcée. Présenter les faits et ses hypothèses avant toute aide, choisir le test le plus discriminant et défendre la correction ; revalider le besoin utilisateur et déclarer ce qui n’a pas été couvert.
+**Réutilisation :** Comment adapterais-tu cette solution à un autre besoin sans dépendre d’une procédure copiée ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
-Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
+Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication s’évaluent séparément. Aucun niveau personnel n’est attribué par cette fiche.
 
-## 14. Preuves à conserver
-
-Démonstration personnelle sur un cas proche nouveau, diagnostic et justification ; conclusion qualitative argumentée. Ajouter date, environnement, version/commit, action personnelle, attendu/observé, difficulté, correction et aide reçue. Ne joindre aucun secret, cookie, token ou state privé.
-
-## 15. Synthèse
-
-En quelques phrases : quel besoin as-tu couvert, quelle décision as-tu prise et quel contrôle la soutient ? Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
-
-## 16. Réutilisation des acquis
-
-Comment adapterais-tu cette solution à un autre besoin sans dépendre d’une procédure copiée ? Relier ta réponse à un autre projet sans en recopier une solution complète.
-
-## 17. Validation et autonomie
-
-Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication sont vérifiés séparément. L0=découverte ; L1=compréhension ; L2=réalisation personnelle ; L3=adaptation/diagnostic d’un cas nouveau avec aide limitée. Aucun niveau n’est attribué par la présence de la fiche.
-
-## 18. Corrigé séparé
+## Corrigé après tentative
 
 Après une première tentative, consulter [les repères de correction](corriges.md#exercice-13) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+
+[← Exercice précédent](12-diagnostic.md) · [Retour au parcours](README.md)

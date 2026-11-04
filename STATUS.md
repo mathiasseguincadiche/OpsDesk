@@ -1,6 +1,10 @@
 # OpsDesk — réception applicative et progression personnelle
 
-**V4.4, 3 novembre 2026.** Les sources applicatives sont testées dans un processus de développement ponctuel, sur le PostgreSQL existant. Aucun service n’a été redéployé, aucune image reconstruite et aucun exercice InfraOps personnel exécuté.
+**Preuves applicatives V4.4 du 3 novembre 2026 ; révision documentaire du 4 novembre 2026.** Les sources applicatives sont testées dans un processus de développement ponctuel, sur le PostgreSQL existant. Aucun service n’a été redéployé, aucune image reconstruite et aucun exercice InfraOps personnel exécuté.
+
+## Références GitHub contrôlées
+
+Le contrôle du 4 novembre 2026 constate la PR [#1](https://github.com/mathiasseguincadiche/OpsDesk/pull/1) fusionnée à 02:11:40 UTC (`16b63546`) et la PR [#2](https://github.com/mathiasseguincadiche/OpsDesk/pull/2) fusionnée à 14:33:12 UTC. La révision `main` analysée pour cette passe est `51e1a489d81e061f84ad3502b5ac0dc8b44bacdf`, commit de fusion de #2. Ces fusions documentent l’intégration des sources ; elles ne sont pas des preuves de CI ou d’infrastructure exécutée. GitHub reste la seule plateforme active ; GitLab est historique.
 
 ## Application
 
@@ -8,8 +12,8 @@
 |---|---|---|
 | Règles, routes, formulaires et SQL réel de la source actuelle | [Rapport courant V4.4](evidence/v44/application-tests.json) et journal voisin | Lire le statut, la date, le nombre de tests et les hashes ; la plupart des écritures sont en table TEMP |
 | Persistance réelle | Cas de test dédié : ticket fictif committé puis relu par des connexions distinctes | Le ticket témoin est conservé ; aucune donnée existante supprimée ou remplacée |
-| Host autorisé/refusé et CSRF non ASCII | Cas positifs/négatifs dans la même suite | Réponse400 contrôlée ; ni authentification ni sécurité réseau complète |
-| Schéma et paramètres | [Contrat à30 rubriques](docs/contrat-applicatif.md), `db/schema.sql` | Le rôle/base/droits/stockage restent à préparer par Mathias |
+| Host autorisé/refusé et CSRF non ASCII | Cas positifs/négatifs dans la même suite | Réponse 400 contrôlée ; ni authentification ni sécurité réseau complète |
+| Schéma et paramètres | [Contrat à 30 rubriques](docs/contrat-applicatif.md), `db/schema.sql` | Le rôle/base/droits/stockage restent à préparer par Mathias |
 | Authentification | Absente, déclarée explicitement | Local fictif uniquement |
 | Réception visuelle | [Capture et rapport V4.2](evidence/browser.json) | Historique, ne certifie pas chaque source V4.4 montée pour les tests |
 
@@ -21,7 +25,7 @@ Le [smoke HTTP historique](evidence/business-smoke.json) a été actualisé le 3
 
 Les contrats Terraform/Ansible locaux et le rendu K3s étaient des essais Codex. Ils n’ont provisionné aucune VM/cloud et n’ont qualifié aucun cluster. Les anciens pipelines locaux ne sont pas exécutés ni corrigés automatiquement. Le candidat OpsDesk comporte encore le défaut `ci-business.json`/`business-smoke.json`, à étudier dans un exercice de diagnostic.
 
-Le [scan complet historique](evidence/vulnerability-scan.json) reste FAIL, avec185 occurrences dont 45 HIGH dans ce rapport. Le retrait d’outils d’installation de l’image n’autorise pas à annoncer une sécurité globale validée. Les nouveaux résultats de tri de sécurité du programme sont une pièce distincte.
+Le [scan complet historique](evidence/vulnerability-scan.json) reste FAIL, avec 185 occurrences dont 45 HIGH dans ce rapport. Le retrait d’outils d’installation de l’image n’autorise pas à annoncer une sécurité globale validée. Les nouveaux résultats de tri de sécurité du programme sont une pièce distincte.
 
 ## Mathias : pratique et autonomie
 

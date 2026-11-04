@@ -2,85 +2,88 @@
 
 **Projet : OpsDesk · Pilier : Construire · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
 
-## 1. Situation professionnelle
+Révision documentaire : 2026-11-04. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.
 
-L’équipe attend des demandes IT créées, consultables et suivies sans perdre les tickets. Dessine le trajet d’une création de ticket ; relève dans le contrat le rôle de PostgreSQL, les paramètres attendus et l’absence d’authentification. Ne lance rien pour cette première lecture.
+## Situation et résultat à obtenir
 
-## 2. Objectif pédagogique
+Le support doit pouvoir retrouver une demande après sa création et expliquer son état. Avant de choisir une machine, comprendre ce que le programme fait permet de distinguer une panne du logiciel, de son accès et de sa base.
 
-Comprendre l’application en reliant décision, action, observation et explication. Tu peux demander une explication avant chaque étape ; rédige néanmoins toi-même le schéma, la configuration et les preuves.
+Dessine le trajet d’une création de ticket ; relève dans le contrat le rôle de PostgreSQL, les paramètres attendus et l’absence d’authentification. Ne lance rien pour cette première lecture.
 
-## 3. Besoin applicatif
+**Livrable attendu :** Un schéma fonctionnel personnel, la liste des données durables et les questions posées à l’équipe applicative. Le résultat est à produire, pas déjà obtenu.
 
-Un ticket identifié, son titre et son état doit rester contrôlable. Le contrat applicatif, pas une ancienne recette d’hébergement, définit les besoins du logiciel.
-
-## 4. Concepts à comprendre
+## Comprendre avant de choisir
 
 Un contrat applicatif décrit ce que le logiciel exige et garantit ; il ne choisit pas ton infrastructure. Un parcours utilisateur relie une entrée HTTP à une donnée persistante.
 
-## 5. Prérequis
+HTTP est l’échange entre client et application ; l’API fournit des réponses JSON, tandis que les pages HTML servent l’utilisateur. Flask traite la requête ; psycopg communique avec PostgreSQL. La mémoire du processus n’est pas la donnée durable : le ticket doit être enregistré dans la base pour survivre au remplacement de l’application.
 
-Aucun module technique préalable. Lire le contrat applicatif et les règles de responsabilité ; disposer d’un outil de dessin et noter ses questions. Aucun logiciel d’infrastructure n’est supposé installé. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Dans le contrat, distinguer une entrée, une règle et un effet : un titre accepté n’autorise pas toutes les transitions de statut. Une réponse de santé renseigne un aspect du service ; elle ne prouve pas, seule, qu’un ticket peut être créé puis relu. La protection CSRF limite certains envois de formulaire ; elle n’identifie aucun utilisateur.
 
-## 6. Environnement et matériel
+**Question de lecture :** quel composant conserve le titre d’un ticket si le processus Flask s’arrête ? Quelle information manquerait encore après un simple HTTP 200 sur `/health/live` ?
+
+## Préparer la bonne cible
+
+Aucun module technique préalable. Lire le contrat applicatif et les règles de responsabilité ; disposer d’un outil de dessin et noter ses questions. Aucun logiciel d’infrastructure n’est supposé installé.
 
 Lecture du contrat et dessin, sans installation ni déploiement. Le poste hôte prévu est Fedora 45 ; aucune VM ni authentification à un laboratoire historique ne sont requises pour comprendre l’application.
 
-## 7. Travail personnel
+Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Pour 01/02, la cible est le document ou le dessin : aucun terminal ni VM requis.
 
-Lire docs/contrat-applicatif.md ; distinguer code métier, dépendances et responsabilités d’exploitation. Conserver la première proposition avant toute correction. Présenter ta reformulation avant de lire un schéma de référence.
+## Réaliser soi-même et demander un indice
 
-## 8. Contraintes
+1. Lire les fonctions, les données persistantes et les limites du contrat ; relever les termes inconnus sans installer d’outil.
+2. Dessiner soi-même le trajet d’une création puis d’une consultation ; placer les paramètres et les secrets hors des données métier.
+3. Présenter en quelques phrases le besoin, deux garanties du programme, deux limites et trois questions à poser avant son hébergement.
 
-Application fictive sans authentification utilisateur ; accès local ; PostgreSQL durable ; santé live/ready et version distinctes. Identifier état initial, effet attendu et retour. Un cloud payant, une exposition réelle, un réseau sensible ou une panne/destruction exige un accord ciblé ; la lecture de cette fiche n’autorise pas ces actions.
+Conserver ta première proposition avant la revue. Les indices se lisent à la demande, du moins direct au plus ciblé.
 
-## 9. Indices progressifs
+<details>
+<summary>Indice 1 — orientation</summary>
 
-**Indice :** Suivre une action utilisateur et nommer chaque composant qui peut la bloquer.
+Suivre une action utilisateur et nommer chaque composant qui peut la bloquer.
 
-**Explication ciblée, sur demande :** relier le concept à un ticket identifié, son titre et son état, avec un exemple limité et un résultat observable.
+</details>
 
-**Correction accompagnée :** montrer ta tentative et le premier écart ; Codex corrige le point précis puis te demande de revalider et d’expliquer.
+<details>
+<summary>Indice 2 — mécanisme</summary>
 
-## 10. Vérifications à effectuer
+Comparer les rubriques fonctionnalités, stockage, santé et authentification du contrat. Chercher ce qui relève du programme, puis ce qui dépendra de ton infrastructure.
+
+</details>
+
+<details>
+<summary>Indice 3 — correction ciblée après tentative</summary>
+
+Présenter ta tentative, l’attendu, l’observé et le premier écart. Demander l’analyse du seul point bloquant ; tu modifies ensuite ta solution, tu retestes et tu expliques la correction. Une explication limitée peut être demandée avant l’action ; aucun fichier InfraOps définitif n’est fourni à recopier. Consigner le niveau d’aide reçu.
+
+</details>
+
+## Vérifier, puis diagnostiquer
 
 - Présenter le besoin utilisateur, les fonctions disponibles et deux limites réelles du logiciel sans confondre application et hébergement.
 - Tracer une requête jusqu’à la donnée durable ; distinguer code fourni, paramètres, secrets et données.
 - Poser les questions techniques qui restent ouvertes ; aucun test d’infrastructure n’est nécessaire à cette première lecture.
 - Expliquer comment un ticket identifié, son titre, son état et sa relecture dans PostgreSQL seront contrôlés plus tard, sans inventer de sortie ou de capture.
 
-Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
+**Contre-exemple de lecture, sans exécution :** une capture de page tickets ne démontre pas leur persistance. Indiquer quel contrôle ultérieur pourrait réfuter cette conclusion ; aucune sortie ni preuve technique n’est à produire aujourd’hui.
 
-## 11. Résultat attendu
+**Erreurs fréquentes :** Confondre le laboratoire de Codex avec une architecture personnelle déjà choisie.
 
-Un schéma fonctionnel personnel, la liste des données durables et les questions posées à l’équipe applicative. Le résultat est à produire, pas déjà obtenu.
+**Démarche en cas d’écart :** Si deux documents semblent décrire des capacités différentes, comparer leur version et la source du contrat. Distinguer une ancienne preuve Codex d’une fonction actuelle ; noter la contradiction au lieu d’inventer un résultat.
 
-## 12. Erreurs fréquentes
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
 
-Confondre le laboratoire de Codex avec une architecture personnelle déjà choisie. En cas d’écart, conserver les faits utiles sans secret et ne pas multiplier les modifications.
+## Expliquer et capitaliser
 
-## 13. Démarche de diagnostic
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
 
-Si deux documents semblent décrire des capacités différentes, comparer leur version et la source du contrat. Distinguer une ancienne preuve Codex d’une fonction actuelle ; noter la contradiction au lieu d’inventer un résultat.
+**Réutilisation :** Déplacer le même besoin vers une autre machine : qu’est-ce qui reste dans le contrat ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
-Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
+Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication s’évaluent séparément. Aucun niveau personnel n’est attribué par cette fiche.
 
-## 14. Preuves à conserver
-
-Un schéma fonctionnel personnel, la liste des données durables et les questions posées à l’équipe applicative. Ajouter date, environnement, version/commit, action personnelle, attendu/observé, difficulté, correction et aide reçue. Ne joindre aucun secret, cookie, token ou state privé.
-
-## 15. Synthèse
-
-En quelques phrases : quel besoin as-tu couvert, quelle décision as-tu prise et quel contrôle la soutient ? Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
-
-## 16. Réutilisation des acquis
-
-Déplacer le même besoin vers une autre machine : qu’est-ce qui reste dans le contrat ? Relier ta réponse à un autre projet sans en recopier une solution complète.
-
-## 17. Validation et autonomie
-
-Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication sont vérifiés séparément. L0=découverte ; L1=compréhension ; L2=réalisation personnelle ; L3=adaptation/diagnostic d’un cas nouveau avec aide limitée. Aucun niveau n’est attribué par la présence de la fiche.
-
-## 18. Corrigé séparé
+## Corrigé après tentative
 
 Après une première tentative, consulter [les repères de correction](corriges.md#exercice-01) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+
+[Retour au parcours](README.md) · [Exercice suivant →](02-architecture.md)

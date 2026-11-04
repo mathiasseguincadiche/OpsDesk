@@ -8,7 +8,7 @@ Une authentification minimale a été évaluée : elle ajouterait identités, mo
 
 ## Contrôles applicatifs actuels
 
-Corps HTTP limité à16 Kio, validations de types/longueurs et du texte Unicode stockable, SQL paramétré, contraintes métier PostgreSQL, échappement Jinja, en-têtes de protection, mutations API exclusivement JSON et CSRF des formulaires. Une entrée CSRF non ASCII est refusée avec 400. `TRUSTED_HOSTS` limite par défaut les hôtes HTTP à localhost/127.0.0.1 ; son erreur est rendue sans modèle Jinja pour éviter un 500 avant l’adaptateur d’URL.
+Corps HTTP limité à 16 Kio, validations de types/longueurs et du texte Unicode stockable, SQL paramétré, contraintes métier PostgreSQL, échappement Jinja, en-têtes de protection, mutations API exclusivement JSON et CSRF des formulaires. Une entrée CSRF non ASCII est refusée avec 400. `TRUSTED_HOSTS` limite par défaut les hôtes HTTP à localhost/127.0.0.1 ; son erreur est rendue sans modèle Jinja pour éviter un 500 avant l’adaptateur d’URL.
 
 Les tests utilisent des cas négatifs réels dans la source applicative actuelle ; l’erreur DB est simulée dans un cas de test, pas provoquée dans le service source. Voir le [contrat](contrat-applicatif.md) et la [preuve V4.4](../evidence/v44/application-tests.json).
 
@@ -20,7 +20,7 @@ Les anciennes références utilisaient trois fichiers sous `secrets/`. La confid
 
 ## Alertes conservées
 
-Le [rapport d’image historique](../evidence/vulnerability-scan.json) reste FAIL :185 occurrences dont 45 HIGH, sans correction disponible indiquée pour ces HIGH à l’heure de ce scan. Ces nombres sont des occurrences paquet/avis, pas des exploits démontrés. Le retrait passé de pip/setuptools de l’image finale et le smoke réussi ne donnent pas un feu vert global. Le tri applicatif actuel du programme et ses réserves sont distincts de ce rapport historique.
+Le [rapport d’image historique](../evidence/vulnerability-scan.json) reste FAIL : 185 occurrences dont 45 HIGH, sans correction disponible indiquée pour ces HIGH à l’heure de ce scan. Ces nombres sont des occurrences paquet/avis, pas des exploits démontrés. Le retrait passé de pip/setuptools de l’image finale et le smoke réussi ne donnent pas un feu vert global. Le tri applicatif actuel du programme et ses réserves sont distincts de ce rapport historique.
 
 Le choix/durcissement de l’image finale, TLS, flux, système, supervision et rotation d’infrastructure seront réalisés par Mathias. Les protections applicatives ne remplacent pas ces décisions.
 

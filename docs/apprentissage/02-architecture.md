@@ -2,85 +2,88 @@
 
 **Projet : OpsDesk · Pilier : Construire · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
 
-## 1. Situation professionnelle
+Révision documentaire : 2026-11-04. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.
 
-L’équipe attend des demandes IT créées, consultables et suivies sans perdre les tickets. Propose une cible simple pour le service IT ; nomme accès utilisateur/opérateur, application et stockage. Explique les ressources et les points de panne sans adopter le schéma Codex comme réponse imposée.
+## Situation et résultat à obtenir
 
-## 2. Objectif pédagogique
+L’équipe veut un service compréhensible et reconstructible sur le PC disponible. Une architecture aide à localiser les accès, les données et les points de panne avant d’engager des ressources.
 
-Concevoir l’architecture en reliant décision, action, observation et explication. Tu peux demander une explication avant chaque étape ; rédige néanmoins toi-même le schéma, la configuration et les preuves.
+Propose une cible simple pour le service IT ; nomme accès utilisateur/opérateur, application et stockage. Explique les ressources et les points de panne sans adopter le schéma Codex comme réponse imposée.
 
-## 3. Besoin applicatif
+**Livrable attendu :** Schéma technique personnel modifiable, choix argumentés et alternatives raisonnables. Le résultat est à produire, pas déjà obtenu.
 
-Un ticket identifié, son titre et son état doit rester contrôlable. Le contrat applicatif, pas une ancienne recette d’hébergement, définit les besoins du logiciel.
-
-## 4. Concepts à comprendre
+## Comprendre avant de choisir
 
 L’architecture traduit un besoin en ressources, flux et frontières de confiance. Un dessin doit expliquer les accès et la persistance, pas seulement aligner des logos.
 
-## 5. Prérequis
+Un schéma de présentation répond « à quoi sert le service et qui l’utilise ? ». Un schéma technique répond « où s’exécute chaque composant, par quel flux et avec quels droits ? ». Les deux dessins ont des publics différents. La cible personnelle est ta proposition ; le schéma Codex décrit une référence historique.
 
-Exercice 01 compris et besoins applicatifs reformulés. Connaître les contraintes de données et d’accès ; relever les ressources matérielles réelles ou les marquer NON VÉRIFIÉES. L’architecture sera une proposition à justifier. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Un composant doit résoudre un besoin : séparer les données du processus évite de les perdre quand on remplace l’application. Cela ne rend pas le disque disponible en cas de panne du PC. Comparer une alternative simple aide à expliquer le compromis coût, mémoire, maintenance et reprise, sans chercher une architecture de production.
 
-## 6. Environnement et matériel
+**Question de conception :** si le disque hébergeant PostgreSQL devient indisponible, quel besoin n’est plus couvert ? Ajouter une seconde copie du processus Flask résout-il ce problème ?
+
+## Préparer la bonne cible
+
+Exercice 01 compris et besoins applicatifs reformulés. Connaître les contraintes de données et d’accès ; relever les ressources matérielles réelles ou les marquer NON VÉRIFIÉES. L’architecture sera une proposition à justifier.
 
 Dessin et analyse à partir du contrat, sans création de ressource. Prévoir un hôte Fedora 45 avec KVM/QEMU et libvirt, et Rocky Linux 10.2 comme système invité cible ; disponibilité exacte, compatibilité et ressources restent à qualifier dans le guide de laboratoire. Distinguer le schéma personnel de la référence historique Codex.
 
-## 7. Travail personnel
+Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Pour 01/02, la cible est le document ou le dessin : aucun terminal ni VM requis.
 
-Produire une proposition de cible, les flux/protocoles, l’accès opérateur et les limites ; justifier ressources et stockage. Conserver la première proposition avant toute correction. Présenter ta reformulation avant de lire un schéma de référence.
+## Réaliser soi-même et demander un indice
 
-## 8. Contraintes
+1. Dresser la liste des fonctions, données durables, accès utilisateur et accès opérateur ; garder les contraintes du contrat visibles.
+2. Proposer tes composants et tracer les flux avec sens, protocole, origine et destination. Dimensionner d’après les ressources mesurées ou signaler NON VÉRIFIÉ.
+3. Comparer une alternative utile, identifier les points de panne et expliquer comment tu reconstruirais chaque composant. Produire toi-même source .drawio et export .svg distincts, sans Mermaid.
 
-Application fictive sans authentification utilisateur ; accès local ; PostgreSQL durable ; santé live/ready et version distinctes. Identifier état initial, effet attendu et retour. Un cloud payant, une exposition réelle, un réseau sensible ou une panne/destruction exige un accord ciblé ; la lecture de cette fiche n’autorise pas ces actions.
+Conserver ta première proposition avant la revue. Les indices se lisent à la demande, du moins direct au plus ciblé.
 
-## 9. Indices progressifs
+<details>
+<summary>Indice 1 — orientation</summary>
 
-**Indice :** Partir du symptôme utilisateur et traverser client, point d’entrée, application puis stockage.
+Partir du symptôme utilisateur et traverser client, point d’entrée, application puis stockage.
 
-**Explication ciblée, sur demande :** relier le concept à un ticket identifié, son titre et son état, avec un exemple limité et un résultat observable.
+</details>
 
-**Correction accompagnée :** montrer ta tentative et le premier écart ; Codex corrige le point précis puis te demande de revalider et d’expliquer.
+<details>
+<summary>Indice 2 — mécanisme</summary>
 
-## 10. Vérifications à effectuer
+Faire parcourir au dessin une requête et son retour, puis un accès SSH opérateur. Un flux qui traverse une frontière doit avoir une destination et un besoin explicites.
+
+</details>
+
+<details>
+<summary>Indice 3 — correction ciblée après tentative</summary>
+
+Présenter ta tentative, l’attendu, l’observé et le premier écart. Demander l’analyse du seul point bloquant ; tu modifies ensuite ta solution, tu retestes et tu expliques la correction. Une explication limitée peut être demandée avant l’action ; aucun fichier InfraOps définitif n’est fourni à recopier. Consigner le niveau d’aide reçu.
+
+</details>
+
+## Vérifier, puis diagnostiquer
 
 - Associer chaque composant proposé à un besoin du contrat ; identifier hôte, VM, application et données sans multiplier les machines.
 - Expliquer les flux autorisés, les accès refusés et l’emplacement de chaque donnée durable.
 - Comparer une alternative utile et indiquer le coût en ressources, le point de panne et la méthode de reconstruction à vérifier.
 - Expliquer comment un ticket identifié, son titre, son état et sa relecture dans PostgreSQL seront contrôlés plus tard, sans inventer de sortie ou de capture.
 
-Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
+**Revue contradictoire, sans création de ressource :** rechercher un flux sans destination, un stockage sans propriétaire ou une exposition incompatible avec l’absence d’authentification. Corriger le dessin et expliquer la limite restante.
 
-## 11. Résultat attendu
+**Erreurs fréquentes :** Assimiler namespace, réseau conteneur et isolation de machines ; oublier où vivent les données.
 
-Schéma technique personnel modifiable, choix argumentés et alternatives raisonnables. Le résultat est à produire, pas déjà obtenu.
+**Démarche en cas d’écart :** Si le schéma paraît répondre au besoin mais qu’un accès reste inexplicable, distinguer flux manquant et dépendance oubliée. Suivre une requête et demander où vit sa donnée durable avant d’ajouter un composant.
 
-## 12. Erreurs fréquentes
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
 
-Assimiler namespace, réseau conteneur et isolation de machines ; oublier où vivent les données. En cas d’écart, conserver les faits utiles sans secret et ne pas multiplier les modifications.
+## Expliquer et capitaliser
 
-## 13. Démarche de diagnostic
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
 
-Si le schéma paraît répondre au besoin mais qu’un accès reste inexplicable, distinguer flux manquant et dépendance oubliée. Suivre une requête et demander où vit sa donnée durable avant d’ajouter un composant.
+**Réutilisation :** Quel compromis changerait si la charge ou l’exigence de reprise augmentait ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
-Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
+Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication s’évaluent séparément. Aucun niveau personnel n’est attribué par cette fiche.
 
-## 14. Preuves à conserver
-
-Schéma technique personnel modifiable, choix argumentés et alternatives raisonnables. Ajouter date, environnement, version/commit, action personnelle, attendu/observé, difficulté, correction et aide reçue. Ne joindre aucun secret, cookie, token ou state privé.
-
-## 15. Synthèse
-
-En quelques phrases : quel besoin as-tu couvert, quelle décision as-tu prise et quel contrôle la soutient ? Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
-
-## 16. Réutilisation des acquis
-
-Quel compromis changerait si la charge ou l’exigence de reprise augmentait ? Relier ta réponse à un autre projet sans en recopier une solution complète.
-
-## 17. Validation et autonomie
-
-Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication sont vérifiés séparément. L0=découverte ; L1=compréhension ; L2=réalisation personnelle ; L3=adaptation/diagnostic d’un cas nouveau avec aide limitée. Aucun niveau n’est attribué par la présence de la fiche.
-
-## 18. Corrigé séparé
+## Corrigé après tentative
 
 Après une première tentative, consulter [les repères de correction](corriges.md#exercice-02) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+
+[← Exercice précédent](01-application.md) · [Retour au parcours](README.md) · [Exercice suivant →](03-linux-reseau.md)

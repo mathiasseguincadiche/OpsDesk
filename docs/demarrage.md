@@ -1,4 +1,6 @@
-# Démarrer le laboratoire local en comprenant la cible
+# Démarrage : parcours actif et laboratoire historique
+
+> **HISTORIQUE — référence Codex non exécutable depuis le dépôt courant.** Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), `compose.yaml`, `Dockerfile` et `scripts/prepare-local.sh` sont absents. Les blocs de commandes conservent les anciennes instructions pour comprendre l’essai Ubuntu/WSL ; ils ne sont pas prêts à copier et ne lancent pas le laboratoire personnel. Les versions et résultats qui suivent sont historiques. [Parcours actif V4.4](apprentissage/README.md) · [Pré-checks Fedora/KVM/Rocky](laboratoire-fedora-kvm-rocky.md).
 
 ## Parcours actif et laboratoire personnel
 
@@ -8,13 +10,24 @@ Le laboratoire prévu est **Fedora 45 hôte → KVM/QEMU/libvirt → Rocky Linux
 
 GitHub est l’unique plateforme active de ce parcours. GitLab est laissé en l’état ; ses anciennes références sont historiques et facultatives, sans synchronisation ni second flux quotidien.
 
+## Ce qui est actif aujourd’hui
+
+| Procédure | Classement | Cible, prérequis et résultat attendu |
+|---|---|---|
+| Lire l’exercice 01 et le contrat | ACTIF — exécutable depuis les sources actuellement disponibles | Poste de lecture, navigateur ou éditeur, accès au dépôt ; aucune VM ni installation. Retrouver le parcours ticket et les besoins de l’application ; comparer sa reformulation aux rubriques 1–4 et 29–30 du contrat. |
+| Concevoir puis préparer son laboratoire | ACTIF — travail personnel à réaliser | Exercice 02 puis [guide commun](laboratoire-fedora-kvm-rocky.md) : nommer l’hôte, la VM et les versions ; relever les pré-checks avant toute installation. Aucune configuration finale n’est fournie. |
+| Démarrage Python natif | NON VÉRIFIÉ de bout en bout | Les fichiers applicatifs existent ; base, droits, secrets et environnement restent à préparer. Lire [contrat, section 8](contrat-applicatif.md#8-démarrage-en-développement), effets et réserves compris. |
+| Recette Compose ci-dessous | HISTORIQUE — non exécutable depuis ce dépôt | Configurations et script absents ; aucune création de fichiers de remplacement ni relance autorisée par cette lecture. |
+
+Pour commencer sans ambiguïté : lire [l’exercice 01](apprentissage/01-application.md), noter ce qui est compris et ce qui reste une question. Si un fichier lié manque, relever son chemin et la révision consultée ; ne pas lancer une recette historique pour compenser.
+
 ## Référence historique Codex — laboratoire V4.2 conservé, pas la procédure Fedora/KVM personnelle
 
 Ce corps conserve les procédures et résultats préparés sous V4.2. Les configurations et opérations InfraOps appartiennent désormais au travail personnel de Mathias ; elles ne sont pas relancées par Codex. Consulter d’abord le [contrat applicatif](contrat-applicatif.md) et la [provenance](provenance.md). Les niveaux techniques anciens de ce texte ne sont pas les niveaux personnels V4.4 : L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée. Les preuves de reprise plus récentes sont datées dans [STATUS](../STATUS.md), sans modifier rétrospectivement cet essai.
 
 ## Avant d’agir
 
-Les commandes ci-dessous se lancent depuis la racine **OpsDesk**, sur la machine de laboratoire. Elles ne doivent pas être exécutées sur un serveur partagé ou professionnel sans qualification.
+Dans l’essai historique, les commandes ci-dessous étaient lancées depuis la racine **OpsDesk**, sur Ubuntu/WSL avec Docker 29.8.0 et Compose 5.5.1. Les accès au moteur étaient déjà autorisés ; aucun privilège nouveau n’est demandé ici. Elles ne doivent pas être exécutées sur un serveur partagé ou professionnel sans qualification.
 
 ```bash
 git --version
@@ -25,11 +38,11 @@ docker compose version
 
 **Succès attendu :** client et moteur Docker accessibles, Compose présent, accès autorisé au moteur. Si le moteur est refusé, identifier les permissions ; ne pas contourner avec un chmod global du socket ni activer un accès réseau distant.
 
-Le contrôle effectué dans cette mission utilise Ubuntu/WSL2. Il ne certifie ni Fedora 45, ni GNOME, ni KVM/libvirt, ni Rocky. Les outils et commandes de ces environnements devront être vérifiés sur leur vraie cible.
+Le contrôle historique Codex utilisait Ubuntu/WSL2. Il ne certifie ni Fedora 45, ni GNOME, ni KVM/libvirt, ni Rocky. Les outils et commandes de ces environnements devront être vérifiés sur leur vraie cible.
 
 ## Identifier les ressources
 
-La configuration utilise le projet Compose `v42opsdesk`, le réseau `v42opsdesk_net`, le volume `v42opsdesk_pgdata` et la boucle locale `127.0.0.1:18081`. Vérifier qu’ils n’appartiennent pas déjà à un autre travail avant le premier démarrage.
+La configuration historique utilisait le projet Compose `v42opsdesk`, le réseau `v42opsdesk_net`, le volume `v42opsdesk_pgdata` et la boucle locale `127.0.0.1:18081`. Vérifier qu’ils n’appartiennent pas déjà à un autre travail avant le premier démarrage.
 
 ```bash
 docker compose config --quiet
@@ -45,7 +58,7 @@ Avant la préparation des secrets, `compose config` peut signaler leur absence ;
 bash scripts/prepare-local.sh
 ```
 
-Le script crée seulement les secrets absents, sans remplacer ceux existants, puis valide Compose. Ils restent hors Git. Sur un montage Windows, vérifier aussi les ACL réelles : une intention POSIX `0600` ne remplace pas la protection du dossier Windows.
+Le script historique créait seulement les secrets absents, sans remplacer ceux existants, puis valide Compose. Ils restent hors Git. Sur un montage Windows, vérifier aussi les ACL réelles : une intention POSIX `0600` ne remplace pas la protection du dossier Windows.
 
 ## Construire et vérifier
 
@@ -54,7 +67,7 @@ docker compose up --build --detach --wait
 python3 scripts/smoke.py --base-url http://127.0.0.1:18081
 ```
 
-Ouvrir ensuite **http://127.0.0.1:18081/tickets**. Créer un ticket fictif et le faire passer par « Prendre en charge », puis « Clôturer ». Le smoke automatise aussi des erreurs attendues ; il crée de petites données de test dans la base, et ne les supprime pas silencieusement.
+Dans cette ancienne procédure, l’interface était ensuite consultée à **http://127.0.0.1:18081/tickets**. Créer un ticket fictif et le faire passer par « Prendre en charge », puis « Clôturer ». Le smoke automatise aussi des erreurs attendues ; il crée de petites données de test dans la base, et ne les supprime pas silencieusement.
 
 ```bash
 curl --fail http://127.0.0.1:18081/version
