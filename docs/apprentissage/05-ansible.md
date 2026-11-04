@@ -20,15 +20,15 @@ Ansible applique des tâches à un inventaire. Un module convergent décrit un �
 
 ## 5. Prérequis
 
-Exercice 04 compris et résultats utiles disponibles ; pré-check du laboratoire à refaire avant une action. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Cible VM et propriétaire de ressources identifiés aux exercices 03/04 ; accès SSH vérifié avec le compte ordinaire prévu. Vérifier la version d’Ansible sur le contrôleur et les prérequis Python des modules sur l’invité. Ne pas supposer un inventaire correct parce qu’un nom répond au ping ICMP. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
 
 ## 6. Environnement et matériel
 
-Laboratoire personnel identifié par Mathias : machine, utilisateur, répertoire, version, ressources et accès. Les exercices mutateurs attendent une cible autorisée ; les essais WSL de Codex ne la qualifient pas.
+Ansible est piloté depuis le poste Fedora 45 vers la VM Rocky Linux 10.2 identifiée. Vérifier inventaire, résolution, SSH, utilisateur distant, Python requis par les modules et élévation ciblée avant une tâche mutatrice. Les paquets, services et protections sont ceux de la VM cible, pas ceux du poste de contrôle. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 ## 7. Travail personnel
 
-Écrire inventaire, variables et playbook pour la cible choisie ; limiter become ; protéger les valeurs sensibles ; vérifier puis rejouer personnellement. Configure la cible choisie, rejoue le playbook et explique une tâche non convergente. Un rendu JSON localhost historique ne remplit pas cette évaluation. Conserver la première proposition avant toute correction.
+Écrire inventaire, variables et playbook pour la cible choisie ; limiter become ; protéger les valeurs sensibles ; vérifier puis rejouer personnellement. Conserver la première proposition avant toute correction.
 
 ## 8. Contraintes
 
@@ -44,7 +44,12 @@ Application fictive sans authentification utilisateur ; accès local ; PostgreSQ
 
 ## 10. Vérifications à effectuer
 
-Expliquer le composant et son rôle, confronter attendu/observé, vérifier un ticket identifié, son titre et son état. Chaque contrôle doit appartenir à ta cible, ta version et ton exécution. Signaler ce qui n’a pas pu être testé.
+- Vérifier l’inventaire et l’identité SSH réelle de la VM avant les changements ; un test Ansible de connexion vérifie aussi son prérequis Python.
+- Comparer première et seconde passes ; expliquer chaque changement restant sans masquer un échec avec une condition arbitraire.
+- Contrôler le paramètre ou service réellement configuré et son effet utile ; changed=0 seul ne démontre pas le fonctionnement.
+- Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
+
+Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
 
 ## 11. Résultat attendu
 
@@ -56,7 +61,9 @@ Utiliser shell pour chaque action ; confondre changed=0 avec service fonctionnel
 
 ## 13. Démarche de diagnostic
 
-Lire le premier hôte/tâche/code en défaut ; vérifier accès, chemin, variable, module et privilège avant correction ciblée. Noter symptôme, hypothèse, contrôle discriminant, cause observée ou encore inconnue, correction et test final.
+Si Ansible échoue, distinguer accès SSH, Python distant et élévation. Si une seconde passe change encore, lire la tâche concernée et son état attendu ; corriger la cause puis vérifier le service, sans rendre silencieusement la tâche inconditionnelle.
+
+Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
 
 ## 14. Preuves à conserver
 

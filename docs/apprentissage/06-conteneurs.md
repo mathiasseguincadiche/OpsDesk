@@ -20,15 +20,17 @@ Une image fige le programme et ses dépendances ; un conteneur est un processus 
 
 ## 5. Prérequis
 
-Exercice 05 compris et résultats utiles disponibles ; pré-check du laboratoire à refaire avant une action. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Contrat applicatif compris, VM et accès qualifiés ; stratégie de stockage et de secrets proposée. Vérifier la compatibilité et la disponibilité du moteur choisi avant son installation. Aucun Dockerfile ou Compose historique n’est obligatoire. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
 
 ## 6. Environnement et matériel
 
-Laboratoire personnel identifié par Mathias : machine, utilisateur, répertoire, version, ressources et accès. Les exercices mutateurs attendent une cible autorisée ; les essais WSL de Codex ne la qualifient pas.
+Le poste de contrôle prévu est Fedora 45. Le moteur de conteneurs est préparé personnellement dans la VM Rocky Linux 10.2 qualifiée ; ne pas confondre un moteur Windows/WSL historique avec celui de la VM. Relever moteur, version, utilisateur, chemins persistants et ports réellement choisis. La recette du conteneur est à écrire à partir du contrat applicatif. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
+
+Le moteur étudié dans ce projet est Docker dans la VM ; vérifier sa version et son accès avant de proposer Dockerfile/Compose. Le service sans authentification reste un démonstrateur privé de laboratoire.
 
 ## 7. Travail personnel
 
-Écrire ta recette et ta configuration d’exécution à partir du contrat ; construire, identifier la version et contrôler la donnée persistante. Conteneurise le programme fourni ; montre quelle version répond et relis un ticket après le remplacement applicatif prévu, avec stockage conservé. Conserver la première proposition avant toute correction.
+Écrire ta recette et ta configuration d’exécution à partir du contrat ; construire, identifier la version et contrôler la donnée persistante. Le moteur étudié dans ce projet est Docker dans la VM ; vérifier sa version et son accès avant de proposer Dockerfile/Compose. Le service sans authentification reste un démonstrateur privé de laboratoire. Conserver la première proposition avant toute correction.
 
 ## 8. Contraintes
 
@@ -44,7 +46,12 @@ Application fictive sans authentification utilisateur ; accès local ; PostgreSQ
 
 ## 10. Vérifications à effectuer
 
-Expliquer le composant et son rôle, confronter attendu/observé, vérifier un ticket identifié, son titre et son état. Chaque contrôle doit appartenir à ta cible, ta version et ton exécution. Signaler ce qui n’a pas pu être testé.
+- Relier code/commit, version de l’application et image réellement exécutée ; distinguer tag et digest.
+- Vérifier séparément écoute, disponibilité des dépendances, paramètres privés et parcours utilisateur.
+- Contrôler la donnée témoin après le remplacement applicatif prévu, avec stockage préservé et sans supprimer un volume existant.
+- Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
+
+Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
 
 ## 11. Résultat attendu
 
@@ -56,7 +63,9 @@ Inclure secrets/données dans l’image ; utiliser latest sans identité ; croir
 
 ## 13. Démarche de diagnostic
 
-Séparer erreur de build, commande de lancement, droits, DNS, connexion DB et schéma ; regarder le premier message utile. Noter symptôme, hypothèse, contrôle discriminant, cause observée ou encore inconnue, correction et test final.
+Si le conteneur est vivant mais le service inutilisable, distinguer port non écouté, dépendance non prête et mauvais paramètre. Lire les journaux du seul composant concerné et tester le chemin de dépendance ; ne pas supprimer les données pour obtenir un redémarrage propre.
+
+Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
 
 ## 14. Preuves à conserver
 

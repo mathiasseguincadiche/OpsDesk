@@ -20,15 +20,15 @@ L’autonomie se constate sur une tâche nouvelle : comprendre le besoin, adapte
 
 ## 5. Prérequis
 
-Exercice 12 compris et résultats utiles disponibles ; pré-check du laboratoire à refaire avant une action. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Travaux précédents et preuves personnelles disponibles ; limites et aide reçue déclarées. Le nouveau cas est défini avant toute intervention et doit différer de l’exemple déjà guidé. Un module non exécuté reste identifié comme tel. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
 
 ## 6. Environnement et matériel
 
-Laboratoire personnel identifié par Mathias : machine, utilisateur, répertoire, version, ressources et accès. Les exercices mutateurs attendent une cible autorisée ; les essais WSL de Codex ne la qualifient pas.
+Le poste de contrôle prévu est Fedora 45. Reprendre un environnement personnel déjà qualifié et une variante nouvelle bornée ; identifier ce qui peut être réutilisé et ce qui doit être revalidé. Si une reconstruction est demandée, employer une cible neuve distincte et conserver l’ancienne. L’hôte, la VM invitée, la version et l’aide autorisée sont explicités avant l’épreuve. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici. La VM invitée cible reste Rocky Linux 10.2 ; sa qualification est à vérifier avant cet exercice.
 
 ## 7. Travail personnel
 
-Proposer et réaliser une solution à un scénario nouveau ; demander seulement le niveau d’aide nécessaire et expliquer tes décisions. Après les modules précédents, recevoir une nouvelle révision applicative identifiée et un symptôme borné différent de l’exemple. Proposer la livraison, la vérifier puis diagnostiquer avec une aide limitée. Conserver la première proposition avant toute correction.
+Proposer et réaliser une solution à un scénario nouveau ; demander seulement le niveau d’aide nécessaire et expliquer tes décisions. Conserver la première proposition avant toute correction.
 
 ## 8. Contraintes
 
@@ -44,7 +44,12 @@ Application fictive sans authentification utilisateur ; accès local ; PostgreSQ
 
 ## 10. Vérifications à effectuer
 
-Expliquer le composant et son rôle, confronter attendu/observé, vérifier un ticket identifié, son titre et son état. Chaque contrôle doit appartenir à ta cible, ta version et ton exécution. Signaler ce qui n’a pas pu être testé.
+- Proposer sa démarche et ses risques avant l’aide, puis adapter la méthode à la variante nouvelle.
+- Montrer un résultat technique, un diagnostic représentatif et une explication de ses choix ; les sorties copiées du laboratoire Codex ne sont pas des preuves personnelles.
+- Déclarer l’assistance reçue et les points non vérifiés ; un L3 exige une adaptation ou un diagnostic nouveau avec aide limitée.
+- Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
+
+Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
 
 ## 11. Résultat attendu
 
@@ -56,7 +61,9 @@ Recopier une référence puis revendiquer L3 ; cacher l’aide reçue ; inventer
 
 ## 13. Démarche de diagnostic
 
-Décrire le blocage et les observations avant de demander une correction ; conserver ce qui a fonctionné et revoir une hypothèse à la fois. Noter symptôme, hypothèse, contrôle discriminant, cause observée ou encore inconnue, correction et test final.
+La difficulté est une variante nouvelle, pas une panne forcée. Présenter les faits et ses hypothèses avant toute aide, choisir le test le plus discriminant et défendre la correction ; revalider le besoin utilisateur et déclarer ce qui n’a pas été couvert.
+
+Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
 
 ## 14. Preuves à conserver
 

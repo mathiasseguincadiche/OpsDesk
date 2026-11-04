@@ -20,15 +20,17 @@ La CI formalise des contrôles déjà compris ; la livraison déplace un artefac
 
 ## 5. Prérequis
 
-Exercice 07 compris et résultats utiles disponibles ; pré-check du laboratoire à refaire avant une action. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Procédure manuelle de test et de livraison comprise, artefact identifié et cible de validation autorisée. L’étude K3s est disponible ; une livraison conteneur sur la cible retenue reste possible si K3s n’a pas encore été qualifié. Ne pas contourner un blocage en prétendant un déploiement de cluster. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
 
 ## 6. Environnement et matériel
 
-Laboratoire personnel identifié par Mathias : machine, utilisateur, répertoire, version, ressources et accès. Les exercices mutateurs attendent une cible autorisée ; les essais WSL de Codex ne la qualifient pas.
+Le poste de contrôle prévu est Fedora 45. Les sources personnelles sont conservées dans le dépôt GitHub principal du projet. Identifier séparément le runner choisi et la VM Rocky Linux 10.2 cible sous KVM ; un runner hébergé n’accède pas implicitement au laboratoire local. La cible de livraison, son accès et ses permissions doivent être proposés et vérifiés avant tout déploiement. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
+
+La chaîne étudiée est GitHub Actions, avec GHCR pour un artefact identifié et Trivy pour conserver le verdict de scan. Définir permissions minimales, secrets, rétention des preuves et arrêt sur échec. Le diagnostic du contrat de preuve historique ci-business.json/business-smoke.json reste un cas à expliquer, pas un pipeline à recopier.
 
 ## 7. Travail personnel
 
-Définir déclencheurs, jobs, dépendances, permissions, variables, artefacts et critères ; construire ta chaîne à partir de la procédure manuelle vérifiée. Construis une première chaîne GitHub Actions. Étudie le cas historique où le smoke écrit ci-business.json mais la reprise lit business-smoke.json : explique quel ticket est utilisé et comment prouver la correction, sans recopier le pipeline. Conserver la première proposition avant toute correction.
+Définir déclencheurs, jobs, dépendances, permissions, variables, artefacts et critères ; construire ta chaîne à partir de la procédure manuelle vérifiée. La chaîne étudiée est GitHub Actions, avec GHCR pour un artefact identifié et Trivy pour conserver le verdict de scan. Définir permissions minimales, secrets, rétention des preuves et arrêt sur échec. Le diagnostic du contrat de preuve historique ci-business.json/business-smoke.json reste un cas à expliquer, pas un pipeline à recopier. Conserver la première proposition avant toute correction.
 
 ## 8. Contraintes
 
@@ -44,7 +46,12 @@ Application fictive sans authentification utilisateur ; accès local ; PostgreSQ
 
 ## 10. Vérifications à effectuer
 
-Expliquer le composant et son rôle, confronter attendu/observé, vérifier un ticket identifié, son titre et son état. Chaque contrôle doit appartenir à ta cible, ta version et ton exécution. Signaler ce qui n’a pas pu être testé.
+- Relier commit, run, jobs et artefact testé ; conserver le premier échec utile et vérifier que la preuve appartient au run courant.
+- Promouvoir le même artefact vers la cible retenue, avec accès justifiés et accord d’environnement ; ne pas reconstruire sous le même tag entre test et livraison.
+- Contrôler version et données après livraison et après le retour prévu ; un job de succès sans contrôle de la cible ne vaut pas déploiement.
+- Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
+
+Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
 
 ## 11. Résultat attendu
 
@@ -56,7 +63,9 @@ Déployer depuis un runner public en supposant un accès au KVM local ; secrets 
 
 ## 13. Démarche de diagnostic
 
-Nommer job, étape, commande, message, hypothèse et test final ; distinguer refus d’accès, variable absente, test métier et mauvais artefact. Noter symptôme, hypothèse, contrôle discriminant, cause observée ou encore inconnue, correction et test final.
+Si le pipeline passe mais la cible affiche une autre version, distinguer artefact reconstruit, mauvais environnement et preuve périmée. Comparer commit/run/digest à l’identité servie ; corriger le point démontré et refaire le contrôle utilisateur.
+
+Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
 
 ## 14. Preuves à conserver
 

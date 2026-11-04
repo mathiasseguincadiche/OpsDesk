@@ -4,6 +4,14 @@
 
 Commencer par [le contrat applicatif](../contrat-applicatif.md), puis suivre cet ordre. Les anciens fichiers InfraOps Codex sont conservés comme références à examiner après sa propre tentative.
 
+## Laboratoire et plateforme de travail
+
+L’hôte prévu est **Fedora 45**, avec KVM/QEMU et libvirt ; le système invité cible est **Rocky Linux 10.2**. Cette cible reste prévue tant que les pré-checks et compatibilités exactes du [guide de laboratoire](../laboratoire-fedora-kvm-rocky.md) ne sont pas vérifiés. Les outils de contrôle Terraform/Ansible sont distingués des services exécutés dans la VM. Les exercices 01 et 02 ne demandent ni VM ni installation. Les ressources restent à dimensionner d’après les mesures du PC, sans multiplier les VM.
+
+**GitHub est l’unique plateforme active du projet.** GitLab reste en l’état ; ses références historiques sont facultatives. Aucune synchronisation ni double gestion quotidienne n’est demandée. AWS et les variantes cloud restent des objectifs distincts à justifier et à autoriser, pas un prérequis du laboratoire local.
+
+Docker, GitHub Actions/GHCR et Trivy sont reliés aux modules 06/08 ; Prometheus/Grafana et un test k6 borné au module 09. Les outils sont à vérifier, préparer et pratiquer personnellement.
+
 | Ordre | Exercice | Responsabilité |
 |---|---|---|
 | 01 | [01 — Comprendre l’application](01-application.md) | Construire |

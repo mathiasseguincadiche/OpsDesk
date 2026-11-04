@@ -11,7 +11,7 @@ Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle 
 
 **Action personnelle :** Mathias propose la méthode, écrit les configurations nécessaires, exécute et explique. Niveau d’aide initial : guidé.
 
-**Contrôle :** Un ticket identifié, son titre et son état et le résultat propre au pilier sont vérifiés ; confronter attendu/observé et diagnostiquer un écart représentatif.
+**Contrôle :** Expliquer le besoin et le schéma personnel ; distinguer Fedora hôte et Rocky invité. Vérifier réseau/SSH/droits/protections sur la VM réelle, puis expliquer un refus attendu. La présence d’un dessin ou le démarrage d’une VM ne suffit pas. Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL.
 
 **Résultat/preuve/niveau :** NON EXÉCUTÉ / aucune preuve personnelle / NON ÉVALUÉ. Après exécution : date, environnement, version/commit, action, résultat, difficulté, correction, test final, aide reçue.
 
@@ -26,7 +26,7 @@ Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle 
 
 **Action personnelle :** Mathias propose la méthode, écrit les configurations nécessaires, exécute et explique. Niveau d’aide initial : guidé.
 
-**Contrôle :** Un ticket identifié, son titre et son état et le résultat propre au pilier sont vérifiés ; confronter attendu/observé et diagnostiquer un écart représentatif.
+**Contrôle :** Relier chaque objet Terraform à une ressource réellement gérée et à son state protégé ; expliquer le plan puis le résultat observé. Montrer une configuration Ansible sur la bonne VM, la seconde passe interprétée et le paramètre ou service effectivement conforme. Un contrat local terraform_data ou changed=0 seul ne valide pas l’automatisation. Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL.
 
 **Résultat/preuve/niveau :** NON EXÉCUTÉ / aucune preuve personnelle / NON ÉVALUÉ. Après exécution : date, environnement, version/commit, action, résultat, difficulté, correction, test final, aide reçue.
 
@@ -41,7 +41,7 @@ Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle 
 
 **Action personnelle :** Mathias propose la méthode, écrit les configurations nécessaires, exécute et explique. Niveau d’aide initial : guidé.
 
-**Contrôle :** Un ticket identifié, son titre et son état et le résultat propre au pilier sont vérifiés ; confronter attendu/observé et diagnostiquer un écart représentatif.
+**Contrôle :** Relier commit, tests, run et artefact identifiable ; expliquer permissions et accès à la cible. Promouvoir le même artefact sans reconstruction cachée, contrôler la version servie et les données, puis démontrer un retour borné compatible avec le schéma. Un fichier CI présent ou un job textuel de succès ne prouve pas une livraison. Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL. GHCR et Trivy font partie des contrôles à préparer, sans publier automatiquement une image ou un dépôt.
 
 **Résultat/preuve/niveau :** NON EXÉCUTÉ / aucune preuve personnelle / NON ÉVALUÉ. Après exécution : date, environnement, version/commit, action, résultat, difficulté, correction, test final, aide reçue.
 
@@ -56,7 +56,7 @@ Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle 
 
 **Action personnelle :** Mathias propose la méthode, écrit les configurations nécessaires, exécute et explique. Niveau d’aide initial : guidé.
 
-**Contrôle :** Un ticket identifié, son titre et son état et le résultat propre au pilier sont vérifiés ; confronter attendu/observé et diagnostiquer un écart représentatif.
+**Contrôle :** Justifier un signal métier, montrer collecte/visualisation et règle avec destinataire autorisé ; distinguer défaut de collecte et défaut du service. Pour un symptôme borné, formuler deux hypothèses, exécuter un contrôle discriminant puis corréler métriques, journaux et résultat utilisateur. Aucune panne destructive n’est requise. Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL.
 
 **Résultat/preuve/niveau :** NON EXÉCUTÉ / aucune preuve personnelle / NON ÉVALUÉ. Après exécution : date, environnement, version/commit, action, résultat, difficulté, correction, test final, aide reçue.
 
@@ -71,7 +71,7 @@ Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle 
 
 **Action personnelle :** Mathias propose la méthode, écrit les configurations nécessaires, exécute et explique. Niveau d’aide initial : guidé.
 
-**Contrôle :** Un ticket identifié, son titre et son état et le résultat propre au pilier sont vérifiés ; confronter attendu/observé et diagnostiquer un écart représentatif.
+**Contrôle :** Préparer une maintenance limitée avec état initial, compatibilité et retour. Contrôler une archive cohérente puis restaurer sur une cible distincte ; retrouver les mêmes références métier et expliquer les mesures de perte/durée. Un backup créé, un conteneur redémarré ou un disque virtuel sur le même PC ne prouve pas à lui seul une reprise utile ou hors site. Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL.
 
 **Résultat/preuve/niveau :** NON EXÉCUTÉ / aucune preuve personnelle / NON ÉVALUÉ. Après exécution : date, environnement, version/commit, action, résultat, difficulté, correction, test final, aide reçue.
 

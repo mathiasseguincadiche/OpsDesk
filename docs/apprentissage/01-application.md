@@ -20,15 +20,15 @@ Un contrat applicatif décrit ce que le logiciel exige et garantit ; il ne chois
 
 ## 5. Prérequis
 
-Aucun module technique préalable ; lire le contrat applicatif et les règles de responsabilité. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Aucun module technique préalable. Lire le contrat applicatif et les règles de responsabilité ; disposer d’un outil de dessin et noter ses questions. Aucun logiciel d’infrastructure n’est supposé installé. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
 
 ## 6. Environnement et matériel
 
-Lecture du contrat et dessin, sans installation ni déploiement.
+Lecture du contrat et dessin, sans installation ni déploiement. Le poste hôte prévu est Fedora 45 ; aucune VM ni authentification à un laboratoire historique ne sont requises pour comprendre l’application.
 
 ## 7. Travail personnel
 
-Lire docs/contrat-applicatif.md ; distinguer code métier, dépendances et responsabilités d’exploitation. Dessine le trajet d’une création de ticket ; relève dans le contrat le rôle de PostgreSQL, les paramètres attendus et l’absence d’authentification. Ne lance rien pour cette première lecture. Conserver la première proposition avant toute correction.
+Lire docs/contrat-applicatif.md ; distinguer code métier, dépendances et responsabilités d’exploitation. Conserver la première proposition avant toute correction. Présenter ta reformulation avant de lire un schéma de référence.
 
 ## 8. Contraintes
 
@@ -44,7 +44,12 @@ Application fictive sans authentification utilisateur ; accès local ; PostgreSQ
 
 ## 10. Vérifications à effectuer
 
-Expliquer le composant et son rôle, confronter attendu/observé, vérifier un ticket identifié, son titre et son état. Chaque contrôle doit appartenir à ta cible, ta version et ton exécution. Signaler ce qui n’a pas pu être testé.
+- Présenter le besoin utilisateur, les fonctions disponibles et deux limites réelles du logiciel sans confondre application et hébergement.
+- Tracer une requête jusqu’à la donnée durable ; distinguer code fourni, paramètres, secrets et données.
+- Poser les questions techniques qui restent ouvertes ; aucun test d’infrastructure n’est nécessaire à cette première lecture.
+- Expliquer comment un ticket identifié, son titre, son état et sa relecture dans PostgreSQL seront contrôlés plus tard, sans inventer de sortie ou de capture.
+
+Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
 
 ## 11. Résultat attendu
 
@@ -56,7 +61,9 @@ Confondre le laboratoire de Codex avec une architecture personnelle déjà chois
 
 ## 13. Démarche de diagnostic
 
-Suivre une action utilisateur et nommer chaque composant qui peut la bloquer. Noter symptôme, hypothèse, contrôle discriminant, cause observée ou encore inconnue, correction et test final.
+Si deux documents semblent décrire des capacités différentes, comparer leur version et la source du contrat. Distinguer une ancienne preuve Codex d’une fonction actuelle ; noter la contradiction au lieu d’inventer un résultat.
+
+Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
 
 ## 14. Preuves à conserver
 

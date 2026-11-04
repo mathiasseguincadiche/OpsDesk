@@ -20,15 +20,15 @@ Linux porte des processus, fichiers et services avec des droits. DNS résout un 
 
 ## 5. Prérequis
 
-Exercice 02 compris et résultats utiles disponibles ; pré-check du laboratoire à refaire avant une action. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Proposition d’architecture issue de l’exercice 02 ; accès autorisé au PC et résultats du pré-check hôte. Vérifier la disponibilité officielle de Rocky Linux 10.2 et son média avant d’en planifier l’installation. Aucun outil de virtualisation ni VM n’est considéré prêt sans contrôle. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
 
 ## 6. Environnement et matériel
 
-Laboratoire personnel identifié par Mathias : machine, utilisateur, répertoire, version, ressources et accès. Les exercices mutateurs attendent une cible autorisée ; les essais WSL de Codex ne la qualifient pas.
+Le pré-check de l’hôte Fedora 45 se fait sur le PC personnel, pas dans WSL ni dans une VM. La première VM cible Rocky Linux 10.2 est préparée personnellement sous KVM/QEMU/libvirt uniquement après qualification du média et des prérequis. Identifier ensuite séparément l’hôte, la VM, son utilisateur, son réseau et son stockage. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 ## 7. Travail personnel
 
-Identifier le laboratoire autorisé ; préparer le système et l’accès ordinaire ; vérifier DNS, routes, écoute, permissions et protections nécessaires. Sur ton laboratoire identifié, vérifie séparément nom, route, écoute et droits. Prépare un compte ordinaire et l’accès requis au service ; garde les protections actives. Conserver la première proposition avant toute correction.
+Identifier le laboratoire autorisé ; préparer le système et l’accès ordinaire ; vérifier DNS, routes, écoute, permissions et protections nécessaires. Conserver la première proposition avant toute correction.
 
 ## 8. Contraintes
 
@@ -44,7 +44,12 @@ Application fictive sans authentification utilisateur ; accès local ; PostgreSQ
 
 ## 10. Vérifications à effectuer
 
-Expliquer le composant et son rôle, confronter attendu/observé, vérifier un ticket identifié, son titre et son état. Chaque contrôle doit appartenir à ta cible, ta version et ton exécution. Signaler ce qui n’a pas pu être testé.
+- Confirmer l’identité et la version de l’hôte puis de l’invité ; relever CPU, mémoire, disque et outils effectivement disponibles.
+- Distinguer réseau prévu, route, résolution, écoute et autorisation : un résultat positif de l’un ne valide pas les autres.
+- Vérifier SSH, utilisateur et permissions attendues ; relever les états de SELinux et firewalld sans les désactiver.
+- Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
+
+Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
 
 ## 11. Résultat attendu
 
@@ -56,7 +61,9 @@ Désactiver SELinux/le pare-feu en bloc ; utiliser root partout ; diagnostiquer 
 
 ## 13. Démarche de diagnostic
 
-Observer utilisateur, processus/service, résolution, trajet, écoute puis autorisation ; changer une chose après confirmation. Noter symptôme, hypothèse, contrôle discriminant, cause observée ou encore inconnue, correction et test final.
+Si SSH échoue, distinguer route ou nom incorrect, absence d’écoute et refus d’authentification. Contrôler successivement identité, trajet, écoute puis droits ; un accès par IP mais pas par nom oriente vers la résolution, sans la prouver à lui seul.
+
+Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
 
 ## 14. Preuves à conserver
 
