@@ -20,15 +20,15 @@ L’architecture traduit un besoin en ressources, flux et frontières de confian
 
 ## 5. Prérequis
 
-Exercice 01 compris et résultats utiles disponibles ; pré-check du laboratoire à refaire avant une action. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Exercice 01 compris et besoins applicatifs reformulés. Connaître les contraintes de données et d’accès ; relever les ressources matérielles réelles ou les marquer NON VÉRIFIÉES. L’architecture sera une proposition à justifier. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
 
 ## 6. Environnement et matériel
 
-Lecture du contrat et dessin, sans installation ni déploiement.
+Dessin et analyse à partir du contrat, sans création de ressource. Prévoir un hôte Fedora 45 avec KVM/QEMU et libvirt, et Rocky Linux 10.2 comme système invité cible ; disponibilité exacte, compatibilité et ressources restent à qualifier dans le guide de laboratoire. Distinguer le schéma personnel de la référence historique Codex.
 
 ## 7. Travail personnel
 
-Produire une proposition de cible, les flux/protocoles, l’accès opérateur et les limites ; justifier ressources et stockage. Propose une cible simple pour le service IT ; nomme accès utilisateur/opérateur, application et stockage. Explique les ressources et les points de panne sans adopter le schéma Codex comme réponse imposée. Conserver la première proposition avant toute correction.
+Produire une proposition de cible, les flux/protocoles, l’accès opérateur et les limites ; justifier ressources et stockage. Conserver la première proposition avant toute correction. Présenter ta reformulation avant de lire un schéma de référence.
 
 ## 8. Contraintes
 
@@ -44,7 +44,12 @@ Application fictive sans authentification utilisateur ; accès local ; PostgreSQ
 
 ## 10. Vérifications à effectuer
 
-Expliquer le composant et son rôle, confronter attendu/observé, vérifier un ticket identifié, son titre et son état. Chaque contrôle doit appartenir à ta cible, ta version et ton exécution. Signaler ce qui n’a pas pu être testé.
+- Associer chaque composant proposé à un besoin du contrat ; identifier hôte, VM, application et données sans multiplier les machines.
+- Expliquer les flux autorisés, les accès refusés et l’emplacement de chaque donnée durable.
+- Comparer une alternative utile et indiquer le coût en ressources, le point de panne et la méthode de reconstruction à vérifier.
+- Expliquer comment un ticket identifié, son titre, son état et sa relecture dans PostgreSQL seront contrôlés plus tard, sans inventer de sortie ou de capture.
+
+Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
 
 ## 11. Résultat attendu
 
@@ -56,7 +61,9 @@ Assimiler namespace, réseau conteneur et isolation de machines ; oublier où vi
 
 ## 13. Démarche de diagnostic
 
-Partir du symptôme utilisateur et traverser client, point d’entrée, application puis stockage. Noter symptôme, hypothèse, contrôle discriminant, cause observée ou encore inconnue, correction et test final.
+Si le schéma paraît répondre au besoin mais qu’un accès reste inexplicable, distinguer flux manquant et dépendance oubliée. Suivre une requête et demander où vit sa donnée durable avant d’ajouter un composant.
+
+Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
 
 ## 14. Preuves à conserver
 

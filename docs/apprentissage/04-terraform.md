@@ -20,15 +20,15 @@ Terraform compare la configuration au state et à l’état distant pour calcule
 
 ## 5. Prérequis
 
-Exercice 03 compris et résultats utiles disponibles ; pré-check du laboratoire à refaire avant une action. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Accès libvirt et laboratoire identifiés à l’exercice 03 ; versions de Terraform et du fournisseur vérifiées dans le guide. Distinguer ressource existante, ressource d’essai à créer et ressource déjà gérée. Pas de configuration complète fournie à recopier. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
 
 ## 6. Environnement et matériel
 
-Laboratoire personnel identifié par Mathias : machine, utilisateur, répertoire, version, ressources et accès. Les exercices mutateurs attendent une cible autorisée ; les essais WSL de Codex ne la qualifient pas.
+Le poste de contrôle prévu est Fedora 45 ; les ressources à gérer sont des ressources KVM/libvirt identifiées du laboratoire. Terraform et la version du fournisseur libvirt choisi doivent être vérifiés séparément. La VM Rocky Linux 10.2 est la cible ; une VM créée manuellement n’appartient pas automatiquement au state Terraform. Ne pas adopter, remplacer ou supprimer une ressource existante par supposition. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 ## 7. Travail personnel
 
-Choisir le fournisseur du laboratoire autorisé ; écrire ressources/variables/backend ; valider et lire le plan avant tout apply personnel. Écris les ressources du laboratoire autorisé et explique chaque différence du plan. Montre que le state correspond à la bonne cible avant ton apply. Conserver la première proposition avant toute correction.
+Choisir le fournisseur du laboratoire autorisé ; écrire ressources/variables/backend ; valider et lire le plan avant tout apply personnel. Conserver la première proposition avant toute correction.
 
 ## 8. Contraintes
 
@@ -44,7 +44,12 @@ Application fictive sans authentification utilisateur ; accès local ; PostgreSQ
 
 ## 10. Vérifications à effectuer
 
-Expliquer le composant et son rôle, confronter attendu/observé, vérifier un ticket identifié, son titre et son état. Chaque contrôle doit appartenir à ta cible, ta version et ton exécution. Signaler ce qui n’a pas pu être testé.
+- Expliquer le fournisseur, sa version, l’URI libvirt et les ressources visées ; chaque différence du plan doit correspondre au laboratoire autorisé.
+- Après son intervention personnelle, rapprocher l’identifiant réel de la ressource et son état du plan lu ; un terraform_data local ne vaut pas création de VM.
+- Rejouer le plan sans changement voulu, interpréter le résultat et protéger le state ; ne pas publier un state pour prouver la réussite.
+- Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
+
+Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
 
 ## 11. Résultat attendu
 
@@ -56,7 +61,9 @@ Confondre validation syntaxique et ressource créée ; versionner le state ; for
 
 ## 13. Démarche de diagnostic
 
-Localiser l’erreur entre syntaxe, provider/authentification, droits, quota ou dérive ; ne pas supprimer le state comme premier réflexe. Noter symptôme, hypothèse, contrôle discriminant, cause observée ou encore inconnue, correction et test final.
+Si le plan ne vise pas la VM attendue, distinguer mauvais workspace/backend, mauvais URI libvirt et ressource non gérée. Lire la cible et les identifiants avant toute correction ; ne pas effacer le state, importer ou détruire une VM pour faire disparaître l’écart.
+
+Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
 
 ## 14. Preuves à conserver
 

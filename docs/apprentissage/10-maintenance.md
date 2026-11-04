@@ -20,15 +20,15 @@ Day-2 désigne les opérations après la première installation : mises à jour,
 
 ## 5. Prérequis
 
-Exercice 09 compris et résultats utiles disponibles ; pré-check du laboratoire à refaire avant une action. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Supervision minimale et contrôle métier disponibles, composant à maintenir identifié. Lire compatibilité, données durables et conditions de retour avant la maintenance. Une dépendance supposée à jour n’est pas un prérequis vérifié. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
 
 ## 6. Environnement et matériel
 
-Laboratoire personnel identifié par Mathias : machine, utilisateur, répertoire, version, ressources et accès. Les exercices mutateurs attendent une cible autorisée ; les essais WSL de Codex ne la qualifient pas.
+Le poste de contrôle prévu est Fedora 45. Identifier la VM Rocky Linux 10.2, le composant et la version concernés par une maintenance limitée. Préparer état initial, données témoins, accès, espace, capacité de retour et risque. Aucun changement de paquets, de service ou de version n’est implicite dans la lecture de cet exercice. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 ## 7. Travail personnel
 
-Choisir une maintenance proportionnée ; préparer compatibilité, état initial et retour ; l’exécuter personnellement sur la cible autorisée puis contrôler. Choisis une maintenance limitée de ton environnement ; prépare le contrôle de ticket avant et après. Aucun patch réel n’est déclenché par la lecture de la fiche. Conserver la première proposition avant toute correction.
+Choisir une maintenance proportionnée ; préparer compatibilité, état initial et retour ; l’exécuter personnellement sur la cible autorisée puis contrôler. Conserver la première proposition avant toute correction.
 
 ## 8. Contraintes
 
@@ -44,7 +44,12 @@ Application fictive sans authentification utilisateur ; accès local ; PostgreSQ
 
 ## 10. Vérifications à effectuer
 
-Expliquer le composant et son rôle, confronter attendu/observé, vérifier un ticket identifié, son titre et son état. Chaque contrôle doit appartenir à ta cible, ta version et ton exécution. Signaler ce qui n’a pas pu être testé.
+- Relever version, état initial, risque et point de retour du seul composant choisi ; vérifier les conditions de compatibilité avant son changement.
+- Comparer contrôle technique et invariant métier avant/après ; lire les journaux utiles et rechercher un effet indésirable.
+- Expliquer ce qu’un retour de version peut rétablir et ce qui nécessite une restauration de données ; garder les limites et l’aide reçue.
+- Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
+
+Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
 
 ## 11. Résultat attendu
 
@@ -56,7 +61,9 @@ Mettre tout à jour pour rendre un scan vert ; confondre retour d’image et ret
 
 ## 13. Démarche de diagnostic
 
-Comparer le premier écart à l’état de référence, isoler une cause et confirmer le retour avec le parcours témoin. Noter symptôme, hypothèse, contrôle discriminant, cause observée ou encore inconnue, correction et test final.
+Si le contrôle échoue après maintenance, comparer la seule couche changée avec l’état initial : incompatibilité de version, paramètre modifié ou permission. Vérifier la cause avant un retour ; un retour d’image ne restaure pas un ancien schéma DB.
+
+Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
 
 ## 14. Preuves à conserver
 

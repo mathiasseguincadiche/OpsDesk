@@ -20,15 +20,15 @@ Diagnostiquer consiste à éliminer des hypothèses avec des vérifications disc
 
 ## 5. Prérequis
 
-Exercice 11 compris et résultats utiles disponibles ; pré-check du laboratoire à refaire avant une action. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Mécanismes précédents compris, observations et accès nécessaires disponibles sur une cible isolée. Définir le symptôme et le contrôle utilisateur attendu avant de choisir un outil ou une modification. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
 
 ## 6. Environnement et matériel
 
-Laboratoire personnel identifié par Mathias : machine, utilisateur, répertoire, version, ressources et accès. Les exercices mutateurs attendent une cible autorisée ; les essais WSL de Codex ne la qualifient pas.
+Le poste de contrôle prévu est Fedora 45. Utiliser une copie ou une cible de laboratoire explicitement isolée et identifiée, avec le composant concerné et un retour prévu. Observer d’abord un symptôme disponible ; proposer un écart de configuration réversible seulement si une expérience contrôlée est nécessaire et autorisée. Ne pas modifier le réseau principal du PC. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici. La VM invitée cible reste Rocky Linux 10.2 ; sa qualification est à vérifier avant cet exercice.
 
 ## 7. Travail personnel
 
-Proposer une hypothèse, collecter les faits puis corriger le minimum sur un incident isolé autorisé ; conserver la chronologie et revalider. À partir d’un symptôme nouveau de ticket inaccessible ou non enregistrable, propose deux hypothèses et un test pour les départager ; ne provoque aucune panne sans cible et accord. Conserver la première proposition avant toute correction.
+Proposer une hypothèse, collecter les faits puis corriger le minimum sur un incident isolé autorisé ; conserver la chronologie et revalider. Conserver la première proposition avant toute correction.
 
 ## 8. Contraintes
 
@@ -44,7 +44,12 @@ Application fictive sans authentification utilisateur ; accès local ; PostgreSQ
 
 ## 10. Vérifications à effectuer
 
-Expliquer le composant et son rôle, confronter attendu/observé, vérifier un ticket identifié, son titre et son état. Chaque contrôle doit appartenir à ta cible, ta version et ton exécution. Signaler ce qui n’a pas pu être testé.
+- Formuler au moins deux hypothèses plausibles, ordonner les contrôles et expliquer quel résultat départagerait les hypothèses.
+- Distinguer cause confirmée, fait observé et cause encore inconnue ; modifier un seul point après justification.
+- Revalider le service et l’invariant utilisateur après correction, puis contrôler le retour et l’absence de régression dans le périmètre testé.
+- Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
+
+Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
 
 ## 11. Résultat attendu
 
@@ -56,7 +61,9 @@ Réinstaller avant de lire les logs ; provoquer une panne hors périmètre ; app
 
 ## 13. Démarche de diagnostic
 
-Utiliser symptôme→couche→faits→hypothèse→test→correction→contrôle ; demander une aide précise si une donnée manque. Noter symptôme, hypothèse, contrôle discriminant, cause observée ou encore inconnue, correction et test final.
+Partir du symptôme exact et de son heure. Pour un accès impossible, départager refus de connexion et refus applicatif ; pour une donnée absente, départager requête, mauvais environnement et persistance. Choisir un test discriminant puis confirmer ou laisser la cause inconnue.
+
+Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
 
 ## 14. Preuves à conserver
 

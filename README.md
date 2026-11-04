@@ -1,5 +1,13 @@
 # OpsDesk — un service de tickets pour apprendre l’InfraOps
 
+## Parcours actif et laboratoire personnel
+
+Commencer par [l’exercice personnel V4.4 n° 1 — comprendre l’application](docs/apprentissage/01-application.md) et [le contrat applicatif](docs/contrat-applicatif.md). Les [13 exercices prioritaires](docs/apprentissage/README.md) sont distincts des supports théoriques et preuves historiques conservés. Les corrigés se consultent après une tentative ; les cinq évaluations personnelles sont dans `docs/apprentissage/evaluations.md`.
+
+Le laboratoire prévu est **Fedora 45 hôte → KVM/QEMU/libvirt → Rocky Linux 10.2 invité**. Les exercices 01/02 se font en lecture et dessin ; pour la préparation technique, lire [le guide de laboratoire et ses contrôles](docs/laboratoire-fedora-kvm-rocky.md). Aucune compatibilité, installation ou VM personnelle n’est validée par les essais historiques Ubuntu/WSL de Codex. Une version ou un contrôle non vérifié reste signalé ; aucune substitution silencieuse de Rocky Linux n’est autorisée.
+
+GitHub est l’unique plateforme active de ce parcours. GitLab est laissé en l’état ; ses anciennes références sont historiques et facultatives, sans synchronisation ni second flux quotidien.
+
 Un collaborateur ouvre une demande IT, l’équipe la consulte, la prend en charge puis la clôture. OpsDesk fournit une petite interface web, une API et une persistance PostgreSQL pour rendre ce parcours vérifiable.
 
 **V4.4 : application et tests fournis par Codex ; infrastructure à concevoir et réaliser personnellement par Mathias.** Les anciennes configurations et preuves V4.2 sont conservées comme références assistées. Elles ne valident aucune compétence personnelle.

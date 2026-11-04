@@ -20,15 +20,15 @@ Une sauvegarde doit permettre une restauration utile. Un dump, ses médias, la c
 
 ## 5. Prérequis
 
-Exercice 10 compris et résultats utiles disponibles ; pré-check du laboratoire à refaire avant une action. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Données témoins connues et état métier vérifié, source identifiée, destination distincte et clé privée disponibles selon la stratégie proposée. Vérifier l’espace et les droits avant l’archivage, puis les prérequis de reconstruction avant la reprise. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
 
 ## 6. Environnement et matériel
 
-Laboratoire personnel identifié par Mathias : machine, utilisateur, répertoire, version, ressources et accès. Les exercices mutateurs attendent une cible autorisée ; les essais WSL de Codex ne la qualifient pas.
+Identifier la VM source et une cible de reprise distincte, créée seulement lorsqu’elle est utile et selon les ressources vérifiées du PC Fedora 45/KVM. Ne pas restaurer sur la source. Relever version applicative, base, médias éventuels, configuration privée, emplacement d’archive et clés nécessaires. Un second disque virtuel sur le même PC n’est pas une sauvegarde hors site. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici. La VM invitée cible reste Rocky Linux 10.2 ; sa qualification est à vérifier avant cet exercice.
 
 ## 7. Travail personnel
 
-Définir données, cohérence, chiffrement, destination, rétention et clé ; écrire ta procédure puis restaurer personnellement sur une cible isolée. Définis ce qui doit être retrouvé pour un ticket témoin, puis écris et pratique ta sauvegarde/restauration sur une cible distincte. Le script historique reste un corrigé après tentative. Conserver la première proposition avant toute correction.
+Définir données, cohérence, chiffrement, destination, rétention et clé ; écrire ta procédure puis restaurer personnellement sur une cible isolée. Conserver la première proposition avant toute correction.
 
 ## 8. Contraintes
 
@@ -44,7 +44,12 @@ Application fictive sans authentification utilisateur ; accès local ; PostgreSQ
 
 ## 10. Vérifications à effectuer
 
-Expliquer le composant et son rôle, confronter attendu/observé, vérifier un ticket identifié, son titre et son état. Chaque contrôle doit appartenir à ta cible, ta version et ton exécution. Signaler ce qui n’a pas pu être testé.
+- Vérifier que l’archive, ses versions, ses données et sa clé permettent la reconstruction ; contrôler intégrité et cohérence, sans écraser une archive existante.
+- Restaurer sur une cible distincte et vérifier l’accès au service ainsi que les mêmes références métier ; une archive créée n’est pas une preuve de reprise.
+- Mesurer les bornes de capture, la perte de données et la durée de retour utiles ; distinguer RPO/RTO visés et réellement observés.
+- Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
+
+Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
 
 ## 11. Résultat attendu
 
@@ -56,7 +61,9 @@ Stocker clé et archive au même endroit en parlant de hors-site ; restaurer seu
 
 ## 13. Démarche de diagnostic
 
-Identifier version, archive, clé, espace, accès, ordre DB/médias et référence attendue ; arrêter sur cible ou archive ambiguë. Noter symptôme, hypothèse, contrôle discriminant, cause observée ou encore inconnue, correction et test final.
+Si le service restauré démarre mais qu’une donnée manque, départager mauvais point de capture, archive incomplète et média absent. Comparer référence, version et hash sur la cible de reprise ; conserver la source et la dernière archive connue.
+
+Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
 
 ## 14. Preuves à conserver
 

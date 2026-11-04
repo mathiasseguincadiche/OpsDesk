@@ -20,15 +20,17 @@ Une métrique est une mesure, un journal explique un événement et une alerte s
 
 ## 5. Prérequis
 
-Exercice 08 compris et résultats utiles disponibles ; pré-check du laboratoire à refaire avant une action. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Parcours applicatif et points de santé compris ; cible et version identifiées, collecte proposée. Vérifier les outils réellement installés et les accès autorisés. Ne pas définir une alerte à partir d’un compteur dont le sens ou la portée reste inconnu. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
 
 ## 6. Environnement et matériel
 
-Laboratoire personnel identifié par Mathias : machine, utilisateur, répertoire, version, ressources et accès. Les exercices mutateurs attendent une cible autorisée ; les essais WSL de Codex ne la qualifient pas.
+Le poste de contrôle prévu est Fedora 45. Choisir une collecte et une visualisation proportionnées au laboratoire déjà qualifié, sans créer une VM par outil. Identifier source de métriques, collecteur, destinataire d’alerte autorisé, réseau et limites de ressources. Les métriques d’une application ne signifient pas que Prometheus ou Grafana est installé. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
+
+Prévoir Prometheus pour la collecte et Grafana pour une vue utile. k6 reste un essai de charge personnel, borné sur une cible locale autorisée : choisir débit/concurrence, durée, seuil d’arrêt et mesure de latence/erreurs avant exécution. Ne pas charger une cible publique ou le PC sans limite. La VM invitée cible reste Rocky Linux 10.2 ; sa qualification est à vérifier avant cet exercice.
 
 ## 7. Travail personnel
 
-Choisir des signaux utiles ; écrire collecte, tableau et règle d’alerte ; vérifier la détection et la route autorisée sur un cas borné. Utilise les signaux applicatifs fournis et un contrôle de ticket. Relie une alerte à l’indisponibilité réelle du besoin, puis explique le retour attendu. Conserver la première proposition avant toute correction.
+Choisir des signaux utiles ; écrire collecte, tableau et règle d’alerte ; vérifier la détection et la route autorisée sur un cas borné. Prévoir Prometheus pour la collecte et Grafana pour une vue utile. k6 reste un essai de charge personnel, borné sur une cible locale autorisée : choisir débit/concurrence, durée, seuil d’arrêt et mesure de latence/erreurs avant exécution. Ne pas charger une cible publique ou le PC sans limite. Conserver la première proposition avant toute correction.
 
 ## 8. Contraintes
 
@@ -44,7 +46,12 @@ Application fictive sans authentification utilisateur ; accès local ; PostgreSQ
 
 ## 10. Vérifications à effectuer
 
-Expliquer le composant et son rôle, confronter attendu/observé, vérifier un ticket identifié, son titre et son état. Chaque contrôle doit appartenir à ta cible, ta version et ton exécution. Signaler ce qui n’a pas pu être testé.
+- Distinguer une mesure du processus, une dépendance prête et un contrôle du besoin utilisateur ; vérifier les unités, la portée et les labels.
+- Montrer collecte, visualisation utile, règle et destinataire autorisé ; un tableau sans données ou un /metrics isolé n’est pas une supervision reçue.
+- Sur un cas réversible autorisé, rapprocher signal, alerte, journaux et retour à l’état attendu ; consigner aussi les faux positifs ou contrôles non exécutés.
+- Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
+
+Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
 
 ## 11. Résultat attendu
 
@@ -56,7 +63,9 @@ Compter uniquement HTTP200 ; alerte sans destinataire ; générer un identifiant
 
 ## 13. Démarche de diagnostic
 
-Formuler le symptôme, comparer métriques/logs/événements et contrôler la dépendance suspecte sans multiplier les modifications. Noter symptôme, hypothèse, contrôle discriminant, cause observée ou encore inconnue, correction et test final.
+Si un tableau est vide, distinguer absence d’échantillons, mauvaise requête et fenêtre de temps. Vérifier la cible collectée avant le panneau. Si aucune alerte n’arrive, distinguer règle non déclenchée et routage non configuré avant de provoquer une panne.
+
+Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
 
 ## 14. Preuves à conserver
 
