@@ -2,85 +2,88 @@
 
 **Projet : OpsDesk · Pilier : Observer/diagnostiquer · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
 
-## 1. Situation professionnelle
+Révision documentaire : 2026-11-04. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.
 
-L’équipe attend des demandes IT créées, consultables et suivies sans perdre les tickets. À partir d’un symptôme nouveau de ticket inaccessible ou non enregistrable, propose deux hypothèses et un test pour les départager ; ne provoque aucune panne sans cible et accord.
+## Situation et résultat à obtenir
 
-## 2. Objectif pédagogique
+Un incident doit être réduit à des faits vérifiables avant de corriger. Le support doit pouvoir expliquer pourquoi un ticket est inaccessible et démontrer le rétablissement utile après une action limitée.
 
-Diagnostiquer et rétablir en reliant décision, action, observation et explication. Tu peux demander une explication avant chaque étape ; rédige néanmoins toi-même le schéma, la configuration et les preuves.
+À partir d’un symptôme nouveau de ticket inaccessible ou non enregistrable, propose deux hypothèses et un test pour les départager ; ne provoque aucune panne sans cible et accord.
 
-## 3. Besoin applicatif
+**Livrable attendu :** Symptôme, preuves, cause confirmée ou inconnue, correction, résultat métier et retour documentés. Le résultat est à produire, pas déjà obtenu.
 
-Un ticket identifié, son titre et son état doit rester contrôlable. Le contrat applicatif, pas une ancienne recette d’hébergement, définit les besoins du logiciel.
-
-## 4. Concepts à comprendre
+## Comprendre avant de choisir
 
 Diagnostiquer consiste à éliminer des hypothèses avec des vérifications discriminantes. Rétablir exige un contrôle utilisateur après la correction ; une commande sans erreur n’est pas la fin de l’incident.
 
-## 5. Prérequis
+Un **symptôme** est ce qui est observé ; une **hypothèse** propose une cause ; un **test discriminant** produit un résultat qui distingue plusieurs hypothèses. Le premier message d’erreur n’est pas forcément la cause racine. La chronologie et l’identité de l’environnement empêchent de rapprocher des faits provenant de machines différentes.
 
-Mécanismes précédents compris, observations et accès nécessaires disponibles sur une cible isolée. Définir le symptôme et le contrôle utilisateur attendu avant de choisir un outil ou une modification. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Par exemple, un refus de connexion indique une difficulté avant une réponse HTTP ; un refus applicatif suppose qu’une application a répondu. Un ticket absent peut venir d’une requête incorrecte, d’une mauvaise base ou d’une écriture non persistée. Choisir le contrôle qui apporte une information nouvelle réduit les modifications au hasard.
 
-## 6. Environnement et matériel
+**Micro-exercice fictif :** `/health/live` répond, `/health/ready` échoue et la création de ticket est impossible. Proposer deux hypothèses liées à PostgreSQL et un contrôle en lecture seule dont les résultats les départagent. Ne pas arrêter de service pour fabriquer le symptôme.
+
+## Préparer la bonne cible
+
+Mécanismes précédents compris, observations et accès nécessaires disponibles sur une cible isolée. Définir le symptôme et le contrôle utilisateur attendu avant de choisir un outil ou une modification.
 
 Le poste de contrôle prévu est Fedora 45. Utiliser une copie ou une cible de laboratoire explicitement isolée et identifiée, avec le composant concerné et un retour prévu. Observer d’abord un symptôme disponible ; proposer un écart de configuration réversible seulement si une expérience contrôlée est nécessaire et autorisée. Ne pas modifier le réseau principal du PC. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici. La VM invitée cible reste Rocky Linux 10.2 ; sa qualification est à vérifier avant cet exercice.
 
-## 7. Travail personnel
+Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
 
-Proposer une hypothèse, collecter les faits puis corriger le minimum sur un incident isolé autorisé ; conserver la chronologie et revalider. Conserver la première proposition avant toute correction.
+## Réaliser soi-même et demander un indice
 
-## 8. Contraintes
+1. Décrire heure, utilisateur, opération, cible et symptôme exact ; conserver les observations expurgées et l’état initial.
+2. Écrire au moins deux hypothèses et prévoir pour chaque contrôle les conclusions possibles. Collecter le fait le plus discriminant sans multiplier les outils.
+3. Corriger le seul point confirmé sur la cible autorisée ; refaire le contrôle métier, vérifier le retour et expliciter ce qui reste inconnu.
 
-Application fictive sans authentification utilisateur ; accès local ; PostgreSQL durable ; santé live/ready et version distinctes. Identifier état initial, effet attendu et retour. Un cloud payant, une exposition réelle, un réseau sensible ou une panne/destruction exige un accord ciblé ; la lecture de cette fiche n’autorise pas ces actions.
+Conserver ta première proposition avant la revue. Les indices se lisent à la demande, du moins direct au plus ciblé.
 
-## 9. Indices progressifs
+<details>
+<summary>Indice 1 — orientation</summary>
 
-**Indice :** Utiliser symptôme→couche→faits→hypothèse→test→correction→contrôle ; demander une aide précise si une donnée manque.
+Utiliser symptôme→couche→faits→hypothèse→test→correction→contrôle ; demander une aide précise si une donnée manque.
 
-**Explication ciblée, sur demande :** relier le concept à un ticket identifié, son titre et son état, avec un exemple limité et un résultat observable.
+</details>
 
-**Correction accompagnée :** montrer ta tentative et le premier écart ; Codex corrige le point précis puis te demande de revalider et d’expliquer.
+<details>
+<summary>Indice 2 — mécanisme</summary>
 
-## 10. Vérifications à effectuer
+Distinguer accès réseau, réponse applicative et accès SQL. Choisir un contrôle dont un résultat contredirait ton hypothèse ; si aucun résultat ne peut la réfuter, préciser d’abord la question.
+
+</details>
+
+<details>
+<summary>Indice 3 — correction ciblée après tentative</summary>
+
+Présenter ta tentative, l’attendu, l’observé et le premier écart. Demander l’analyse du seul point bloquant ; tu modifies ensuite ta solution, tu retestes et tu expliques la correction. Une explication limitée peut être demandée avant l’action ; aucun fichier InfraOps définitif n’est fourni à recopier. Consigner le niveau d’aide reçu.
+
+</details>
+
+## Vérifier, puis diagnostiquer
 
 - Formuler au moins deux hypothèses plausibles, ordonner les contrôles et expliquer quel résultat départagerait les hypothèses.
 - Distinguer cause confirmée, fait observé et cause encore inconnue ; modifier un seul point après justification.
 - Revalider le service et l’invariant utilisateur après correction, puis contrôler le retour et l’absence de régression dans le périmètre testé.
 - Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
 
-Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
+**Contre-test :** chercher une observation qui invaliderait l’explication retenue. Si elle existe, garder la cause inconnue ou réviser l’hypothèse. Une réinstallation ou une panne volontaire n’est pas nécessaire pour documenter ce raisonnement.
 
-## 11. Résultat attendu
+**Erreurs fréquentes :** Réinstaller avant de lire les logs ; provoquer une panne hors périmètre ; appeler cause racine la première hypothèse plausible.
 
-Symptôme, preuves, cause confirmée ou inconnue, correction, résultat métier et retour documentés. Le résultat est à produire, pas déjà obtenu.
+**Démarche en cas d’écart :** Partir du symptôme exact et de son heure. Pour un accès impossible, départager refus de connexion et refus applicatif ; pour une donnée absente, départager requête, mauvais environnement et persistance. Choisir un test discriminant puis confirmer ou laisser la cause inconnue.
 
-## 12. Erreurs fréquentes
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
 
-Réinstaller avant de lire les logs ; provoquer une panne hors périmètre ; appeler cause racine la première hypothèse plausible. En cas d’écart, conserver les faits utiles sans secret et ne pas multiplier les modifications.
+## Expliquer et capitaliser
 
-## 13. Démarche de diagnostic
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
 
-Partir du symptôme exact et de son heure. Pour un accès impossible, départager refus de connexion et refus applicatif ; pour une donnée absente, départager requête, mauvais environnement et persistance. Choisir un test discriminant puis confirmer ou laisser la cause inconnue.
+**Réutilisation :** Quel nouveau test permettrait de réfuter ton explication sur un cas proche ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
-Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
+Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication s’évaluent séparément. Aucun niveau personnel n’est attribué par cette fiche.
 
-## 14. Preuves à conserver
-
-Symptôme, preuves, cause confirmée ou inconnue, correction, résultat métier et retour documentés. Ajouter date, environnement, version/commit, action personnelle, attendu/observé, difficulté, correction et aide reçue. Ne joindre aucun secret, cookie, token ou state privé.
-
-## 15. Synthèse
-
-En quelques phrases : quel besoin as-tu couvert, quelle décision as-tu prise et quel contrôle la soutient ? Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
-
-## 16. Réutilisation des acquis
-
-Quel nouveau test permettrait de réfuter ton explication sur un cas proche ? Relier ta réponse à un autre projet sans en recopier une solution complète.
-
-## 17. Validation et autonomie
-
-Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication sont vérifiés séparément. L0=découverte ; L1=compréhension ; L2=réalisation personnelle ; L3=adaptation/diagnostic d’un cas nouveau avec aide limitée. Aucun niveau n’est attribué par la présence de la fiche.
-
-## 18. Corrigé séparé
+## Corrigé après tentative
 
 Après une première tentative, consulter [les repères de correction](corriges.md#exercice-12) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+
+[← Exercice précédent](11-sauvegarde-reprise.md) · [Retour au parcours](README.md) · [Exercice suivant →](13-autonomie.md)

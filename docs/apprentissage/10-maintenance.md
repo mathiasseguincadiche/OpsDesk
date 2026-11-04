@@ -2,85 +2,88 @@
 
 **Projet : OpsDesk · Pilier : Maintenir/rétablir · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
 
-## 1. Situation professionnelle
+Révision documentaire : 2026-11-04. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.
 
-L’équipe attend des demandes IT créées, consultables et suivies sans perdre les tickets. Choisis une maintenance limitée de ton environnement ; prépare le contrôle de ticket avant et après. Aucun patch réel n’est déclenché par la lecture de la fiche.
+## Situation et résultat à obtenir
 
-## 2. Objectif pédagogique
+Une installation qui fonctionne aujourd’hui doit pouvoir évoluer sans perte de tickets. Une maintenance limitée rend les risques, les contrôles et le retour compréhensibles avant de modifier une version.
 
-Exploiter et maintenir en reliant décision, action, observation et explication. Tu peux demander une explication avant chaque étape ; rédige néanmoins toi-même le schéma, la configuration et les preuves.
+Choisis une maintenance limitée de ton environnement ; prépare le contrôle de ticket avant et après. Aucun patch réel n’est déclenché par la lecture de la fiche.
 
-## 3. Besoin applicatif
+**Livrable attendu :** Fiche avant/action/après, risque justifié, version et vérifications ; aide reçue déclarée. Le résultat est à produire, pas déjà obtenu.
 
-Un ticket identifié, son titre et son état doit rester contrôlable. Le contrat applicatif, pas une ancienne recette d’hébergement, définit les besoins du logiciel.
-
-## 4. Concepts à comprendre
+## Comprendre avant de choisir
 
 Day-2 désigne les opérations après la première installation : mises à jour, dérive, accès, capacité et qualité des données. Une maintenance possède un état initial, un risque, un retour et un contrôle métier.
 
-## 5. Prérequis
+La maintenance Day-2 commence après la mise en service : versions, capacité, accès, dérive et qualité des données. Le périmètre utile est une couche choisie et un effet mesurable. Le point de retour doit rester disponible tant que la validation n’est pas terminée.
 
-Supervision minimale et contrôle métier disponibles, composant à maintenir identifié. Lire compatibilité, données durables et conditions de retour avant la maintenance. Une dépendance supposée à jour n’est pas un prérequis vérifié. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Un rollback d’image remplace la version applicative ; il ne remet pas la base dans son état antérieur. Un changement de schéma ou de format peut rendre le retour incompatible. Comparer avant/après le composant, sa configuration et le même ticket permet d’éviter de confondre succès de mise à jour et succès métier.
 
-## 6. Environnement et matériel
+**Question :** la version répond après maintenance, mais un ancien ticket n’est plus lisible. Quelles observations départagent un problème de format, une mauvaise base cible et une permission modifiée ?
+
+## Préparer la bonne cible
+
+Supervision minimale et contrôle métier disponibles, composant à maintenir identifié. Lire compatibilité, données durables et conditions de retour avant la maintenance. Une dépendance supposée à jour n’est pas un prérequis vérifié.
 
 Le poste de contrôle prévu est Fedora 45. Identifier la VM Rocky Linux 10.2, le composant et la version concernés par une maintenance limitée. Préparer état initial, données témoins, accès, espace, capacité de retour et risque. Aucun changement de paquets, de service ou de version n’est implicite dans la lecture de cet exercice. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
-## 7. Travail personnel
+Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
 
-Choisir une maintenance proportionnée ; préparer compatibilité, état initial et retour ; l’exécuter personnellement sur la cible autorisée puis contrôler. Conserver la première proposition avant toute correction.
+## Réaliser soi-même et demander un indice
 
-## 8. Contraintes
+1. Choisir un seul composant et justifier le besoin ; lire compatibilité et limites, identifier versions initiale/cible, accès, données et moyens de retour.
+2. Écrire ta fiche avant/action/après avec critères d’arrêt et contrôle métier ; faire revoir une incertitude avant l’intervention personnelle.
+3. Réaliser uniquement le changement autorisé, puis comparer état technique, journaux et ticket témoin. Décider de conserver ou revenir selon des faits, en préservant les preuves.
 
-Application fictive sans authentification utilisateur ; accès local ; PostgreSQL durable ; santé live/ready et version distinctes. Identifier état initial, effet attendu et retour. Un cloud payant, une exposition réelle, un réseau sensible ou une panne/destruction exige un accord ciblé ; la lecture de cette fiche n’autorise pas ces actions.
+Conserver ta première proposition avant la revue. Les indices se lisent à la demande, du moins direct au plus ciblé.
 
-## 9. Indices progressifs
+<details>
+<summary>Indice 1 — orientation</summary>
 
-**Indice :** Comparer le premier écart à l’état de référence, isoler une cause et confirmer le retour avec le parcours témoin.
+Comparer le premier écart à l’état de référence, isoler une cause et confirmer le retour avec le parcours témoin.
 
-**Explication ciblée, sur demande :** relier le concept à un ticket identifié, son titre et son état, avec un exemple limité et un résultat observable.
+</details>
 
-**Correction accompagnée :** montrer ta tentative et le premier écart ; Codex corrige le point précis puis te demande de revalider et d’expliquer.
+<details>
+<summary>Indice 2 — mécanisme</summary>
 
-## 10. Vérifications à effectuer
+Comparer le premier écart au changement réellement effectué. Vérifier configuration et compatibilité avant de conclure à un défaut applicatif ; ne pas changer une seconde couche pour compenser sans hypothèse vérifiée.
+
+</details>
+
+<details>
+<summary>Indice 3 — correction ciblée après tentative</summary>
+
+Présenter ta tentative, l’attendu, l’observé et le premier écart. Demander l’analyse du seul point bloquant ; tu modifies ensuite ta solution, tu retestes et tu expliques la correction. Une explication limitée peut être demandée avant l’action ; aucun fichier InfraOps définitif n’est fourni à recopier. Consigner le niveau d’aide reçu.
+
+</details>
+
+## Vérifier, puis diagnostiquer
 
 - Relever version, état initial, risque et point de retour du seul composant choisi ; vérifier les conditions de compatibilité avant son changement.
 - Comparer contrôle technique et invariant métier avant/après ; lire les journaux utiles et rechercher un effet indésirable.
 - Expliquer ce qu’un retour de version peut rétablir et ce qui nécessite une restauration de données ; garder les limites et l’aide reçue.
 - Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
 
-Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
+**Répétition sans mutation :** simuler la décision d’arrêt si le contrôle préalable de compatibilité échoue. Un refus argumenté d’engager la maintenance est un résultat de préparation ; il ne vaut pas maintenance exécutée.
 
-## 11. Résultat attendu
+**Erreurs fréquentes :** Mettre tout à jour pour rendre un scan vert ; confondre retour d’image et retour de schéma ; changer plusieurs couches d’un coup.
 
-Fiche avant/action/après, risque justifié, version et vérifications ; aide reçue déclarée. Le résultat est à produire, pas déjà obtenu.
+**Démarche en cas d’écart :** Si le contrôle échoue après maintenance, comparer la seule couche changée avec l’état initial : incompatibilité de version, paramètre modifié ou permission. Vérifier la cause avant un retour ; un retour d’image ne restaure pas un ancien schéma DB.
 
-## 12. Erreurs fréquentes
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
 
-Mettre tout à jour pour rendre un scan vert ; confondre retour d’image et retour de schéma ; changer plusieurs couches d’un coup. En cas d’écart, conserver les faits utiles sans secret et ne pas multiplier les modifications.
+## Expliquer et capitaliser
 
-## 13. Démarche de diagnostic
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
 
-Si le contrôle échoue après maintenance, comparer la seule couche changée avec l’état initial : incompatibilité de version, paramètre modifié ou permission. Vérifier la cause avant un retour ; un retour d’image ne restaure pas un ancien schéma DB.
+**Réutilisation :** Quels contrôles restent valides si la maintenance ne redémarre aucun conteneur ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
-Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
+Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication s’évaluent séparément. Aucun niveau personnel n’est attribué par cette fiche.
 
-## 14. Preuves à conserver
-
-Fiche avant/action/après, risque justifié, version et vérifications ; aide reçue déclarée. Ajouter date, environnement, version/commit, action personnelle, attendu/observé, difficulté, correction et aide reçue. Ne joindre aucun secret, cookie, token ou state privé.
-
-## 15. Synthèse
-
-En quelques phrases : quel besoin as-tu couvert, quelle décision as-tu prise et quel contrôle la soutient ? Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
-
-## 16. Réutilisation des acquis
-
-Quels contrôles restent valides si la maintenance ne redémarre aucun conteneur ? Relier ta réponse à un autre projet sans en recopier une solution complète.
-
-## 17. Validation et autonomie
-
-Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication sont vérifiés séparément. L0=découverte ; L1=compréhension ; L2=réalisation personnelle ; L3=adaptation/diagnostic d’un cas nouveau avec aide limitée. Aucun niveau n’est attribué par la présence de la fiche.
-
-## 18. Corrigé séparé
+## Corrigé après tentative
 
 Après une première tentative, consulter [les repères de correction](corriges.md#exercice-10) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+
+[← Exercice précédent](09-supervision.md) · [Retour au parcours](README.md) · [Exercice suivant →](11-sauvegarde-reprise.md)

@@ -2,6 +2,12 @@
 
 Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle n’est renseignée. Les essais Codex sont historiques et séparés.
 
+Ces évaluations sont transversales : elles ne constituent pas cinq exercices supplémentaires ni un second ordre de travail. Les exercices 01/02 restent sans VM ; les contrôles métier sur service déployé sont différés tant que leur cible n’est pas personnellement disponible. Renseigner alors NON EXÉCUTÉ pour cette partie, sans déclarer toute l’évaluation reçue. L’exercice 13 fournit un cas nouveau pour examiner les responsabilités et l’autonomie ; consulter les [règles de preuve et de niveau](README.md#preuve-et-progression-personnelles).
+
+
+<a id="evaluation-1"></a>
+
+<a id="evaluation-1"></a>
 
 ## Évaluation 1 — Construire
 
@@ -18,6 +24,10 @@ Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle 
 **Correction/consolidation :** à définir sur la tentative réelle. Une réussite avec assistance est distincte d’une autonomie sur un cas nouveau.
 
 
+<a id="evaluation-2"></a>
+
+<a id="evaluation-2"></a>
+
 ## Évaluation 2 — Automatiser
 
 **Objectif/scénario :** démontrer automatiser pour des demandes IT créées, consultables et suivies sans perdre les tickets, à partir des exercices 4, 5 et d’une variante nouvelle.
@@ -32,6 +42,10 @@ Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle 
 
 **Correction/consolidation :** à définir sur la tentative réelle. Une réussite avec assistance est distincte d’une autonomie sur un cas nouveau.
 
+
+<a id="evaluation-3"></a>
+
+<a id="evaluation-3"></a>
 
 ## Évaluation 3 — Faciliter la livraison
 
@@ -48,6 +62,10 @@ Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle 
 **Correction/consolidation :** à définir sur la tentative réelle. Une réussite avec assistance est distincte d’une autonomie sur un cas nouveau.
 
 
+<a id="evaluation-4"></a>
+
+<a id="evaluation-4"></a>
+
 ## Évaluation 4 — Observer/diagnostiquer
 
 **Objectif/scénario :** démontrer observer/diagnostiquer pour des demandes IT créées, consultables et suivies sans perdre les tickets, à partir des exercices 9, 12 et d’une variante nouvelle.
@@ -63,6 +81,10 @@ Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle 
 **Correction/consolidation :** à définir sur la tentative réelle. Une réussite avec assistance est distincte d’une autonomie sur un cas nouveau.
 
 
+<a id="evaluation-5"></a>
+
+<a id="evaluation-5"></a>
+
 ## Évaluation 5 — Maintenir/rétablir
 
 **Objectif/scénario :** démontrer maintenir/rétablir pour des demandes IT créées, consultables et suivies sans perdre les tickets, à partir des exercices 10, 11 et d’une variante nouvelle.
@@ -76,3 +98,7 @@ Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle 
 **Résultat/preuve/niveau :** NON EXÉCUTÉ / aucune preuve personnelle / NON ÉVALUÉ. Après exécution : date, environnement, version/commit, action, résultat, difficulté, correction, test final, aide reçue.
 
 **Correction/consolidation :** à définir sur la tentative réelle. Une réussite avec assistance est distincte d’une autonomie sur un cas nouveau.
+
+[Retour au parcours](README.md) · [Épreuve nouvelle d’autonomie](13-autonomie.md) · [Repères après tentative](corriges.md)
+
+Révision documentaire : 2026-11-04.

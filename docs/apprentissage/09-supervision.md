@@ -2,87 +2,90 @@
 
 **Projet : OpsDesk · Pilier : Observer/diagnostiquer · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
 
-## 1. Situation professionnelle
+Révision documentaire : 2026-11-04. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.
 
-L’équipe attend des demandes IT créées, consultables et suivies sans perdre les tickets. Utilise les signaux applicatifs fournis et un contrôle de ticket. Relie une alerte à l’indisponibilité réelle du besoin, puis explique le retour attendu.
+## Situation et résultat à obtenir
 
-## 2. Objectif pédagogique
+Quand un utilisateur ne peut plus enregistrer un ticket, un processus vivant ne suffit pas à rassurer l’équipe. La supervision doit rendre visible le besoin touché et donner une première piste de diagnostic.
 
-Superviser en reliant décision, action, observation et explication. Tu peux demander une explication avant chaque étape ; rédige néanmoins toi-même le schéma, la configuration et les preuves.
+Utilise les signaux applicatifs fournis et un contrôle de ticket. Relie une alerte à l’indisponibilité réelle du besoin, puis explique le retour attendu.
 
-## 3. Besoin applicatif
+**Livrable attendu :** Signal choisi pour le métier, alerte constatée, logs corrélés et retour observé ; pas seulement une capture de tableau vide. Le résultat est à produire, pas déjà obtenu.
 
-Un ticket identifié, son titre et son état doit rester contrôlable. Le contrat applicatif, pas une ancienne recette d’hébergement, définit les besoins du logiciel.
-
-## 4. Concepts à comprendre
+## Comprendre avant de choisir
 
 Une métrique est une mesure, un journal explique un événement et une alerte signale un besoin d’action. La disponibilité d’un processus ne garantit pas le succès d’un parcours métier.
 
-## 5. Prérequis
+Une métrique mesure une grandeur à un instant ou sur un intervalle ; un journal relate un événement ; une alerte associe une condition à une action et à un destinataire. Prometheus collecte les échantillons ; Grafana présente des requêtes et leurs résultats. Un panneau vide peut venir de la collecte, de la requête ou de la fenêtre de temps.
 
-Parcours applicatif et points de santé compris ; cible et version identifiées, collecte proposée. Vérifier les outils réellement installés et les accès autorisés. Ne pas définir une alerte à partir d’un compteur dont le sens ou la portée reste inconnu. Lire [le contrat](../contrat-applicatif.md) et le [cadre du parcours](README.md). Ne pas importer un résultat Codex comme preuve personnelle.
+Choisir unités, labels et portée avant un seuil. Les compteurs applicatifs par worker ne représentent pas automatiquement un total durable du service ; un redémarrage peut les réinitialiser. Un identifiant de ticket en label multiplie les séries inutilement. Relier un signal technique au contrôle métier aide à distinguer dépendance non prête et panne utilisateur réelle.
 
-## 6. Environnement et matériel
+**Question :** `/metrics` répond mais le panneau ne montre aucun échantillon. Quel fait vérifier d’abord pour départager une cible jamais collectée et une requête qui filtre toutes les séries ?
+
+## Préparer la bonne cible
+
+Parcours applicatif et points de santé compris ; cible et version identifiées, collecte proposée. Vérifier les outils réellement installés et les accès autorisés. Ne pas définir une alerte à partir d’un compteur dont le sens ou la portée reste inconnu.
 
 Le poste de contrôle prévu est Fedora 45. Choisir une collecte et une visualisation proportionnées au laboratoire déjà qualifié, sans créer une VM par outil. Identifier source de métriques, collecteur, destinataire d’alerte autorisé, réseau et limites de ressources. Les métriques d’une application ne signifient pas que Prometheus ou Grafana est installé. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 Prévoir Prometheus pour la collecte et Grafana pour une vue utile. k6 reste un essai de charge personnel, borné sur une cible locale autorisée : choisir débit/concurrence, durée, seuil d’arrêt et mesure de latence/erreurs avant exécution. Ne pas charger une cible publique ou le PC sans limite. La VM invitée cible reste Rocky Linux 10.2 ; sa qualification est à vérifier avant cet exercice.
 
-## 7. Travail personnel
+Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
 
-Choisir des signaux utiles ; écrire collecte, tableau et règle d’alerte ; vérifier la détection et la route autorisée sur un cas borné. Prévoir Prometheus pour la collecte et Grafana pour une vue utile. k6 reste un essai de charge personnel, borné sur une cible locale autorisée : choisir débit/concurrence, durée, seuil d’arrêt et mesure de latence/erreurs avant exécution. Ne pas charger une cible publique ou le PC sans limite. Conserver la première proposition avant toute correction.
+## Réaliser soi-même et demander un indice
 
-## 8. Contraintes
+1. Choisir un besoin utilisateur, un signal et ses limites ; noter unité, source, fréquence et coût de collecte.
+2. Écrire une collecte, une vue et une règle proportionnées ; identifier le destinataire autorisé et le retour attendu. Préparer le contrôle métier en parallèle.
+3. Rapprocher métriques, journaux et alerte sur un cas réversible autorisé. Pour k6, proposer d’abord cible locale, débit/concurrence, durée et seuil d’arrêt ; ne pas déduire une capacité d’une capture isolée.
 
-Application fictive sans authentification utilisateur ; accès local ; PostgreSQL durable ; santé live/ready et version distinctes. Identifier état initial, effet attendu et retour. Un cloud payant, une exposition réelle, un réseau sensible ou une panne/destruction exige un accord ciblé ; la lecture de cette fiche n’autorise pas ces actions.
+Conserver ta première proposition avant la revue. Les indices se lisent à la demande, du moins direct au plus ciblé.
 
-## 9. Indices progressifs
+<details>
+<summary>Indice 1 — orientation</summary>
 
-**Indice :** Formuler le symptôme, comparer métriques/logs/événements et contrôler la dépendance suspecte sans multiplier les modifications.
+Formuler le symptôme, comparer métriques/logs/événements et contrôler la dépendance suspecte sans multiplier les modifications.
 
-**Explication ciblée, sur demande :** relier le concept à un ticket identifié, son titre et son état, avec un exemple limité et un résultat observable.
+</details>
 
-**Correction accompagnée :** montrer ta tentative et le premier écart ; Codex corrige le point précis puis te demande de revalider et d’expliquer.
+<details>
+<summary>Indice 2 — mécanisme</summary>
 
-## 10. Vérifications à effectuer
+Contrôler l’état de la cible de collecte et la présence d’échantillons bruts avant le panneau. Pour une alerte absente, distinguer condition non atteinte, délai d’évaluation et destinataire non configuré.
+
+</details>
+
+<details>
+<summary>Indice 3 — correction ciblée après tentative</summary>
+
+Présenter ta tentative, l’attendu, l’observé et le premier écart. Demander l’analyse du seul point bloquant ; tu modifies ensuite ta solution, tu retestes et tu expliques la correction. Une explication limitée peut être demandée avant l’action ; aucun fichier InfraOps définitif n’est fourni à recopier. Consigner le niveau d’aide reçu.
+
+</details>
+
+## Vérifier, puis diagnostiquer
 
 - Distinguer une mesure du processus, une dépendance prête et un contrôle du besoin utilisateur ; vérifier les unités, la portée et les labels.
 - Montrer collecte, visualisation utile, règle et destinataire autorisé ; un tableau sans données ou un /metrics isolé n’est pas une supervision reçue.
 - Sur un cas réversible autorisé, rapprocher signal, alerte, journaux et retour à l’état attendu ; consigner aussi les faux positifs ou contrôles non exécutés.
 - Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
 
-Pour chaque observation, écrire d’abord le résultat attendu, puis lire et interpréter le résultat réel. Un exemple fourni par Codex ne remplace pas ta mesure.
+**Cas négatif de lecture :** une série absente n’est pas automatiquement une valeur zéro. Expliquer quelle conclusion serait trompeuse et quel contrôle de collecte la réfuterait. Une panne volontaire ou une charge réelle n’est pas nécessaire à cette lecture.
 
-## 11. Résultat attendu
+**Erreurs fréquentes :** Compter uniquement HTTP200 ; alerte sans destinataire ; générer un identifiant de ticket comme label à forte cardinalité.
 
-Signal choisi pour le métier, alerte constatée, logs corrélés et retour observé ; pas seulement une capture de tableau vide. Le résultat est à produire, pas déjà obtenu.
+**Démarche en cas d’écart :** Si un tableau est vide, distinguer absence d’échantillons, mauvaise requête et fenêtre de temps. Vérifier la cible collectée avant le panneau. Si aucune alerte n’arrive, distinguer règle non déclenchée et routage non configuré avant de provoquer une panne.
 
-## 12. Erreurs fréquentes
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
 
-Compter uniquement HTTP200 ; alerte sans destinataire ; générer un identifiant de ticket comme label à forte cardinalité. En cas d’écart, conserver les faits utiles sans secret et ne pas multiplier les modifications.
+## Expliquer et capitaliser
 
-## 13. Démarche de diagnostic
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
 
-Si un tableau est vide, distinguer absence d’échantillons, mauvaise requête et fenêtre de temps. Vérifier la cible collectée avant le panneau. Si aucune alerte n’arrive, distinguer règle non déclenchée et routage non configuré avant de provoquer une panne.
+**Réutilisation :** Quel indicateur garde son sens quand on change le nombre de réplicas ou redémarre le processus ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
-Conserver le fil : symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale. Une observation en lecture seule suffit tant qu’aucun changement n’est nécessaire.
+Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication s’évaluent séparément. Aucun niveau personnel n’est attribué par cette fiche.
 
-## 14. Preuves à conserver
-
-Signal choisi pour le métier, alerte constatée, logs corrélés et retour observé ; pas seulement une capture de tableau vide. Ajouter date, environnement, version/commit, action personnelle, attendu/observé, difficulté, correction et aide reçue. Ne joindre aucun secret, cookie, token ou state privé.
-
-## 15. Synthèse
-
-En quelques phrases : quel besoin as-tu couvert, quelle décision as-tu prise et quel contrôle la soutient ? Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
-
-## 16. Réutilisation des acquis
-
-Quel indicateur garde son sens quand on change le nombre de réplicas ou redémarre le processus ? Relier ta réponse à un autre projet sans en recopier une solution complète.
-
-## 17. Validation et autonomie
-
-Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication sont vérifiés séparément. L0=découverte ; L1=compréhension ; L2=réalisation personnelle ; L3=adaptation/diagnostic d’un cas nouveau avec aide limitée. Aucun niveau n’est attribué par la présence de la fiche.
-
-## 18. Corrigé séparé
+## Corrigé après tentative
 
 Après une première tentative, consulter [les repères de correction](corriges.md#exercice-09) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+
+[← Exercice précédent](08-cicd.md) · [Retour au parcours](README.md) · [Exercice suivant →](10-maintenance.md)
