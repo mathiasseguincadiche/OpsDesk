@@ -4,7 +4,11 @@
 
 ## Références GitHub contrôlées
 
-Le contrôle du 4 novembre 2026 constate la PR [#1](https://github.com/mathiasseguincadiche/OpsDesk/pull/1) fusionnée à 02:11:40 UTC (`16b63546`) et la PR [#2](https://github.com/mathiasseguincadiche/OpsDesk/pull/2) fusionnée à 14:33:12 UTC. La révision `main` analysée pour cette passe est `51e1a489d81e061f84ad3502b5ac0dc8b44bacdf`, commit de fusion de #2. Ces fusions documentent l’intégration des sources ; elles ne sont pas des preuves de CI ou d’infrastructure exécutée. GitHub reste la seule plateforme active ; GitLab est historique.
+Le contrôle du 4 novembre 2026 constate la PR [#1](https://github.com/mathiasseguincadiche/OpsDesk/pull/1) fusionnée à 02:11:40 UTC (`16b63546`) et la PR [#2](https://github.com/mathiasseguincadiche/OpsDesk/pull/2) fusionnée à 14:33:12 UTC. La PR [#3](https://github.com/mathiasseguincadiche/OpsDesk/pull/3) est fusionnée le 4 novembre 2026 à 18:38:48 UTC ; `main` est relu au commit `886918115e4321c89c0923e4ea95286c50e2e506` pour l’application de la charte documentaire V5. Les audits précédents restent des observations datées de leur propre révision. Ces fusions documentent l’intégration des sources ; elles ne sont pas des preuves de CI ou d’infrastructure exécutée. GitHub reste la seule plateforme active ; GitLab est historique.
+
+## Portée de cette révision documentaire
+
+**Documentation : réalisée — vérifiée par les contrôles documentaires décrits dans [l’audit V5](docs/audit-documentaire-v5.md), selon leur périmètre. Infrastructure personnelle : prévue — non vérifiée.** Le parcours et le logiciel restent V4.4 ; V5 désigne la charte. Une procédure écrite, une preuve ancienne et un niveau personnel sont trois objets distincts. Aucun test applicatif, scan, VM ou CI n’est rejoué par cette mise à jour. Les résultats ci-dessous appartiennent aux essais datés ; une modification de leur périmètre impose une nouvelle réception.
 
 ## Application
 

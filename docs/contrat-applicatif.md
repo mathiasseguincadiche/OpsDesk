@@ -14,6 +14,45 @@ Dans le laboratoire fictif, tout visiteur local peut lister les demandes, créer
 
 Pages HTML `/tickets` et `/tickets/<id>` ; API JSON GET/POST `/api/tickets` et GET/PATCH `/api/tickets/<id>`. Le PATCH attend uniquement `status`. Titre : 3–120 caractères ; description : 0–2000 ; priorité : `low`, `normal` ou `high`. Statuts : `open`, `in_progress`, `closed`. Les sauts et réouvertures sont refusés ; la liste se limite aux 100 derniers tickets.
 
+### Référence de l’API locale fournie
+
+Référence de la source V4.4, relue le 4 novembre 2026 : [routes et sérialisation](../app/opsdesk/web.py), [validation et transitions](../app/opsdesk/business.py), [schéma SQL](../db/schema.sql). Les fonctions Python sont internes ; les routes ci-dessous forment l’interface consommée par le laboratoire. Toute évolution de cette interface doit mettre à jour ce contrat dans le même changement ; aucun engagement de compatibilité non démontré n’est annoncé.
+
+**Accès :** aucune authentification ni autorisation utilisateur. Les opérations JSON de création/modification exigent `Content-Type: application/json`, sans jeton CSRF ; les formulaires HTML ont leur propre contrôle CSRF. Un Host non autorisé est refusé en 400, en texte brut. Cette référence ne donne aucune autorisation d’exposition Internet.
+
+| Méthode et chemin | Entrée | Réponse normale, à vérifier sur la cible personnelle |
+|---|---|---|
+| GET `/api/tickets` | Aucun paramètre requis ; pas de pagination configurable | 200, tableau JSON des 100 derniers tickets au maximum, identifiant décroissant |
+| POST `/api/tickets` | Objet JSON décrit ci-dessous | 201, ticket créé ; en-tête Location vers son API ; statut initial `open` |
+| GET `/api/tickets/{id}` | Identifiant entier dans le chemin | 200, ticket ; 404 si absent ou chemin non reconnu |
+| PATCH `/api/tickets/{id}` | Objet contenant uniquement `status` | 200, ticket modifié ; absence de ticket : 404 ; transition/statut refusé : 409 |
+
+| Champ de création | Type, obligation, défaut et limite |
+|---|---|
+| `title` | Chaîne obligatoire en pratique : défaut vide, refusé ; 3–120 caractères après retrait des espaces aux extrémités |
+| `description` | Chaîne facultative, défaut vide ; 0–2000 caractères après retrait des espaces aux extrémités |
+| `priority` | Chaîne facultative, défaut `normal` ; `low`, `normal` ou `high`, sans normalisation automatique |
+
+Les textes refusent NUL et les substituts Unicode isolés. À la création, les autres clés ne sont pas utilisées ; fournir `status` ne choisit pas l’état initial. Pour PATCH, une clé supplémentaire, un objet absent ou une forme autre qu’un objet contenant seulement `status` vaut 400. Les transitions permises sont `open` vers lui-même ou `in_progress`, `in_progress` vers lui-même ou `closed`, et `closed` vers lui-même. Répéter le statut actualise `updated_at` : ce n’est pas une réponse totalement idempotente.
+
+Un ticket renvoyé contient `id` (entier), `title`, `description`, `priority`, `status` (chaînes), `created_at` et `updated_at` (dates sérialisées en UTC). Les identifiants et dates sont produits par PostgreSQL : ne pas les traiter comme des constantes d’un exemple.
+
+**Exemples fictifs de corps JSON, sans requête exécutée ni ticket créé.** Création minimale valide :
+
+```json
+{"title": "Écran de laboratoire indisponible"}
+```
+
+Modification à proposer seulement après identification d’un ticket fictif `open` :
+
+```json
+{"status": "in_progress"}
+```
+
+**Erreurs à distinguer :** 400 pour JSON/champ/forme invalide ; 404 pour ticket absent ; 409 pour statut ou transition refusé ; 413 si le corps dépasse 16 Kio ; 415 pour POST/PATCH API sans type JSON ; 503 pour une erreur PostgreSQL gérée. Les erreurs API gérées renvoient un objet `error`, sauf le refus Host en texte brut. Cette liste ne garantit pas qu’une erreur de programmation ne puisse produire un autre statut.
+
+Les routes de diagnostic ne sont pas des preuves métier complètes : `/health/live` répond 200 sans accès DB, `/health/ready` répond 200 si la requête à `tickets` aboutit (503 pour l’erreur SQL gérée), `/version` donne l’identité déclarée. `/metrics` peut répondre **200 avec `opsdesk_database_up 0`** : examiner la valeur et les journaux, pas seulement le statut HTTP. Les compteurs sont propres à chaque worker ; aucune série de durée p95 n’est fournie par cette seule route. Les méthodes exactes et sorties réellement observées seront consignées par Mathias sur sa cible.
+
 ## 4. Architecture interne
 
 `app/opsdesk/business.py` porte les validations indépendantes de HTTP. `web.py` relie routes, rendu Jinja, requêtes SQL paramétrées, santé et journaux. `app/wsgi.py` expose l’application au serveur WSGI. Les modèles HTML et le CSS sont fournis sous `app/opsdesk/templates/` et `static/`. La base PostgreSQL contient une table métier `tickets`.
@@ -80,7 +119,7 @@ PostgreSQL, une table `tickets` : identifiant bigint généré, titre, descripti
 
 ## 14. Migrations
 
-`db/schema.sql` fournit uniquement le schéma métier initial. Il s’applique une fois à un schéma applicatif vide par une identité autorisée. Il n’y a pas de moteur de migrations incrémentales ni de conversion SQLite. L’ancien `db/001-initial.sql` est conservé localement comme référence V4.2 mélangeant création de rôle/droits et schéma ; il n’est pas le contrat applicatif à recopier.
+`db/schema.sql` fournit uniquement le schéma métier initial. Il s’applique une fois à un schéma applicatif vide par une identité autorisée. Il n’y a pas de moteur de migrations incrémentales ni de conversion SQLite. L’ancien `db/001-initial.sql`, cité dans les preuves V4.2, mélangeait création de rôle/droits et schéma. Il est absent du dépôt courant ; sa conservation locale hors dépôt est non vérifiée. Il n’est pas le contrat applicatif à recopier.
 
 Tout changement de schéma futur doit fournir une migration explicite, sa compatibilité avec l’ancienne application, les tests et ses limites de retour. Ne pas remplacer silencieusement une table existante.
 

@@ -21,6 +21,12 @@ GitHub est l’unique plateforme active de ce parcours. GitLab est laissé en l�
 
 Pour commencer sans ambiguïté : lire [l’exercice 01](apprentissage/01-application.md), noter ce qui est compris et ce qui reste une question. Si un fichier lié manque, relever son chemin et la révision consultée ; ne pas lancer une recette historique pour compenser.
 
+## État d’essai des procédures
+
+La lecture 01 est disponible ; sa compréhension sera expliquée par Mathias. La procédure native du contrat n’a jamais été rejouée entièrement sur son laboratoire : **non vérifiée**. La recette Compose reste historique et non exécutable depuis main. Une procédure partiellement essayée doit préciser les étapes réellement parcourues et celles qui manquent. Un retour arrière seulement décrit reste non vérifié ; aucune durée de séance n’est annoncée sans mesure.
+
+Avant une installation ou une modification, arrêter si machine/version/droits/état initial sont inconnus, si les données source ne sont pas protégées ou si le retour nécessaire n’est pas établi. Nommer le point de non-retour éventuel avant de l’atteindre. Pour un incident, utiliser d’abord le [triage court](reprise.md#triage-court-avant-une-reprise-personnelle).
+
 ## Référence historique Codex — laboratoire V4.2 conservé, pas la procédure Fedora/KVM personnelle
 
 Ce corps conserve les procédures et résultats préparés sous V4.2. Les configurations et opérations InfraOps appartiennent désormais au travail personnel de Mathias ; elles ne sont pas relancées par Codex. Consulter d’abord le [contrat applicatif](contrat-applicatif.md) et la [provenance](provenance.md). Les niveaux techniques anciens de ce texte ne sont pas les niveaux personnels V4.4 : L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée. Les preuves de reprise plus récentes sont datées dans [STATUS](../STATUS.md), sans modifier rétrospectivement cet essai.

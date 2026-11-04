@@ -34,6 +34,10 @@ Lire le [contrat applicatif autonome](docs/contrat-applicatif.md), puis le [parc
 | Qui a produit quoi ; anciennes solutions et travail réservé | [Provenance](docs/provenance.md) |
 | Objectifs des trois projets et prochaines étapes personnelles | [Feuille de route](ROADMAP.md) · [Notion OpsDesk](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223) |
 
+## Repères documentaires
+
+Le parcours personnel reste **V4.4** ; la charte **V5** renforce la traçabilité documentaire. Lire la [portée des preuves](docs/preuves.md#avancement-et-contrôle--deux-informations-distinctes), le [registre des décisions](docs/architecture.md#décisions-durables-et-décisions-encore-personnelles) et la [maintenance des documents](docs/provenance.md#maintenir-les-documents-sans-entretenir-plusieurs-copies). Les SVG sont des représentations générées séparément, pas des exports vérifiés par Draw.io. La mise à jour documentaire ne valide aucune nouvelle opération personnelle.
+
 ## Application disponible
 
 Pages `/tickets` et `/tickets/<id>`, API `/api/tickets`, statuts ouvert → en cours → clôturé, données fictives durables dans PostgreSQL. La version, la santé et des métriques simples sont exposées. Python/Flask, psycopg et Gunicorn sont verrouillés dans `requirements.lock` ; le schéma métier initial est séparé dans `db/schema.sql`.

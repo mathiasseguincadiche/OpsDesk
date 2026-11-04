@@ -17,6 +17,18 @@ Le [rapport des tests actuels](../evidence/v44/application-tests.json) et son jo
 
 La preuve déclare `uncommitted-v42`. Elle ne fournit pas un faux SHA, un digest GHCR, un test de persistance après redémarrage ou une restauration. Le champ `persisted_ticket_id` désigne le ticket enregistré et relu pendant le test, pas une preuve de résilience à une destruction.
 
+## Avancement et contrôle : deux informations distinctes
+
+L’avancement répond à « qu’est-ce qui existe ? » : prévu, en cours, réalisé/implémenté ou abandonné. Le contrôle répond à « qu’a-t-on établi ? » : vérifié, échec constaté ou non vérifié. Ainsi, un playbook écrit peut être **réalisé — non vérifié** ; un contrôle exécuté peut être **réalisé — échec constaté**. Les résultats détaillés gardent PASS, FAIL, PARTIEL ou NON EXÉCUTÉ. Le mot « exécuté » décrit une action effectuée, jamais sa réussite implicite. Un abandon indique sa raison et sa date lorsqu’elles sont connues.
+
+Une preuve vaut pour les fichiers, versions, cible, méthode et critères qu’elle identifie. Si cet ensemble change, le contrôle de la nouvelle révision redevient non vérifié ; l’ancien rapport reste intact comme observation historique. Une correction ne supprime pas l’échec initial : lier la nouvelle validation. Un changement uniquement rédactionnel n’invalide pas automatiquement un résultat applicatif portant sur un code et un environnement inchangés ; il exige cependant son propre contrôle documentaire.
+
+Une déclaration sans pièce consultable se note « déclaré par Mathias — non vérifié ». Elle n’est ni rejetée ni convertie en preuve. Les niveaux L0–L3 décrivent une progression personnelle et restent distincts de ces deux axes ; aucune migration documentaire ne les remplit.
+
+**Exemple fictif :** un déploiement K3s a été contrôlé sur une VM et un digest précis. Changer le digest, le stockage ou les sondes ne transfère pas le PASS à la nouvelle cible. Conserver la preuve initiale, marquer le nouveau périmètre non vérifié et choisir les contrôles concernés avant de conclure.
+
+Un « vérifié » indique toujours date, version ou hash, cible, commande/méthode, attendu, observé et limites. Si une pièce manque, préciser le manque plutôt que reconstruire une sortie probable.
+
 ## Registre à tenir
 
 | Champ | Attendu |
