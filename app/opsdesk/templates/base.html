@@ -1,0 +1,5 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpsDesk — tickets IT</title><link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}"></head>
+<body><header><a href="{{ url_for('list_page') }}">OpsDesk</a><span>Support IT · laboratoire InfraOps</span></header>
+<main><div class="notice">Données fictives uniquement · démonstrateur local sans authentification · ne pas exposer sur Internet.</div>{% block content %}{% endblock %}</main>
+<footer>Version {{ identity.version }} · Révision {{ identity.revision }} · PostgreSQL persistant</footer></body></html>

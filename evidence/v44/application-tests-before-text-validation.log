@@ -1,0 +1,34 @@
+PERSISTED_FICTIONAL_TICKET_ID=6
+test_current_source_commits_and_reads_through_distinct_connections (integration.test_http_postgres.CommittedDevelopmentReadback.test_current_source_commits_and_reads_through_distinct_connections) ... ok
+test_dependency_failure_distinguishes_live_and_ready (integration.test_http_postgres.HTTPPostgreSQLTests.test_dependency_failure_distinguishes_live_and_ready) ... [2026-11-03 18:48:17,528] WARNING in web: database_unavailable request_endpoint=ready
+[2026-11-03 18:48:17,528] WARNING in web: database_unavailable request_endpoint=list_api
+ok
+test_health_version_and_metrics (integration.test_http_postgres.HTTPPostgreSQLTests.test_health_version_and_metrics) ... ok
+test_html_form_requires_valid_session_csrf (integration.test_http_postgres.HTTPPostgreSQLTests.test_html_form_requires_valid_session_csrf) ... ok
+test_html_is_escaped_and_security_headers_present (integration.test_http_postgres.HTTPPostgreSQLTests.test_html_is_escaped_and_security_headers_present) ... ok
+test_invalid_create_is_rejected_before_sql (integration.test_http_postgres.HTTPPostgreSQLTests.test_invalid_create_is_rejected_before_sql) ... ok
+test_list_is_limited_to_latest_hundred (integration.test_http_postgres.HTTPPostgreSQLTests.test_list_is_limited_to_latest_hundred) ... ok
+test_loopback_hosts_are_accepted (integration.test_http_postgres.HTTPPostgreSQLTests.test_loopback_hosts_are_accepted) ... ok
+test_malformed_json_is_json_400 (integration.test_http_postgres.HTTPPostgreSQLTests.test_malformed_json_is_json_400) ... ok
+test_missing_ticket_is_json_404 (integration.test_http_postgres.HTTPPostgreSQLTests.test_missing_ticket_is_json_404) ... ok
+test_mutating_api_requires_json (integration.test_http_postgres.HTTPPostgreSQLTests.test_mutating_api_requires_json) ... ok
+test_no_authentication_is_claimed_by_local_api (integration.test_http_postgres.HTTPPostgreSQLTests.test_no_authentication_is_claimed_by_local_api) ... ok
+test_patch_requires_only_status (integration.test_http_postgres.HTTPPostgreSQLTests.test_patch_requires_only_status) ... ok
+test_payload_limit_is_enforced (integration.test_http_postgres.HTTPPostgreSQLTests.test_payload_limit_is_enforced) ... ok
+test_postgresql_business_constraints_are_real (integration.test_http_postgres.HTTPPostgreSQLTests.test_postgresql_business_constraints_are_real) ... ok
+test_same_state_does_not_change_business_status (integration.test_http_postgres.HTTPPostgreSQLTests.test_same_state_does_not_change_business_status) ... ok
+test_sql_text_is_data_and_not_a_command (integration.test_http_postgres.HTTPPostgreSQLTests.test_sql_text_is_data_and_not_a_command) ... ok
+test_ticket_round_trip_and_state_flow (integration.test_http_postgres.HTTPPostgreSQLTests.test_ticket_round_trip_and_state_flow) ... ok
+test_untrusted_host_is_rejected (integration.test_http_postgres.HTTPPostgreSQLTests.test_untrusted_host_is_rejected) ... ok
+test_cannot_skip_or_reopen (unit.test_business.BusinessRules.test_cannot_skip_or_reopen) ... ok
+test_defaults_are_explicit (unit.test_business.BusinessRules.test_defaults_are_explicit) ... ok
+test_invalid_input_is_not_coerced (unit.test_business.BusinessRules.test_invalid_input_is_not_coerced) ... ok
+test_limits_allow_maximum_text (unit.test_business.BusinessRules.test_limits_allow_maximum_text) ... ok
+test_normalizes_only_ticket_text (unit.test_business.BusinessRules.test_normalizes_only_ticket_text) ... ok
+test_retry_of_same_status_is_idempotent (unit.test_business.BusinessRules.test_retry_of_same_status_is_idempotent) ... ok
+test_valid_status_flow (unit.test_business.BusinessRules.test_valid_status_flow) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.300s
+
+OK

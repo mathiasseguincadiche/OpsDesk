@@ -1,0 +1,47 @@
+{
+  "checked_at_utc": "2026-11-03T18:59:10.572308+00:00",
+  "status": "PASS",
+  "scope": "Documentation, editable diagrams, application contract and reserved-file preservation",
+  "relative_links_checked": 100,
+  "contract_numbered_sections": 30,
+  "diagrams": [
+    {
+      "family": "presentation",
+      "vertices": 8,
+      "edges": 2,
+      "drawio_sha256": "99101c21f1cd57d67ec6f4e5096e30079d6ce5123e2be8f082178b3fdcd9f543",
+      "svg_sha256": "cf160a2ceee9c10a8b1f835675d1fe1ab9f889c863016c92cc850e8e7ad1a725"
+    },
+    {
+      "family": "architecture-technique",
+      "vertices": 9,
+      "edges": 4,
+      "drawio_sha256": "f69993f67bd3c997fff89378d80830c6a57a77365d4441f9f0a17f9aaff8ccb5",
+      "svg_sha256": "1dc47a2ab92394dc6732fb9ea5fed93fccc167f49eb595802fd3fb9fe5cf7e79"
+    }
+  ],
+  "browser_render": {
+    "checked_at_utc": "2026-11-03T18:54:18.739Z",
+    "status": "PASS",
+    "browser": "Chrome/Playwright",
+    "diagrams": [
+      {
+        "name": "presentation",
+        "width": 1200,
+        "height": 690,
+        "text_overflow": []
+      },
+      {
+        "name": "architecture-technique",
+        "width": 1280,
+        "height": 860,
+        "text_overflow": []
+      }
+    ]
+  },
+  "visual_inspection": "Two rendered PNGs inspected; no clipping/overlap observed. Family presentation differs from technical network view.",
+  "reserved_infra_files_changed": [],
+  "errors": [],
+  "application_result": "PASS",
+  "personal_infra_exercises": "NON EXÉCUTÉS / aucun niveau personnel attribué"
+}

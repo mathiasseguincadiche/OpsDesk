@@ -1,0 +1,42 @@
+{
+  "checked_at_utc": "2026-11-03T13:41:42.922268+00:00",
+  "status": "PASS",
+  "scenarios": [
+    {
+      "scenario": "healthy",
+      "expected_exit": 0,
+      "observed_exit": 0,
+      "observation": {
+        "checked_at_utc": "2026-11-03T13:41:37.819293+00:00",
+        "status": "PASS",
+        "url": "http://127.0.0.1:18081/health/ready",
+        "http_status": 200,
+        "latency_ms": 14.11,
+        "local_alert": null,
+        "limits": [
+          "Local probe only: no remote alert route, outage injection or SLO qualification"
+        ]
+      }
+    },
+    {
+      "scenario": "unavailable",
+      "expected_exit": 1,
+      "observed_exit": 1,
+      "observation": {
+        "checked_at_utc": "2026-11-03T13:41:42.914589+00:00",
+        "status": "FAIL",
+        "url": "http://127.0.0.1:18999/health/ready",
+        "http_status": null,
+        "latency_ms": 5009.38,
+        "local_alert": "URLError",
+        "limits": [
+          "Local probe only: no remote alert route, outage injection or SLO qualification"
+        ]
+      }
+    }
+  ],
+  "limits": [
+    "The failing target is an unused loopback port; source services were not interrupted",
+    "Local detection only; no Prometheus/Alertmanager or external notification executed"
+  ]
+}

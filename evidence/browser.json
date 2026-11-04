@@ -1,0 +1,9 @@
+{
+  "checked_at_utc": "2026-11-03T03:41:03.026Z",
+  "status": "PASS",
+  "browser": "Chrome / Playwright, Windows accessing WSL loopback",
+  "url": "http://127.0.0.1:18081/tickets",
+  "title": "OpsDesk — tickets IT",
+  "body_preview": "OpsDesk\nSupport IT · laboratoire InfraOps\nDonnées fictives uniquement · démonstrateur local sans authentification · ne pas exposer sur Internet.\n\nSERV",
+  "console_errors": []
+}

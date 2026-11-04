@@ -1,52 +1,34 @@
-# OpsDesk — livraison et exploitation d'une application de tickets IT
+# OpsDesk — un service de tickets pour apprendre l’InfraOps
 
-**Projet personnel InfraOps** · Application / CI-CD / Infrastructure as Code / Kubernetes / Observabilité
+Un collaborateur ouvre une demande IT, l’équipe la consulte, la prend en charge puis la clôture. OpsDesk fournit une petite interface web, une API et une persistance PostgreSQL pour rendre ce parcours vérifiable.
 
-> **État réel : conception documentée ; réalisation et validations à venir.** [Voir l'avancement et les preuves](STATUS.md).
+**V4.4 : application et tests fournis par Codex ; infrastructure à concevoir et réaliser personnellement par Mathias.** Les anciennes configurations et preuves V4.2 sont conservées comme références assistées. Elles ne valident aucune compétence personnelle.
 
-## En 30 secondes
+![Présentation : application fournie et travail personnel réservé](docs/diagrams/presentation.svg)
 
-Une équipe IT doit pouvoir créer et suivre ses tickets sans perdre ses données. **OpsDesk** prend ce service concret comme fil conducteur pour démontrer comment **livrer une application, reconstruire son environnement et l'exploiter en cas d'incident**.
+## Commencer
 
-Le même service évoluera en trois étapes — sans repartir de zéro ni empiler les outils inutilement.
+Lire le [contrat applicatif autonome](docs/contrat-applicatif.md), puis le [parcours personnel](docs/parcours-apprentissage.md). Le premier exercice consiste à comprendre les besoins et proposer son propre schéma d’infrastructure. Il ne demande pas de recopier les anciennes recettes.
 
-| Étape | Réalisation visée | Ce qui permettra de la vérifier |
-| --- | --- | --- |
-| **1. Livrer** | Tickets + PostgreSQL sous Docker Compose ; GitHub Actions, GHCR et Trivy | Démo fonctionnelle, tests automatisés, image reliée au commit, rapport d'analyse |
-| **2. Déployer** | Serveur Rocky Linux sur AWS avec Terraform et Ansible | Recréation documentée, configuration contrôlée, vérification d'idempotence |
-| **3. Exploiter** | K3s, métriques Prometheus/Grafana, journaux, alertes, tests k6 | Service vérifié, incident simulé, diagnostic, mesures et reprise |
+| Besoin du lecteur | Document |
+|---|---|
+| Fonctions, dépendances, démarrage dev, ports, variables, schéma, santé, tests et limites | [Contrat de passation](docs/contrat-applicatif.md) |
+| Architecture interne et référence du laboratoire Codex | [Architecture et frontières](docs/architecture.md) |
+| Résultats actuels et preuves historiques | [État de réception](STATUS.md) · [Preuves](docs/preuves.md) |
+| Authentification absente et contrôles applicatifs | [Sécurité](docs/securite.md) |
+| Qui a produit quoi ; anciennes solutions et travail réservé | [Provenance](docs/provenance.md) |
+| Objectifs des trois projets et prochaines étapes personnelles | [Feuille de route](ROADMAP.md) · [Notion OpsDesk](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223) |
 
-**Point de départ :** la première étape doit marcher localement, sans AWS ni Kubernetes.
+## Application disponible
 
-## Architecture cible
+Pages `/tickets` et `/tickets/<id>`, API `/api/tickets`, statuts ouvert → en cours → clôturé, données fictives durables dans PostgreSQL. La version, la santé et des métriques simples sont exposées. Python/Flask, psycopg et Gunicorn sont verrouillés dans `requirements.lock` ; le schéma métier initial est séparé dans `db/schema.sql`.
 
-```mermaid
-flowchart TD
-    User["Utilisateur"] --> App["Application de tickets"]
-    App --> DB["PostgreSQL"]
-    CI["GitHub Actions + GHCR"] -. "image versionnée" .-> App
-    IaC["Terraform + Ansible"] --> Host["Rocky Linux / AWS"]
-    Host --> K3s["K3s : exploitation"]
-    K3s --> App
-    Obs["Prometheus / Grafana"] -. "suivi" .-> K3s
-```
+Les tests de la source V4.4 couvrent règles, formulaires, CSRF, SQL réel, refus HTTP, Host, santé/version et relecture d’un ticket committé par une autre connexion. [Résultat et contexte des tests](evidence/v44/application-tests.json). Les tests ponctuels réutilisent le développement existant ; aucun déploiement, exercice de reprise, Terraform, Ansible, K3s ou CI n’est réalisé sous V4.4.
 
-*Schéma de la cible finale, non d'une infrastructure déjà déployée.*
+## Limites
 
-## Ce qu'on pourra examiner
+**Pas d’authentification utilisateur : démonstrateur local, données fictives uniquement.** La session signe un jeton de formulaire ; elle n’est pas un compte. Aucun usage public ou production n’est autorisé par cette réception. Les alertes historiques de sécurité de l’image restent à examiner ; un parcours métier réussi ne les efface pas. Pas de gestion ITSM complète, affectation, commentaire ou pièce jointe.
 
-- Le code de l'application et les tests du scénario **créer → suivre → clôturer un ticket**.
-- La chaîne **commit → tests → image → déploiement**, avec les vrais résultats de CI et de sécurité.
-- La reconstruction de l'infrastructure et les contrôles de configuration.
-- Une démonstration d'incident : **signal → diagnostic → correction → vérification**.
+Les deux familles de schémas sont distinctes et modifiables : [présentation draw.io](docs/diagrams/presentation.drawio) / [SVG](docs/diagrams/presentation.svg), [technique draw.io](docs/diagrams/architecture-technique.drawio) / [SVG](docs/diagrams/architecture-technique.svg). Le schéma technique décrit le laboratoire de développement Codex ; il ne constitue pas l’architecture personnelle déjà réalisée de Mathias.
 
-**Aujourd'hui, ces preuves sont à produire**, pas à supposer : leur progression est suivie dans [STATUS.md](STATUS.md).
-
-## Deux chemins de lecture
-
-- **Évaluer le projet :** [état et preuves](STATUS.md) · [jalons et critères de réussite](ROADMAP.md) · [architecture détaillée](docs/architecture.md).
-- **Apprendre et reproduire :** [parcours expliqué](docs/parcours-apprentissage.md) · [première séance et prérequis](docs/demarrage.md).
-
-Les sources, configurations, workflows et résultats seront ajoutés progressivement, lorsqu'ils existent et sont vérifiés. Aucun secret ni état Terraform sensible ne doit être committé ; aucun laboratoire AWS ne sera lancé sans budget et nettoyage prévus.
-
-**Mathias SEGUIN-CADICHE** · Projet personnel DevOps, spécialisation InfraOps.
+[GitHub](https://github.com/mathiasseguincadiche/OpsDesk) · [GitLab](https://gitlab.com/mathias.seguincadiche/OpsDesk) · [MIT](LICENSE). Aucun résultat distant CI n’est déduit de la présence des anciens fichiers.

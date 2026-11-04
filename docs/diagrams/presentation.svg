@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="690" viewBox="0 0 1200 690" role="img" aria-labelledby="title desc">
+<title id="title">OpsDesk — un service utile, une progression InfraOps</title>
+<desc id="desc">Diagramme du laboratoire local réellement exécuté, avec étapes futures explicitement non exécutées.</desc>
+<rect width="1200" height="690" fill="#f7fafc"/>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#39688a"/></marker></defs>
+<text x="40" y="46" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="#17385f">OpsDesk — un service utile, une progression InfraOps</text>
+<rect x="50" y="120" width="230" height="120" rx="12" fill="#fff" stroke="#a6bdcf" stroke-width="2"/>
+<text x="165.0" y="160.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#20334d">Collaborateur / équipe IT</text>
+<text x="165.0" y="185.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Ouvrir une demande</text>
+<text x="165.0" y="210.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Prendre en charge · clôturer</text>
+<rect x="415" y="105" width="320" height="150" rx="12" fill="#e6f4f5" stroke="#a6bdcf" stroke-width="2"/>
+<text x="575.0" y="148.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#20334d">OpsDesk</text>
+<text x="575.0" y="173.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Interface web + API</text>
+<text x="575.0" y="198.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Démonstrateur métier fourni</text>
+<text x="575.0" y="223.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Version locale 0.1.0</text>
+<rect x="865" y="120" width="280" height="120" rx="12" fill="#fff" stroke="#a6bdcf" stroke-width="2"/>
+<text x="1005.0" y="160.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#20334d">PostgreSQL</text>
+<text x="1005.0" y="185.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Tickets et statuts</text>
+<text x="1005.0" y="210.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Données fictives persistantes</text>
+<rect x="50" y="315" width="1095" height="115" rx="12" fill="#e9eff8" stroke="#a6bdcf" stroke-width="2"/>
+<text x="597.5" y="353.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#20334d">Contributions et responsabilité personnelle</text>
+<text x="597.5" y="378.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Codex : application, tests et contrat · Mathias : infrastructure, livraison et exploitation</text>
+<text x="597.5" y="403.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Les preuves Codex ne valident aucun niveau personnel de Mathias.</text>
+<rect x="50" y="495" width="330" height="145" rx="12" fill="#e6f4f5" stroke="#a6bdcf" stroke-width="2"/>
+<text x="215.0" y="535.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#20334d">1. Recevoir l’application</text>
+<text x="215.0" y="560.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Pages, API, règles et PostgreSQL</text>
+<text x="215.0" y="585.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Tests applicatifs Codex : PASS</text>
+<text x="215.0" y="610.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Contrat et preuves distinctes</text>
+<rect x="430" y="495" width="330" height="145" rx="12" fill="#fff3db" stroke="#a6bdcf" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="595.0" y="535.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#20334d">2. Construire personnellement</text>
+<text x="595.0" y="560.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Linux · réseau · Terraform · Ansible</text>
+<text x="595.0" y="585.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Énoncés et aides progressives</text>
+<text x="595.0" y="610.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">À FAIRE PAR MATHIAS</text>
+<rect x="810" y="495" width="335" height="145" rx="12" fill="#fff3db" stroke="#a6bdcf" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="977.5" y="535.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#20334d">3. Livrer et exploiter</text>
+<text x="977.5" y="560.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">K3s · CI · signaux · diagnostic</text>
+<text x="977.5" y="585.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">Maintenance et reprise</text>
+<text x="977.5" y="610.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#20334d">À FAIRE PAR MATHIAS</text>
+<polyline points="280,180.0 415,180.0" fill="none" stroke="#39688a" stroke-width="2.2" marker-end="url(#arrow)"/>
+<rect x="300.5" y="151.0" width="94" height="24" rx="4" fill="#f7fafc"/><text x="347.5" y="168.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#20334d">HTTP local</text>
+<polyline points="735,180.0 865,180.0" fill="none" stroke="#39688a" stroke-width="2.2" marker-end="url(#arrow)"/>
+<rect x="781.0" y="151.0" width="38" height="24" rx="4" fill="#f7fafc"/><text x="800.0" y="168.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#20334d">SQL</text>
+</svg>

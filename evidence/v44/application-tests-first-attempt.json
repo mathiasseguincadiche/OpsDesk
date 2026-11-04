@@ -1,0 +1,28 @@
+{
+  "checked_at_utc": "2026-11-03T18:44:31.012767+00:00",
+  "status": "FAIL",
+  "exit_code": 1,
+  "seconds": 2.025,
+  "scope": "Current application source mounted read-only into a one-off development test process; existing PostgreSQL/network reused",
+  "infrastructure_exercise_executed": false,
+  "source_hashes": {
+    "app/wsgi.py": "4065baa21452b550fa6043426d98c555bd8dd1c8de3834a1b09bb369703e35a7",
+    "app/opsdesk/business.py": "19054619ef92778a089c0ef992d85febd842bdb63938a89463fc8cfca2b8525c",
+    "app/opsdesk/web.py": "8ee45a76109306272078a8826efd30c0a3cb3df31069b81811b44a672419c360",
+    "app/opsdesk/__init__.py": "fb48566dc5b137d1df9cd8bcdfc30c76bfdff7ee73e59699c29260928900e324",
+    "tests/__init__.py": "04c21f36bab9d519a89a3544f31495de4276616ac7589c1baf5f4081e845f834",
+    "tests/integration/test_http_postgres.py": "81b5530a5dec9a93317bc5e4c60f1c55ad2e89f0ec6509549978052c3dc8671a",
+    "tests/integration/__init__.py": "06e19fb89eea1e4141633a7d686d810206c8be76334944f6c02cff634c0f5c97",
+    "tests/unit/test_business.py": "48c39ab4e56ba6c75732e4bab527d84d749dc5b3afb427dfd22ce04b88caa955",
+    "tests/unit/__init__.py": "55cf8d2e2f5e42bb8d9876c49786892cb9497155cf591cf6eab22987c22dcea8",
+    "db/001-initial.sql": "ecf68238752f5e146f27d9b60104f5cb6bb68a4a13f288627a6afa51614bbc9a",
+    "db/schema.sql": "a6e8af138ad417fe62cdc8f8ed7e800d354c5eb5d4bfa117d7389e7a5bac4833"
+  },
+  "command": "python -m unittest discover -s /source/tests -v in existing development image",
+  "data_policy": "Most SQL uses a connection-local TEMP tickets table. One named fictional ticket is committed and retained to prove persistence across distinct connections. No existing ticket is removed or changed.",
+  "limits": [
+    "No service redeployed or image rebuilt",
+    "No restart, backup, restore, Terraform, Ansible, Kubernetes, CI or physical reception",
+    "No user authentication: local fictional-data demonstrator only"
+  ]
+}

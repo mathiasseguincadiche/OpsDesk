@@ -1,0 +1,17 @@
+{
+  "checked_at_utc": "2026-11-03T13:50:56.358598+00:00",
+  "status": "PARTIEL",
+  "action": "Remove installation-only pip/setuptools from final runtime; rebuild and re-run business checks",
+  "scope": "New isolated application container, same persistent fictional database; no host package changes",
+  "before_image": "sha256:a18df3bd96d7c331db4019fa831b0cea65208a06f857721f533a9f3e28eb72bc",
+  "after_image": "sha256:2fa15b716fd4f4df2d286f412cca1b3b323cc484677a0ac3866a8fecced5ac95",
+  "high_before": 50,
+  "high_after": 45,
+  "fixable_high_critical_before": 5,
+  "fixable_high_critical_after": 0,
+  "business_smoke_status": "PASS",
+  "limits": [
+    "Residual OS HIGH findings remain; runtime hardening is not a global security clearance",
+    "No Fedora/Rocky patching, credential rotation, real outage or physical qualification"
+  ]
+}

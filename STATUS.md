@@ -1,32 +1,30 @@
-# OpsDesk — état réel et preuves
+# OpsDesk — réception applicative et progression personnelle
 
-**Référence documentaire : 1er novembre 2026.** Ce dépôt vient d’être créé. Les documents de conception ne valent pas implémentation.
+**V4.4, 3 novembre 2026.** Les sources applicatives sont testées dans un processus de développement ponctuel, sur le PostgreSQL existant. Aucun service n’a été redéployé, aucune image reconstruite et aucun exercice InfraOps personnel exécuté.
 
-## Niveaux de maturité
+## Application
 
-- **Prévu** : fonctionnalité définie ou architecture dessinée.
-- **En cours** : fichiers de travail présents, mais fonctionnement pas encore confirmé.
-- **Implémenté** : code/configuration disponible, exécuté avec vérification locale.
-- **Vérifié** : résultat reproduit, daté et documenté, avec commande/scénario, preuve, limite et commit.
+| Contrôle | Résultat et source | Portée |
+|---|---|---|
+| Règles, routes, formulaires et SQL réel de la source actuelle | [Rapport courant V4.4](evidence/v44/application-tests.json) et journal voisin | Lire le statut, la date, le nombre de tests et les hashes ; la plupart des écritures sont en table TEMP |
+| Persistance réelle | Cas de test dédié : ticket fictif committé puis relu par des connexions distinctes | Le ticket témoin est conservé ; aucune donnée existante supprimée ou remplacée |
+| Host autorisé/refusé et CSRF non ASCII | Cas positifs/négatifs dans la même suite | Réponse400 contrôlée ; ni authentification ni sécurité réseau complète |
+| Schéma et paramètres | [Contrat à30 rubriques](docs/contrat-applicatif.md), `db/schema.sql` | Le rôle/base/droits/stockage restent à préparer par Mathias |
+| Authentification | Absente, déclarée explicitement | Local fictif uniquement |
+| Réception visuelle | [Capture et rapport V4.2](evidence/browser.json) | Historique, ne certifie pas chaque source V4.4 montée pour les tests |
 
-| Élément | Statut | Ce qu’il faudra vérifier |
-| --- | --- | --- |
-| Application tickets + PostgreSQL | Prévu | Création, liste, changement d’état, données conservées après redémarrage |
-| Docker Compose | Prévu | Démarrage reproductible, santé, réseau interne, arrêt propre |
-| Tests et GitHub Actions | Prévu | Tests réels exécutés, échec bloquant visible |
-| Image GHCR et analyse Trivy | Prévu | Tag immuable, rapport et traitement des résultats |
-| Terraform AWS | Prévu | Format/validation/plan puis application autorisée et destruction |
-| Ansible et Rocky Linux | Prévu | Durcissement contrôlé, seconde exécution idempotente |
-| K3s | Prévu | Déploiement, sondes, stockage et retour arrière |
-| Prometheus, Grafana, alertes, journaux | Prévu | Indicateurs, alerte provoquée, diagnostic vérifiable |
-| k6 | Prévu | Profil de charge, critères, mesures et interprétation |
+Le premier passage V4.4 a découvert un refus Host qui tentait de rendre un modèle avant création de l’adaptateur d’URL, ainsi qu’une erreur de scénario du test réutilisant un en-tête Location absent après PATCH. [Rapport initial défavorable conservé](evidence/v44/application-tests-first-attempt.json). La source et le scénario ont été corrigés puis la suite rejouée ; le rapport courant porte son propre statut.
 
-**Aucune phase technique n’est actuellement déclarée terminée.** Cette page doit être actualisée après chaque vraie validation, et non au moment où un fichier est seulement écrit.
+## Antériorités Codex V4.2
 
-## Journal de preuves à remplir
+Le [smoke HTTP historique](evidence/business-smoke.json) a été actualisé le 3 novembre à 13:40 UTC. Le [dernier essai de reprise historique](evidence/recovery.json) est daté à 13:52:06 UTC, cible 18088, durée 10,969 s et ticket témoin identique. Une reprise précédente 10,769 s reste conservée séparément. Ces mesures n’ont pas été rejouées sous V4.4 et ne constituent ni SLO de production ni exercice personnel.
 
-| Date UTC | Commit / version | Scénario | Résultat obtenu | Pièce de preuve | Limites |
-| --- | --- | --- | --- | --- | --- |
-| — | — | Aucune exécution vérifiée à ce jour | — | — | — |
+Les contrats Terraform/Ansible locaux et le rendu K3s étaient des essais Codex. Ils n’ont provisionné aucune VM/cloud et n’ont qualifié aucun cluster. Les anciens pipelines locaux ne sont pas exécutés ni corrigés automatiquement. Le candidat OpsDesk comporte encore le défaut `ci-business.json`/`business-smoke.json`, à étudier dans un exercice de diagnostic.
 
-Des captures non datées ou des exemples de commande ne suffisent pas. Expliquer aussi les échecs rencontrés et leur résolution.
+Le [scan complet historique](evidence/vulnerability-scan.json) reste FAIL, avec185 occurrences dont 45 HIGH dans ce rapport. Le retrait d’outils d’installation de l’image n’autorise pas à annoncer une sécurité globale validée. Les nouveaux résultats de tri de sécurité du programme sont une pièce distincte.
+
+## Mathias : pratique et autonomie
+
+Les cinq responsabilités restent à réaliser personnellement : infrastructure/réseau, automatisation, déploiement/CI, supervision/diagnostic, maintenance/reprise. **Aucune preuve ou niveau L0/L1/L2/L3 personnel n’est attribué par les tests de Codex.** L2 exige une réalisation personnelle ; L3 une adaptation et un diagnostic autonomes sur une tâche nouvelle.
+
+[Parcours](docs/parcours-apprentissage.md) · [Provenance](docs/provenance.md) · [Contrat](docs/contrat-applicatif.md). Le CV v2.9 est hors périmètre et reste inchangé.

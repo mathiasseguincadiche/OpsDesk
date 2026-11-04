@@ -1,0 +1,132 @@
+{
+  "checked_at_utc": "2026-11-03T19:06:14.136867+00:00",
+  "project": "OpsDesk",
+  "verdict": "FAIL",
+  "triage_state": "PARTIEL — contextual qualification, no global security clearance",
+  "risk_acceptance": false,
+  "personal_infraops_validation": false,
+  "scope": "Application-security/documentary triage of preserved scan evidence and observed development constraints; no infrastructure hardening, package change, suppression or scanner reconfiguration",
+  "scanner": {
+    "name": "Trivy",
+    "version": "0.74.0",
+    "database_used": {
+      "Version": 2,
+      "NextUpdate": "2026-11-04T07:14:02.629452405Z",
+      "UpdatedAt": "2026-11-03T07:14:02.629452927Z",
+      "DownloadedAt": "2026-11-03T13:36:51.789733958Z"
+    },
+    "cache_used": "/tmp/v42-trivy-cache",
+    "default_cache_warning": "The separately displayed default cache dated September11 was not used for these results; explicit cache metadata above is authoritative"
+  },
+  "baseline": {
+    "report": "evidence/vulnerability-scan.json",
+    "sha256": "6abf75b74a08be6453d72145f28f87c7dad0331373bc7f34216dd5d0d4b0ce13",
+    "recorded_at_utc": "2026-11-03T13:48:01.065269+00:00",
+    "artifact": "v42opsdesk-app:0.1.0-local",
+    "image_id": "sha256:2fa15b716fd4f4df2d286f412cca1b3b323cc484677a0ac3866a8fecced5ac95",
+    "metrics": {
+      "occurrences": 185,
+      "unique_advisory_ids": 85,
+      "occurrences_beyond_unique_ids": 100,
+      "exact_repeated_target_package_advisory_version_records": 0,
+      "repeated_package_advisory_version_records_when_target_is_ignored": 0,
+      "severity_counts": {
+        "LOW": 61,
+        "HIGH": 45,
+        "MEDIUM": 72,
+        "UNKNOWN": 7
+      },
+      "class_counts": {
+        "os-pkgs": 185
+      },
+      "high_critical_with_fixed_version_in_scanner": 0,
+      "top_repeated_ids": [
+        {
+          "id": "CVE-2026-76642",
+          "occurrences": 9
+        },
+        {
+          "id": "CVE-2026-78408",
+          "occurrences": 9
+        },
+        {
+          "id": "CVE-2026-78409",
+          "occurrences": 9
+        },
+        {
+          "id": "CVE-2026-78410",
+          "occurrences": 9
+        },
+        {
+          "id": "CVE-2026-3184",
+          "occurrences": 9
+        }
+      ]
+    },
+    "raw_scan": {
+      "workspace_support_path": "work/v42/trivy-opsdesk-after.json",
+      "sha256": "53b02a408a021a0638fd7a1dfb4bf0ffcdcc5b41790babe2e1ac2c55e13adfc1",
+      "scanner_created_at": "2026-11-03T09:41:41.111073356-04:00",
+      "scanner_created_at_utc": "2026-11-03T13:41:41.111073+00:00"
+    }
+  },
+  "counting_notes": [
+    "Occurrences count package/advisory pairs in targets, not proven exploit paths.",
+    "Identifiers may be CVE, GHSA or TEMP. Aliases were not fully normalized, so unique_advisory_ids is not a certified count of distinct vulnerabilities.",
+    "Repeated IDs in binary subpackages or uv/uvx are not discarded as false positives. All original findings remain."
+  ],
+  "priorities": [
+    {
+      "priority": "P1",
+      "topic": "Public exposure and global clearance",
+      "status": "BLOCKED",
+      "reason": "Residual HIGH/CRITICAL findings and incomplete reachability qualification; local fictional-data lab only."
+    },
+    {
+      "priority": "P1",
+      "topic": "Application dependencies and input/authorization tests",
+      "status": "REVIEWED_WITH_LIMITS",
+      "reason": "Use application test evidence separately; passing functional tests does not clear image vulnerabilities."
+    },
+    {
+      "priority": "P2",
+      "topic": "Operating-system image components",
+      "status": "OPEN",
+      "reason": "Review vendor fix/support and threat model; architecture/image hardening belongs to Mathias and is not automatically implemented."
+    }
+  ],
+  "reachability": [
+    {
+      "group": "OS packages including util-linux",
+      "state": "PRESENT / EXPLOITABILITY_NOT_PROVEN",
+      "evidence": "The scan lists the components. No supplied business route intentionally invokes mount helpers. This is a code-based inference, not a penetration test or proof that a compromised process cannot reach them.",
+      "corrective_criterion": "Review each applicable vendor advisory, image update compatibility and privileges before any real exposure."
+    },
+    {
+      "group": "Python framework/runtime findings",
+      "state": "NONE_REPORTED_IN_THIS_SCAN",
+      "evidence": "All185 recorded occurrences are class os-pkgs. Absence of language-package findings in this report is not an exhaustive security proof."
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-76642",
+      "type": "Primary Debian vendor status",
+      "observation": "util-linux2.41.5 Debian trixie is listed vulnerable; fixes in other suites do not prove this image corrected."
+    }
+  ],
+  "limits": [
+    "No penetration test, exhaustive call graph, load/Internet qualification or certification.",
+    "No package/advisory removed because a service is inactive or an exploit precondition was not observed.",
+    "No operating-system upgrade, firewall change, deployment, backup/restore or learner exercise performed by this triage.",
+    "Application tests are Codex preparation; no personal learner level is assigned."
+  ],
+  "review_validation": {
+    "reviewed_at_utc": "2026-11-04T01:48:12.191145+00:00",
+    "method": "Independent recount from existing raw scanner JSON and hash comparison to the unchanged published historical summary; no scan rerun or runtime mutation.",
+    "baseline_metrics_match_raw_report": true,
+    "baseline_summary_sha256_verified": true,
+    "baseline_image_identity_matches_raw_report": true,
+    "origin": "Codex documentary preparation; no learner competence or infrastructure acceptance assigned"
+  }
+}

@@ -1,55 +1,33 @@
-# OpsDesk — plan de réalisation et critères de sortie
+# OpsDesk — préparation fournie et parcours personnel
 
-Chaque étape suit : **pourquoi → précontrôle → construction → validation → panne simulée → explication**.
+La V4.4 sépare la réception de l’application et la réalisation des exercices. Une case de préparation Codex ne vaut pas validation personnelle de Mathias.
 
-## 0. Cadrer le service
+## Préparation applicative Codex
 
-- [ ] Définir trois usages : ouvrir, consulter, clôturer un ticket.
-- [ ] Choisir la pile applicative la plus simple à maintenir ; argumenter le choix.
-- [ ] Dessiner le schéma PostgreSQL et identifier les données **fictives**.
-- [ ] Définir une API minimale et des erreurs prévisibles.
+- Sources Flask, pages/API et règles de tickets conservées ; dépendances verrouillées et schéma métier autonome fourni.
+- Contrôle Host et refus CSRF non ASCII testés ; nom du rôle PostgreSQL configurable par `DB_USER`.
+- Tests HTTP/SQL et relecture d’un ticket committé ajoutés ; résultats courants dans `evidence/v44/`, premier échec conservé.
+- Contrat applicatif à30 rubriques et documentation réconciliés ; alertes de sécurité conservées.
+- Parcours et preuves historiques conservés avec leur provenance ; aucune réalisation InfraOps personnelle anticipée.
 
-**Validation :** quelqu’un d’autre comprend les besoins en une minute. **À expliquer :** pourquoi une base relationnelle pour les tickets ?
+## Ordre de travail de Mathias
 
-## 1. Application et livraison locale — commencer ici
+1. Comprendre l’application et lire son contrat.
+2. Concevoir son architecture et justifier ressources, flux, accès et stockage.
+3. Préparer Linux/Rocky et le réseau du laboratoire autorisé.
+4. Écrire son Terraform, lire le plan et vérifier les ressources réellement provisionnées.
+5. Écrire son Ansible, contrôler les changements puis la seconde passe.
+6. Conteneuriser l’application, choisir ses volumes/réseaux/secrets et vérifier le ticket.
+7. Pratiquer Kubernetes/K3s : ressources, probes, stockage, rollout et diagnostic.
+8. Construire sa CI/CD à partir d’une livraison manuelle comprise ; étudier le défaut de référence du candidat historique.
+9. Choisir des signaux utiles, construire sa supervision et vérifier une alerte.
+10. Préparer une maintenance Day-2 et contrôler le service avant/après.
+11. Concevoir et exécuter sa sauvegarde et sa restauration isolée ; vérifier les tickets.
+12. Diagnostiquer un cas nouveau et rétablir le besoin utilisateur.
+13. Réutiliser les acquis sur une tâche de transfert et expliquer ses choix avec une aide limitée.
 
-- [ ] Écrire le CRUD minimal et des tests métier (cas nominal et entrée invalide).
-- [ ] Démarrer PostgreSQL + application avec Compose, healthchecks et données persistantes.
-- [ ] Tester création → modification → redémarrage → relecture.
-- [ ] Produire une image versionnée reliée à un commit.
-- [ ] Construire une vraie CI : tests, image, analyse Trivy, publication GHCR conditionnée à la réussite et aux permissions minimales.
-- [ ] Forcer volontairement un test en échec et vérifier que la CI le signale.
+**Tous ces exercices sont à faire personnellement ; aucun niveau n’est présumé.** OpsDesk propose un accompagnement guidé. BankFlow demandera plus de choix personnels et LogiTrack davantage de réutilisation autonome.
 
-**Sortie :** une personne peut suivre les instructions sur sa machine, rejouer le scénario et identifier l’image exacte.
+Les anciennes solutions restent accessibles comme références après une première tentative ; elles ne sont pas les fichiers obligatoires à recopier. Toute ressource payante, exposition réelle, destruction ou nettoyage demande son périmètre et l’accord approprié. Ce document ne lance aucun exercice.
 
-## 2. Provisionnement et sécurisation
-
-- [ ] Définir budget AWS, région, réseau, secrets, droits IAM et procédure de destruction.
-- [ ] Écrire Terraform : `fmt`, `validate`, `plan`, revue, puis `apply` autorisé.
-- [ ] Configurer Rocky Linux avec Ansible (comptes, SSH, SELinux, firewalld, packages et logs).
-- [ ] Tester un deuxième passage Ansible sans changement indésirable.
-- [ ] Déployer l’application et vérifier accès, sécurité, journalisation.
-- [ ] Reconstruire le laboratoire et supprimer les ressources payantes.
-
-**Sortie :** environnement traçable et reconstructible. **À expliquer :** Terraform crée les ressources ; Ansible configure l’OS.
-
-## 3. Exploitation et incident
-
-- [ ] Adapter l’application au déploiement K3s, gestion des secrets et stockage compris.
-- [ ] Définir sondes readiness/liveness, ressources et procédure de rollback.
-- [ ] Collecter disponibilité, latence et erreurs dans Prometheus/Grafana.
-- [ ] Créer une alerte déclenchable et un scénario de dépannage avec journaux.
-- [ ] Exécuter un test k6 avec seuils et interpréter les résultats.
-- [ ] Documenter un échec, son diagnostic et le retour à un fonctionnement normal.
-
-**Sortie :** mini-démonstration « incident → signal → investigation → réparation » avec mesures datées.
-
-## Avant toute diffusion comme projet achevé
-
-- [ ] Code réel disponible et instructions reproductibles.
-- [ ] Tests et pipeline accessibles ; captures/logs nettoyés de secrets.
-- [ ] Au moins un incident documenté avec sa cause.
-- [ ] `STATUS.md` à jour avec commit, date et preuves.
-- [ ] Présentation honnête des limites, coûts et décisions.
-
-Les liens vers les dépôts pourront ensuite être ajoutés au CV, mais aucun état technique n’est anticipé.
+[Contrat](docs/contrat-applicatif.md) · [Parcours](docs/parcours-apprentissage.md) · [Provenance](docs/provenance.md)

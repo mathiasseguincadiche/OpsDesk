@@ -1,41 +1,50 @@
-# OpsDesk — apprendre et comprendre
+# Apprendre OpsDesk par des résultats observables
 
-Ce dépôt est un laboratoire **guidé**, pas un catalogue de commandes à copier-coller.
+**V4.4 : premier projet accompagné.** Mathias écrit et réalise lui-même ses configurations ; Codex explique, propose des indices puis examine sa tentative. Le Notion OpsDesk existant garde sa fonction pédagogique et son historique. Ce dépôt fournit les sources et les preuves ; il ne crée pas un deuxième parent Notion ni une duplication littérale des leçons.
 
-## La méthode des sept questions
+## Ordre de progression V4.4
 
-Pour chaque tâche, produire des réponses courtes et concrètes :
+Application → architecture personnelle → Linux/réseau → Terraform → Ansible → conteneurisation → K3s → CI/CD → supervision → Day-2 → sauvegarde/restauration → diagnostic/rétablissement → épreuve nouvelle d’autonomie. Les contenus utiles sont conservés ; ce parcours ne force pas13 pages exactement. Les énoncés complets, indices et corrigés séparés sont préparés avec le parcours Notion ; les anciennes solutions sont des références à consulter après la première tentative, pas des réponses imposées.
 
-1. **Quel problème ?** Expliquer ce qui dysfonctionnerait sans cette étape.
-2. **Quels prérequis ?** Outils, versions, permissions, ressources et coûts.
-3. **Quel mécanisme ?** Décrire les échanges et les responsabilités, sans jargon inutile.
-4. **Comment faire le minimum ?** Un seul changement observable.
-5. **Comment prouver ?** Commande exacte, résultat attendu, résultat obtenu.
-6. **Comment diagnostiquer ?** Provoquer une panne sans risque et identifier son symptôme.
-7. **Qu’ai-je compris ?** Expliquer à voix haute la logique et ses limites.
+L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée. **Aucun niveau n’est attribué par les tests de Codex.** Le premier exercice porte sur les besoins techniques d’OpsDesk et un schéma proposé personnellement.
 
-## Petit lexique
+## Méthode progressive conservée
 
-- **Image Docker :** modèle d’exécution versionné ; un conteneur est une instance démarrée de cette image.
-- **Volume :** emplacement de données indépendant du cycle de vie d’un conteneur.
-- **CI :** contrôles automatiques à chaque changement, dont il faut lire les vrais résultats.
-- **IaC :** description versionnée des ressources désirées ; comparer le plan avant d’agir.
-- **Idempotence :** relancer la configuration ne doit pas entraîner de changements inutiles.
-- **Readiness :** indique si l’application peut recevoir du trafic ; **liveness** indique si elle doit être redémarrée.
-- **Observabilité :** indices permettant d’expliquer un fonctionnement ou un incident.
+Pour chaque tâche : **problème → prérequis → mécanisme → minimum utile → test → diagnostic → explication personnelle**. Progresser de « je reconnais les composants » à « j’exécute guidé », puis « j’interprète », « je diagnostique » et enfin « je reproduis et j’explique ». Un fichier écrit ou un job vert ne suffit pas à valider la dernière étape.
 
-## Exercices graduels
+## Exercices à partir du service actuel
 
-- **Débutant :** expliquer pourquoi les tickets survivent au redémarrage d’un conteneur mais pas à l’effacement de son volume.
-- **Livraison :** suivre un commit jusqu’aux tests puis jusqu’au tag d’image GHCR.
-- **Infrastructure :** expliquer précisément ce que crée Terraform et ce que configure Ansible.
-- **Exploitation :** tracer un incident depuis l’alerte jusqu’à la cause, puis vérifier la reprise.
-- **Retour d’expérience :** noter un choix initial incorrect et pourquoi la correction est meilleure.
+1. Ouvrir un ticket dans l’UI, le retrouver par l’API et expliquer pourquoi il est dans PostgreSQL.
+2. Comparer `/health/live`, `/health/ready`, `/version` et `/metrics` ; décrire les limites de chaque signal.
+3. Envoyer une entrée trop courte et une transition interdite ; expliquer pourquoi les refus attendus sont des tests réussis.
+4. Dessiner le trajet navigateur → port local → app → DNS `db` → PostgreSQL → volume.
+5. Lire un échec réel, formuler une hypothèse, vérifier une seule chose à la fois et conserver l’observation.
+6. Préparer les exercices de livraison, maintenance et restauration ; ne les compter que lorsqu’ils ont été exécutés sur une cible identifiée.
 
-Écrire pour chaque exercice : **hypothèse, manipulation, observation, explication, limite**. Les 16 modules détaillés d’OpsDesk peuvent être approfondis dans Notion ; GitHub garde le code et les preuves.
+## Cinq piliers — réception séparée
 
-## Exemple de raisonnement : « l'application ne répond plus »
+| Pilier | Preuve directrice OpsDesk | État personnel Mathias |
+|---|---|---|
+| Construire | Chemin réseau jusqu’au service tickets sur K3s | **NON EXÉCUTÉ personnellement** dans les preuves suivies ; niveau non évalué |
+| Automatiser | Terraform/Ansible reconstruisent l’environnement autorisé | **NON EXÉCUTÉ personnellement** ; les anciens rendus locaux sont ceux de Codex |
+| Faciliter la livraison | CI d’image et vérification d’un ticket sans SSH administrateur développeur | **NON EXÉCUTÉ personnellement** ; construire ses jobs à partir d’une procédure comprise |
+| Observer/diagnostiquer | Alerte applicative et panne analysée | **NON EXÉCUTÉ personnellement** ; signaux/alerte/diagnostic à proposer et vérifier |
+| Maintenir/rétablir | Maintenance Day-2 et reprise des tickets | **NON EXÉCUTÉ personnellement** ; les reprises historiques Codex restent distinctes |
 
-**Hypothèse (à tester plus tard) :** l'application démarre avant que PostgreSQL soit prêt. Le bon réflexe n'est pas de redémarrer au hasard : vérifier d'abord l'état des deux services, les *healthchecks* et leurs journaux. Si la base n'accepte pas les connexions, corriger la gestion d'attente et **rejouer le test de création de ticket**.
+Pour chaque ligne, renseigner : pourquoi, fichiers, pré-check, commande/version réelle, contrôle positif et négatif, diagnostic, preuve datée et explication personnelle. Ne pas annoncer « cinq piliers vérifiés » avec la seule tranche HTTP locale.
 
-Ce cas montre la chaîne **symptôme → hypothèse → observation → correction → preuve**. Il est présenté comme un exercice, pas comme un incident déjà résolu.
+## Glossaire ciblé
+
+- **Image** : artefact d’exécution ; un tag précis n’est pas nécessairement immuable, un digest identifie le contenu.
+- **Volume** : données séparées du cycle de vie du conteneur ; pas une sauvegarde.
+- **CI** : contrôles répétés sur un changement ; lire les étapes et leurs échecs.
+- **Idempotence** : répétition sans changement indésirable, à constater sur une seconde exécution.
+- **Readiness** : dépendances nécessaires disponibles ; pas une preuve exhaustive du parcours utilisateur.
+- **Observabilité** : indices pour comprendre un état ; une métrique n’est ni un log ni une alerte.
+- **Rollback** : retour d’une version applicative ; distinct d’une restauration de données.
+
+## Conservation des supports antérieurs
+
+Les premiers guides de conception portaient déjà sur les trois phases, les secrets, la persistance, la CI et le diagnostic. Ces connaissances restent présentes dans [architecture](architecture.md), [démarrage](demarrage.md), [livraison](livraison.md) et [Day-2](exploitation-day2.md). Les anciennes assertions « aucune application » ne décrivent plus cette révision ; les originaux sont conservés dans la sauvegarde d’audit et l’historique du dépôt.
+
+Les [cinq évaluations détaillées](evaluations.md) indiquent besoins, pré-checks, commandes réelles, erreurs, preuves et suites. Le [guide infrastructure](infrastructure.md) explique la différence entre contrat local testé et infrastructure réellement provisionnée.

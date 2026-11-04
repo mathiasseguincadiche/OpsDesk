@@ -1,0 +1,152 @@
+{
+  "updated_at_utc": "2026-11-03T13:44:06.216877+00:00",
+  "project": "OpsDesk",
+  "scope": "Five pillar reception, limited by available dated evidence; not an end-to-end certification",
+  "evaluations": [
+    {
+      "pillar": 1,
+      "name": "Construire",
+      "status": "PARTIEL",
+      "why": "Collaborateur et équipe IT doivent créer et retrouver un ticket à travers le réseau et PostgreSQL.",
+      "infra_files": [
+        "compose.yaml",
+        "Dockerfile",
+        "db/001-initial.sql",
+        "k8s/"
+      ],
+      "business_code": "app/opsdesk/ fourni pour équipe fictive",
+      "precheck": "Projet v42opsdesk, loopback18081, réseau et volume identifiés, secrets privés, aucun contexte Kubernetes implicite.",
+      "commands_executed": [
+        "docker compose up --build --detach --wait",
+        "python3 scripts/smoke.py --base-url http://127.0.0.1:18081",
+        "Chrome/Playwright: GET /tickets",
+        "kubectl kustomize k8s"
+      ],
+      "expected": "Ticket relu et états cohérents; futur chemin cluster qualifié séparément.",
+      "observed": "HTTP métier et navigateur PASS; rendu Kustomize hors ligne PASS; aucun cluster contacté.",
+      "diagnostic": "400/404/409 sont des refus attendus; aucune panne réseau injectée.",
+      "evidence": [
+        "evidence/business-smoke.json",
+        "evidence/browser.json",
+        "evidence/k8s-static.json"
+      ],
+      "next_action": "Qualifier une cible K3s, exécuter et diagnostiquer un défaut réseau/service borné.",
+      "environment": "Ubuntu WSL / Docker Compose local; K3s/Rocky/Fedora non qualifiés",
+      "technical_level_max": "L2 (sous-exercices réellement exécutés)",
+      "mathias_personal_execution": "NON EXÉCUTÉE / non attribuée",
+      "mathias_personal_explanation": "NON EXÉCUTÉE / à renseigner après exécution et explication"
+    },
+    {
+      "pillar": 2,
+      "name": "Automatiser",
+      "status": "PARTIEL",
+      "why": "Répéter une configuration et constater l’absence de dérive avant de provisionner une infrastructure.",
+      "infra_files": [
+        "infra/terraform/main.tf",
+        "infra/ansible/render.yml",
+        "infra/verify.py"
+      ],
+      "business_code": "Aucun code métier modifié par cet exercice",
+      "precheck": "Contrat non secret; état et rendus ignorés, chemins locaux autorisés et /tmp, aucun cloud/hôte administré.",
+      "commands_executed": [
+        "python3 infra/verify.py"
+      ],
+      "expected": "Deuxième apply0/0/0, planexit0, Ansiblechanged0; bind public refusé.",
+      "observed": "Critères PASS sur contrat Terraform et JSON Ansible; infrastructure_provisioned=false.",
+      "diagnostic": "Premier Ansible unreachable car remote_tmp dans HOME non accessible; inventaire corrige vers /tmp puis revalidation.",
+      "evidence": [
+        "evidence/automation-first-attempt.json",
+        "evidence/automation-contract.json"
+      ],
+      "next_action": "Qualifier KVM/Rocky, fournisseur et état puis configurer et reconstruire une cible autorisée.",
+      "environment": "Ubuntu WSL / Docker Compose local; K3s/Rocky/Fedora non qualifiés",
+      "technical_level_max": "L2 (sous-exercices réellement exécutés)",
+      "mathias_personal_execution": "NON EXÉCUTÉE / non attribuée",
+      "mathias_personal_explanation": "NON EXÉCUTÉE / à renseigner après exécution et explication"
+    },
+    {
+      "pillar": 3,
+      "name": "Faciliter la livraison",
+      "status": "PARTIEL",
+      "why": "Livrer sans droits administrateur développeur et relier le ticket à la bonne image/commit.",
+      "infra_files": [
+        "Dockerfile",
+        "compose.yaml",
+        "scripts/check.py",
+        ".github/workflows/verify.yml"
+      ],
+      "business_code": "Tests et app/opsdesk/ appartiennent au démonstrateur fourni",
+      "precheck": "Diff relu, tests, image saine, secrets exclus, cible isolée; aucun runner ou registre supposé.",
+      "commands_executed": [
+        "python3 -m unittest discover -s tests/unit -v",
+        "docker compose up --build --detach --wait",
+        "python3 scripts/smoke.py --base-url http://127.0.0.1:18081"
+      ],
+      "expected": "Artefact identifié, mêmes tests en CI, version et ticket contrôlés, promotion/rollback prouvés.",
+      "observed": "Sept tests et parcours local exécutés; preuve initiale revision=uncommitted-v42; chaîne distante à qualifier.",
+      "diagnostic": "Refus de transitions testés; aucun mauvais artefact distant promu et diagnostiqué dans cette cellule.",
+      "evidence": [
+        "evidence/business-smoke.json",
+        "evidence/browser.json",
+        "evidence/vulnerability-scan.json"
+      ],
+      "next_action": "Lier commits/runs/images vérifiés puis démontrer promotion même image et retour avec ticket conservé.",
+      "environment": "Ubuntu WSL / Docker Compose local; K3s/Rocky/Fedora non qualifiés",
+      "technical_level_max": "L2 (sous-exercices réellement exécutés)",
+      "mathias_personal_execution": "NON EXÉCUTÉE / non attribuée",
+      "mathias_personal_explanation": "NON EXÉCUTÉE / à renseigner après exécution et explication"
+    },
+    {
+      "pillar": 4,
+      "name": "Observer et diagnostiquer",
+      "status": "PARTIEL",
+      "why": "Détecter quand le processus répond mais que le ticket ne peut plus être enregistré.",
+      "infra_files": [
+        "app/opsdesk/web.py",
+        "docs/exploitation-day2.md",
+        "scripts/probe.py"
+      ],
+      "business_code": "Instrumentation simple du démonstrateur; pas de plateforme de supervision complète",
+      "precheck": "Endpoints et journaux identifiés; collecte sans secrets; panne volontaire seulement avec cible et confirmation ciblées.",
+      "commands_executed": [
+        "python3 scripts/smoke.py --base-url http://127.0.0.1:18081"
+      ],
+      "expected": "Alerte utile observée, cause corrélée aux indices et ticket rétabli.",
+      "observed": "live/ready/version/metrics et opsdesk_database_up1 vérifiés; routage/incidentcluster non qualifiés.",
+      "diagnostic": "Refus métier attendus; panne Ansible pilier2 distincte d’un incident service.",
+      "evidence": [
+        "evidence/business-smoke.json",
+        "evidence/automation-first-attempt.json"
+      ],
+      "next_action": "Constater détection et diagnostic d’un défaut applicatif borné puis revalider le ticket.",
+      "environment": "Ubuntu WSL / Docker Compose local; K3s/Rocky/Fedora non qualifiés",
+      "technical_level_max": "L2 (sous-exercices réellement exécutés)",
+      "mathias_personal_execution": "NON EXÉCUTÉE / non attribuée",
+      "mathias_personal_explanation": "NON EXÉCUTÉE / à renseigner après exécution et explication"
+    },
+    {
+      "pillar": 5,
+      "name": "Maintenir et rétablir",
+      "status": "NON EXÉCUTÉ",
+      "why": "Retrouver les demandes et statuts après maintenance ou reprise des données.",
+      "infra_files": [
+        "docs/exploitation-day2.md",
+        "compose.yaml",
+        "db/001-initial.sql"
+      ],
+      "business_code": "Règles de ticket distinctes de la continuité des données",
+      "precheck": "Source/volume, version, archive et nouvelle cible isolée nommés; aucune destruction ou écrasement source.",
+      "commands_executed": [],
+      "expected": "Maintenance contrôlée et sauvegarde/restauration indépendante suivies de lecture du même ticket.",
+      "observed": "Procédure préparée; aucune reprise attestée par les preuves citées dans cette cellule.",
+      "diagnostic": "Aucune panne provoquée/observée; le volume et la relecture pendant smoke ne démontrent pas une restauration.",
+      "evidence": [],
+      "next_action": "Exécuter une sauvegarde et restauration bornées et renseigner résultat/horodatages/perte/limites.",
+      "environment": "Ubuntu WSL / Docker Compose local; K3s/Rocky/Fedora non qualifiés",
+      "technical_level_max": "L1 (procédure préparée seulement)",
+      "mathias_personal_execution": "NON EXÉCUTÉE / non attribuée",
+      "mathias_personal_explanation": "NON EXÉCUTÉE / à renseigner après exécution et explication"
+    }
+  ],
+  "all_pillars_verified": false
+}

@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net">
+  <diagram id="architecture-technique" name="OpsDesk — chemin réseau, données et frontières du lab">
+    <mxGraphModel dx="1280" dy="860" grid="1" gridSize="10" page="1" pageWidth="1280" pageHeight="860" background="#f7fafc">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="OpsDesk — chemin réseau, données et frontières du lab" style="text;html=0;align=left;verticalAlign=middle;whiteSpace=wrap;strokeColor=none;fillColor=none;fontFamily=Arial;fontSize=26;fontStyle=1;fontColor=#17385f;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="20" width="1200" height="40" />
+        </mxCell>
+        <mxCell id="host" value="&lt;b&gt;RÉFÉRENCE DEV CODEX V4.2 : Ubuntu / WSL2 · Compose&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef3f9;strokeColor=#a6bdcf;fontColor=#20334d;fontFamily=Arial;fontSize=16;strokeWidth=1.5;verticalAlign=top;align=left;spacingTop=12;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="330" y="85" width="900" height="580" />
+        </mxCell>
+        <mxCell id="network" value="&lt;b&gt;Réseau Docker v42opsdesk_net — DNS interne db&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fbfe;strokeColor=#a6bdcf;fontColor=#20334d;fontFamily=Arial;fontSize=16;strokeWidth=1.5;verticalAlign=top;align=left;spacingTop=12;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="365" y="205" width="820" height="190" />
+        </mxCell>
+        <mxCell id="browser" value="&lt;b&gt;Navigateur du laboratoire&lt;/b&gt;&lt;br&gt;127.0.0.1:18081&lt;br&gt;Aucun accès public prévu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#a6bdcf;fontColor=#20334d;fontFamily=Arial;fontSize=18;strokeWidth=2;align=center;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="35" y="250" width="245" height="115" />
+        </mxCell>
+        <mxCell id="app" value="&lt;b&gt;app :8000 · UID 10001&lt;/b&gt;&lt;br&gt;Gunicorn + Flask&lt;br&gt;live · ready · version · metrics" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4f5;strokeColor=#a6bdcf;fontColor=#20334d;fontFamily=Arial;fontSize=18;strokeWidth=2;align=center;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="405" y="255" width="290" height="115" />
+        </mxCell>
+        <mxCell id="db" value="&lt;b&gt;db :5432&lt;/b&gt;&lt;br&gt;PostgreSQL 17.11&lt;br&gt;Rôle app : opsdesk_app" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#a6bdcf;fontColor=#20334d;fontFamily=Arial;fontSize=18;strokeWidth=2;align=center;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="875" y="255" width="265" height="115" />
+        </mxCell>
+        <mxCell id="secrets" value="&lt;b&gt;Secrets locaux hors Git&lt;/b&gt;&lt;br&gt;Mot de passe DB applicatif&lt;br&gt;Secret session / propriétaire" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#a6bdcf;fontColor=#20334d;fontFamily=Arial;fontSize=18;strokeWidth=2;align=center;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="400" y="460" width="300" height="115" />
+        </mxCell>
+        <mxCell id="volume" value="&lt;b&gt;Volume v42opsdesk_pgdata&lt;/b&gt;&lt;br&gt;Fichiers PostgreSQL&lt;br&gt;Un volume ≠ une sauvegarde" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#a6bdcf;fontColor=#20334d;fontFamily=Arial;fontSize=18;strokeWidth=2;align=center;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="865" y="460" width="300" height="115" />
+        </mxCell>
+        <mxCell id="future" value="&lt;b&gt;EXERCICES PERSONNELS — À CONCEVOIR ET RÉALISER PAR MATHIAS&lt;/b&gt;&lt;br&gt;Rocky/KVM · K3s · CI distante · Prometheus/Grafana · reprise contrôlée" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3db;strokeColor=#a6bdcf;fontColor=#20334d;fontFamily=Arial;fontSize=18;strokeWidth=2;dashed=1;align=center;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="45" y="720" width="1175" height="100" />
+        </mxCell>
+        <mxCell id="edge0" value="HTTP local" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;fontFamily=Arial;fontSize=15;strokeColor=#39688a;labelBackgroundColor=#f7fafc;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="browser" target="app">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+            <mxPoint as="offset" x="-0.5" y="-23.0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge1" value="DNS db / TCP 5432" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;fontFamily=Arial;fontSize=15;strokeColor=#39688a;labelBackgroundColor=#f7fafc;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="app" target="db">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+            <mxPoint as="offset" x="0.0" y="-22.5" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge2" value="fichiers montés" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;fontFamily=Arial;fontSize=15;strokeColor=#39688a;labelBackgroundColor=#f7fafc;exitX=0.5;exitY=0.0;entryX=0.5;entryY=1.0;exitPerimeter=0;entryPerimeter=0;dashed=1;" edge="1" parent="1" source="secrets" target="app">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+            <mxPoint as="offset" x="0.0" y="0.0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge3" value="écritures durables" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;fontFamily=Arial;fontSize=15;strokeColor=#39688a;labelBackgroundColor=#f7fafc;exitX=0.4981132075471698;exitY=1.0;entryX=0.47333333333333333;entryY=0.0;exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="db" target="volume">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+            <mxPoint as="offset" x="48.0" y="5.0" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

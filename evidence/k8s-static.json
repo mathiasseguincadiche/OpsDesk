@@ -1,0 +1,70 @@
+{
+  "checked_at_utc": "2026-11-03T13:47:38.622528+00:00",
+  "status": "PASS",
+  "scope": "Offline Kustomize render and structural checks only",
+  "command": "python3 infra/verify_k8s.py (kubectl kustomize k8s)",
+  "kubectl_version": "v1.36.2",
+  "kustomize_version": "v5.8.1",
+  "resources": [
+    {
+      "kind": "Namespace",
+      "name": "opsdesk-lab"
+    },
+    {
+      "kind": "ServiceAccount",
+      "name": "opsdesk-delivery"
+    },
+    {
+      "kind": "ServiceAccount",
+      "name": "opsdesk-runtime"
+    },
+    {
+      "kind": "Role",
+      "name": "opsdesk-delivery"
+    },
+    {
+      "kind": "RoleBinding",
+      "name": "opsdesk-delivery"
+    },
+    {
+      "kind": "ConfigMap",
+      "name": "opsdesk-db-init"
+    },
+    {
+      "kind": "Service",
+      "name": "db"
+    },
+    {
+      "kind": "Service",
+      "name": "opsdesk"
+    },
+    {
+      "kind": "Deployment",
+      "name": "opsdesk"
+    },
+    {
+      "kind": "StatefulSet",
+      "name": "opsdesk-db"
+    },
+    {
+      "kind": "NetworkPolicy",
+      "name": "app-connections"
+    },
+    {
+      "kind": "NetworkPolicy",
+      "name": "database-connections"
+    },
+    {
+      "kind": "NetworkPolicy",
+      "name": "default-deny"
+    }
+  ],
+  "rendered_sha256": "c916d7c6263852ddbd12c840a358be7ab3de368d04c896d6bf8731b4b846fb5f",
+  "cluster_contacted": false,
+  "limits": [
+    "No live cluster, API schema/admission validation, image pull, storage, Secret, RBAC or NetworkPolicy enforcement tested",
+    "K3s version/CNI/CSI, nodes and local port forwarding must be qualified before use",
+    "Tagged local app/DB images are candidates; import or replace with verified content digests",
+    "No rollout/rollback, alert, load, outage, restore or Fedora/Rocky reception implied"
+  ]
+}

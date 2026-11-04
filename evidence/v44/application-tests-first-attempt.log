@@ -1,0 +1,139 @@
+PERSISTED_FICTIONAL_TICKET_ID=5
+test_current_source_commits_and_reads_through_distinct_connections (integration.test_http_postgres.CommittedDevelopmentReadback.test_current_source_commits_and_reads_through_distinct_connections) ... ok
+test_dependency_failure_distinguishes_live_and_ready (integration.test_http_postgres.HTTPPostgreSQLTests.test_dependency_failure_distinguishes_live_and_ready) ... [2026-11-03 18:44:30,445] WARNING in web: database_unavailable request_endpoint=ready
+[2026-11-03 18:44:30,446] WARNING in web: database_unavailable request_endpoint=list_api
+ok
+test_health_version_and_metrics (integration.test_http_postgres.HTTPPostgreSQLTests.test_health_version_and_metrics) ... ok
+test_html_form_requires_valid_session_csrf (integration.test_http_postgres.HTTPPostgreSQLTests.test_html_form_requires_valid_session_csrf) ... ok
+test_html_is_escaped_and_security_headers_present (integration.test_http_postgres.HTTPPostgreSQLTests.test_html_is_escaped_and_security_headers_present) ... ok
+test_invalid_create_is_rejected_before_sql (integration.test_http_postgres.HTTPPostgreSQLTests.test_invalid_create_is_rejected_before_sql) ... ok
+test_list_is_limited_to_latest_hundred (integration.test_http_postgres.HTTPPostgreSQLTests.test_list_is_limited_to_latest_hundred) ... ok
+test_loopback_hosts_are_accepted (integration.test_http_postgres.HTTPPostgreSQLTests.test_loopback_hosts_are_accepted) ... ok
+test_malformed_json_is_json_400 (integration.test_http_postgres.HTTPPostgreSQLTests.test_malformed_json_is_json_400) ... ok
+test_missing_ticket_is_json_404 (integration.test_http_postgres.HTTPPostgreSQLTests.test_missing_ticket_is_json_404) ... ok
+test_mutating_api_requires_json (integration.test_http_postgres.HTTPPostgreSQLTests.test_mutating_api_requires_json) ... ok
+test_no_authentication_is_claimed_by_local_api (integration.test_http_postgres.HTTPPostgreSQLTests.test_no_authentication_is_claimed_by_local_api) ... ok
+test_patch_requires_only_status (integration.test_http_postgres.HTTPPostgreSQLTests.test_patch_requires_only_status) ... ok
+test_payload_limit_is_enforced (integration.test_http_postgres.HTTPPostgreSQLTests.test_payload_limit_is_enforced) ... ok
+test_postgresql_business_constraints_are_real (integration.test_http_postgres.HTTPPostgreSQLTests.test_postgresql_business_constraints_are_real) ... ok
+test_same_state_does_not_change_business_status (integration.test_http_postgres.HTTPPostgreSQLTests.test_same_state_does_not_change_business_status) ... ok
+test_sql_text_is_data_and_not_a_command (integration.test_http_postgres.HTTPPostgreSQLTests.test_sql_text_is_data_and_not_a_command) ... ok
+test_ticket_round_trip_and_state_flow (integration.test_http_postgres.HTTPPostgreSQLTests.test_ticket_round_trip_and_state_flow) ... ERROR
+test_untrusted_host_is_rejected (integration.test_http_postgres.HTTPPostgreSQLTests.test_untrusted_host_is_rejected) ... ERROR
+test_cannot_skip_or_reopen (unit.test_business.BusinessRules.test_cannot_skip_or_reopen) ... ok
+test_defaults_are_explicit (unit.test_business.BusinessRules.test_defaults_are_explicit) ... ok
+test_invalid_input_is_not_coerced (unit.test_business.BusinessRules.test_invalid_input_is_not_coerced) ... ok
+test_limits_allow_maximum_text (unit.test_business.BusinessRules.test_limits_allow_maximum_text) ... ok
+test_normalizes_only_ticket_text (unit.test_business.BusinessRules.test_normalizes_only_ticket_text) ... ok
+test_retry_of_same_status_is_idempotent (unit.test_business.BusinessRules.test_retry_of_same_status_is_idempotent) ... ok
+test_valid_status_flow (unit.test_business.BusinessRules.test_valid_status_flow) ... ok
+
+======================================================================
+ERROR: test_ticket_round_trip_and_state_flow (integration.test_http_postgres.HTTPPostgreSQLTests.test_ticket_round_trip_and_state_flow)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/source/tests/integration/test_http_postgres.py", line 42, in test_ticket_round_trip_and_state_flow
+    response=self.client.patch(response.headers['Location'],json={'status':state});self.assertEqual(response.status_code,200);self.assertEqual(response.get_json()['status'],state)
+                               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/site-packages/werkzeug/datastructures/headers.py", line 87, in __getitem__
+    return self._get_key(key)
+           ~~~~~~~~~~~~~^^^^^
+  File "/usr/local/lib/python3.14/site-packages/werkzeug/datastructures/headers.py", line 101, in _get_key
+    raise BadRequestKeyError(key)
+werkzeug.exceptions.BadRequestKeyError: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+
+======================================================================
+ERROR: test_untrusted_host_is_rejected (integration.test_http_postgres.HTTPPostgreSQLTests.test_untrusted_host_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.14/site-packages/flask/app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/usr/local/lib/python3.14/site-packages/flask/app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/site-packages/flask/ctx.py", line 323, in __init__
+    self.url_adapter = app.create_url_adapter(self.request)
+                       ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/site-packages/flask/app.py", line 450, in create_url_adapter
+    request.host = get_host(request.environ, request.trusted_hosts)  # pyright: ignore
+                   ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/site-packages/werkzeug/wsgi.py", line 120, in get_host
+    return _sansio_utils.get_host(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        environ["wsgi.url_scheme"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        trusted_hosts,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "/usr/local/lib/python3.14/site-packages/werkzeug/sansio/utils.py", line 154, in get_host
+    raise SecurityError(f"Host {host!r} is not trusted.")
+werkzeug.exceptions.SecurityError: 400 Bad Request: Host 'untrusted.example.invalid' is not trusted.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/source/tests/integration/test_http_postgres.py", line 96, in test_untrusted_host_is_rejected
+    self.assertEqual(self.client.get('/version',headers={'Host':'untrusted.example.invalid'}).status_code,400)
+                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/site-packages/werkzeug/test.py", line 1166, in get
+    return self.open(*args, **kw)
+           ~~~~~~~~~^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/site-packages/flask/testing.py", line 235, in open
+    response = super().open(
+        request,
+        buffered=buffered,
+        follow_redirects=follow_redirects,
+    )
+  File "/usr/local/lib/python3.14/site-packages/werkzeug/test.py", line 1120, in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+  File "/usr/local/lib/python3.14/site-packages/werkzeug/test.py", line 992, in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+  File "/usr/local/lib/python3.14/site-packages/werkzeug/test.py", line 1268, in run_wsgi_app
+    app_rv = app(environ, start_response)
+  File "/usr/local/lib/python3.14/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "/usr/local/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/local/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/local/lib/python3.14/site-packages/flask/app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/local/lib/python3.14/site-packages/flask/app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/source/app/opsdesk/web.py", line 217, in expected_error
+    return render_template("error.html", message=message), error.code
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "/usr/local/lib/python3.14/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+  File "/usr/local/lib/python3.14/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.14/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/source/app/opsdesk/templates/error.html", line 1, in top-level template code
+    {% extends 'base.html' %}{% block content %}<section class="card"><h1>La demande ne peut pas aboutir.</h1><p>{{ message }}</p><p><a href="{{ url_for('list_page') }}">Retour aux tickets</a></p></section>{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/source/app/opsdesk/templates/base.html", line 2, in top-level template code
+    <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpsDesk — tickets IT</title><link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}"></head>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'build'
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.335s
+
+FAILED (errors=2)

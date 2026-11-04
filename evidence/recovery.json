@@ -1,0 +1,62 @@
+{
+  "checked_at_utc": "2026-11-03T13:52:06.989453+00:00",
+  "status": "PASS",
+  "scope": "Fresh PostgreSQL volume and separate app/network on Ubuntu WSL Docker; source preserved",
+  "source_url": "http://127.0.0.1:18081",
+  "target_url": "http://127.0.0.1:18088",
+  "target_project": "v42opsrestore-d3929bb6",
+  "rto_seconds": 10.969,
+  "image_id": "sha256:2fa15b716fd4f4df2d286f412cca1b3b323cc484677a0ac3866a8fecced5ac95",
+  "ticket_id": 3,
+  "before": {
+    "created_at": "2026-11-03T13:40:23.173415+00:00",
+    "description": "Données fictives — test SQL et accents.",
+    "id": 3,
+    "priority": "normal",
+    "status": "closed",
+    "title": "Ticket de preuve 71272b6295b5",
+    "updated_at": "2026-11-03T13:40:23.223505+00:00"
+  },
+  "after": {
+    "created_at": "2026-11-03T13:40:23.173415+00:00",
+    "description": "Données fictives — test SQL et accents.",
+    "id": 3,
+    "priority": "normal",
+    "status": "closed",
+    "title": "Ticket de preuve 71272b6295b5",
+    "updated_at": "2026-11-03T13:40:23.223505+00:00"
+  },
+  "dump_sha256": "990147d505718ec754825aa357cdb34692c2eef08fb64749eba91e7081341cbe",
+  "steps": [
+    {
+      "step": "backup",
+      "exit_code": 0,
+      "seconds": 0.17
+    },
+    {
+      "step": "fresh-target-db",
+      "exit_code": 0,
+      "seconds": 4.528
+    },
+    {
+      "step": "restore",
+      "exit_code": 0,
+      "seconds": 0.126
+    },
+    {
+      "step": "runtime-grants",
+      "exit_code": 0,
+      "seconds": 0.106
+    },
+    {
+      "step": "fresh-target-app",
+      "exit_code": 0,
+      "seconds": 6.195
+    }
+  ],
+  "limits": [
+    "One known ticket compared through HTTP; no concurrent writes or physical-host loss qualified",
+    "Private database dump is not encrypted in this OpsDesk local exercise; no offsite/scheduled backup claimed",
+    "No database deletion, source outage, VM, K3s rollback or production qualification"
+  ]
+}
