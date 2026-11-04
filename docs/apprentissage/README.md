@@ -74,6 +74,16 @@ Utiliser la base [Suivi des réalisations — OpsDesk](https://app.notion.com/p/
 
 **L0** = découverte ; **L1** = compréhension ; **L2** = réalisation personnelle ; **L3** = autonomie vérifiée sur une adaptation ou un diagnostic nouveau avec aide limitée. Le résultat technique, la compréhension, le diagnostic et l’explication se vérifient séparément. Un exercice terminé avec assistance peut relever de L2 ; il n’attribue pas automatiquement L3. Aucun niveau, acquis CV ou résultat personnel n’est prérempli par la documentation.
 
+### Validité du contrôle et précautions de lecture — charte V5
+
+Un fichier peut être réalisé sans être vérifié. Un contrôle en échec ne retire pas la réalisation : conserver « réalisé — échec constaté », le symptôme et la prochaine action. Une déclaration sans preuve consultable reste « déclaré — non vérifié ». Les règles de [portée et renouvellement d’une preuve](../preuves.md#avancement-et-contrôle--deux-informations-distinctes) font autorité ; ne pas recopier PASS sur une nouvelle version ou une nouvelle cible. Les champs et statuts de la base existante sont conservés : ses valeurs servent au suivi, la preuve détaille le contrôle, et le niveau personnel reste séparé.
+
+Avant toute procédure, distinguer l’état de sa rédaction de son état d’essai : jamais rejouée, partiellement rejouée ou entièrement rejouée, avec date/cible/version. Le laboratoire prévu et ses versions demandent une revérification au moment de la pratique ; cette charte ne les certifie pas.
+
+Une commande mentionnée dans un exercice n’a pas été exécutée par cette mise à jour. Vérifier options et sous-commandes dans l’aide de la version réellement disponible avant de les utiliser. `terraform validate` suppose une initialisation ; `init` peut télécharger des providers, et `plan` peut accéder au fournisseur et à l’état. Une sortie de configuration résolue, par exemple `docker compose config`, peut dévoiler des secrets. Ne pas la publier sans relecture. Avant un script téléchargé, lire le fichier et son origine ; ne pas l’exécuter directement par un tube vers un shell.
+
+**Arrêter avant modification** si la cible, l’autorisation, la version, la sauvegarde restaurable ou le retour nécessaire est ambigu. Nommer le point de non-retour lorsqu’il existe ; un retour décrit mais jamais essayé reste non vérifié. Les exercices 01/02 restent des activités de lecture et dessin.
+
 ### Conservation des 18 exigences
 
 | Ancienne rubrique | Emplacement après regroupement |
