@@ -2,7 +2,7 @@
 
 **Scénario oral proposé, non chronométré et non présenté comme une démonstration déjà réalisée par Mathias.** Les durées ci-dessous sont un découpage indicatif. Les tests de source V4.4 et les observations du service historique ont des preuves séparées.
 
-Ce parcours présente **ce qui fonctionne localement** et explique honnêtement les étapes encore cibles. Aucune disponibilité 24 h/24 ni réception cloud/K3s n’est annoncée.
+Ce parcours présente **les observations locales historiques et les résultats personnels qui seront disponibles au jour de la démonstration** et explique honnêtement les étapes encore cibles. Aucune disponibilité 24 h/24 ni réception cloud/K3s n’est annoncée.
 
 | Temps indicatif | Action | Ce que le lecteur doit comprendre |
 |---|---|---|
@@ -15,6 +15,8 @@ Ce parcours présente **ce qui fonctionne localement** et explique honnêtement 
 | 13–15 min | Répondre aux questions et annoncer la prochaine preuve | La maîtrise se construit par tests, diagnostic et reprise |
 
 Ne pas improviser une panne devant le recruteur. Une démonstration d’incident doit avoir été répétée sur la cible isolée, être récupérable et disposer de ses pré-checks. Présenter seulement son scénario tant qu’elle n’est pas exécutée.
+
+Avant une démonstration vivante, vérifier l’existence de sa propre cible locale et sa version ; les anciennes commandes Compose sont [historiques et non exécutables depuis le dépôt courant](demarrage.md). Sans cible personnelle reçue, présenter le contrat, les schémas historiques et les preuves attribuées à Codex.
 
 ## Questions d’entretien utiles
 

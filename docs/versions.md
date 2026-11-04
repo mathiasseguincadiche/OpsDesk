@@ -15,7 +15,7 @@ Cette fiche sépare la version déclarée par l’application, les outils de l�
 | Rendu Ansible | core 2.20.1, connexion locale | Rendu JSON et seconde passe sans changement ; aucune configuration Linux distante |
 | Manifests K3s | kubectl 1.36.2 / Kustomize 5.8.1 pour le rendu | Treize ressources rendues hors ligne ; version K3s cible NON QUALIFIÉE |
 | Pod Security | Candidat `restricted` versionné dans le namespace | Contrôler sa compatibilité avec le vrai cluster avant toute application |
-| CI / registre | Fichiers réels du dépôt et liens de runs publiés | Résultat distant, permissions/runner et publication à vérifier séparément |
+| CI / registre | Candidats historiques `.github/workflows/verify.yml` et `.gitlab-ci.yml`, absents du dépôt courant | Workflow GitHub personnel à construire ; aucun run distant ni registre publié attestés par cette fiche |
 | Scan image | Version, base et identité dans le rapport Trivy | Lire le rapport complet et son état ; ne pas conclure « zéro vulnérabilité » |
 
 Une mise à jour bénigne doit préserver le ticket témoin, les variables/Secrets nécessaires et la compatibilité du schéma. Une image saine de retour et une archive restaurable sont deux éléments distincts. [Livraison](livraison.md) · [Day-2](exploitation-day2.md) · [Preuves](preuves.md).

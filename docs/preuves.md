@@ -2,7 +2,7 @@
 
 ## Preuve applicative courante V4.4
 
-Le [rapport des tests actuels](../evidence/v44/application-tests.json) et son journal enregistrent26 tests réussis sur la source montée en lecture seule, avec PostgreSQL réel. La plupart des cas utilisent une table TEMP ; un ticket fictif par passage est committé puis relu par des connexions distinctes et conservé. Le premier passage défavorable reste archivé séparément. Aucune image reconstruite, aucun service redéployé, aucune reprise ou opération InfraOps personnelle n’est exécutée.
+Le [rapport des tests actuels](../evidence/v44/application-tests.json) et son journal enregistrent 26 tests réussis sur la source montée en lecture seule, avec PostgreSQL réel. La plupart des cas utilisent une table TEMP ; un ticket fictif par passage est committé puis relu par des connexions distinctes et conservé. Le premier passage défavorable reste archivé séparément. Aucune image reconstruite, aucun service redéployé, aucune reprise ou opération InfraOps personnelle n’est exécutée.
 
 ## Smoke historique V4.2 conservé
 
@@ -32,12 +32,17 @@ La preuve déclare `uncommitted-v42`. Elle ne fournit pas un faux SHA, un digest
 
 ## Rejouer sans gonfler les statuts
 
-```bash
+**ACTIF — exécutable depuis les sources disponibles, sous prérequis ; NON EXÉCUTÉ par cette mission documentaire.** Les tests unitaires purs sont présents. Depuis la racine OpsDesk, sur le poste personnel avec Python disponible, sous son utilisateur ordinaire et sans DB ni installation supplémentaire, leur lancement est :
+
+```sh
 python3 -m unittest discover -s tests/unit -v
-python3 scripts/smoke.py --base-url http://127.0.0.1:18081
 ```
 
-Ces commandes sont des commandes à exécuter ; leur présence dans le guide n’est pas un nouveau résultat. Archiver la sortie réelle, vérifier sa cible et ne pas conserver PASS après une régression. Le smoke ajoute des données fictives à la base ; il n’efface pas les tickets existants.
+La preuve historique utilisait Python 3.14.10 ; relever sa propre version avant comparaison. Attendu : sept tests de règles sans échec, puis un code de sortie 0. En cas d’import introuvable ou de résultat différent, conserver l’erreur, le chemin de lancement et le commit ; lire le test et son import avant toute installation. La commande n’appelle ni DB ni service, mais Python peut créer un cache `__pycache__` dans le répertoire utilisateur du dépôt.
+
+**ACTIF — travail personnel à réaliser : identifier et recevoir une instance avant le smoke.** `scripts/smoke.py` est présent ; il ne prépare ni n’installe le service. Le [contrat, section 20](contrat-applicatif.md#20-commandes-de-vérification) fournit le contexte du contrôle HTTP, après préparation de l’instance, des secrets et de la DB. La cible de référence `127.0.0.1:18081` désigne la boucle locale de la machine qui lance le client ; sur l’hôte, elle ne désigne pas automatiquement la VM. Le smoke crée deux tickets fictifs et ne les efface pas. Contrôler l’identité du service avec `/version`, les données autorisées et le port avant toute écriture.
+
+Archiver uniquement la sortie réellement obtenue, avec version, environnement et date ; ne pas conserver PASS après une régression. La présence de ces consignes n’est pas un nouveau résultat.
 
 ## Ce qui appartient aux exercices personnels
 

@@ -15,7 +15,7 @@ La V4.4 sépare la réception de l’application et la réalisation des exercice
 - Sources Flask, pages/API et règles de tickets conservées ; dépendances verrouillées et schéma métier autonome fourni.
 - Contrôle Host et refus CSRF non ASCII testés ; nom du rôle PostgreSQL configurable par `DB_USER`.
 - Tests HTTP/SQL et relecture d’un ticket committé ajoutés ; résultats courants dans `evidence/v44/`, premier échec conservé.
-- Contrat applicatif à30 rubriques et documentation réconciliés ; alertes de sécurité conservées.
+- Contrat applicatif à 30 rubriques et documentation réconciliés ; alertes de sécurité conservées.
 - Parcours et preuves historiques conservés avec leur provenance ; aucune réalisation InfraOps personnelle anticipée.
 
 ## Ordre de travail de Mathias

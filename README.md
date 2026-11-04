@@ -1,22 +1,29 @@
 # OpsDesk — un service de tickets pour apprendre l’InfraOps
 
-## Parcours actif et laboratoire personnel
+OpsDesk est une application de tickets IT fictifs qui sert de laboratoire pour apprendre l’infrastructure et l’exploitation. Un collaborateur ouvre une demande, le support la consulte, la prend en charge puis la clôture ; PostgreSQL conserve les tickets.
 
-Commencer par [l’exercice personnel V4.4 n° 1 — comprendre l’application](docs/apprentissage/01-application.md) et [le contrat applicatif](docs/contrat-applicatif.md). Les [13 exercices prioritaires](docs/apprentissage/README.md) sont distincts des supports théoriques et preuves historiques conservés. Les corrigés se consultent après une tentative ; les cinq évaluations personnelles sont dans `docs/apprentissage/evaluations.md`.
+![Présentation du service et des responsabilités ; références historiques Codex](docs/diagrams/presentation.svg)
+
+Le schéma présente le service et la séparation des responsabilités. Le [schéma technique](docs/diagrams/architecture-technique.svg) décrit le laboratoire historique Codex Ubuntu/WSL ; Mathias concevra son architecture personnelle à l’exercice 02.
+
+**Qui fait quoi :** Codex a fourni l’application Flask/Python, son contrat et ses tests. Mathias doit concevoir, écrire, déployer, tester et expliquer personnellement l’infrastructure et l’exploitation. Les anciennes références Codex ne valident aucune compétence personnelle.
+
+**État réel :** 26 tests applicatifs PASS dans [l’environnement Codex du 3 novembre 2026](evidence/v44/application-tests.json) ; sécurité globale non validée, [triage historique FAIL](docs/triage-securite-v44.md) ; laboratoire Fedora/KVM/Rocky et exercices personnels NON EXÉCUTÉS. **Aucune authentification : usage local et données fictives uniquement, sans exposition Internet.** Les PR [#1](https://github.com/mathiasseguincadiche/OpsDesk/pull/1) et [#2](https://github.com/mathiasseguincadiche/OpsDesk/pull/2) sont fusionnées ; leur intégration ne prouve aucune CI distante ou infrastructure personnelle.
+
+## Choisir sa lecture
+
+- **Je veux découvrir ou apprendre :** [Notion OpsDesk](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223) → [exercice 01 — comprendre l’application](docs/apprentissage/01-application.md) et [contrat applicatif](docs/contrat-applicatif.md), puis [13 exercices dans l’ordre](docs/apprentissage/README.md). Les cinq évaluations sont distinctes ; les corrigés se lisent après tentative.
+- **Je veux inspecter ou préparer une reproduction :** [architecture](docs/architecture.md), [état et portée des preuves](STATUS.md), [démarrage actif ou historique](docs/demarrage.md), [runbook](docs/exploitation-day2.md), [sécurité et limites](docs/securite.md). Le démarrage de l’infrastructure reste un travail personnel guidé.
+
+## Laboratoire personnel prévu
 
 Le laboratoire prévu est **Fedora 45 hôte → KVM/QEMU/libvirt → Rocky Linux 10.2 invité**. Les exercices 01/02 se font en lecture et dessin ; pour la préparation technique, lire [le guide de laboratoire et ses contrôles](docs/laboratoire-fedora-kvm-rocky.md). Aucune compatibilité, installation ou VM personnelle n’est validée par les essais historiques Ubuntu/WSL de Codex. Une version ou un contrôle non vérifié reste signalé ; aucune substitution silencieuse de Rocky Linux n’est autorisée.
 
 GitHub est l’unique plateforme active de ce parcours. GitLab est laissé en l’état ; ses anciennes références sont historiques et facultatives, sans synchronisation ni second flux quotidien.
 
-Un collaborateur ouvre une demande IT, l’équipe la consulte, la prend en charge puis la clôture. OpsDesk fournit une petite interface web, une API et une persistance PostgreSQL pour rendre ce parcours vérifiable.
-
-**V4.4 : application et tests fournis par Codex ; infrastructure à concevoir et réaliser personnellement par Mathias.** Les anciennes configurations et preuves V4.2 sont conservées comme références assistées. Elles ne valident aucune compétence personnelle.
-
-![Présentation : application fournie et travail personnel réservé](docs/diagrams/presentation.svg)
-
 ## Commencer
 
-Lire le [contrat applicatif autonome](docs/contrat-applicatif.md), puis le [parcours personnel](docs/parcours-apprentissage.md). Le premier exercice consiste à comprendre les besoins et proposer son propre schéma d’infrastructure. Il ne demande pas de recopier les anciennes recettes.
+Lire le [contrat applicatif autonome](docs/contrat-applicatif.md), puis le [parcours personnel](docs/parcours-apprentissage.md). Le premier exercice consiste à comprendre l’application et reformuler ses besoins ; le schéma personnel d’infrastructure appartient à l’exercice 02. Il ne demande pas de recopier les anciennes recettes.
 
 | Besoin du lecteur | Document |
 |---|---|
@@ -39,4 +46,4 @@ Les tests de la source V4.4 couvrent règles, formulaires, CSRF, SQL réel, refu
 
 Les deux familles de schémas sont distinctes et modifiables : [présentation draw.io](docs/diagrams/presentation.drawio) / [SVG](docs/diagrams/presentation.svg), [technique draw.io](docs/diagrams/architecture-technique.drawio) / [SVG](docs/diagrams/architecture-technique.svg). Le schéma technique décrit le laboratoire de développement Codex ; il ne constitue pas l’architecture personnelle déjà réalisée de Mathias.
 
-[GitHub](https://github.com/mathiasseguincadiche/OpsDesk) · [GitLab](https://gitlab.com/mathias.seguincadiche/OpsDesk) · [MIT](LICENSE). Aucun résultat distant CI n’est déduit de la présence des anciens fichiers.
+[GitHub](https://github.com/mathiasseguincadiche/OpsDesk) · [GitLab — archive historique facultative](https://gitlab.com/mathias.seguincadiche/OpsDesk) · [MIT](LICENSE). Aucun résultat distant CI n’est déduit de la présence des anciens fichiers.

@@ -1,12 +1,14 @@
 # Architecture opérationnelle d’OpsDesk
 
-**V4.4 : architecture interne de l’application et référence du laboratoire de développement Codex.** La cible d’hébergement reste à concevoir personnellement par Mathias. Les choix Compose, noms de ressources et ports ci-dessous décrivent cet essai existant ; ils ne sont pas une architecture personnelle déjà réalisée ou imposée. Le [contrat autonome](contrat-applicatif.md) porte les besoins à satisfaire.
+**V4.4 : architecture interne de l’application et référence du laboratoire de développement Codex.** La cible d’hébergement reste à concevoir personnellement par Mathias. Les choix Compose, noms de ressources et ports ci-dessous décrivent cet essai historique ; ils ne sont pas une architecture personnelle déjà réalisée ou imposée. Le [contrat autonome](contrat-applicatif.md) porte les besoins à satisfaire.
+
+> **Lecture des schémas : historique Codex.** Les recettes Compose/Docker et les manifests cités ne sont pas présents dans `main` `51e1a489`. Le service observé, son réseau et ses volumes appartiennent à l’essai Ubuntu/WSL documenté par les preuves ; cette page ne constitue pas une procédure exécutable ni la cible Fedora/KVM/Rocky personnelle.
 
 ## Besoin et choix
 
 Un collaborateur doit ouvrir une demande et l’équipe IT doit retrouver son état. Les tickets doivent rester dans une base indépendante de l’image applicative ; l’opérateur doit pouvoir reconnaître une mauvaise livraison et localiser une panne.
 
-| Besoin | Décision actuelle | Alternative et compromis | Vérification |
+| Besoin | Décision du support ou choix historique | Alternative et compromis | Vérification |
 |---|---|---|---|
 | Petite application compréhensible | Flask, rendu HTML côté serveur et API JSON | Une SPA ajouterait un build et du code métier sans bénéfice pour ce premier lab | UI HTTP et parcours API dans le smoke |
 | Donnée relationnelle durable | PostgreSQL 17.11, volume nommé | SQLite simplifierait le démarrage mais ne montrerait pas le flux réseau app → DB attendu | Création puis relecture d’un ticket ; redémarrage/restauration à vérifier séparément |
