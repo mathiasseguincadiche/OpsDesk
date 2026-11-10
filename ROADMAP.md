@@ -34,7 +34,7 @@ La V4.4 sépare la réception de l’application et la réalisation des exercice
 12. Diagnostiquer un cas nouveau et rétablir le besoin utilisateur.
 13. Réutiliser les acquis sur une tâche de transfert et expliquer ses choix avec une aide limitée.
 
-**Tous ces exercices sont à faire personnellement ; aucun niveau n’est présumé.** OpsDesk propose un accompagnement guidé. BankFlow demandera plus de choix personnels et LogiTrack davantage de réutilisation autonome.
+**Tous ces exercices sont à faire personnellement ; aucun niveau n’est présumé.** OpsDesk est l’unique projet actif de ce parcours : l’accompagnement diminue progressivement d’une première tentative guidée à une tâche nouvelle réalisée et expliquée avec une aide limitée (exercice 13). Les autres projets anciens ne sont ni des étapes obligatoires ni des preuves à afficher dans le CV.
 
 Les anciennes solutions restent accessibles comme références après une première tentative ; elles ne sont pas les fichiers obligatoires à recopier. Toute ressource payante, exposition réelle, destruction ou nettoyage demande son périmètre et l’accord approprié. Ce document ne lance aucun exercice.
 
