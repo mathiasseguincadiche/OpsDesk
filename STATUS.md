@@ -4,7 +4,7 @@
 
 ## Références GitHub contrôlées
 
-Le contrôle du 4 novembre 2026 constate la PR [#1](https://github.com/mathiasseguincadiche/OpsDesk/pull/1) fusionnée à 02:11:40 UTC (`16b63546`) et la PR [#2](https://github.com/mathiasseguincadiche/OpsDesk/pull/2) fusionnée à 14:33:12 UTC. La PR [#3](https://github.com/mathiasseguincadiche/OpsDesk/pull/3) est fusionnée le 4 novembre 2026 à 18:38:48 UTC ; `main` est relu au commit `886918115e4321c89c0923e4ea95286c50e2e506` pour l’application de la charte documentaire V5. Les audits précédents restent des observations datées de leur propre révision. Ces fusions documentent l’intégration des sources ; elles ne sont pas des preuves de CI ou d’infrastructure exécutée. GitHub reste la seule plateforme active ; GitLab est historique.
+Le contrôle du 4 novembre 2026 constate la PR [#1](https://github.com/mathiasseguincadiche/OpsDesk/pull/1) fusionnée à 02:11:40 UTC (`16b63546`) et la PR [#2](https://github.com/mathiasseguincadiche/OpsDesk/pull/2) fusionnée à 14:33:12 UTC. La PR [#3](https://github.com/mathiasseguincadiche/OpsDesk/pull/3) a été fusionnée le 4 novembre 2026 à 18:38:48 UTC ; la PR [#4](https://github.com/mathiasseguincadiche/OpsDesk/pull/4) a ensuite été fusionnée le 4 novembre à 21:28:52 UTC, portant `main` au commit `05caa712e28ffac4af1239c9e0d3b4175129ec1f` (contrôlé le 10 novembre 2026). Les audits précédents restent des observations datées de leur propre révision. Ces fusions documentent l’intégration des sources ; elles ne sont pas des preuves de CI ou d’infrastructure exécutée. GitHub reste la seule plateforme active ; GitLab est historique.
 
 ## Portée de cette révision documentaire
 
@@ -35,4 +35,4 @@ Le [scan complet historique](evidence/vulnerability-scan.json) reste FAIL, avec 
 
 Les cinq responsabilités restent à réaliser personnellement : infrastructure/réseau, automatisation, déploiement/CI, supervision/diagnostic, maintenance/reprise. **Aucune preuve ou niveau L0/L1/L2/L3 personnel n’est attribué par les tests de Codex.** L2 exige une réalisation personnelle ; L3 une adaptation et un diagnostic autonomes sur une tâche nouvelle.
 
-[Parcours](docs/parcours-apprentissage.md) · [Provenance](docs/provenance.md) · [Contrat](docs/contrat-applicatif.md). Le CV v2.9 est hors périmètre et reste inchangé.
+[Parcours](docs/parcours-apprentissage.md) · [Provenance](docs/provenance.md) · [Contrat](docs/contrat-applicatif.md). Le CV et la lettre de motivation sont gérés séparément ; aucune compétence personnelle n’est ajoutée sur la seule base des essais Codex ou d’une mise à jour documentaire.

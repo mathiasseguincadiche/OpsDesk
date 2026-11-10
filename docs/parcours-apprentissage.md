@@ -8,7 +8,7 @@ Le laboratoire prévu est **Fedora 45 hôte → KVM/QEMU/libvirt → Rocky Linux
 
 GitHub est l’unique plateforme active de ce parcours. GitLab est laissé en l’état ; ses anciennes références sont historiques et facultatives, sans synchronisation ni second flux quotidien.
 
-**V4.4 : premier projet accompagné.** Mathias écrit et réalise lui-même ses configurations ; Codex explique, propose des indices puis examine sa tentative. Le Notion OpsDesk existant garde sa fonction pédagogique et son historique. Ce dépôt fournit les sources et les preuves ; il ne crée pas un deuxième parent Notion ni une duplication littérale des leçons.
+**V4.4 : parcours unique OpsDesk, d’abord accompagné puis progressivement autonome.** Mathias écrit et réalise lui-même ses configurations ; Codex explique, propose des indices puis examine sa tentative. Le Notion OpsDesk existant garde sa fonction pédagogique et son historique. Ce dépôt fournit les sources et les preuves ; il ne crée pas un deuxième parent Notion ni une duplication littérale des leçons.
 
 ## Ordre de progression V4.4
 
