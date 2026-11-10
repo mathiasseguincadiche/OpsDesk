@@ -8,7 +8,7 @@ Le schéma présente le service et la séparation des responsabilités. Le [sch�
 
 **Qui fait quoi :** Codex a fourni l’application Flask/Python, son contrat et ses tests. Mathias doit concevoir, écrire, déployer, tester et expliquer personnellement l’infrastructure et l’exploitation. Les anciennes références Codex ne valident aucune compétence personnelle.
 
-**État réel :** 26 tests applicatifs PASS dans [l’environnement Codex du 3 novembre 2026](evidence/v44/application-tests.json) ; sécurité globale non validée, [triage historique FAIL](docs/triage-securite-v44.md) ; laboratoire Fedora/KVM/Rocky et exercices personnels NON EXÉCUTÉS. **Aucune authentification : usage local et données fictives uniquement, sans exposition Internet.** Les PR [#1](https://github.com/mathiasseguincadiche/OpsDesk/pull/1) et [#2](https://github.com/mathiasseguincadiche/OpsDesk/pull/2) sont fusionnées ; leur intégration ne prouve aucune CI distante ou infrastructure personnelle.
+**État réel :** 26 tests applicatifs PASS dans [l’environnement Codex du 3 novembre 2026](evidence/v44/application-tests.json) ; sécurité globale non validée, [triage historique FAIL](docs/triage-securite-v44.md) ; laboratoire Fedora/KVM/Rocky et exercices personnels NON EXÉCUTÉS. **Aucune authentification : usage local et données fictives uniquement, sans exposition Internet.** Les PR [#1](https://github.com/mathiasseguincadiche/OpsDesk/pull/1), [#2](https://github.com/mathiasseguincadiche/OpsDesk/pull/2), [#3](https://github.com/mathiasseguincadiche/OpsDesk/pull/3) et [#4](https://github.com/mathiasseguincadiche/OpsDesk/pull/4) sont fusionnées ; leur intégration ne prouve aucune CI distante ou infrastructure personnelle.
 
 ## Choisir sa lecture
 
@@ -32,7 +32,7 @@ Lire le [contrat applicatif autonome](docs/contrat-applicatif.md), puis le [parc
 | Résultats actuels et preuves historiques | [État de réception](STATUS.md) · [Preuves](docs/preuves.md) |
 | Authentification absente et contrôles applicatifs | [Sécurité](docs/securite.md) |
 | Qui a produit quoi ; anciennes solutions et travail réservé | [Provenance](docs/provenance.md) |
-| Objectifs des trois projets et prochaines étapes personnelles | [Feuille de route](ROADMAP.md) · [Notion OpsDesk](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223) |
+| Objectifs du projet fil rouge unique et prochaines étapes personnelles | [Feuille de route](ROADMAP.md) · [Notion OpsDesk](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223) |
 
 ## Repères documentaires
 
