@@ -20,7 +20,7 @@ Les alternatives ci-dessus servent à comprendre les compromis. Les sources cons
 
 ## Chemin d’une demande
 
-![Architecture technique du laboratoire historique de développement Ubuntu/WSL ; cible Fedora/KVM/Rocky à réaliser](diagrams/architecture-technique.svg)
+![Chemin d’une demande dans le laboratoire historique Ubuntu/WSL : navigateur, application, base PostgreSQL et volume ; les cibles Fedora, KVM/QEMU, Rocky Linux, Terraform, Ansible, K3s, Grafana et GitHub sont en pointillé, non exécutées](diagrams/architecture-technique.svg)
 
 1. Le navigateur de la machine de laboratoire contacte `127.0.0.1:18081` en HTTP. Il n’y a pas de DNS public, TLS public, VPC ou Ingress dans cette tranche.
 2. Docker transmet au port `8000` du conteneur `app`. Gunicorn sert Flask ; Jinja échappe le contenu HTML.
@@ -69,9 +69,9 @@ Pour une nouvelle décision coûteuse à inverser, ajouter date, contexte sourc�
 
 ## Origine réelle des fichiers de schéma
 
-Les paires [présentation](diagrams/presentation.drawio) / [SVG](diagrams/presentation.svg) et [technique](diagrams/architecture-technique.drawio) / [SVG](diagrams/architecture-technique.svg) sont produites séparément par [generate.py](diagrams/generate.py). Les SVG sont des représentations autonomes écrites par ce générateur, **pas des exports obtenus en ouvrant les `.drawio` dans diagrams.net**. Un futur export par l’éditeur pourra différer, notamment pour les libellés HTML de la source. Les fichiers et le générateur ne sont pas exécutés ni modifiés par cette passe.
+Les paires [présentation](diagrams/presentation.drawio) / [SVG](diagrams/presentation.svg) et [technique](diagrams/architecture-technique.drawio) / [SVG](diagrams/architecture-technique.svg) ont une source `.drawio` qui fait foi. Chaque SVG a été exporté depuis sa source par le moteur de rendu de Draw.io 16.0.0 (page d’export `export3.html`, fonction `getSvg`), sans l’application de bureau ; seules les balises d’accessibilité `title` et `desc` ont été ajoutées après l’export. Le générateur `generate.py` est supprimé : il aurait écrasé ces fichiers. La marche à suivre est dans le [README des schémas](diagrams/README.md).
 
-La structure XML, les libellés et le rendu SVG local ont été contrôlés lors de la réception documentaire précédente, pour les hashes indiqués dans son rapport. La réouverture Draw.io et l’affichage natif GitHub/Notion restent non vérifiés. Les libellés, le fond opaque et les flèches n’autorisent aucune affirmation d’architecture personnelle déjà réalisée. Les identifiants internes des deux SVG doivent rester isolés si l’on tente de les intégrer ensemble dans un même document HTML ; leur usage actuel en images distinctes n’équivaut pas à cette intégration.
+Contrôlés : XML valide, identifiants uniques, aucune référence externe ni script, rendu identique dans Chromium (thèmes clair et sombre) et dans rsvg, contrastes mesurés. Non vérifiés : la réouverture dans l’application Draw.io de bureau, l’affichage natif GitHub/Notion et la lisibilité à la taille d’insertion (texte minimal de 12,5 px à taille native). Les libellés, le fond opaque et les flèches n’autorisent aucune affirmation d’architecture personnelle déjà réalisée. Les deux SVG utilisent les mêmes identifiants internes (`svg-title`, `svg-desc`) : ils doivent rester isolés si l’on tente de les intégrer ensemble dans un même document HTML.
 
 ## Références primaires
 

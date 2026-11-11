@@ -2,9 +2,9 @@
 
 OpsDesk est une application de tickets IT fictifs qui sert de laboratoire pour apprendre l’infrastructure et l’exploitation. Un collaborateur ouvre une demande, le support la consulte, la prend en charge puis la clôture ; PostgreSQL conserve les tickets.
 
-![Vue d’ensemble du service OpsDesk et des responsabilités InfraOps](docs/diagrams/presentation.svg)
+![Le service OpsDesk (navigateur, application Flask, PostgreSQL, volume) et les trois phases du parcours ; les phases 2 et 3 sont à concevoir, non exécutées](docs/diagrams/presentation.svg)
 
-Le schéma présente le service et la séparation des responsabilités. Le [schéma technique](docs/diagrams/architecture-technique.svg) décrit le laboratoire historique Codex Ubuntu/WSL ; Mathias concevra son architecture personnelle à l’exercice 02.
+Le schéma présente le service et les trois phases du parcours. Le [schéma technique](docs/diagrams/architecture-technique.svg) décrit le laboratoire historique Codex Ubuntu/WSL ; Mathias concevra son architecture personnelle à l’exercice 02.
 
 **Répartition des responsabilités :** l’application Flask/PostgreSQL, son contrat et ses tests sont fournis comme support de laboratoire. Mathias conçoit, écrit, déploie, vérifie et explique personnellement l’infrastructure et son exploitation. L’origine détaillée des éléments est conservée dans la [provenance](docs/provenance.md) ; les essais historiques ne valent pas réalisation personnelle.
 
