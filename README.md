@@ -8,7 +8,7 @@ Le schéma présente le service et la séparation des responsabilités. Le [sch�
 
 **Qui fait quoi :** Codex a fourni l’application Flask/Python, son contrat et ses tests. Mathias doit concevoir, écrire, déployer, tester et expliquer personnellement l’infrastructure et l’exploitation. Les anciennes références Codex ne valident aucune compétence personnelle.
 
-**État réel :** 26 tests applicatifs PASS dans [l’environnement Codex du 3 novembre 2026](evidence/v44/application-tests.json) ; sécurité globale non validée, [triage historique FAIL](docs/triage-securite-v44.md) ; laboratoire Fedora/KVM/Rocky et exercices personnels NON EXÉCUTÉS. **Aucune authentification : usage local et données fictives uniquement, sans exposition Internet.** Les PR [#1](https://github.com/mathiasseguincadiche/OpsDesk/pull/1), [#2](https://github.com/mathiasseguincadiche/OpsDesk/pull/2), [#3](https://github.com/mathiasseguincadiche/OpsDesk/pull/3) et [#4](https://github.com/mathiasseguincadiche/OpsDesk/pull/4) sont fusionnées ; leur intégration ne prouve aucune CI distante ou infrastructure personnelle.
+**État réel :** 26 tests applicatifs PASS dans [l’environnement Codex du 3 novembre 2026](evidence/v44/application-tests.json) ; sécurité globale non validée, [triage historique FAIL](docs/triage-securite-v44.md) ; laboratoire Fedora/KVM/Rocky et exercices personnels NON EXÉCUTÉS. **Aucune authentification : usage local et données fictives uniquement, sans exposition Internet.** Les PR [#1](https://github.com/mathiasseguincadiche/OpsDesk/pull/1) à [#5](https://github.com/mathiasseguincadiche/OpsDesk/pull/5) sont fusionnées, la dernière recentrant le parcours sur un seul projet. Leur intégration ne prouve aucune CI distante ni infrastructure personnelle ; voir [l’état daté](STATUS.md).
 
 ## Choisir sa lecture
 
@@ -18,6 +18,8 @@ Le schéma présente le service et la séparation des responsabilités. Le [sch�
 ## Laboratoire personnel prévu
 
 Le laboratoire prévu est **Fedora 45 hôte → KVM/QEMU/libvirt → Rocky Linux 10.2 invité**. Les exercices 01/02 se font en lecture et dessin ; pour la préparation technique, lire [le guide de laboratoire et ses contrôles](docs/laboratoire-fedora-kvm-rocky.md). Aucune compatibilité, installation ou VM personnelle n’est validée par les essais historiques Ubuntu/WSL de Codex. Une version ou un contrôle non vérifié reste signalé ; aucune substitution silencieuse de Rocky Linux n’est autorisée.
+
+**Préparer l’environnement est une étape obligatoire, même si les outils semblent déjà installés :** inventorier les versions, services, dépendances et droits ; installer ou corriger uniquement ce qui manque ; vérifier le fonctionnement avec des tests observables et conserver les procédures de diagnostic. Le guide conserve les instructions complètes pour repartir aussi bien d’une VM neuve que d’une VM prééquipée.
 
 GitHub est l’unique plateforme active de ce parcours. GitLab est laissé en l’état ; ses anciennes références sont historiques et facultatives, sans synchronisation ni second flux quotidien.
 
