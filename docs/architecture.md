@@ -20,7 +20,7 @@ Les alternatives ci-dessus servent à comprendre les compromis. Les sources cons
 
 ## Chemin d’une demande
 
-![Architecture du laboratoire réellement exécuté](diagrams/architecture-technique.svg)
+![Architecture technique du laboratoire historique de développement Ubuntu/WSL ; cible Fedora/KVM/Rocky à réaliser](diagrams/architecture-technique.svg)
 
 1. Le navigateur de la machine de laboratoire contacte `127.0.0.1:18081` en HTTP. Il n’y a pas de DNS public, TLS public, VPC ou Ingress dans cette tranche.
 2. Docker transmet au port `8000` du conteneur `app`. Gunicorn sert Flask ; Jinja échappe le contenu HTML.

@@ -1,6 +1,6 @@
 # OpsDesk — réception applicative et progression personnelle
 
-**Preuves applicatives V4.4 du 3 novembre 2026 ; révision documentaire du 4 novembre 2026.** Les sources applicatives sont testées dans un processus de développement ponctuel, sur le PostgreSQL existant. Aucun service n’a été redéployé, aucune image reconstruite et aucun exercice InfraOps personnel exécuté.
+**Preuves applicatives V4.4 du 3 novembre 2026 ; suivi documentaire révisé le 10 novembre 2026 (heure locale Martinique).** Les sources applicatives sont testées dans un processus de développement ponctuel, sur le PostgreSQL existant. Aucun service n’a été redéployé, aucune image reconstruite et aucun exercice InfraOps personnel exécuté.
 
 ## Références GitHub contrôlées
 
@@ -8,7 +8,9 @@ Le contrôle du 4 novembre 2026 constate la PR [#1](https://github.com/mathiasse
 
 **Recentrage du parcours — 10 novembre 2026 :** la [PR #5](https://github.com/mathiasseguincadiche/OpsDesk/pull/5) a été fusionnée, avec `4c8444ec11bba406c2e7f4cfb67b993a304131aa` comme référence documentaire contrôlée après cette intégration. Elle organise le projet fil rouge unique et ses supports ; elle ne constitue pas une exécution du laboratoire personnel. Les preuves applicatives et les observations historiques conservent leurs dates propres.
 
-**Finition éditoriale V11 (PR #6) :** lisibilité de l’accueil GitHub/Notion et mise en avant des procédures pour environnements neufs ou déjà équipés. Cette finition ne modifie ni l’application, ni la sécurité, ni les preuves techniques et ne prétend pas avoir exécuté Terraform, Ansible, K3s, CI ou une restauration personnelle.
+**Finition V11 — PR [#6](https://github.com/mathiasseguincadiche/OpsDesk/pull/6) fusionnée :** accueil clarifié et préparation de laboratoire pour les machines neuves ou déjà équipées.
+
+**Guide laboratoire et schémas — PR [#7](https://github.com/mathiasseguincadiche/OpsDesk/pull/7) fusionnée :** procédures conditionnelles Fedora/KVM/Rocky 10.2 complétées et descriptions SVG corrigées. Référence de `main` après fusion : `0739a381da826644c196a8a69df98d60861fd3c6`. Les `.drawio` n’ont pas changé lors de cette PR. Ces deux fusions sont exclusivement documentaires : elles ne modifient ni l’application, ni la sécurité, ni les preuves techniques et ne démontrent aucune exécution personnelle de Terraform, Ansible, K3s, CI ou restauration.
 
 ## Portée de cette révision documentaire
 

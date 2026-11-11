@@ -2,13 +2,13 @@
 
 OpsDesk est une application de tickets IT fictifs qui sert de laboratoire pour apprendre l’infrastructure et l’exploitation. Un collaborateur ouvre une demande, le support la consulte, la prend en charge puis la clôture ; PostgreSQL conserve les tickets.
 
-![Présentation du service et des responsabilités ; références historiques Codex](docs/diagrams/presentation.svg)
+![Vue d’ensemble du service OpsDesk et des responsabilités InfraOps](docs/diagrams/presentation.svg)
 
 Le schéma présente le service et la séparation des responsabilités. Le [schéma technique](docs/diagrams/architecture-technique.svg) décrit le laboratoire historique Codex Ubuntu/WSL ; Mathias concevra son architecture personnelle à l’exercice 02.
 
-**Qui fait quoi :** Codex a fourni l’application Flask/Python, son contrat et ses tests. Mathias doit concevoir, écrire, déployer, tester et expliquer personnellement l’infrastructure et l’exploitation. Les anciennes références Codex ne valident aucune compétence personnelle.
+**Répartition des responsabilités :** l’application Flask/PostgreSQL, son contrat et ses tests sont fournis comme support de laboratoire. Mathias conçoit, écrit, déploie, vérifie et explique personnellement l’infrastructure et son exploitation. L’origine détaillée des éléments est conservée dans la [provenance](docs/provenance.md) ; les essais historiques ne valent pas réalisation personnelle.
 
-**État réel :** 26 tests applicatifs PASS dans [l’environnement Codex du 3 novembre 2026](evidence/v44/application-tests.json) ; sécurité globale non validée, [triage historique FAIL](docs/triage-securite-v44.md) ; laboratoire Fedora/KVM/Rocky et exercices personnels NON EXÉCUTÉS. **Aucune authentification : usage local et données fictives uniquement, sans exposition Internet.** Les PR [#1](https://github.com/mathiasseguincadiche/OpsDesk/pull/1) à [#5](https://github.com/mathiasseguincadiche/OpsDesk/pull/5) sont fusionnées, la dernière recentrant le parcours sur un seul projet. Leur intégration ne prouve aucune CI distante ni infrastructure personnelle ; voir [l’état daté](STATUS.md).
+**État réel :** 26 tests applicatifs PASS dans [l’environnement Codex du 3 novembre 2026](evidence/v44/application-tests.json) ; sécurité globale non validée, [triage historique FAIL](docs/triage-securite-v44.md) ; laboratoire Fedora/KVM/Rocky et exercices personnels NON EXÉCUTÉS. **Aucune authentification : usage local et données fictives uniquement, sans exposition Internet.** Les dernières évolutions documentaires et les limites des preuves sont détaillées dans [l’état daté](STATUS.md). Une PR fusionnée ne démontre ni CI exécutée ni infrastructure personnelle déployée.
 
 ## Choisir sa lecture
 
@@ -38,7 +38,7 @@ Lire le [contrat applicatif autonome](docs/contrat-applicatif.md), puis le [parc
 
 ## Repères documentaires
 
-Le parcours personnel reste **V4.4** ; la charte **V5** renforce la traçabilité documentaire. Lire la [portée des preuves](docs/preuves.md#avancement-et-contrôle--deux-informations-distinctes), le [registre des décisions](docs/architecture.md#décisions-durables-et-décisions-encore-personnelles) et la [maintenance des documents](docs/provenance.md#maintenir-les-documents-sans-entretenir-plusieurs-copies). Les SVG sont des représentations générées séparément, pas des exports vérifiés par Draw.io. La mise à jour documentaire ne valide aucune nouvelle opération personnelle.
+Le parcours personnel reste **V4.4** ; la charte **V5** renforce la traçabilité documentaire. Lire la [portée des preuves](docs/preuves.md#avancement-et-contrôle--deux-informations-distinctes), le [registre des décisions](docs/architecture.md#décisions-durables-et-décisions-encore-personnelles) et la [maintenance des documents](docs/provenance.md#maintenir-les-documents-sans-entretenir-plusieurs-copies). Les schémas possèdent une source `.drawio` modifiable et une version SVG consultable. La correspondance de leurs rendus doit être contrôlée avant publication ; un schéma ne constitue pas une preuve de déploiement.
 
 ## Application disponible
 
