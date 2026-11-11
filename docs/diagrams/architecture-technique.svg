@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="860" viewBox="0 0 1280 860" role="img" aria-labelledby="title desc">
 <title id="title">OpsDesk — chemin réseau, données et frontières du lab</title>
-<desc id="desc">Diagramme du laboratoire local réellement exécuté, avec étapes futures explicitement non exécutées.</desc>
+<desc id="desc">Architecture historique du laboratoire de développement Codex sous Ubuntu/WSL2 et Docker Compose ; laboratoire personnel Fedora/KVM/Rocky non encore exécuté.</desc>
 <rect width="1280" height="860" fill="#f7fafc"/>
 <defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#39688a"/></marker></defs>
 <text x="40" y="46" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="#17385f">OpsDesk — chemin réseau, données et frontières du lab</text>
