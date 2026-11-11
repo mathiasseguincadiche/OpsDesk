@@ -44,6 +44,75 @@ Les paquets Fedora 45 `qemu-kvm`, `libvirt-daemon-kvm`, `virt-manager` et `virt-
 
 Les libvirt récents proposent des démons modulaires ; le mode installé doit être découvert avant une correction. Sur une pile modulaire dont les unités existent, `virtqemud.socket` concerne QEMU, `virtnetworkd.socket` les réseaux et `virtstoraged.socket` le stockage. Une activation éventuelle sera une action personnelle expliquée et ciblée après observation ; ce guide n’impose aucune migration d’un hôte déjà configuré. [Démons libvirt](https://www.libvirt.org/daemons.html), [connexion après installation](https://libvirt.org/kbase/failed_connection_after_install.html).
 
+### 2.1. Installer la virtualisation si elle manque — ou conserver l'existant
+
+**Pourquoi cette étape ?** Une machine Fedora fraîchement installée n'a pas forcément tous les composants nécessaires. À l'inverse, réinstaller ou reconfigurer une pile KVM déjà fonctionnelle peut perturber un laboratoire existant. Les contrôles H01–H12 servent donc à choisir **une seule** voie, avant toute action.
+
+| Situation observée sur l'hôte Fedora | Décision et vérification |
+|---|---|
+| Tous les paquets nécessaires sont présents, la connexion `qemu:///system` fonctionne et les capacités KVM conviennent | **Ne rien réinstaller.** Conserver les versions et la configuration existantes ; passer au dimensionnement de la VM (section 3). |
+| Un ou plusieurs paquets manquent, mais Fedora 45 et la virtualisation matérielle sont confirmés | Identifier les paquets absents, vérifier leur provenance et **lire la transaction DNF** avant d'accepter l'installation. |
+| Paquets installés, mais gestion libvirt ou KVM en échec | **Ne pas réinstaller au hasard.** Consulter d'abord unités, droits, journaux, capacités CPU et conflits de réseau. |
+| Autre système, hôte virtuel non anticipé, dépôts incohérents ou manque de droits | Arrêter ce parcours spécifique ; qualifier l'environnement réel et adapter les opérations avant de poursuivre. |
+
+Sur **Fedora uniquement**, la consultation suivante ne modifie rien :
+
+```bash
+# INVENTAIRE — Fedora, terminal de l'hôte ; aucun paquet installé par cette commande.
+rpm -q qemu-kvm libvirt-daemon-kvm libvirt-client libvirt-daemon-config-network virt-install virt-manager
+```
+
+Si les contrôles H01–H06 sont satisfaisants **et** que ces composants sont nécessaires mais absents, étudier cette transaction (sans option de confirmation automatique) :
+
+```bash
+# INSTALLATION CONDITIONNELLE — Fedora uniquement ; lire la liste avant confirmation.
+sudo dnf install qemu-kvm libvirt-daemon-kvm libvirt-client libvirt-daemon-config-network virt-install virt-manager
+```
+
+Le gestionnaire de paquets reconnaît ceux déjà installés ; l'exemple donne une liste reproductible, **pas l'ordre de l'exécuter systématiquement**. Avant de confirmer, vérifier les dépôts, les dépendances, les suppressions/remplacements proposés, la place disque et l'impact éventuel sur les machines existantes. Si un élément paraît inattendu, répondre **non**, conserver le message et diagnostiquer. Ne pas ajouter de dépôt tiers par défaut.
+
+**Valider après une installation autorisée :** relancer l'inventaire `rpm -q`, `command -v virsh`, `command -v virt-manager` et `virt-host-validate qemu` (H05/H09). Les paquets présents ne suffisent pas : les sockets, droits, capacités CPU et réseaux doivent encore être contrôlés (H07–H12).
+
+### 2.2. Démarrer libvirt seulement selon le mode réellement installé
+
+**Pourquoi ?** Fedora peut employer les démons modulaires libvirt ou une configuration existante différente. Démarrer indistinctement `libvirtd` et tous les démons modulaires introduit un conflit évitable.
+
+Sur **Fedora**, découvrir les unités et leur état avant de démarrer quoi que ce soit :
+
+```bash
+# OBSERVATION — présence, activation et démarrage à la demande.
+systemctl list-unit-files 'virtqemud*' 'virtnetworkd*' 'virtstoraged*' 'libvirtd*'
+systemctl is-active virtqemud.socket virtnetworkd.socket virtstoraged.socket libvirtd.socket
+```
+
+Un résultat `inactive` ou `unknown` peut être normal pour une unité non retenue. Si **le mode modulaire est confirmé**, si les trois sockets existent et si la pile monolithique concurrente n'est pas utilisée, examiner puis exécuter **uniquement les commandes nécessaires** :
+
+```bash
+# ACTION CONDITIONNELLE — ne lancer que les sockets modulaires présents et requis.
+sudo systemctl start virtqemud.socket
+sudo systemctl start virtnetworkd.socket
+sudo systemctl start virtstoraged.socket
+```
+
+Ces commandes démarrent les sockets pour la session ; elles ne prouvent ni une configuration persistante au redémarrage ni un accès utilisateur autorisé. Décider séparément, après validation et selon les usages du PC, si une activation persistante avec `systemctl enable` est souhaitable. Si le système utilise déjà `libvirtd`, **ne pas appliquer** ce bloc modulaire : documenter le mode existant et consulter le diagnostic associé. Ne pas rendre l'utilisateur administrateur libvirt ou modifier les permissions de `/dev/kvm` simplement pour faire disparaître une erreur.
+
+**Vérifications de sortie, toujours sur Fedora :**
+
+```bash
+# VALIDATION — une liste de VM vide est normale avant création.
+virsh --readonly --connect qemu:///system list --all
+virsh --readonly --connect qemu:///system net-list --all
+virt-host-validate qemu
+```
+
+- **« command not found »** : revenir à l'inventaire des paquets.
+- **« failed to connect to the hypervisor » / socket absent** : identifier unité et mode libvirt ; consulter `systemctl status` et `journalctl` de l'unité concernée.
+- **« permission denied »** : examiner la politique d'autorisation effective (dont polkit) ; ne pas élargir globalement les droits.
+- **Échec KVM/CPU** : revoir H03/H04/H09 et firmware, sans désactiver SELinux ou firewalld.
+- **Réseau `default` absent ou inactif** : inspecter les réseaux et plages existants (H12). Ne pas créer ni démarrer automatiquement un réseau NAT pouvant entrer en collision avec une route locale/VPN.
+
+Le critère de réussite est une connexion de gestion **autorisée et comprise**, des capacités KVM conformes au besoin et un choix de réseau documenté ; toute incertitude reste à diagnostiquer, jamais à déclarer `PASS`.
+
 ## 3. Proportionner le laboratoire et comprendre ses limites
 
 L’observation CIM du PC sous Windows indique **Ryzen 7 7700, 8 cœurs et 16 threads et 48 Gio de RAM**. Elle ne prouve ni l’installation Fedora, ni l’accélération KVM sous Fedora. Les capacités de virtualisation signalées sous Windows/Hyper-V ne doivent pas être interprétées comme un test CPU négatif pour le futur hôte. L’espace NTFS observé n’est pas l’espace alloué au stockage Fedora.
@@ -123,6 +192,31 @@ Pour un refus, suivre l’ordre **symptôme → observation → hypothèses → 
 Pour vérifier les mises à jour dans la VM identifiée, `dnf check-update` renvoie 0 si aucune mise à jour n’est proposée, 100 si des mises à jour sont disponibles, et un autre code à interpréter en cas d’erreur. Lire ensuite la transaction de `sudo dnf upgrade` avant de la confirmer ; cette opération personnelle ne doit viser que la VM choisie. Le code 100 de la consultation n’est pas un échec d’installation. [Référence DNF](https://dnf.readthedocs.io/en/latest/command_ref.html#check-update-command).
 
 Depuis Fedora, après vérification de l’empreinte et de l’adresse, la connexion s’étudie sous la forme `ssh UTILISATEUR@IP_VM_RELEVEE` : remplacer ces deux repères par le compte et l’adresse réellement observés. Un refus de connexion, un nom non résolu et un refus d’authentification sont trois symptômes différents.
+
+### 6.1. Installer les outils de base manquants dans Rocky Linux, sans supposer leur présence
+
+**Pourquoi ?** Une installation « minimale » de Rocky Linux peut omettre des outils utiles. Une VM prééquipée peut les avoir déjà. Le pré-check du tableau précédent décide de la suite ; cette préparation n'installe **ni Kubernetes ni une pile DevOps entière**.
+
+Dans le **terminal de la VM Rocky** (jamais sur Fedora pour cette commande), relever d'abord les versions et les dépôts :
+
+```bash
+# OBSERVATION — Rocky invité ; vérifier l'identité avec /etc/os-release avant de commencer.
+rpm -q openssh-server firewalld policycoreutils python3
+dnf repolist
+```
+
+Si un paquet requis est absent, que les dépôts sont ceux attendus et que la transaction est acceptable :
+
+```bash
+# INSTALLATION CONDITIONNELLE — Rocky invité uniquement ; sans validation automatique.
+sudo dnf install openssh-server firewalld policycoreutils python3
+```
+
+Lire les dépendances et les changements proposés, puis confirmer personnellement. Si tout est déjà installé, **ne pas réinstaller**. Si le réseau est isolé, les dépôts inaccessibles ou la transaction incohérente, conserver le diagnostic et résoudre le problème de connectivité/dépôts avant d'insister ; ne pas désactiver la vérification des signatures ni ajouter une source de paquets non choisie.
+
+Vérifier à nouveau `rpm -q`, `python3 --version`, `getenforce`, `systemctl is-active firewalld` et les ressources `free -h`/`df -hT`. **Installer un paquet ne démarre pas forcément son service.** Pour SSH, commencer par `sudo sshd -t` et `systemctl status sshd` ; ne démarrer `sshd` que si un accès depuis l'hôte est réellement prévu et si le compte, l'authentification, le réseau et les règles firewalld ont été décidés. Vérifier ensuite la clé d'hôte et la connexion selon la section 6. Conserver la console KVM comme voie de secours.
+
+Les outils propres à chaque exercice (Terraform/provider, Ansible/collections, moteurs de conteneurs, K3s, CI, Prometheus/Grafana, sauvegarde) seront installés et validés **au module qui les utilise**, après sélection des versions compatibles. Pour chaque outil, suivre le même ordre : *vérifier la présence → expliquer l'utilité → préparer sources et dépendances → installer si nécessaire → vérifier la version et le fonctionnement → diagnostiquer → noter les preuves personnelles*. Ce guide n'affirme aucune installation déjà réussie sur la VM de Mathias.
 
 ## 7. Vérifier la compatibilité au moment du module concerné
 
