@@ -6,8 +6,8 @@ import xml.etree.ElementTree as ET
 OUT=Path(__file__).resolve().parent
 NAVY='#17385f'; BLUE='#17659b'; INK='#20334d'; TEAL='#e6f4f5'; BORDER='#a6bdcf'; ORANGE='#fff3db'
 
-def generate(name,title,width,height,nodes,edges):
-    svg=[f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">',f'<title id="title">{escape(title)}</title>','<desc id="desc">Diagramme du laboratoire local réellement exécuté, avec étapes futures explicitement non exécutées.</desc>',f'<rect width="{width}" height="{height}" fill="#f7fafc"/>','<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#39688a"/></marker></defs>',f'<text x="40" y="46" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="{NAVY}">{escape(title)}</text>']
+def generate(name,title,width,height,nodes,edges,description):
+    svg=[f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">',f'<title id="title">{escape(title)}</title>',f'<desc id="desc">{escape(description)}</desc>',f'<rect width="{width}" height="{height}" fill="#f7fafc"/>','<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#39688a"/></marker></defs>',f'<text x="40" y="46" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="{NAVY}">{escape(title)}</text>']
     mxfile=ET.Element('mxfile',host='app.diagrams.net');diagram=ET.SubElement(mxfile,'diagram',id=name,name=title);model=ET.SubElement(diagram,'mxGraphModel',dx=str(width),dy=str(height),grid='1',gridSize='10',page='1',pageWidth=str(width),pageHeight=str(height),background='#f7fafc');root=ET.SubElement(model,'root');ET.SubElement(root,'mxCell',id='0');ET.SubElement(root,'mxCell',id='1',parent='0')
     title_cell=ET.SubElement(root,'mxCell',id='title',value=title,style=f'text;html=0;align=left;verticalAlign=middle;whiteSpace=wrap;strokeColor=none;fillColor=none;fontFamily=Arial;fontSize=26;fontStyle=1;fontColor={NAVY};',vertex='1',parent='1');ET.SubElement(title_cell,'mxGeometry',x='40',y='20',width=str(width-80),height='40',attrib={'as':'geometry'})
     lookup={n['id']:n for n in nodes}
@@ -44,7 +44,7 @@ presentation=[
  {'id':'phase2','x':430,'y':495,'w':330,'h':145,'lines':['2. Construire personnellement','Linux · réseau · Terraform · Ansible','Énoncés et aides progressives','À FAIRE PAR MATHIAS'],'fill':ORANGE,'dash':True},
  {'id':'phase3','x':810,'y':495,'w':335,'h':145,'lines':['3. Livrer et exploiter','K3s · CI · signaux · diagnostic','Maintenance et reprise','À FAIRE PAR MATHIAS'],'fill':ORANGE,'dash':True},
 ]
-generate('presentation','OpsDesk — un service utile, une progression InfraOps',1200,690,presentation,[{'from':'user','to':'app','label':'HTTP local'},{'from':'app','to':'db','label':'SQL'}])
+generate('presentation','OpsDesk — un service utile, une progression InfraOps',1200,690,presentation,[{'from':'user','to':'app','label':'HTTP local'},{'from':'app','to':'db','label':'SQL'}],description='Vue pédagogique du service OpsDesk : application et base fournies ; infrastructure, livraison et exploitation personnelles à réaliser.')
 technical=[
  {'id':'host','x':330,'y':85,'w':900,'h':580,'lines':['RÉFÉRENCE DEV CODEX V4.2 : Ubuntu / WSL2 · Compose'],'fill':'#eef3f9','container':True},
  {'id':'network','x':365,'y':205,'w':820,'h':190,'lines':['Réseau Docker v42opsdesk_net — DNS interne db'],'fill':'#f8fbfe','container':True},
@@ -61,5 +61,5 @@ edges=[
  {'from':'secrets','to':'app','points':[(550,460),(550,370)],'dash':True,'label':'fichiers montés','label_at':(550,420)},
  {'from':'db','to':'volume','points':[(1007,370),(1007,460)],'label':'écritures durables','label_at':(1055,425)},
 ]
-generate('architecture-technique','OpsDesk — chemin réseau, données et frontières du lab',1280,860,technical,edges)
+generate('architecture-technique','OpsDesk — chemin réseau, données et frontières du lab',1280,860,technical,edges,description='Architecture historique du laboratoire de développement Codex sous Ubuntu/WSL2 et Docker Compose ; laboratoire personnel Fedora/KVM/Rocky non encore exécuté.')
 print('Generated two editable draw.io files and two matching SVG files.')
