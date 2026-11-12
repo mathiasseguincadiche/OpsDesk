@@ -72,7 +72,7 @@ Présenter ta tentative, l’attendu, l’observé et le premier écart. Demande
 
 **Démarche en cas d’écart :** La difficulté est une variante nouvelle, pas une panne forcée. Présenter les faits et ses hypothèses avant toute aide, choisir le test le plus discriminant et défendre la correction ; revalider le besoin utilisateur et déclarer ce qui n’a pas été couvert.
 
-Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#vérifier-et-diagnostiquer).
 
 ## Expliquer et capitaliser
 
@@ -84,6 +84,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-13) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-13--démontrer-son-autonomie) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](12-diagnostic.md) · [Retour au parcours](README.md)

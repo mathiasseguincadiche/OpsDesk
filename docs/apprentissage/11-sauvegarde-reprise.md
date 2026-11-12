@@ -76,7 +76,7 @@ Présenter ta tentative, l’attendu, l’observé et le premier écart. Demande
 
 **Démarche en cas d’écart :** Si le service restauré démarre mais qu’un ticket manque, départager mauvais point de capture, mauvaise base cible et données incomplètes. Comparer référence, version et intégrité sur la cible de reprise ; conserver la source et la dernière archive connue.
 
-Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#vérifier-et-diagnostiquer).
 
 ## Expliquer et capitaliser
 
@@ -88,6 +88,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-11) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-11--sauvegarder-et-restaurer) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](10-maintenance.md) · [Retour au parcours](README.md) · [Exercice suivant →](12-diagnostic.md)

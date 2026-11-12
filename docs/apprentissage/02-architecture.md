@@ -72,7 +72,7 @@ Présenter ta tentative, l’attendu, l’observé et le premier écart. Demande
 
 **Démarche en cas d’écart :** Si le schéma paraît répondre au besoin mais qu’un accès reste inexplicable, distinguer flux manquant et dépendance oubliée. Suivre une requête et demander où vit sa donnée durable avant d’ajouter un composant.
 
-Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#vérifier-et-diagnostiquer).
 
 ## Expliquer et capitaliser
 
@@ -84,6 +84,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-02) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-02--concevoir-larchitecture) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](01-application.md) · [Retour au parcours](README.md) · [Exercice suivant →](03-linux-reseau.md)

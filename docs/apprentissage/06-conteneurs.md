@@ -74,7 +74,7 @@ Présenter ta tentative, l’attendu, l’observé et le premier écart. Demande
 
 **Démarche en cas d’écart :** Si le conteneur est vivant mais le service inutilisable, distinguer port non écouté, dépendance non prête et mauvais paramètre. Lire les journaux du seul composant concerné et tester le chemin de dépendance ; ne pas supprimer les données pour obtenir un redémarrage propre.
 
-Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#vérifier-et-diagnostiquer).
 
 ## Expliquer et capitaliser
 
@@ -86,6 +86,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-06) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-06--conteneuriser) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](05-ansible.md) · [Retour au parcours](README.md) · [Exercice suivant →](07-k3s.md)

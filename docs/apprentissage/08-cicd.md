@@ -78,7 +78,7 @@ Présenter ta tentative, l’attendu, l’observé et le premier écart. Demande
 
 **Démarche en cas d’écart :** Si le pipeline passe mais la cible affiche une autre version, distinguer artefact reconstruit, mauvais environnement et preuve périmée. Comparer commit/run/digest à l’identité servie ; corriger le point démontré et refaire le contrôle utilisateur.
 
-Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#verifier-et-diagnostiquer).
+Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#vérifier-et-diagnostiquer).
 
 ## Expliquer et capitaliser
 
@@ -90,6 +90,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-08) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-08--construire-la-cicd) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](07-k3s.md) · [Retour au parcours](README.md) · [Exercice suivant →](09-supervision.md)

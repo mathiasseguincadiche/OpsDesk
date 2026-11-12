@@ -1,6 +1,6 @@
 # OpsDesk — réception applicative et progression personnelle
 
-**Preuves applicatives V4.4 du 3 novembre 2026 ; suivi documentaire révisé le 10 novembre 2026 (heure locale Martinique).** Les sources applicatives sont testées dans un processus de développement ponctuel, sur le PostgreSQL existant. Aucun service n’a été redéployé, aucune image reconstruite et aucun exercice InfraOps personnel exécuté.
+**Preuves applicatives V4.4 du 3 novembre 2026 ; suivi documentaire révisé le 11 novembre 2026 (heure locale Martinique).** Les sources applicatives sont testées dans un processus de développement ponctuel, sur le PostgreSQL existant. Aucun service n’a été redéployé, aucune image reconstruite et aucun exercice InfraOps personnel exécuté.
 
 ## Références GitHub contrôlées
 
@@ -11,6 +11,8 @@ Le contrôle du 4 novembre 2026 constate la PR [#1](https://github.com/mathiasse
 **Finition V11 — PR [#6](https://github.com/mathiasseguincadiche/OpsDesk/pull/6) fusionnée :** accueil clarifié et préparation de laboratoire pour les machines neuves ou déjà équipées.
 
 **Guide laboratoire et schémas — PR [#7](https://github.com/mathiasseguincadiche/OpsDesk/pull/7) fusionnée :** procédures conditionnelles Fedora/KVM/Rocky 10.2 complétées et descriptions SVG corrigées. Référence de `main` après fusion : `0739a381da826644c196a8a69df98d60861fd3c6`. Les `.drawio` n’ont pas changé lors de cette PR. Ces deux fusions sont exclusivement documentaires : elles ne modifient ni l’application, ni la sécurité, ni les preuves techniques et ne démontrent aucune exécution personnelle de Terraform, Ansible, K3s, CI ou restauration.
+
+**Schémas et clarification des vues — PR [#9](https://github.com/mathiasseguincadiche/OpsDesk/pull/9) et PR [#10](https://github.com/mathiasseguincadiche/OpsDesk/pull/10) fusionnées :** la PR #9 a été fusionnée le 11 novembre 2026 à 02:16 (heure locale Martinique, `d19314c`) et ajoute les sources `.drawio` et les SVG de [`docs/diagrams/`](docs/diagrams/). La PR #10 a été fusionnée le 11 novembre 2026 à 20:59 (heure locale Martinique, `0219d9f`) et clarifie les deux vues, présentation et architecture technique, ainsi que la portée de l’essai historique. Ces deux fusions sont exclusivement documentaires : elles ne démontrent ni CI, ni déploiement, ni exécution du laboratoire personnel. Les SVG sont écrits à la main : ce ne sont pas des exports natifs certifiés de diagrams.net, comme l’indique [`docs/diagrams/README.md`](docs/diagrams/README.md). Une correction de libellés qui touchaient les bords de boîtes dans le schéma technique a été apportée après ces fusions.
 
 ## Portée de cette révision documentaire
 
