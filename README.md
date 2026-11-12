@@ -2,7 +2,7 @@
 
 OpsDesk est une application de tickets IT fictifs qui sert de laboratoire pour apprendre l’infrastructure et l’exploitation. Un collaborateur ouvre une demande, le support la consulte, la prend en charge puis la clôture ; PostgreSQL conserve les tickets.
 
-![Vue fonctionnelle historique d’OpsDesk : utilisateur, application de tickets, base et stockage persistant ; données fictives et absence d’authentification](docs/diagrams/presentation.svg)
+![OpsDesk : un collaborateur utilise l’application Flask, qui conserve les tickets dans PostgreSQL ; trois phases prévues pour la livrer, l’héberger et l’exploiter](docs/diagrams/presentation.svg)
 
 Le schéma présente le fonctionnement général du service. Les trois phases d’apprentissage (livrer et conserver ; préparer et automatiser ; orchestrer et maintenir) sont décrites dans le [parcours](docs/parcours-apprentissage.md), et ne constituent pas des composants déployés. Le [schéma technique](docs/diagrams/architecture-technique.svg) décrit l’essai historique Ubuntu/WSL ; l’architecture personnelle sera définie à l’exercice 02.
 
