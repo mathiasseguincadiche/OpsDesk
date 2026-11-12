@@ -8,7 +8,8 @@
 ## Lire les schémas
 
 - **Cadre noir :** le service OpsDesk (navigateur, application, base de données).
-- **Cadre ou bloc coloré :** une phase du projet. Bleu : phase 1, livrer et conserver. Vert : phase 2, préparer et automatiser. Violet : phase 3, orchestrer et maintenir. Dans le schéma technique, trois cadres se suivent de haut en bas, un par phase, chacun avec sa pastille P1, P2 ou P3.
+- **Cadre ou bloc coloré :** une phase du projet. Bleu : phase 1, livrer et conserver. Vert : phase 2, préparer et automatiser. Violet : phase 3, orchestrer et maintenir. Dans le schéma technique, trois cadres se suivent de haut en bas, un par phase, chacun avec sa pastille P1, P2 ou P3 ; la présentation reprend cette pastille sous la forme « Phase 1 », « Phase 2 », « Phase 3 ».
+- **Groupe gris « Podman » (technique) :** les deux conteneurs, `app` et `db`, que Podman fait tourner sur `srv-app`.
 - **Flèche bleue :** la requête de l'utilisateur (HTTP, puis SQL).
 - **Flèche grise :** la livraison de l'image, la lecture des sondes et des mesures, la sauvegarde et la restauration.
 - **Pastille numérotée (technique) :** ordre de lecture, de 1 à 7, repris dans l'encadré « Comment ça fonctionne ».
