@@ -9,12 +9,12 @@
 
 - **Cadre à trait plein :** existe dans le dépôt (l'application et sa base).
 - **Cadre à points fins (technique) :** référence historique, observée hors du dépôt.
-- **Cadre ou tuile en pointillé :** prévu, pas encore réalisé. Une couleur seule ne dit jamais l'avancement.
+- **Cadre ou tuile en pointillé :** à réaliser (étape du parcours en présentation, laboratoire personnel en technique). Aucun exercice n'est réalisé à ce jour (suivi Notion du 12 novembre 2026 : 36 lignes « À faire »). Une couleur seule ne dit jamais l'avancement.
 - **Pastille numérotée (présentation) :** ordre des trois phases. Le schéma technique n'en a pas : il montre des emplacements, pas une chronologie.
 - **Flèche pleine :** échange entre composants (HTTP, SQL) ou montage d'un volume.
 - **Flèche pointillée :** enchaînement ou livraison prévus.
 
-Les trois phases reprennent celles du [parcours](../parcours-apprentissage.md) et de Notion : conteneurisation et livraison automatisée, infrastructure et automatisation, orchestration, observabilité et fiabilité. Le schéma technique ne décide pas de la topologie du laboratoire : la case « exécution d'OpsDesk » reste à décider à l'exercice 02. Aucun des deux schémas n'affirme un déploiement, une preuve ou une mise en production.
+Les trois phases reprennent celles du [parcours](../parcours-apprentissage.md) et de Notion : conteneurisation et livraison automatisée, infrastructure et automatisation, orchestration, observabilité et fiabilité. Le schéma technique ne décide pas de la topologie du laboratoire : la case « exécution d'OpsDesk » reste à décider à l'exercice 02. L'essai historique de la phase 1 (application et base fournies, exécutées avec Docker Compose) est décrit dans la référence historique du schéma technique. Aucun des deux schémas n'affirme un déploiement, une preuve ou une mise en production.
 
 ## Logos et pictogrammes
 
@@ -51,6 +51,7 @@ Les pictogrammes de la personne, du navigateur, du bouclier (durcissement), des 
 | Aucune authentification, données fictives | [`README.md`](../../README.md), [`docs/securite.md`](../securite.md) |
 | Essai historique : `127.0.0.1:18081` vers le port 8000, `db:5432`, volume nommé | [`docs/architecture.md`](../architecture.md), [`docs/demarrage.md`](../demarrage.md) |
 | Laboratoire prévu : Fedora 45, KVM/QEMU/libvirt, Rocky Linux 10.2 | [`ROADMAP.md`](../../ROADMAP.md), [`docs/laboratoire-fedora-kvm-rocky.md`](../laboratoire-fedora-kvm-rocky.md) |
+| AWS facultatif (budget et autorisation) | [`docs/architecture.md`](../architecture.md) |
 | Phases 1 à 3 et leurs outils | [`docs/parcours-apprentissage.md`](../parcours-apprentissage.md), [`docs/apprentissage/README.md`](../apprentissage/README.md) |
 
 Les fichiers Compose de l'essai historique ne sont pas dans le dépôt : le schéma technique les décrit d'après `docs/architecture.md` et ne prouve ni leur contenu ni leur exécution.
