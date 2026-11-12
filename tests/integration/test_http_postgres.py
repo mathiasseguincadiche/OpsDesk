@@ -113,8 +113,8 @@ class HTTPPostgreSQLTests(unittest.TestCase):
 
 class CommittedDevelopmentReadback(unittest.TestCase):
     def test_current_source_commits_and_reads_through_distinct_connections(self):
-        app=web.create_app();client=app.test_client();title='FICTIF-V44-'+uuid.uuid4().hex[:12]
-        created=client.post('/api/tickets',json={'title':title,'description':'Recette V4.4 : témoin conservé, aucune donnée supprimée.'})
+        app=web.create_app();client=app.test_client();title='FICTIF-'+uuid.uuid4().hex[:12]
+        created=client.post('/api/tickets',json={'title':title,'description':'Recette : témoin conservé, aucune donnée supprimée.'})
         self.assertEqual(created.status_code,201);item=created.get_json();url=f"/api/tickets/{item['id']}"
         next_client=web.create_app().test_client();self.assertEqual(next_client.get(url).get_json()['title'],title)
         with web.connect() as connection:

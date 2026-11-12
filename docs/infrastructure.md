@@ -37,7 +37,7 @@ L’état local et le répertoire `.terraform` ne sont pas publiés. Ils ne cont
 
 ## Diagnostic observé : Ansible ne peut pas créer son répertoire temporaire
 
-Le premier rendu a échoué avant toute génération : `localhost unreachable=1`, le répertoire temporaire par défaut sous le HOME n’étant pas accessible à l’exécution. Définir `ANSIBLE_LOCAL_TEMP` ne change que le temporaire du contrôleur. L’inventaire de référence définissait **`ansible_remote_tmp: /tmp/v42-opsdesk-ansible-remote`** pour cette connexion locale. La seconde exécution passe sans modification du HOME ni service hôte.
+Le premier rendu a échoué avant toute génération : `localhost unreachable=1`, le répertoire temporaire par défaut sous le HOME n’étant pas accessible à l’exécution. Définir `ANSIBLE_LOCAL_TEMP` ne change que le temporaire du contrôleur. L’inventaire de référence définissait **`ansible_remote_tmp` vers un répertoire dédié sous `/tmp`** pour cette connexion locale. La seconde exécution passe sans modification du HOME ni service hôte.
 
 [Échec initial conservé](../evidence/automation-first-attempt.json) · [Revalidation et limites](../evidence/automation-contract.json).
 

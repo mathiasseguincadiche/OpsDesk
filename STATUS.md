@@ -8,20 +8,20 @@ Dernière révision : 12 novembre 2026. Les preuves ci-dessous portent chacune l
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| Pages, API, statuts des tickets | Réalisé | Vérifié le 3 novembre 2026 : 26 tests réussis en 2,5 s | [Rapport](evidence/v44/application-tests.json) ; source montée en lecture seule dans un processus de développement ponctuel, PostgreSQL existant réutilisé |
+| Pages, API, statuts des tickets | Réalisé | Vérifié le 3 novembre 2026 : 26 tests réussis en 2,5 s | [Rapport](evidence/qualification/application-tests.json) ; source montée en lecture seule dans un processus de développement ponctuel, PostgreSQL existant réutilisé |
 | Persistance en base | Réalisé | Vérifié le 3 novembre 2026 : un ticket fictif validé puis relu par des connexions distinctes | Même rapport ; le ticket témoin est conservé, aucune donnée existante n’est modifiée |
 | Hôte autorisé ou refusé, jeton CSRF non ASCII | Réalisé | Vérifié le 3 novembre 2026 : réponse 400 contrôlée | Même rapport ; ne démontre ni authentification ni sécurité réseau |
 | Schéma SQL et paramètres | Réalisé | Vérifié par lecture, non exécuté sur une base neuve | [Contrat applicatif](docs/contrat-applicatif.md), `db/schema.sql` ; rôle, base et droits restent à préparer |
 | Authentification des utilisateurs | Abandonné | — | [Sécurité](docs/securite.md) : évaluée puis non ajoutée ; données fictives, usage local uniquement |
 | Rendu visuel de l’interface | Réalisé | Non vérifié sur la version actuelle | [Capture et rapport](evidence/browser.json) d’une version antérieure |
 
-Le premier passage des tests a échoué sur deux points : un refus d’hôte qui tentait d’afficher une page avant la création de l’adaptateur d’URL, et une erreur de scénario sur un en-tête `Location`. Le [rapport initial](evidence/v44/application-tests-first-attempt.json) est conservé ; la source et le scénario ont été corrigés, puis la suite rejouée.
+Le premier passage des tests a échoué sur deux points : un refus d’hôte qui tentait d’afficher une page avant la création de l’adaptateur d’URL, et une erreur de scénario sur un en-tête `Location`. Le [rapport initial](evidence/qualification/application-tests-first-attempt.json) est conservé ; la source et le scénario ont été corrigés, puis la suite rejouée.
 
 ## Sécurité
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| Analyse Trivy 0.74.0 de l’image `v42opsdesk-app:0.1.0-local` | Réalisé | Échec constaté le 3 novembre 2026 : 185 occurrences (45 HIGH, 72 MEDIUM, 61 LOW, 7 UNKNOWN), 85 CVE distinctes | [Rapport](evidence/vulnerability-scan.json) ; image historique, aucune vulnérabilité corrigeable de niveau HIGH ou CRITICAL |
+| Analyse Trivy 0.74.0 de l’image locale `0.1.0-local` | Réalisé | Échec constaté le 3 novembre 2026 : 185 occurrences (45 HIGH, 72 MEDIUM, 61 LOW, 7 UNKNOWN), 85 CVE distinctes | [Rapport](evidence/vulnerability-scan.json) ; image historique, aucune vulnérabilité corrigeable de niveau HIGH ou CRITICAL |
 | Tri des alertes | En cours | Non vérifié | [Triage](docs/triage-securite.md) : qualification partielle, aucune acceptation de risque, aucune validation globale |
 
 Le retrait des outils d’installation de l’image ne permet pas d’annoncer une sécurité validée.

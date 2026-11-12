@@ -2,7 +2,7 @@
 
 ## Preuve applicative courante
 
-Le [rapport des tests actuels](../evidence/v44/application-tests.json) et son journal enregistrent 26 tests réussis sur la source montée en lecture seule, avec PostgreSQL réel. La plupart des cas utilisent une table TEMP ; un ticket fictif par passage est committé puis relu par des connexions distinctes et conservé. Le premier passage défavorable reste archivé séparément. Aucune image reconstruite, aucun service redéployé, aucune reprise ou opération InfraOps personnelle n’est exécutée.
+Le [rapport des tests actuels](../evidence/qualification/application-tests.json) et son journal enregistrent 26 tests réussis sur la source montée en lecture seule, avec PostgreSQL réel. La plupart des cas utilisent une table TEMP ; un ticket fictif par passage est committé puis relu par des connexions distinctes et conservé. Le premier passage défavorable reste archivé séparément. Aucune image reconstruite, aucun service redéployé, aucune reprise ou opération InfraOps personnelle n’est exécutée.
 
 ## Smoke historique conservé
 
@@ -15,7 +15,7 @@ Le [rapport des tests actuels](../evidence/v44/application-tests.json) et son jo
 - soumission UI, contenu HTML échappé et refus sans CSRF ;
 - métrique DB disponible.
 
-La preuve déclare `uncommitted-v42`. Elle ne fournit pas un faux SHA, un digest GHCR, un test de persistance après redémarrage ou une restauration. Le champ `persisted_ticket_id` désigne le ticket enregistré et relu pendant le test, pas une preuve de résilience à une destruction.
+La preuve déclare une révision sans commit. Elle ne fournit pas un faux SHA, un digest GHCR, un test de persistance après redémarrage ou une restauration. Le champ `persisted_ticket_id` désigne le ticket enregistré et relu pendant le test, pas une preuve de résilience à une destruction.
 
 ## Avancement et contrôle : deux informations distinctes
 

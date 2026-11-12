@@ -105,7 +105,7 @@ La configuration applicative est lue dans l’environnement au démarrage ou à 
 | `SESSION_SECRET_FILE` | Obligatoire ; même contrainte de longueur | Signature de la session et du jeton CSRF |
 | `TRUSTED_HOSTS` | `127.0.0.1,localhost` | Liste d’hôtes HTTP autorisés, séparés par virgules ; ajuster explicitement si une cible personnelle utilise un autre nom |
 | `APP_VERSION` | `0.1.0` | Identité applicative déclarée |
-| `APP_REVISION` | `uncommitted-v42` | Révision déclarée ; cette valeur historique n’est pas un SHA publié |
+| `APP_REVISION` | `uncommitted` | Révision déclarée ; cette valeur par défaut n’est pas un SHA publié |
 
 Ne pas placer de mot de passe dans les paramètres de commande ou dans une URL. Le contrôle de l’en-tête Host limite les noms acceptés ; il ne remplace ni authentification ni protection réseau.
 
@@ -125,7 +125,7 @@ Tout changement de schéma futur doit fournir une migration explicite, sa compat
 
 ## 15. Données persistantes et démonstration
 
-Le ticket et ses dates/statuts sont les données durables. Les données sont strictement fictives. La réception ajoute un ticket nommé `FICTIF-V44-…`, volontairement conservé, puis le relit par des connexions distinctes. Les autres tests SQL travaillent principalement sur une table temporaire propre à leur connexion ; ils ne suppriment ni ne réinitialisent les tickets existants.
+Le ticket et ses dates/statuts sont les données durables. Les données sont strictement fictives. La réception ajoute un ticket nommé `FICTIF-…`, volontairement conservé, puis le relit par des connexions distinctes. Les autres tests SQL travaillent principalement sur une table temporaire propre à leur connexion ; ils ne suppriment ni ne réinitialisent les tickets existants.
 
 ## 16. Endpoints de santé
 
@@ -155,7 +155,7 @@ PYTHONPATH=app .local/venv/bin/python -m unittest discover -s tests/integration 
 
 Attendu : sept tests unitaires puis dix-neuf tests HTTP/SQL sans échec ; le smoke affiche un JSON `status: PASS` seulement si son parcours complet réussit. Ce sont des critères attendus, pas un résultat personnel. En cas d’échec, lire d’abord le cas et son erreur, puis séparer paramètre/secret/DB de règle HTTP/métier ; conserver les refus négatifs attendus.
 
-La seconde commande nécessite une base de développement autorisée, des secrets présents et la permission TEMP pour ses tables de test (elle n’est pas un besoin du rôle runtime de production). Elle conserve un ticket témoin ; ne pas l’exécuter sur des données réelles. Lire le rapport `evidence/v44/application-tests.json` et son journal, en distinguant la source montée pour les tests du service historique déjà en cours. Aucun test de redémarrage, sauvegarde ou restauration n’a été relancé depuis.
+La seconde commande nécessite une base de développement autorisée, des secrets présents et la permission TEMP pour ses tables de test (elle n’est pas un besoin du rôle runtime de production). Elle conserve un ticket témoin ; ne pas l’exécuter sur des données réelles. Lire le rapport `evidence/qualification/application-tests.json` et son journal, en distinguant la source montée pour les tests du service historique déjà en cours. Aucun test de redémarrage, sauvegarde ou restauration n’a été relancé depuis.
 
 ## 21. Ressources recommandées
 

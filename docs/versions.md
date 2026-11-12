@@ -1,12 +1,12 @@
 # Versions et périmètres
 
-**les versions et configurations d’infrastructure ci-dessous décrivent l’antériorité historique.** Le [contrat applicatif](contrat-applicatif.md) distingue combinaison testée, paramètres et besoins à satisfaire par l’apprenant. La source actuellement testée est identifiée par ses hashes dans `evidence/v44/application-tests.json`, sans faux SHA publié.
+**les versions et configurations d’infrastructure ci-dessous décrivent l’antériorité historique.** Le [contrat applicatif](contrat-applicatif.md) distingue combinaison testée, paramètres et besoins à satisfaire par l’apprenant. La source actuellement testée est identifiée par ses hashes dans `evidence/qualification/application-tests.json`, sans faux SHA publié.
 
 Cette fiche sépare la version déclarée par l’application, les outils de l’essai et les cibles encore à qualifier. Les tags d’images ne sont pas des digests immuables ; relier toute nouvelle livraison au contenu réellement construit.
 
 | Composant | Version/fichier de référence | État et limite |
 |---|---|---|
-| OpsDesk | `0.1.0` ; première preuve `uncommitted-v42` | Version servie lors du smoke initial ; ce texte n’est pas un commit Git |
+| OpsDesk | `0.1.0` ; première preuve sans commit | Version servie lors du smoke initial ; ce texte n’est pas un commit Git |
 | Python app | `3.14.10-slim-trixie` dans `Dockerfile` | Base déclarée du build ; identité et scan de l’image finale à vérifier |
 | Flask / Psycopg / Gunicorn | 3.1.3 / 3.3.6 / 26.2.0 dans `requirements.lock` | Dépendances verrouillées avec hashes ; licences conservées |
 | PostgreSQL | `17.11-bookworm` dans Compose et candidat K3s | Runtime local exécuté ; stockage de cluster non qualifié |

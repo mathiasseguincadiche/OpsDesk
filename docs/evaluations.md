@@ -24,7 +24,7 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Code fourni / rôle InfraOps.** `app/opsdesk/` fournit les règles et pages du démonstrateur ; `compose.yaml`, `Dockerfile`, `db/001-initial.sql`, `scripts/prepare-local.sh` et `k8s/` définissent l’exécution, les droits et les dépendances. L’architecture sur [le schéma technique](diagrams/architecture-technique.svg) montre navigateur → port local → app → DNS `db` → PostgreSQL → volume.
 
-**Pré-check.** Identifier le projet `v42opsdesk`, le port local 18081, le réseau et le volume ; vérifier ressources et absence d’accès public. Données fictives et secrets privés uniquement. La preuve initiale ne qualifie ni Fedora ni une VM Rocky. Ne pas employer le contexte Kubernetes existant.
+**Pré-check.** Identifier le projet Compose, le port local 18081, le réseau et le volume ; vérifier ressources et absence d’accès public. Données fictives et secrets privés uniquement. La preuve initiale ne qualifie ni Fedora ni une VM Rocky. Ne pas employer le contexte Kubernetes existant.
 
 **Exécution réelle.** `docker compose up --build --detach --wait`, puis `python3 scripts/smoke.py --base-url http://127.0.0.1:18081` ont exercé la cible Compose. Le [rapport de smoke actualisé le 3 novembre à 13:40:23 UTC](../evidence/business-smoke.json) vérifie création/relecture/transitions et 400/404/409 attendus ; [Chrome/Playwright](../evidence/browser.json) a affiché la liste le 3 novembre 03:41:03 UTC. `kubectl kustomize k8s` a seulement [rendu les objets hors ligne](../evidence/k8s-static.json).
 
@@ -58,7 +58,7 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Pré-check.** Différence relue, tests positifs/négatifs, image saine identifiée, secret exclu du build, cible isolée, sauvegarde avant migration de schéma. Aucun accès runner → laboratoire ni publication de registre n’est supposé.
 
-**Exécution réelle.** Sept tests unitaires ont été exécutés localement. Le smoke et le navigateur contrôlent l’application en service. La version initiale est `0.1.0`, révision déclarée `uncommitted-v42` : ce n’est pas un SHA publié. Le contrôle structurel et les runs CI nouvellement publiés doivent être ajoutés avec leurs références effectives.
+**Exécution réelle.** Sept tests unitaires ont été exécutés localement. Le smoke et le navigateur contrôlent l’application en service. La version initiale est `0.1.0`, sans commit associé : la révision déclarée n’est pas un SHA publié. Le contrôle structurel et les runs CI nouvellement publiés doivent être ajoutés avec leurs références effectives.
 
 **Attendu / observé.** L’image démarre avec PostgreSQL et sert le parcours positif et les refus attendus. La relation commit → image immuable → cible → ticket n’est pas entièrement établie par ce succès local. Le [scan d’image disponible](../evidence/vulnerability-scan.json) est un résultat de sécurité distinct à lire ; aucun feu vert production n’en est déduit.
 
