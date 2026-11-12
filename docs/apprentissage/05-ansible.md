@@ -28,7 +28,7 @@ Référence : [handlers Ansible](https://docs.ansible.com/projects/ansible/lates
 
 Cible VM et propriétaire de ressources identifiés aux exercices 03/04 ; accès SSH vérifié avec le compte ordinaire prévu. Vérifier la version d’Ansible sur le contrôleur et les prérequis Python des modules sur l’invité. Ne pas supposer un inventaire correct parce qu’un nom répond au ping ICMP.
 
-Ansible est piloté depuis le poste Fedora 45 vers la VM Rocky Linux 10.2 identifiée. Vérifier inventaire, résolution, SSH, utilisateur distant, Python requis par les modules et élévation ciblée avant une tâche mutatrice. Les paquets, services et protections sont ceux de la VM cible, pas ceux du poste de contrôle. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
+Ansible est piloté depuis le poste Fedora 45 vers la VM Rocky Linux 10.2 identifiée. Vérifier inventaire, résolution, SSH, utilisateur distant, Python requis par les modules et élévation ciblée avant une tâche mutatrice. Les paquets, services et protections sont ceux de la VM cible, pas ceux du poste de contrôle. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
 
@@ -78,7 +78,7 @@ Séparer attendu et observé ; une cause reste hypothétique tant qu’un contr�
 
 ## Expliquer et capitaliser
 
-Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence historique et travail personnel.
 
 **Réutilisation :** Quelle partie de ta configuration peut être réutilisée sans copier les secrets ni les adresses ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
@@ -86,6 +86,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-05--configurer-avec-ansible) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-05--configurer-avec-ansible) ou demander le niveau d’aide souhaité. La référence historique n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](04-terraform.md) · [Retour au parcours](README.md) · [Exercice suivant →](06-conteneurs.md)

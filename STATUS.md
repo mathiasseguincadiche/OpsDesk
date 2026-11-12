@@ -22,7 +22,7 @@ Le premier passage des tests a échoué sur deux points : un refus d’hôte qui
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
 | Analyse Trivy 0.74.0 de l’image `v42opsdesk-app:0.1.0-local` | Réalisé | Échec constaté le 3 novembre 2026 : 185 occurrences (45 HIGH, 72 MEDIUM, 61 LOW, 7 UNKNOWN), 85 CVE distinctes | [Rapport](evidence/vulnerability-scan.json) ; image historique, aucune vulnérabilité corrigeable de niveau HIGH ou CRITICAL |
-| Tri des alertes | En cours | Non vérifié | [Triage](docs/triage-securite-v44.md) : qualification partielle, aucune acceptation de risque, aucune validation globale |
+| Tri des alertes | En cours | Non vérifié | [Triage](docs/triage-securite.md) : qualification partielle, aucune acceptation de risque, aucune validation globale |
 
 Le retrait des outils d’installation de l’image ne permet pas d’annoncer une sécurité validée.
 

@@ -1,14 +1,10 @@
 # Démarrage : parcours actif et laboratoire historique
 
-> **HISTORIQUE — référence Codex non exécutable depuis le dépôt courant.** Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), `compose.yaml`, `Dockerfile` et `scripts/prepare-local.sh` sont absents. Les blocs de commandes conservent les anciennes instructions pour comprendre l’essai Ubuntu/WSL ; ils ne sont pas prêts à copier et ne lancent pas le laboratoire personnel. Les versions et résultats qui suivent sont historiques. [Parcours actif V4.4](apprentissage/README.md) · [Pré-checks Fedora/KVM/Rocky](laboratoire-fedora-kvm-rocky.md).
+> **HISTORIQUE — référence non exécutable depuis le dépôt courant.** Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), `compose.yaml`, `Dockerfile` et `scripts/prepare-local.sh` sont absents. Les blocs de commandes conservent les anciennes instructions pour comprendre l’essai Ubuntu/WSL ; ils ne sont pas prêts à copier et ne lancent pas le laboratoire personnel. Les versions et résultats qui suivent sont historiques. [Parcours actif](apprentissage/README.md) · [Pré-checks Fedora/KVM/Rocky](laboratoire-fedora-kvm-rocky.md).
 
 ## Parcours actif et laboratoire personnel
 
-Commencer par [l’exercice personnel V4.4 n° 1 — comprendre l’application](apprentissage/01-application.md) et [le contrat applicatif](contrat-applicatif.md). Les [13 exercices prioritaires](apprentissage/README.md) sont distincts des supports théoriques et preuves historiques conservés. Les corrigés se consultent après une tentative ; les cinq évaluations personnelles sont dans `docs/apprentissage/evaluations.md`.
-
-Le laboratoire prévu est **Fedora 45 hôte → KVM/QEMU/libvirt → Rocky Linux 10.2 invité**. Les exercices 01/02 se font en lecture et dessin ; pour la préparation technique, lire [le guide de laboratoire et ses contrôles](laboratoire-fedora-kvm-rocky.md). Aucune compatibilité, installation ou VM personnelle n’est validée par les essais historiques Ubuntu/WSL de Codex. Une version ou un contrôle non vérifié reste signalé ; aucune substitution silencieuse de Rocky Linux n’est autorisée.
-
-GitHub est l’unique plateforme active de ce parcours. GitLab est laissé en l’état ; ses anciennes références sont historiques et facultatives, sans synchronisation ni second flux quotidien.
+Le parcours actif, le laboratoire prévu (Fedora 45, KVM, Rocky Linux 10.2) et la place de GitHub sont décrits dans le [parcours d’apprentissage](parcours-apprentissage.md). Commencer par l’[exercice 1](apprentissage/01-application.md) et le [contrat applicatif](contrat-applicatif.md).
 
 ## Ce qui est actif aujourd’hui
 
@@ -23,13 +19,13 @@ Pour commencer sans ambiguïté : lire [l’exercice 01](apprentissage/01-applic
 
 ## État d’essai des procédures
 
-La lecture 01 est disponible ; sa compréhension sera expliquée par Mathias. La procédure native du contrat n’a jamais été rejouée entièrement sur son laboratoire : **non vérifiée**. La recette Compose reste historique et non exécutable depuis main. Une procédure partiellement essayée doit préciser les étapes réellement parcourues et celles qui manquent. Un retour arrière seulement décrit reste non vérifié ; aucune durée de séance n’est annoncée sans mesure.
+La lecture 01 est disponible ; sa compréhension sera expliquée par l’apprenant. La procédure native du contrat n’a jamais été rejouée entièrement sur son laboratoire : **non vérifiée**. La recette Compose reste historique et non exécutable depuis main. Une procédure partiellement essayée doit préciser les étapes réellement parcourues et celles qui manquent. Un retour arrière seulement décrit reste non vérifié ; aucune durée de séance n’est annoncée sans mesure.
 
 Avant une installation ou une modification, arrêter si machine/version/droits/état initial sont inconnus, si les données source ne sont pas protégées ou si le retour nécessaire n’est pas établi. Nommer le point de non-retour éventuel avant de l’atteindre. Pour un incident, utiliser d’abord le [triage court](reprise.md#triage-court-avant-une-reprise-personnelle).
 
-## Référence historique Codex — laboratoire V4.2 conservé, pas la procédure Fedora/KVM personnelle
+## Référence historique — laboratoire conservé, pas la procédure Fedora/KVM personnelle
 
-Ce corps conserve les procédures et résultats préparés sous V4.2. Les configurations et opérations InfraOps appartiennent désormais au travail personnel de Mathias ; elles ne sont pas relancées par Codex. Consulter d’abord le [contrat applicatif](contrat-applicatif.md) et la [provenance](provenance.md). Les niveaux techniques anciens de ce texte ne sont pas les niveaux personnels V4.4 : L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée. Les preuves de reprise plus récentes sont datées dans [STATUS](../STATUS.md), sans modifier rétrospectivement cet essai.
+Les procédures et résultats ci-dessous datent des essais historiques ; ils ne sont pas relancés. Les configurations et opérations InfraOps sont à réaliser personnellement ([contrat applicatif](contrat-applicatif.md), [provenance](provenance.md)). Les niveaux techniques de ce texte suivent un ancien barème et ne sont pas les niveaux personnels du [parcours](parcours-apprentissage.md). Les preuves de reprise récentes sont datées dans [STATUS](../STATUS.md).
 
 ## Avant d’agir
 
@@ -44,7 +40,7 @@ docker compose version
 
 **Succès attendu :** client et moteur Docker accessibles, Compose présent, accès autorisé au moteur. Si le moteur est refusé, identifier les permissions ; ne pas contourner avec un chmod global du socket ni activer un accès réseau distant.
 
-Le contrôle historique Codex utilisait Ubuntu/WSL2. Il ne certifie ni Fedora 45, ni GNOME, ni KVM/libvirt, ni Rocky. Les outils et commandes de ces environnements devront être vérifiés sur leur vraie cible.
+Le contrôle historique utilisait Ubuntu/WSL2. Il ne certifie ni Fedora 45, ni GNOME, ni KVM/libvirt, ni Rocky. Les outils et commandes de ces environnements devront être vérifiés sur leur vraie cible.
 
 ## Identifier les ressources
 

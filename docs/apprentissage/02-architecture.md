@@ -8,7 +8,7 @@ Révision documentaire : 2026-11-04. Les [règles communes et exigences conserv�
 
 L’équipe veut un service compréhensible et reconstructible sur le PC disponible. Une architecture aide à localiser les accès, les données et les points de panne avant d’engager des ressources.
 
-Propose une cible simple pour le service IT ; nomme accès utilisateur/opérateur, application et stockage. Explique les ressources et les points de panne sans adopter le schéma Codex comme réponse imposée.
+Propose une cible simple pour le service IT ; nomme accès utilisateur/opérateur, application et stockage. Explique les ressources et les points de panne sans adopter le schéma historique comme réponse imposée.
 
 **Livrable attendu :** Schéma technique personnel modifiable, choix argumentés et alternatives raisonnables. Le résultat est à produire, pas déjà obtenu.
 
@@ -16,7 +16,7 @@ Propose une cible simple pour le service IT ; nomme accès utilisateur/opérateu
 
 L’architecture traduit un besoin en ressources, flux et frontières de confiance. Un dessin doit expliquer les accès et la persistance, pas seulement aligner des logos.
 
-Un schéma de présentation répond « à quoi sert le service et qui l’utilise ? ». Un schéma technique répond « où s’exécute chaque composant, par quel flux et avec quels droits ? ». Les deux dessins ont des publics différents. La cible personnelle est ta proposition ; le schéma Codex décrit une référence historique.
+Un schéma de présentation répond « à quoi sert le service et qui l’utilise ? ». Un schéma technique répond « où s’exécute chaque composant, par quel flux et avec quels droits ? ». Les deux dessins ont des publics différents. La cible personnelle est ta proposition ; le schéma historique décrit une référence historique.
 
 Un composant doit résoudre un besoin : séparer les données du processus évite de les perdre quand on remplace l’application. Cela ne rend pas le disque disponible en cas de panne du PC. Comparer une alternative simple aide à expliquer le compromis coût, mémoire, maintenance et reprise, sans chercher une architecture de production.
 
@@ -26,7 +26,7 @@ Un composant doit résoudre un besoin : séparer les données du processus évit
 
 Exercice 01 compris et besoins applicatifs reformulés. Connaître les contraintes de données et d’accès ; relever les ressources matérielles réelles ou les marquer NON VÉRIFIÉES. L’architecture sera une proposition à justifier.
 
-Dessin et analyse à partir du contrat, sans création de ressource. Prévoir un hôte Fedora 45 avec KVM/QEMU et libvirt, et Rocky Linux 10.2 comme système invité cible ; disponibilité exacte, compatibilité et ressources restent à qualifier dans le guide de laboratoire. Distinguer le schéma personnel de la référence historique Codex.
+Dessin et analyse à partir du contrat, sans création de ressource. Prévoir un hôte Fedora 45 avec KVM/QEMU et libvirt, et Rocky Linux 10.2 comme système invité cible ; disponibilité exacte, compatibilité et ressources restent à qualifier dans le guide de laboratoire. Distinguer le schéma personnel de la référence historique.
 
 Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Pour 01/02, la cible est le document ou le dessin : aucun terminal ni VM requis.
 
@@ -76,7 +76,7 @@ Séparer attendu et observé ; une cause reste hypothétique tant qu’un contr�
 
 ## Expliquer et capitaliser
 
-Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence historique et travail personnel.
 
 **Réutilisation :** Quel compromis changerait si la charge ou l’exigence de reprise augmentait ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
@@ -84,6 +84,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-02--concevoir-larchitecture) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-02--concevoir-larchitecture) ou demander le niveau d’aide souhaité. La référence historique n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](01-application.md) · [Retour au parcours](README.md) · [Exercice suivant →](03-linux-reseau.md)

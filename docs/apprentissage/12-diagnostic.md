@@ -26,7 +26,7 @@ Par exemple, un refus de connexion indique une difficulté avant une réponse HT
 
 Mécanismes précédents compris, observations et accès nécessaires disponibles sur une cible isolée. Définir le symptôme et le contrôle utilisateur attendu avant de choisir un outil ou une modification.
 
-Le poste de contrôle prévu est Fedora 45. Utiliser une copie ou une cible de laboratoire explicitement isolée et identifiée, avec le composant concerné et un retour prévu. Observer d’abord un symptôme disponible ; proposer un écart de configuration réversible seulement si une expérience contrôlée est nécessaire et autorisée. Ne pas modifier le réseau principal du PC. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici. La VM invitée cible reste Rocky Linux 10.2 ; sa qualification est à vérifier avant cet exercice.
+Le poste de contrôle prévu est Fedora 45. Utiliser une copie ou une cible de laboratoire explicitement isolée et identifiée, avec le composant concerné et un retour prévu. Observer d’abord un symptôme disponible ; proposer un écart de configuration réversible seulement si une expérience contrôlée est nécessaire et autorisée. Ne pas modifier le réseau principal du PC. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici. La VM invitée cible reste Rocky Linux 10.2 ; sa qualification est à vérifier avant cet exercice.
 
 Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
 
@@ -76,7 +76,7 @@ Séparer attendu et observé ; une cause reste hypothétique tant qu’un contr�
 
 ## Expliquer et capitaliser
 
-Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence historique et travail personnel.
 
 **Réutilisation :** Quel nouveau test permettrait de réfuter ton explication sur un cas proche ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
@@ -84,6 +84,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-12--diagnostiquer-et-rétablir) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-12--diagnostiquer-et-rétablir) ou demander le niveau d’aide souhaité. La référence historique n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](11-sauvegarde-reprise.md) · [Retour au parcours](README.md) · [Exercice suivant →](13-autonomie.md)

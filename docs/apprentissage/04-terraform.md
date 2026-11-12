@@ -28,7 +28,7 @@ Références : [cycle Terraform](https://developer.hashicorp.com/terraform/intro
 
 Accès libvirt et laboratoire identifiés à l’exercice 03 ; versions de Terraform et du fournisseur vérifiées dans le guide. Distinguer ressource existante, ressource d’essai à créer et ressource déjà gérée. Pas de configuration complète fournie à recopier.
 
-Le poste de contrôle prévu est Fedora 45 ; les ressources à gérer sont des ressources KVM/libvirt identifiées du laboratoire. Terraform et la version du fournisseur libvirt choisi doivent être vérifiés séparément. La VM Rocky Linux 10.2 est la cible ; une VM créée manuellement n’appartient pas automatiquement au state Terraform. Ne pas adopter, remplacer ou supprimer une ressource existante par supposition. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
+Le poste de contrôle prévu est Fedora 45 ; les ressources à gérer sont des ressources KVM/libvirt identifiées du laboratoire. Terraform et la version du fournisseur libvirt choisi doivent être vérifiés séparément. La VM Rocky Linux 10.2 est la cible ; une VM créée manuellement n’appartient pas automatiquement au state Terraform. Ne pas adopter, remplacer ou supprimer une ressource existante par supposition. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
 
@@ -78,7 +78,7 @@ Séparer attendu et observé ; une cause reste hypothétique tant qu’un contr�
 
 ## Expliquer et capitaliser
 
-Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence historique et travail personnel.
 
 **Réutilisation :** Comment reprendre le même besoin dans un second environnement sans partager les identités de ressources ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
@@ -86,6 +86,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-04--provisionner-avec-terraform) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-04--provisionner-avec-terraform) ou demander le niveau d’aide souhaité. La référence historique n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](03-linux-reseau.md) · [Retour au parcours](README.md) · [Exercice suivant →](05-ansible.md)

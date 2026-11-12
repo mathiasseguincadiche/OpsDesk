@@ -1,4 +1,4 @@
--- Business schema only. Database, roles, grants and storage are prepared by Mathias.
+-- Business schema only. Database, roles, grants and storage are prepared separately, as part of the infrastructure exercises.
 -- Apply once to an empty application schema; no IF NOT EXISTS hides a mismatched schema.
 CREATE TABLE tickets (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

@@ -1,12 +1,12 @@
-# OpsDesk — triage de sécurité applicative V4.4
+# OpsDesk — triage de sécurité applicative
 
-**Verdict global conservé : FAIL. Triage contextualisé : PARTIEL. Aucune autorisation d’exposition Internet ni acceptation du risque.** Ce document distingue l’application fournie par Codex et la sécurité de l’infrastructure que Mathias construira personnellement.
+**Verdict global conservé : FAIL. Triage contextualisé : PARTIEL. Aucune autorisation d’exposition Internet ni acceptation du risque.** Ce document distingue l’application fournie et la sécurité de l’infrastructure que l’apprenant construira personnellement.
 
 ## Source et fraîcheur
 
 Le [rapport Trivy conservé](../evidence/vulnerability-scan.json) a été produit avec Trivy 0.74.0 sur `v42opsdesk-app:0.1.0-local`, image `sha256:2fa15b716fd4f4df2d286f412cca1b3b323cc484677a0ac3866a8fecced5ac95`. Sa date est `2026-11-03T13:48:01.065269+00:00`. La base explicitement utilisée a été mise à jour le 3 novembre 2026 à 07:14 UTC et téléchargée à 13:36 UTC. Le cache par défaut plus ancien affiché par une commande générale de version n’est pas le cache utilisé ici.
 
-Ce triage ne relance pas un scan et ne reconstruit pas l’image. Les sources applicatives V4.4 ont leurs tests distincts ; l’ancien scan ne prouve pas une nouvelle image déployée. Le [JSON de qualification](../evidence/v44/security-triage.json) conserve empreinte SHA-256, identité d’image, métriques et réserves.
+Ce triage ne relance pas un scan et ne reconstruit pas l’image. Les sources applicatives ont leurs tests distincts ; l’ancien scan ne prouve pas une nouvelle image déployée. Le [JSON de qualification](../evidence/v44/security-triage.json) conserve empreinte SHA-256, identité d’image, métriques et réserves.
 
 ## Lire les chiffres sans les gonfler
 
@@ -36,4 +36,4 @@ OpsDesk reste un démonstrateur fictif sans authentification utilisateur ; son u
 
 Le retrait historique des outils d’installation inutiles a déjà réduit l’image runtime ; le rapport défavorable antérieur est conservé. Zéro correctif HIGH/CRITICAL renseigné pour ces occurrences OS signifie seulement que la base de ce scan n’en fournit pas pour la version détectée. Cela ne démontre ni l’absence de risque ni l’absence d’une correction dans toute autre branche de distribution.
 
-La suite doit examiner les avis fournisseurs, la compatibilité d’une image corrigée et la régression applicative. Aucune migration arbitraire vers une distribution instable, désactivation de scan, suppression de rapport ou règle d’ignorance globale n’est livrée. La sélection et le durcissement d’infrastructure restent des exercices personnels de Mathias, avec leurs preuves futures. Les réglages loopback et les tests fictifs n’autorisent aucune exposition publique.
+La suite doit examiner les avis fournisseurs, la compatibilité d’une image corrigée et la régression applicative. Aucune migration arbitraire vers une distribution instable, désactivation de scan, suppression de rapport ou règle d’ignorance globale n’est livrée. La sélection et le durcissement d’infrastructure restent des exercices personnels de l’apprenant, avec leurs preuves futures. Les réglages loopback et les tests fictifs n’autorisent aucune exposition publique.

@@ -13,7 +13,7 @@ OpsDesk est une petite application de tickets IT. Un collaborateur ouvre une dem
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
 | Application (pages, API, base) | Réalisé | Vérifié : 26 tests réussis le 3 novembre 2026 | [Rapport](evidence/v44/application-tests.json) ; processus de développement ponctuel |
-| Analyse de vulnérabilités de l’image | Réalisé | Échec constaté : 185 occurrences, dont 45 HIGH | [Rapport](evidence/vulnerability-scan.json) et [triage](docs/triage-securite-v44.md) ; image historique |
+| Analyse de vulnérabilités de l’image | Réalisé | Échec constaté : 185 occurrences, dont 45 HIGH | [Rapport](evidence/vulnerability-scan.json) et [triage](docs/triage-securite.md) ; image historique |
 | Trois phases d’infrastructure | Prévu | Non vérifié : aucun déploiement ni pipeline exécuté | [État détaillé](STATUS.md) |
 | Laboratoire Fedora, KVM, Rocky Linux | Prévu | Non vérifié : aucune machine préparée | [Guide du laboratoire](docs/laboratoire-fedora-kvm-rocky.md) |
 

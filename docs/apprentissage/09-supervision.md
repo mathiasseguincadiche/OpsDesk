@@ -26,7 +26,7 @@ Choisir unités, labels et portée avant un seuil. Les compteurs applicatifs par
 
 Parcours applicatif et points de santé compris ; cible et version identifiées, collecte proposée. Vérifier les outils réellement installés et les accès autorisés. Ne pas définir une alerte à partir d’un compteur dont le sens ou la portée reste inconnu.
 
-Le poste de contrôle prévu est Fedora 45. Choisir une collecte et une visualisation proportionnées au laboratoire déjà qualifié, sans créer une VM par outil. Identifier source de métriques, collecteur, destinataire d’alerte autorisé, réseau et limites de ressources. Les métriques d’une application ne signifient pas que Prometheus ou Grafana est installé. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
+Le poste de contrôle prévu est Fedora 45. Choisir une collecte et une visualisation proportionnées au laboratoire déjà qualifié, sans créer une VM par outil. Identifier source de métriques, collecteur, destinataire d’alerte autorisé, réseau et limites de ressources. Les métriques d’une application ne signifient pas que Prometheus ou Grafana est installé. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 Prévoir Prometheus pour la collecte et Grafana pour une vue utile. k6 reste un essai de charge personnel, borné sur une cible locale autorisée : choisir débit/concurrence, durée, seuil d’arrêt et mesure de latence/erreurs avant exécution. Ne pas charger une cible publique ou le PC sans limite. La VM invitée cible reste Rocky Linux 10.2 ; sa qualification est à vérifier avant cet exercice.
 
@@ -78,7 +78,7 @@ Séparer attendu et observé ; une cause reste hypothétique tant qu’un contr�
 
 ## Expliquer et capitaliser
 
-Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence historique et travail personnel.
 
 **Réutilisation :** Quel indicateur garde son sens quand on change le nombre de réplicas ou redémarre le processus ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
@@ -86,6 +86,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-09--superviser) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-09--superviser) ou demander le niveau d’aide souhaité. La référence historique n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](08-cicd.md) · [Retour au parcours](README.md) · [Exercice suivant →](10-maintenance.md)
