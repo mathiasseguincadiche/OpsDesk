@@ -41,17 +41,19 @@ Les pictogrammes de la personne, du bouclier (durcissement), des journaux et de 
 ## Modifier et exporter
 
 1. Ouvrir le `.drawio` dans diagrams.net et modifier.
-2. *Fichier → Exporter → SVG*, sans l'option « Inclure une copie de mon diagramme ».
-3. Rouvrir le SVG, ajouter `role="img"`, un `<title>` et un `<desc>`, puis vérifier le rendu.
+2. *Fichier → Exporter en → SVG*, en thème clair et sans l'option « Inclure une copie de mon diagramme ». Le texte alternatif de la page devient le `<title>` du SVG.
+3. Enregistrer le `.drawio` et le SVG dans le même commit.
 
-Le `.drawio` et le SVG de présentation décrivent la même figure ; le SVG a été produit à partir de la même description que le `.drawio`, pas par le menu d'export.
+Le SVG de présentation est exporté depuis `presentation.drawio` par le moteur d'export de Draw.io 32.6.10 (page d'export du dépôt jgraph/drawio, Chromium sans interface), en thème clair et sans bordure. Cet export ne remplace pas l'ouverture du fichier dans l'application.
 
 ## Contrôles
 
 Réalisés le 12 novembre 2026 sur la présentation :
 
-- rendu du SVG dans Chromium : aucun texte ne dépasse son cadre (mesure des boîtes de texte) ;
+- export du SVG par le moteur Draw.io 32.6.10 ; aucun `<foreignObject>`, aucune image externe ;
+- rendu du SVG par deux moteurs indépendants (Chromium et librsvg) : même figure, aucun texte ne dépasse son cadre (mesure des boîtes de texte) ;
+- navigateur en thème sombre : le fond clair du SVG est conservé et tous les logos restent lisibles ;
 - contrastes calculés : texte courant entre 6,9:1 et 16:1, titres de phase et chiffres des pastilles au moins 4,7:1 (seuil WCAG AA : 4,5:1) ;
 - fichiers XML valides.
 
-Restent à faire : ouverture du `.drawio` dans diagrams.net, affichage dans GitHub et Notion à largeur étroite, thème sombre. Le schéma technique sera refait dans un second temps selon le même style.
+Restent à faire : ouverture du `.drawio` dans diagrams.net après cette modification, affichage dans GitHub et Notion à largeur étroite. Le schéma technique est refait dans un second temps selon le même style.
