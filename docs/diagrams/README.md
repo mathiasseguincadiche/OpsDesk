@@ -24,12 +24,17 @@ Le prototype utilise des données fictives et ne dispose pas d’authentificatio
 
 ## Source éditable, SVG et recette
 
-Les `.drawio` sont des fichiers XML éditables avec les formes et les textes du diagramme. Les SVG proposés ont été produits avec la même géométrie de conception, **mais ne sont pas des exports natifs certifiés de diagrams.net**. Cette distinction doit rester visible tant que les contrôles suivants ne sont pas réalisés :
+Les `.drawio` sont les sources éditables. Les SVG en sont exportés avec le moteur de rendu de l'application web diagrams.net (version 32.7.1), appelé par script le 11 novembre 2026, sans copie du diagramme incluse dans le fichier, en variante claire. Un titre et une description textuelle ont été ajoutés ensuite pour l'accessibilité. Ce ne sont donc pas des fichiers produits à la main, mais ils ne proviennent pas non plus du menu *Fichier → Exporter* : refaire l'export par ce menu reste possible et doit donner le même rendu.
 
-1. Rouvrir les deux `.drawio` dans diagrams.net et vérifier les blocs, les flèches, les libellés et les cadres.
-2. Exporter un SVG depuis **chaque source** ; comparer la géométrie et les textes avec l’aperçu proposé.
-3. Vérifier titres, descriptions accessibles, absence de collision, polices et contrastes mesurés.
-4. Vérifier l’image réellement insérée dans GitHub et Notion, à largeur normale et étroite, en thème clair et sombre.
-5. Consigner pour chaque contrôle l’outil utilisé, la date, le résultat observable et les limites. Ne pas confondre XML valide, rendu SVG et test d’usage.
+Contrôles réalisés le 11 novembre 2026 :
 
-Les SVG incluent un fond opaque, un titre et une description textuelle. Leur présence ne suffit pas à démontrer l’accessibilité complète du diagramme.
+- les deux `.drawio` s'ouvrent dans diagrams.net et affichent les blocs, flèches, libellés et cadres attendus ;
+- les deux SVG exportés ont été rendus comme images dans Chromium : aucune collision de texte observée.
+
+Contrôles restant à faire :
+
+1. Mesurer les contrastes et vérifier les polices.
+2. Vérifier l'image réellement insérée dans GitHub et Notion, à largeur normale et étroite, en thème clair et sombre.
+3. Consigner pour chaque contrôle l'outil utilisé, la date, le résultat observable et les limites. Ne pas confondre XML valide, rendu SVG et test d'usage.
+
+Les SVG incluent un fond opaque, un titre et une description textuelle. Leur présence ne suffit pas à démontrer l'accessibilité complète du diagramme.
