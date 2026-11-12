@@ -41,21 +41,39 @@ Les logos proviennent du paquet [simple-icons](https://github.com/simple-icons/s
 
 Les pictogrammes de la personne, du navigateur, du bouclier (durcissement), des journaux, de l'alerte et du volume sont dessinés pour ce projet et suivent la licence MIT du dépôt.
 
+## D'où viennent les faits
+
+| Ce que montre le schéma | Source dans le dépôt |
+| --- | --- |
+| Gunicorn sert Flask ; pages `/tickets`, API `/api/tickets` | [`app/opsdesk/web.py`](../../app/opsdesk/web.py), [`requirements.lock`](../../requirements.lock), [`docs/architecture.md`](../architecture.md) |
+| Sondes `/health/live`, `/health/ready`, `/version`, `/metrics` | [`app/opsdesk/web.py`](../../app/opsdesk/web.py) |
+| PostgreSQL, requêtes paramétrées, schéma | [`db/schema.sql`](../../db/schema.sql), [`app/opsdesk/web.py`](../../app/opsdesk/web.py) |
+| Aucune authentification, données fictives | [`README.md`](../../README.md), [`docs/securite.md`](../securite.md) |
+| Essai historique : `127.0.0.1:18081` vers le port 8000, `db:5432`, volume nommé | [`docs/architecture.md`](../architecture.md), [`docs/demarrage.md`](../demarrage.md) |
+| Laboratoire prévu : Fedora 45, KVM/QEMU/libvirt, Rocky Linux 10.2 | [`ROADMAP.md`](../../ROADMAP.md), [`docs/laboratoire-fedora-kvm-rocky.md`](../laboratoire-fedora-kvm-rocky.md) |
+| Phases 1 à 3 et leurs outils | [`docs/parcours-apprentissage.md`](../parcours-apprentissage.md), [`docs/apprentissage/README.md`](../apprentissage/README.md) |
+
+Les fichiers Compose de l'essai historique ne sont pas dans le dépôt : le schéma technique les décrit d'après `docs/architecture.md` et ne prouve ni leur contenu ni leur exécution.
+
 ## Modifier et exporter
 
 1. Ouvrir le `.drawio` dans diagrams.net et modifier.
-2. *Fichier → Exporter → SVG*, sans l'option « Inclure une copie de mon diagramme ».
-3. Rouvrir le SVG, ajouter `role="img"`, un `<title>` et un `<desc>`, puis vérifier le rendu.
+2. *Fichier → Exporter en → SVG*, sans l'option « Inclure une copie de mon diagramme ». Le texte alternatif de la page devient le `<title>` du SVG.
+3. Enregistrer le `.drawio` et le SVG dans le même commit.
 
-Pour les deux schémas, le `.drawio` et le SVG décrivent la même figure ; le SVG a été produit à partir de la même description que le `.drawio`, pas par le menu d'export de diagrams.net.
+Les sources portent `adaptiveColors="none"` : sans ce réglage, diagrams.net en thème sombre inverse les couleurs et les logos sombres deviennent presque invisibles. Les cadres de texte sont ajustés à leur contenu.
+
+Les deux SVG sont exportés depuis les `.drawio` par le moteur d'export de Draw.io 32.6.10 (page d'export du dépôt jgraph/drawio, Chromium sans interface), en thème clair et sans bordure. Cet export ne remplace pas l'ouverture des fichiers dans l'application.
 
 ## Contrôles
 
-Réalisés le 12 novembre 2026 :
+Réalisés le 12 novembre 2026 sur les deux schémas :
 
-- rendu des SVG dans Chromium : aucun texte ne dépasse son cadre (mesure des boîtes de texte) ;
-- contrastes calculés sur les deux schémas : texte courant entre 6,7:1 et 16:1, titres colorés et chiffres des pastilles au moins 4,7:1 (seuil WCAG AA : 4,5:1) ;
-- fichiers XML valides ;
-- les deux `.drawio` ouverts dans diagrams.net : rendu identique aux SVG.
+- export des SVG par le moteur Draw.io 32.6.10 ; aucun `<foreignObject>` ; aucune image externe (les logos sont embarqués) ;
+- rendu par deux moteurs indépendants (Chromium et librsvg) : même figure, chaque composant affiche son icône ;
+- aucun texte ne dépasse son cadre (mesure des boîtes de texte sur le rendu Chromium) ; plus petite police : 13 px sur un canevas de 1600 px de large ;
+- navigateur en thème sombre : le fond clair du SVG est conservé et tous les logos restent lisibles ;
+- contrastes calculés : texte courant entre 6,7:1 et 16:1, titres colorés et chiffres des pastilles au moins 4,7:1 (seuil WCAG AA : 4,5:1) ;
+- fichiers XML valides ; `.drawio` ouverts dans diagrams.net (application web) en thème sombre, sans inversion de couleurs.
 
-Restent à faire : affichage dans GitHub et Notion à largeur étroite, thème sombre.
+Non vérifiés : affichage dans GitHub (largeur étroite, thème sombre), affichage dans Notion, ouverture dans l'application de bureau Draw.io, lisibilité de la plus petite police à la largeur réelle d'insertion.
