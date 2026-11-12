@@ -15,7 +15,7 @@
         "k8s/"
       ],
       "business_code": "app/opsdesk/ fourni pour équipe fictive",
-      "precheck": "Projet v42opsdesk, loopback18081, réseau et volume identifiés, secrets privés, aucun contexte Kubernetes implicite.",
+      "precheck": "Projet Compose, loopback18081, réseau et volume identifiés, secrets privés, aucun contexte Kubernetes implicite.",
       "commands_executed": [
         "docker compose up --build --detach --wait",
         "python3 scripts/smoke.py --base-url http://127.0.0.1:18081",
@@ -83,7 +83,7 @@
         "python3 scripts/smoke.py --base-url http://127.0.0.1:18081"
       ],
       "expected": "Artefact identifié, mêmes tests en CI, version et ticket contrôlés, promotion/rollback prouvés.",
-      "observed": "Sept tests et parcours local exécutés; preuve initiale revision=uncommitted-v42; chaîne distante à qualifier.",
+      "observed": "Sept tests et parcours local exécutés; preuve initiale sans commit; chaîne distante à qualifier.",
       "diagnostic": "Refus de transitions testés; aucun mauvais artefact distant promu et diagnostiqué dans cette cellule.",
       "evidence": [
         "evidence/business-smoke.json",

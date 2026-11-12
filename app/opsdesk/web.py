@@ -50,7 +50,7 @@ def create_app():
         SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax",
         TRUSTED_HOSTS=[host.strip() for host in os.environ.get("TRUSTED_HOSTS", "127.0.0.1,localhost").split(",") if host.strip()],
     )
-    identity = {"application": "OpsDesk", "version": os.environ.get("APP_VERSION", "0.1.0"), "revision": os.environ.get("APP_REVISION", "uncommitted-v42")}
+    identity = {"application": "OpsDesk", "version": os.environ.get("APP_VERSION", "0.1.0"), "revision": os.environ.get("APP_REVISION", "uncommitted")}
 
     @app.before_request
     def start_request():

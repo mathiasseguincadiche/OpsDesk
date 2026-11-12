@@ -44,12 +44,12 @@ Le contrôle historique utilisait Ubuntu/WSL2. Il ne certifie ni Fedora 45, ni G
 
 ## Identifier les ressources
 
-La configuration historique utilisait le projet Compose `v42opsdesk`, le réseau `v42opsdesk_net`, le volume `v42opsdesk_pgdata` et la boucle locale `127.0.0.1:18081`. Vérifier qu’ils n’appartiennent pas déjà à un autre travail avant le premier démarrage.
+La configuration historique utilisait un projet Compose, un réseau et un volume nommés d’après OpsDesk, et la boucle locale `127.0.0.1:18081`. Vérifier qu’ils n’appartiennent pas déjà à un autre travail avant le premier démarrage.
 
 ```bash
 docker compose config --quiet
 docker compose ps
-docker volume inspect v42opsdesk_pgdata
+docker volume ls
 ```
 
 Avant la préparation des secrets, `compose config` peut signaler leur absence ; c’est une dépendance attendue. L’absence du volume avant le premier lancement n’est pas un échec. Si un volume existe déjà, le conserver et comprendre son origine ; aucun `down -v`, prune ou nettoyage global n’est nécessaire pour le démarrage.

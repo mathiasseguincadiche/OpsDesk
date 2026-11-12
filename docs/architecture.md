@@ -26,8 +26,8 @@ Cette **vue de déploiement statique** indique où résident les composants et c
 
 - **Accès :** dans la configuration historique, le navigateur utilise `127.0.0.1:18081` en HTTP ; Docker redirige vers le port `8000` du service `app`. L’adresse saisie ne prouve pas à elle seule l’interface d’écoute réelle ; il faut vérifier la configuration et l’environnement d’exécution.
 - **Application :** Gunicorn sert Flask et les fonctionnalités de tickets. Le pilote Python `psycopg` fait partie de l’application ; il ne représente ni un protocole ni un service réseau indépendant.
-- **Base :** le service `app` résout `db` dans le réseau Compose `v42opsdesk_net` et se connecte au port interne `5432`. Le rôle SQL `opsdesk_app` a les droits nécessaires aux tickets sans être le propriétaire d’initialisation : c’est une **propriété de PostgreSQL**, pas une étape de circulation.
-- **Stockage :** PostgreSQL utilise le volume nommé `v42opsdesk_pgdata`. Il s’agit d’un **montage de l’hôte**, hors du réseau logique. La persistance ne prouve ni une sauvegarde indépendante ni une restauration réussie.
+- **Base :** le service `app` résout `db` dans le réseau Compose du projet et se connecte au port interne `5432`. Le rôle SQL `opsdesk_app` a les droits nécessaires aux tickets sans être le propriétaire d’initialisation : c’est une **propriété de PostgreSQL**, pas une étape de circulation.
+- **Stockage :** PostgreSQL utilise un volume nommé. Il s’agit d’un **montage de l’hôte**, hors du réseau logique. La persistance ne prouve ni une sauvegarde indépendante ni une restauration réussie.
 
 **Portée et limites :** ce dessin décrit l’essai Ubuntu/WSL2 historique, pas un service actuel ni une infrastructure personnelle reçue. Données fictives et absence d’authentification utilisateur. PostgreSQL n’était pas publié sur l’hôte dans la configuration de référence. Un réseau Compose n’est pas une frontière de sécurité forte. Aucune qualification de production n’est déduite de ce schéma.
 

@@ -10,7 +10,7 @@ Une authentification minimale a été évaluée : elle ajouterait identités, mo
 
 Corps HTTP limité à 16 Kio, validations de types/longueurs et du texte Unicode stockable, SQL paramétré, contraintes métier PostgreSQL, échappement Jinja, en-têtes de protection, mutations API exclusivement JSON et CSRF des formulaires. Une entrée CSRF non ASCII est refusée avec 400. `TRUSTED_HOSTS` limite par défaut les hôtes HTTP à localhost/127.0.0.1 ; son erreur est rendue sans modèle Jinja pour éviter un 500 avant l’adaptateur d’URL.
 
-Les tests utilisent des cas négatifs réels dans la source applicative actuelle ; l’erreur DB est simulée dans un cas de test, pas provoquée dans le service source. Voir le [contrat](contrat-applicatif.md) et la [preuve actuelle](../evidence/v44/application-tests.json).
+Les tests utilisent des cas négatifs réels dans la source applicative actuelle ; l’erreur DB est simulée dans un cas de test, pas provoquée dans le service source. Voir le [contrat](contrat-applicatif.md) et la [preuve actuelle](../evidence/qualification/application-tests.json).
 
 ## Secrets et droits attendus
 

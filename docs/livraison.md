@@ -27,7 +27,7 @@ Cette chaîne locale ne prouve pas un job GitHub exécuté, un push GHCR ou une 
 
 ## Interface de versionnement
 
-L’image reçoit `APP_VERSION` et `APP_REVISION` à sa construction. La version réellement servie se lit dans `/version`. La valeur `uncommitted-v42` de la première preuve signifie explicitement qu’aucun commit n’existait encore pour cette exécution.
+L’image reçoit `APP_VERSION` et `APP_REVISION` à sa construction. La version réellement servie se lit dans `/version`. La révision sans commit de la première preuve signifie qu’aucun commit n’existait encore pour cette exécution.
 
 Exemple historique de paramètres de livraison, conservé pour lecture. Il modifiait le service Compose du laboratoire préparé ; les fichiers requis sont absents du dépôt courant :
 
