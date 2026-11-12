@@ -15,7 +15,7 @@ Docker, GitHub Actions/GHCR et Trivy sont reliés aux exercices 06/08 ; Promethe
 | Ordre | Exercice | Responsabilité |
 |---|---|---|
 | 01 | [01 — Comprendre l’application](01-application.md) | Construire |
-| 02 | [02 — Concevoir l’architecture](02-architecture.md) | Construire |
+| 02 | [02 — Relire, justifier et vérifier l’architecture retenue](02-architecture.md) | Construire |
 | 03 | [03 — Préparer Linux et le réseau](03-linux-reseau.md) | Construire |
 | 04 | [04 — Provisionner avec Terraform](04-terraform.md) | Automatiser |
 | 05 | [05 — Configurer avec Ansible](05-ansible.md) | Automatiser |

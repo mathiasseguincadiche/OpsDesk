@@ -24,7 +24,7 @@ Les permissions Linux déterminent quel utilisateur peut lire un fichier ou agir
 
 ## Préparer la bonne cible
 
-Proposition d’architecture issue de l’exercice 02 ; accès autorisé au PC et résultats du pré-check hôte. Vérifier la disponibilité officielle de Rocky Linux 10.2 et son média avant d’en planifier l’installation. Aucun outil de virtualisation ni VM n’est considéré prêt sans contrôle.
+Architecture retenue, relue et justifiée à l’exercice 02 ; accès autorisé au PC et résultats du pré-check hôte. Vérifier la disponibilité officielle de Rocky Linux 10.2 et son média avant d’en planifier l’installation. Aucun outil de virtualisation ni VM n’est considéré prêt sans contrôle.
 
 Le pré-check de l’hôte Fedora 45 se fait sur le PC personnel, pas dans WSL ni dans une VM. La première VM cible Rocky Linux 10.2 est préparée personnellement sous KVM/QEMU/libvirt uniquement après qualification du média et des prérequis. Identifier ensuite séparément l’hôte, la VM, son utilisateur, son réseau et son stockage. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 

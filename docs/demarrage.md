@@ -11,7 +11,7 @@ Le parcours actif, le laboratoire prévu (Fedora 45, KVM, Rocky Linux 10.2) et l
 | Procédure | Classement | Cible, prérequis et résultat attendu |
 |---|---|---|
 | Lire l’exercice 01 et le contrat | ACTIF — exécutable depuis les sources actuellement disponibles | Poste de lecture, navigateur ou éditeur, accès au dépôt ; aucune VM ni installation. Retrouver le parcours ticket et les besoins de l’application ; comparer sa reformulation aux rubriques 1–4 et 29–30 du contrat. |
-| Concevoir puis préparer son laboratoire | ACTIF — travail personnel à réaliser | Exercice 02 puis [guide commun](laboratoire-fedora-kvm-rocky.md) : nommer l’hôte, la VM et les versions ; relever les pré-checks avant toute installation. Aucune configuration finale n’est fournie. |
+| Relire l’architecture retenue, puis préparer son laboratoire | ACTIF — travail personnel à réaliser | Exercice 02 puis [guide commun](laboratoire-fedora-kvm-rocky.md) : nommer l’hôte, les serveurs et les versions ; relever les pré-checks avant toute installation. Aucune configuration finale n’est fournie. |
 | Démarrage Python natif | NON VÉRIFIÉ de bout en bout | Les fichiers applicatifs existent ; base, droits, secrets et environnement restent à préparer. Lire [contrat, section 8](contrat-applicatif.md#8-démarrage-en-développement), effets et réserves compris. |
 | Recette Compose ci-dessous | HISTORIQUE — non exécutable depuis ce dépôt | Configurations et script absents ; aucune création de fichiers de remplacement ni relance autorisée par cette lecture. |
 

@@ -68,7 +68,7 @@ Présenter ta tentative, l’attendu, l’observé et le premier écart. Demande
 
 **Contre-exemple de lecture, sans exécution :** une capture de page tickets ne démontre pas leur persistance. Indiquer quel contrôle ultérieur pourrait réfuter cette conclusion ; aucune sortie ni preuve technique n’est à produire aujourd’hui.
 
-**Erreurs fréquentes :** Confondre le laboratoire historique avec une architecture personnelle déjà choisie.
+**Erreurs fréquentes :** Confondre le laboratoire historique avec l’architecture retenue pour le projet.
 
 **Démarche en cas d’écart :** Si deux documents semblent décrire des capacités différentes, comparer leur version et la source du contrat. Distinguer une ancienne preuve historique d’une fonction actuelle ; noter la contradiction au lieu d’inventer un résultat.
 

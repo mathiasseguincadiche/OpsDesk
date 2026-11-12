@@ -7,7 +7,7 @@ OpsDesk est le projet fil rouge unique du parcours. L’application est fournie 
 | N° | Étape | Exercice |
 | --- | --- | --- |
 | 1 | Comprendre l’application et lire son contrat | [01](docs/apprentissage/01-application.md) |
-| 2 | Concevoir l’architecture et justifier ressources, flux, accès et stockage | [02](docs/apprentissage/02-architecture.md) |
+| 2 | Relire l’architecture retenue, justifier ressources, flux, accès et stockage, et la vérifier | [02](docs/apprentissage/02-architecture.md) |
 | 3 | Préparer Linux, Rocky Linux et le réseau du laboratoire | [03](docs/apprentissage/03-linux-reseau.md) |
 | 4 | Écrire le Terraform, lire le plan, vérifier les ressources créées | [04](docs/apprentissage/04-terraform.md) |
 | 5 | Écrire l’Ansible, contrôler les changements puis la seconde passe | [05](docs/apprentissage/05-ansible.md) |
@@ -23,6 +23,7 @@ OpsDesk est le projet fil rouge unique du parcours. L’application est fournie 
 ## Principes
 
 - Le laboratoire prévu est **Fedora 45 (hôte) → KVM, QEMU, libvirt → Rocky Linux 10.2 (invité)**. Les exercices 1 et 2 se font en lecture et en dessin ; la préparation technique suit le [guide du laboratoire](docs/laboratoire-fedora-kvm-rocky.md). Une version non vérifiée reste signalée, et Rocky Linux n’est pas remplacé en silence.
+- L’architecture retenue (deux serveurs Rocky Linux, réseau `opsdesk-lan`, Podman, sauvegarde, supervision) est dans le [registre des décisions](docs/architecture.md#décisions-retenues) et sur le [schéma technique](docs/diagrams/architecture-technique.svg).
 - Les corrigés se lisent après une première tentative. Les anciennes solutions sont des références datées, pas des fichiers à recopier ([provenance](docs/provenance.md)).
 - Toute ressource payante, exposition réelle, destruction ou nettoyage demande son périmètre et un accord préalable.
 - GitHub est l’unique plateforme active. GitLab reste en l’état, à titre historique.

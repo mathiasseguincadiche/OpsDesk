@@ -2,7 +2,7 @@
 
 OpsDesk est une petite application de tickets IT. Un collaborateur ouvre une demande, le support la suit puis la clôture ; PostgreSQL conserve les tickets. Le projet sert de fil rouge pour apprendre à livrer, héberger et exploiter un service.
 
-![OpsDesk : un collaborateur utilise l’application Flask, qui conserve les tickets dans PostgreSQL ; trois phases à réaliser pour la livrer, l’héberger et l’exploiter](docs/diagrams/presentation.svg)
+![OpsDesk : un utilisateur appelle l’application Flask, qui conserve les tickets dans PostgreSQL ; trois phases pour la livrer, l’héberger et l’exploiter](docs/diagrams/presentation.svg)
 
 ## Problème et objectif
 

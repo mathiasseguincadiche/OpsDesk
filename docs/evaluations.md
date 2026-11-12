@@ -22,7 +22,7 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Pourquoi.** Le collaborateur doit pouvoir ouvrir puis retrouver sa demande ; l’équipe IT doit lire son état. La réception doit suivre l’utilisateur jusqu’aux données, pas seulement constater qu’un conteneur tourne.
 
-**Code fourni / rôle InfraOps.** `app/opsdesk/` fournit les règles et pages du démonstrateur ; `compose.yaml`, `Dockerfile`, `db/001-initial.sql`, `scripts/prepare-local.sh` et `k8s/` définissent l’exécution, les droits et les dépendances. L’architecture sur [le schéma technique](diagrams/architecture-technique.svg) montre navigateur → port local → app → DNS `db` → PostgreSQL → volume.
+**Code fourni / rôle InfraOps.** `app/opsdesk/` fournit les règles et pages du démonstrateur ; `compose.yaml`, `Dockerfile`, `db/001-initial.sql`, `scripts/prepare-local.sh` et `k8s/` définissent l’exécution, les droits et les dépendances. L’architecture sur [le schéma technique](diagrams/architecture-technique.svg) montre navigateur → application → PostgreSQL, avec la sauvegarde et la supervision autour.
 
 **Pré-check.** Identifier le projet Compose, le port local 18081, le réseau et le volume ; vérifier ressources et absence d’accès public. Données fictives et secrets privés uniquement. La preuve initiale ne qualifie ni Fedora ni une VM Rocky. Ne pas employer le contexte Kubernetes existant.
 

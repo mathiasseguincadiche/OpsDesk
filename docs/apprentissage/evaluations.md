@@ -17,7 +17,7 @@ Ces évaluations sont transversales : elles ne constituent pas cinq exercices su
 
 **Action personnelle :** L’apprenant propose la méthode, écrit les configurations nécessaires, exécute et explique. Niveau d’aide initial : guidé.
 
-**Contrôle :** Expliquer le besoin et le schéma personnel ; distinguer Fedora hôte et Rocky invité. Vérifier réseau/SSH/droits/protections sur la VM réelle, puis expliquer un refus attendu. La présence d’un dessin ou le démarrage d’une VM ne suffit pas. Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL.
+**Contrôle :** Expliquer le besoin et justifier l’architecture retenue ; distinguer Fedora hôte et Rocky invité. Vérifier réseau/SSH/droits/protections sur la VM réelle, puis expliquer un refus attendu. La présence d’un dessin ou le démarrage d’une VM ne suffit pas. Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL.
 
 **Résultat/preuve/niveau :** NON EXÉCUTÉ / aucune preuve personnelle / NON ÉVALUÉ. Après exécution : date, environnement, version/commit, action, résultat, difficulté, correction, test final, aide reçue.
 
