@@ -1,41 +1,31 @@
-# OpsDesk — préparation fournie et parcours personnel
+# Feuille de route d’OpsDesk
 
-## Parcours actif et laboratoire personnel
+OpsDesk est le projet fil rouge unique du parcours. L’application est fournie ; l’infrastructure et son exploitation sont à construire, exercice après exercice. Aucun exercice d’infrastructure n’est réalisé à ce jour : tous les éléments ci-dessous sont au statut **Prévu**, et leur contrôle est **Non vérifié**. L’[état détaillé](STATUS.md) donne les preuves existantes.
 
-Commencer par [l’exercice personnel V4.4 n° 1 — comprendre l’application](docs/apprentissage/01-application.md) et [le contrat applicatif](docs/contrat-applicatif.md). Les [13 exercices prioritaires](docs/apprentissage/README.md) sont distincts des supports théoriques et preuves historiques conservés. Les corrigés se consultent après une tentative ; les cinq évaluations personnelles sont dans `docs/apprentissage/evaluations.md`.
+## Étapes
 
-Le laboratoire prévu est **Fedora 45 hôte → KVM/QEMU/libvirt → Rocky Linux 10.2 invité**. Les exercices 01/02 se font en lecture et dessin ; pour la préparation technique, lire [le guide de laboratoire et ses contrôles](docs/laboratoire-fedora-kvm-rocky.md). Aucune compatibilité, installation ou VM personnelle n’est validée par les essais historiques Ubuntu/WSL de Codex. Une version ou un contrôle non vérifié reste signalé ; aucune substitution silencieuse de Rocky Linux n’est autorisée.
+| N° | Étape | Exercice |
+| --- | --- | --- |
+| 1 | Comprendre l’application et lire son contrat | [01](docs/apprentissage/01-application.md) |
+| 2 | Concevoir l’architecture et justifier ressources, flux, accès et stockage | [02](docs/apprentissage/02-architecture.md) |
+| 3 | Préparer Linux, Rocky Linux et le réseau du laboratoire | [03](docs/apprentissage/03-linux-reseau.md) |
+| 4 | Écrire le Terraform, lire le plan, vérifier les ressources créées | [04](docs/apprentissage/04-terraform.md) |
+| 5 | Écrire l’Ansible, contrôler les changements puis la seconde passe | [05](docs/apprentissage/05-ansible.md) |
+| 6 | Conteneuriser l’application ; choisir volumes, réseaux et secrets ; vérifier un ticket | [06](docs/apprentissage/06-conteneurs.md) |
+| 7 | Pratiquer K3s : ressources, sondes, stockage, mise à jour et diagnostic | [07](docs/apprentissage/07-k3s.md) |
+| 8 | Construire la CI/CD à partir d’une livraison manuelle comprise | [08](docs/apprentissage/08-cicd.md) |
+| 9 | Choisir des signaux utiles, construire la supervision, vérifier une alerte | [09](docs/apprentissage/09-supervision.md) |
+| 10 | Préparer une maintenance et contrôler le service avant et après | [10](docs/apprentissage/10-maintenance.md) |
+| 11 | Concevoir une sauvegarde et une restauration isolée ; vérifier les tickets | [11](docs/apprentissage/11-sauvegarde-reprise.md) |
+| 12 | Diagnostiquer un cas nouveau et rétablir le service | [12](docs/apprentissage/12-diagnostic.md) |
+| 13 | Refaire une tâche nouvelle et expliquer ses choix avec une aide limitée | [13](docs/apprentissage/13-autonomie.md) |
 
-GitHub est l’unique plateforme active de ce parcours. GitLab est laissé en l’état ; ses anciennes références sont historiques et facultatives, sans synchronisation ni second flux quotidien.
+## Principes
 
-La V4.4 sépare la réception de l’application et la réalisation des exercices. Une case de préparation Codex ne vaut pas validation personnelle de Mathias.
+- Le laboratoire prévu est **Fedora 45 (hôte) → KVM, QEMU, libvirt → Rocky Linux 10.2 (invité)**. Les exercices 1 et 2 se font en lecture et en dessin ; la préparation technique suit le [guide du laboratoire](docs/laboratoire-fedora-kvm-rocky.md). Une version non vérifiée reste signalée, et Rocky Linux n’est pas remplacé en silence.
+- Les corrigés se lisent après une première tentative. Les anciennes solutions sont des références datées, pas des fichiers à recopier ([provenance](docs/provenance.md)).
+- Toute ressource payante, exposition réelle, destruction ou nettoyage demande son périmètre et un accord préalable.
+- GitHub est l’unique plateforme active. GitLab reste en l’état, à titre historique.
+- AWS est facultatif et dépend d’un budget et d’une autorisation.
 
-## Préparation applicative Codex
-
-- Sources Flask, pages/API et règles de tickets conservées ; dépendances verrouillées et schéma métier autonome fourni.
-- Contrôle Host et refus CSRF non ASCII testés ; nom du rôle PostgreSQL configurable par `DB_USER`.
-- Tests HTTP/SQL et relecture d’un ticket committé ajoutés ; résultats courants dans `evidence/v44/`, premier échec conservé.
-- Contrat applicatif à 30 rubriques et documentation réconciliés ; alertes de sécurité conservées.
-- Parcours et preuves historiques conservés avec leur provenance ; aucune réalisation InfraOps personnelle anticipée.
-
-## Ordre de travail de Mathias
-
-1. Comprendre l’application et lire son contrat.
-2. Concevoir son architecture et justifier ressources, flux, accès et stockage.
-3. Préparer Linux/Rocky et le réseau du laboratoire autorisé.
-4. Écrire son Terraform, lire le plan et vérifier les ressources réellement provisionnées.
-5. Écrire son Ansible, contrôler les changements puis la seconde passe.
-6. Conteneuriser l’application, choisir ses volumes/réseaux/secrets et vérifier le ticket.
-7. Pratiquer Kubernetes/K3s : ressources, probes, stockage, rollout et diagnostic.
-8. Construire sa CI/CD à partir d’une livraison manuelle comprise ; étudier le défaut de référence du candidat historique.
-9. Choisir des signaux utiles, construire sa supervision et vérifier une alerte.
-10. Préparer une maintenance Day-2 et contrôler le service avant/après.
-11. Concevoir et exécuter sa sauvegarde et sa restauration isolée ; vérifier les tickets.
-12. Diagnostiquer un cas nouveau et rétablir le besoin utilisateur.
-13. Réutiliser les acquis sur une tâche de transfert et expliquer ses choix avec une aide limitée.
-
-**Tous ces exercices sont à faire personnellement ; aucun niveau n’est présumé.** OpsDesk est l’unique projet actif de ce parcours : l’accompagnement diminue progressivement d’une première tentative guidée à une tâche nouvelle réalisée et expliquée avec une aide limitée (exercice 13). Les autres projets anciens ne sont ni des étapes obligatoires ni des preuves à afficher dans le CV.
-
-Les anciennes solutions restent accessibles comme références après une première tentative ; elles ne sont pas les fichiers obligatoires à recopier. Toute ressource payante, exposition réelle, destruction ou nettoyage demande son périmètre et l’accord approprié. Ce document ne lance aucun exercice.
-
-[Contrat](docs/contrat-applicatif.md) · [Parcours](docs/parcours-apprentissage.md) · [Provenance](docs/provenance.md)
+[Parcours](docs/parcours-apprentissage.md) · [Contrat applicatif](docs/contrat-applicatif.md) · [État](STATUS.md)
