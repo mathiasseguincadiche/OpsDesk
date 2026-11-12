@@ -20,13 +20,13 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 <a id="exercice-02"></a>
 <a id="exercice-02"></a>
 
-## Exercice 02 — Concevoir l’architecture
+## Exercice 02 — Relire, justifier et vérifier l’architecture retenue
 
-**Attendus à argumenter.** L’architecture traduit un besoin en ressources, flux et frontières de confiance. Un dessin doit expliquer les accès et la persistance, pas seulement aligner des logos. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Schéma technique personnel modifiable, choix argumentés et alternatives raisonnables.
+**Attendus à argumenter.** L’architecture traduit un besoin en ressources, flux et frontières de confiance. Un dessin doit expliquer les accès et la persistance, pas seulement aligner des logos. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Note de justification des décisions du registre (besoin, alternative écartée, point de panne, contrôle prévu), flux redessinés puis comparés au schéma technique, écarts signalés.
 
-**Vérification raisonnée.** Partir du symptôme utilisateur et traverser client, point d’entrée, application puis stockage. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+**Vérification raisonnée.** Partir du symptôme utilisateur et traverser client, point d’entrée, application puis stockage. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une critique de l’architecture retenue est recevable si elle s’appuie sur le contrat, les droits, la persistance et les critères, et si elle se consigne comme proposition avec sa raison plutôt que comme modification silencieuse.
 
-**Points à refuser.** Assimiler namespace, réseau conteneur et isolation de machines ; oublier où vivent les données. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Assimiler namespace, réseau conteneur et isolation de machines ; oublier où vivent les données ; recopier le registre sans expliquer un seul choix. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
 **Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 

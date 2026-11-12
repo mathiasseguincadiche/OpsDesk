@@ -7,7 +7,7 @@ OpsDesk est le projet fil rouge unique du parcours. L’application est fournie 
 | N° | Étape | Exercice |
 | --- | --- | --- |
 | 1 | Comprendre l’application et lire son contrat | [01](docs/apprentissage/01-application.md) |
-| 2 | Concevoir l’architecture et justifier ressources, flux, accès et stockage | [02](docs/apprentissage/02-architecture.md) |
+| 2 | Relire l’architecture retenue, justifier ressources, flux, accès et stockage, et la vérifier | [02](docs/apprentissage/02-architecture.md) |
 | 3 | Préparer Linux, Rocky Linux et le réseau du laboratoire | [03](docs/apprentissage/03-linux-reseau.md) |
 | 4 | Écrire le Terraform, lire le plan, vérifier les ressources créées | [04](docs/apprentissage/04-terraform.md) |
 | 5 | Écrire l’Ansible, contrôler les changements puis la seconde passe | [05](docs/apprentissage/05-ansible.md) |

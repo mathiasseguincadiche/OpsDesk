@@ -12,9 +12,9 @@ GitHub est l’unique plateforme active de ce parcours. GitLab est laissé en l�
 
 ## Ordre de progression
 
-Application → architecture personnelle → Linux/réseau → Terraform → Ansible → conteneurisation → K3s → CI/CD → supervision → Day-2 → sauvegarde/restauration → diagnostic/rétablissement → épreuve nouvelle d’autonomie. Les contenus utiles sont conservés ; les 13 exercices sont maintenant identifiables individuellement. Les énoncés complets, indices et corrigés séparés sont préparés avec le parcours Notion ; les anciennes solutions sont des références à consulter après la première tentative, pas des réponses imposées.
+Application → architecture retenue → Linux/réseau → Terraform → Ansible → conteneurisation → K3s → CI/CD → supervision → Day-2 → sauvegarde/restauration → diagnostic/rétablissement → épreuve nouvelle d’autonomie. Les contenus utiles sont conservés ; les 13 exercices sont maintenant identifiables individuellement. Les énoncés complets, indices et corrigés séparés sont préparés avec le parcours Notion ; les anciennes solutions sont des références à consulter après la première tentative, pas des réponses imposées.
 
-L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée. **Aucun niveau n’est attribué par les tests historiques.** Le premier exercice porte sur le contrat et les flux applicatifs, sans VM ; le schéma d’infrastructure personnel relève de l’exercice 02.
+L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée. **Aucun niveau n’est attribué par les tests historiques.** Le premier exercice porte sur le contrat et les flux applicatifs, sans VM ; la relecture et la justification de l’architecture retenue relèvent de l’exercice 02.
 
 ## Méthode progressive conservée
 
