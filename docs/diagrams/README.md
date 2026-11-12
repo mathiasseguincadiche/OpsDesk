@@ -8,12 +8,12 @@
 ## Lire la présentation
 
 - **Cadre à trait plein :** existe dans le dépôt (l'application et sa base).
-- **Cadre ou tuile en pointillé :** prévu, pas encore réalisé. Une couleur seule ne dit jamais l'avancement.
+- **Cadre ou tuile en pointillé :** étape du parcours à réaliser. Aucun exercice n'est réalisé à ce jour (suivi Notion du 12 novembre 2026 : 36 lignes « À faire »). Une couleur seule ne dit jamais l'avancement.
 - **Pastille numérotée :** ordre des trois phases.
 - **Flèche pleine :** échange entre composants (HTTP, SQL).
 - **Flèche pointillée :** enchaînement prévu entre étapes.
 
-Les trois phases reprennent celles du [parcours](../parcours-apprentissage.md) et de Notion : conteneurisation et livraison automatisée, infrastructure et automatisation, orchestration, observabilité et fiabilité. Le schéma n'affirme ni déploiement, ni preuve, ni mise en production.
+Les trois phases reprennent celles du [parcours](../parcours-apprentissage.md) et de Notion : conteneurisation et livraison automatisée, infrastructure et automatisation, orchestration, observabilité et fiabilité. L'essai historique de la phase 1 (application et base fournies, exécutées avec Docker Compose) est décrit dans le schéma technique. Le schéma n'affirme ni déploiement, ni preuve, ni mise en production.
 
 ## Logos et pictogrammes
 
