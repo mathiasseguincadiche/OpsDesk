@@ -20,13 +20,13 @@ Les alternatives ci-dessus servent à comprendre les compromis. Les sources cons
 
 ## Architecture technique
 
-![Architecture technique d’OpsDesk : le navigateur appelle l’application Gunicorn et Flask et ses trois sondes, qui lit et écrit dans PostgreSQL sur srv-app ; la sauvegarde de 02:00 est copiée hors du serveur ; K3s, Prometheus et Grafana tournent sur srv-k3s ; GitHub Actions publie l’image sur GHCR](diagrams/architecture-technique.svg)
+![Architecture technique d’OpsDesk en trois cadres, un par phase. Phase 1 : GitHub Actions publie l’image sur GHCR ; la sauvegarde de 02:00 est copiée hors du serveur. Phase 2, srv-app : le navigateur appelle l’application Gunicorn et Flask et ses trois sondes, qui lit et écrit dans PostgreSQL ; la restauration refait le serveur et remet la base. Phase 3, srv-k3s : K3s, Prometheus et Grafana lisent les sondes et les mesures](diagrams/architecture-technique.svg)
 
-Le schéma suit une requête de l’utilisateur jusqu’à la base, puis ce qui l’entoure : livraison de l’image, sondes, sauvegarde et supervision. Les numéros se lisent dans l’ordre. Le [détail des routes, sondes, colonnes, ports et sauvegardes](diagrams/README.md#détail-des-éléments-du-schéma-technique) est dans le README des schémas.
+Le schéma est découpé en trois cadres, un par phase : livraison et sauvegarde en haut, `srv-app` au milieu, `srv-k3s` en bas. La requête de l’utilisateur traverse le cadre du milieu, du navigateur à la base. Les numéros de 1 à 7 se lisent dans l’ordre. Le [détail des routes, sondes, colonnes, ports et sauvegardes](diagrams/README.md#détail-des-éléments-du-schéma-technique) est dans le README des schémas.
 
 - **Livraison (phase 1) :** GitHub Actions lance les tests `unittest`, construit l’image, l’analyse avec Trivy et la publie sur GHCR. `srv-app` tire cette image.
 - **Service (phase 2) :** `srv-app` exécute l’application et la base dans deux conteneurs, `app` et `db`, avec Podman et Quadlet. Le mot de passe de la base est un fichier secret. Le port 8000 est ouvert à l’hôte et à `srv-k3s` ; le port 5432 n’est pas publié.
-- **Sauvegarde (phases 1 et 2) :** `pg_dump` chaque nuit à 02:00, 7 copies gardées, copiées par `rsync` sur SSH vers `~/sauvegardes` sur l’hôte. La restauration refait le serveur avec Terraform et Ansible, restaure avec `pg_restore`, puis contrôle `/health/ready`.
+- **Sauvegarde (phase 1) :** `pg_dump` chaque nuit à 02:00, 7 copies gardées, copiées par `rsync` sur SSH vers `~/sauvegardes` sur l’hôte. **Restauration (phase 2) :** refaire le serveur avec Terraform et Ansible, restaurer avec `pg_restore`, puis contrôler `/health/ready`.
 - **Supervision (phase 3) :** `srv-k3s` porte K3s avec Traefik, Prometheus et Grafana. K3s lit `/health/live` et `/health/ready` ; Prometheus lit `/metrics` toutes les 15 secondes et garde 15 jours de mesures ; `node_exporter` mesure les deux serveurs. Deux règles d’alerte Prometheus : base indisponible depuis 1 minute, erreurs 5xx en hausse.
 
 **Portée et limites :** ce dessin montre l’architecture retenue, pas un service réalisé. Tous les éléments des phases 1 à 3 sont au statut Prévu et au contrôle Non vérifié ([STATUS](../STATUS.md)). Données fictives et absence d’authentification utilisateur. Un réseau de laboratoire n’est pas une frontière de sécurité forte. Aucune qualification de production n’est déduite de ce schéma.

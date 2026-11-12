@@ -8,10 +8,10 @@
 ## Lire les schémas
 
 - **Cadre noir :** le service OpsDesk (navigateur, application, base de données).
-- **Cadre ou bloc coloré :** une phase du projet. Bleu : phase 1, livrer et conserver. Vert : phase 2, préparer et automatiser. Violet : phase 3, orchestrer et maintenir. Les pastilles P1, P2 et P3 du schéma technique reprennent ces couleurs.
+- **Cadre ou bloc coloré :** une phase du projet. Bleu : phase 1, livrer et conserver. Vert : phase 2, préparer et automatiser. Violet : phase 3, orchestrer et maintenir. Dans le schéma technique, trois cadres se suivent de haut en bas, un par phase, chacun avec sa pastille P1, P2 ou P3.
 - **Flèche bleue :** la requête de l'utilisateur (HTTP, puis SQL).
 - **Flèche grise :** la livraison de l'image, la lecture des sondes et des mesures, la sauvegarde et la restauration.
-- **Pastille numérotée (technique) :** ordre de lecture de l'encadré « Comment ça fonctionne ».
+- **Pastille numérotée (technique) :** ordre de lecture, de 1 à 7, repris dans l'encadré « Comment ça fonctionne ».
 - **Flèche grise entre les phases (présentation) :** enchaînement des trois phases.
 
 Les phases reprennent celles du [parcours](../parcours-apprentissage.md). Les schémas décrivent l'architecture du projet, pas son avancement : l'avancement et le contrôle de chaque élément sont suivis dans [STATUS](../../STATUS.md) et la [feuille de route](../../ROADMAP.md).
@@ -124,7 +124,7 @@ Réalisés le 12 novembre 2026 sur les deux schémas :
 - aucun texte ne dépasse son cadre sur le rendu Chromium ; plus petite police : 14 px sur un canevas de 1200 px de large ;
 - contrastes calculés : tous les textes au moins 4,75:1 (seuil WCAG AA : 4,5:1) ;
 - fichiers XML valides ;
-- ouverture des deux `.drawio` dans diagrams.net (application web), depuis leur adresse sur GitHub : le schéma technique s'affiche en entier avec sa légende (110 textes), la présentation aussi (65 textes, 15 images), sans `<foreignObject>` ; les couleurs restent claires dans l'éditeur en thème sombre ;
+- ouverture des deux `.drawio` dans diagrams.net (application web), depuis leur adresse sur GitHub : le schéma technique s'affiche en entier avec sa légende (115 textes, 13 images), la présentation aussi (65 textes, 15 images), sans `<foreignObject>` ; les couleurs restent claires dans l'éditeur en thème sombre ;
 - affichage dans GitHub, visiteur non connecté, thème sombre : l'image se charge et garde son fond clair, sans défilement horizontal. Largeur mesurée de l'image et plus petite police qui en résulte : 911 px dans `docs/architecture.md` sur une fenêtre de 1024 px (10,6 px), 567 px dans le README du dépôt (6,6 px), 325 px sur un écran de 390 px (3,8 px, à ouvrir en grand pour lire) ;
 - affichage dans Notion, session connectée, thème sombre : les deux images se chargent ; le schéma technique occupe 704 px sur une fenêtre de 1024 px (8,2 px).
 
