@@ -1,40 +1,57 @@
-# Schémas OpsDesk — présentation et technique
+# Schémas OpsDesk
 
-| Vue | Source modifiable | Visuel de consultation | Fonction |
+| Vue | Source modifiable | Image | Question à laquelle elle répond |
 | --- | --- | --- | --- |
-| Présentation | [presentation.drawio](presentation.drawio) | [presentation.svg](presentation.svg) | À quoi sert le service, quels acteurs et quelles données essentielles ? |
-| Technique | [architecture-technique.drawio](architecture-technique.drawio) | [architecture-technique.svg](architecture-technique.svg) | Où se trouvent les services et comment communiquent-ils pendant l’essai historique ? |
+| Présentation | [presentation.drawio](presentation.drawio) | [presentation.svg](presentation.svg) | Que fait OpsDesk, et quelles phases mènent de l'application à une infrastructure exploitée ? |
+| Technique | [architecture-technique.drawio](architecture-technique.drawio) | [architecture-technique.svg](architecture-technique.svg) | Où se trouvent les services de l'essai historique et comment communiquent-ils ? |
 
-Ces figures documentent le service et l’essai local sous Ubuntu/WSL2 ; elles ne prouvent ni un déploiement personnel, ni une disponibilité actuelle, ni une production sécurisée. Les trois phases pédagogiques et la cible Fedora/KVM/Rocky/Terraform/Ansible/K3s/Grafana sont détaillées dans le [parcours](../parcours-apprentissage.md), pas dans la topologie historique.
+## Lire la présentation
 
-## Conventions
+- **Cadre à trait plein :** existe dans le dépôt (l'application et sa base).
+- **Cadre ou tuile en pointillé :** prévu, pas encore réalisé. Une couleur seule ne dit jamais l'avancement.
+- **Pastille numérotée :** ordre des trois phases.
+- **Flèche pleine :** échange entre composants (HTTP, SQL).
+- **Flèche pointillée :** enchaînement prévu entre étapes.
 
-- **Flèche pleine :** interaction ou communication entre éléments.
-- **Trait pointillé :** montage de stockage ; pas « prévu » et pas un flux réseau.
-- **Zone du réseau Compose :** regroupement logique des services app et db ; ce n’est pas une frontière de sécurité forte.
-- **Volume hors du réseau :** données persistantes montées sur l’hôte ; aucune sauvegarde ni restauration n’est démontrée par ce seul volume.
-- **Sans pastilles numérotées :** les figures représentent des composants, pas cinq opérations chronologiques. Les permissions du rôle SQL sont une propriété de la base.
-- **Couleurs :** elles distinguent des fonctions, toujours nommées par du texte ; aucun état d’avancement n’est déduit d’une couleur.
+Les trois phases reprennent celles du [parcours](../parcours-apprentissage.md) et de Notion : conteneurisation et livraison automatisée, infrastructure et automatisation, orchestration, observabilité et fiabilité. Le schéma n'affirme ni déploiement, ni preuve, ni mise en production.
 
-Les noms de services, les ports et le rôle SQL proviennent de la documentation de l’essai historique, avec les réserves de [l’architecture](../architecture.md), de l’[état](../../STATUS.md) et des [preuves](../preuves.md). Les nouvelles configurations personnelles devront être vérifiées sur leurs environnements réels.
+## Logos et pictogrammes
 
-## Limites et conservation de l’information
+Les logos proviennent du paquet [simple-icons](https://github.com/simple-icons/simple-icons) 13.21.0, dont les fichiers sont publiés sous licence CC0. Les marques appartiennent à leurs titulaires ; les logos servent seulement à nommer les outils.
 
-Le prototype utilise des données fictives et ne dispose pas d’authentification utilisateur. La liaison historique `127.0.0.1:18081` vers `8000` doit être confirmée par la configuration et par un contrôle d’écoute dans un environnement effectivement exécuté. Aucune publication publique ou qualification de production n’est attestée. Les anciennes figures peuvent être retrouvées dans l’historique Git.
+| Outil | Fichier source | Couleur d'origine |
+| --- | --- | --- |
+| Flask | `flask.svg` | #000000 |
+| PostgreSQL | `postgresql.svg` | #4169E1 |
+| Docker | `docker.svg` | #2496ED |
+| GitHub Actions | `githubactions.svg` | #2088FF |
+| GHCR (GitHub) | `github.svg` | #181717 |
+| Trivy | `trivy.svg` | #1904DA |
+| AWS | `amazonwebservices.svg` | #232F3E |
+| Terraform | `terraform.svg` | #844FBA |
+| Rocky Linux | `rockylinux.svg` | #10B981 |
+| Ansible | `ansible.svg` | #EE0000 |
+| K3s | `k3s.svg` | #FFC61C |
+| Prometheus | `prometheus.svg` | #E6522C |
+| Grafana | `grafana.svg` | #F46800 |
+| k6 | `k6.svg` | #7D64FF |
 
-## Source éditable, SVG et recette
+Les pictogrammes de la personne, du bouclier (durcissement), des journaux et de l'alerte sont dessinés pour ce projet et suivent la licence MIT du dépôt.
 
-Les `.drawio` sont les sources éditables. Les SVG en sont exportés avec le moteur de rendu de l'application web diagrams.net (version 32.7.1), appelé par script le 11 novembre 2026, sans copie du diagramme incluse dans le fichier, en variante claire. Un titre et une description textuelle ont été ajoutés ensuite pour l'accessibilité. Ce ne sont donc pas des fichiers produits à la main, mais ils ne proviennent pas non plus du menu *Fichier → Exporter* : refaire l'export par ce menu reste possible et doit donner le même rendu.
+## Modifier et exporter
 
-Contrôles réalisés le 11 novembre 2026 :
+1. Ouvrir le `.drawio` dans diagrams.net et modifier.
+2. *Fichier → Exporter → SVG*, sans l'option « Inclure une copie de mon diagramme ».
+3. Rouvrir le SVG, ajouter `role="img"`, un `<title>` et un `<desc>`, puis vérifier le rendu.
 
-- les deux `.drawio` s'ouvrent dans diagrams.net et affichent les blocs, flèches, libellés et cadres attendus ;
-- les deux SVG exportés ont été rendus comme images dans Chromium : aucune collision de texte observée.
+Le `.drawio` et le SVG de présentation décrivent la même figure ; le SVG a été produit à partir de la même description que le `.drawio`, pas par le menu d'export.
 
-Contrôles restant à faire :
+## Contrôles
 
-1. Mesurer les contrastes et vérifier les polices.
-2. Vérifier l'image réellement insérée dans GitHub et Notion, à largeur normale et étroite, en thème clair et sombre.
-3. Consigner pour chaque contrôle l'outil utilisé, la date, le résultat observable et les limites. Ne pas confondre XML valide, rendu SVG et test d'usage.
+Réalisés le 12 novembre 2026 sur la présentation :
 
-Les SVG incluent un fond opaque, un titre et une description textuelle. Leur présence ne suffit pas à démontrer l'accessibilité complète du diagramme.
+- rendu du SVG dans Chromium : aucun texte ne dépasse son cadre (mesure des boîtes de texte) ;
+- contrastes calculés : texte courant entre 6,9:1 et 16:1, titres de phase et chiffres des pastilles au moins 4,7:1 (seuil WCAG AA : 4,5:1) ;
+- fichiers XML valides.
+
+Restent à faire : ouverture du `.drawio` dans diagrams.net, affichage dans GitHub et Notion à largeur étroite, thème sombre. Le schéma technique sera refait dans un second temps selon le même style.
