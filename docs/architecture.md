@@ -72,7 +72,7 @@ Pour une nouvelle décision coûteuse à inverser, ajouter date, contexte sourc�
 
 Deux figures servent désormais des objectifs distincts : [présentation](diagrams/presentation.drawio) / [SVG](diagrams/presentation.svg) et [technique](diagrams/architecture-technique.drawio) / [SVG](diagrams/architecture-technique.svg). Les anciennes figures restent accessibles dans l’historique Git, sans suppression des preuves ni des limites techniques dans les documents.
 
-**Recette graphique non terminée :** les SVG proposés utilisent la même géométrie de conception que leurs sources `.drawio`, mais **aucun export natif avec diagrams.net, ni ouverture visuelle de ces sources dans l’éditeur, n’a été contrôlé** pour cette nouvelle révision. Il reste à exporter réellement, comparer les rendus, mesurer les contrastes et contrôler la lisibilité dans GitHub et Notion. Les anciens contrôles documentés avec Draw.io 16.0.0 concernent une autre révision et ne certifient pas ces fichiers. Voir la [recette de validation](diagrams/README.md).
+**Recette graphique partielle :** les SVG sont exportés des sources `.drawio` avec le moteur de diagrams.net (version 32.7.1, 11 novembre 2026), et les sources s'ouvrent dans l’éditeur ; aucune collision de texte n'a été observée dans un rendu Chromium. Il reste à mesurer les contrastes et à contrôler la lisibilité dans GitHub et Notion, en thèmes clair et sombre. Les anciens contrôles documentés avec Draw.io 16.0.0 concernent une autre révision et ne certifient pas ces fichiers. Voir la [recette de validation](diagrams/README.md).
 
 ## Références primaires
 
