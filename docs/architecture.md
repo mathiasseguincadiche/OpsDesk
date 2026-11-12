@@ -20,7 +20,7 @@ Les alternatives ci-dessus servent à comprendre les compromis. Les sources cons
 
 ## Déploiement de l’essai historique — composants et relations
 
-![Vue technique de l’essai historique : hôte Ubuntu/WSL2, navigateur, service app, service db, réseau Compose et volume nommé distinct du réseau](diagrams/architecture-technique.svg)
+![Architecture technique : l’application Flask et PostgreSQL du dépôt, la référence historique Ubuntu/WSL2 avec Docker Compose, et le laboratoire personnel prévu sur Fedora, KVM et Rocky Linux](diagrams/architecture-technique.svg)
 
 Cette **vue de déploiement statique** indique où résident les composants et comment ils sont reliés. Elle ne constitue pas une séquence chronologique numérotée.
 
@@ -72,7 +72,7 @@ Pour une nouvelle décision coûteuse à inverser, ajouter date, contexte sourc�
 
 Deux figures servent désormais des objectifs distincts : [présentation](diagrams/presentation.drawio) / [SVG](diagrams/presentation.svg) et [technique](diagrams/architecture-technique.drawio) / [SVG](diagrams/architecture-technique.svg). Les anciennes figures restent accessibles dans l’historique Git, sans suppression des preuves ni des limites techniques dans les documents.
 
-**Recette graphique partielle :** les SVG sont exportés des sources `.drawio` avec le moteur de diagrams.net (version 32.7.1, 11 novembre 2026), et les sources s'ouvrent dans l’éditeur ; aucune collision de texte n'a été observée dans un rendu Chromium. Il reste à mesurer les contrastes et à contrôler la lisibilité dans GitHub et Notion, en thèmes clair et sombre. Les anciens contrôles documentés avec Draw.io 16.0.0 concernent une autre révision et ne certifient pas ces fichiers. Voir la [recette de validation](diagrams/README.md).
+**Recette graphique partielle :** les SVG sont produits à partir de la même description que les sources `.drawio` (12 novembre 2026). Aucune collision de texte n'a été observée dans un rendu Chromium. Il reste à contrôler la lisibilité dans GitHub et Notion, en thèmes clair et sombre. Voir la [recette de validation](diagrams/README.md).
 
 ## Références primaires
 
