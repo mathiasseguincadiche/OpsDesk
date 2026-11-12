@@ -40,7 +40,7 @@ Le retrait des outils d’installation de l’image ne permet pas d’annoncer u
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| Schémas de présentation et technique | Réalisé | Vérifié en partie : export Draw.io 32.6.10, rendu Chromium et librsvg, contrastes calculés ; plus petite police 14 px sur 1200 px de large ; ouverture dans diagrams.net non vérifiée | [Fiche de contrôle](docs/diagrams/README.md#contrôles) |
+| Schémas de présentation et technique | Réalisé | Vérifié en partie : export Draw.io 32.6.10, rendu Chromium et librsvg, contrastes calculés ; plus petite police 14 px sur 1200 px de large ; ouverture dans diagrams.net (web), affichage GitHub et Notion en thème sombre vérifiés le 12 novembre 2026 ; application de bureau, thème clair de GitHub et de Notion, application mobile de Notion non vérifiés | [Fiche de contrôle](docs/diagrams/README.md#contrôles) |
 | Affichage sur GitHub et Notion | Réalisé | Non vérifié à largeur étroite | — |
 
 ## Apprentissage
