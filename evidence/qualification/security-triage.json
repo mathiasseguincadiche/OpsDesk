@@ -15,14 +15,14 @@
       "UpdatedAt": "2026-11-03T07:14:02.629452927Z",
       "DownloadedAt": "2026-11-03T13:36:51.789733958Z"
     },
-    "cache_used": "/tmp/v42-trivy-cache",
+    "cache_used": "/tmp/trivy-cache",
     "default_cache_warning": "The separately displayed default cache dated September11 was not used for these results; explicit cache metadata above is authoritative"
   },
   "baseline": {
     "report": "evidence/vulnerability-scan.json",
     "sha256": "6abf75b74a08be6453d72145f28f87c7dad0331373bc7f34216dd5d0d4b0ce13",
     "recorded_at_utc": "2026-11-03T13:48:01.065269+00:00",
-    "artifact": "v42opsdesk-app:0.1.0-local",
+    "artifact": "opsdesk-app:0.1.0-local",
     "image_id": "sha256:2fa15b716fd4f4df2d286f412cca1b3b323cc484677a0ac3866a8fecced5ac95",
     "metrics": {
       "occurrences": 185,
@@ -64,7 +64,7 @@
       ]
     },
     "raw_scan": {
-      "workspace_support_path": "work/v42/trivy-opsdesk-after.json",
+      "workspace_support_path": "work/trivy-opsdesk-after.json",
       "sha256": "53b02a408a021a0638fd7a1dfb4bf0ffcdcc5b41790babe2e1ac2c55e13adfc1",
       "scanner_created_at": "2026-11-03T09:41:41.111073356-04:00",
       "scanner_created_at_utc": "2026-11-03T13:41:41.111073+00:00"

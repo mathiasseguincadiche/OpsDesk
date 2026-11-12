@@ -4,7 +4,7 @@
   "scope": "Fresh PostgreSQL volume and separate app/network on Ubuntu WSL Docker; source preserved",
   "source_url": "http://127.0.0.1:18081",
   "target_url": "http://127.0.0.1:18086",
-  "target_project": "v42opsrestore-c00f6554",
+  "target_project": "opsrestore-c00f6554",
   "rto_seconds": 10.769,
   "image_id": "sha256:2fa15b716fd4f4df2d286f412cca1b3b323cc484677a0ac3866a8fecced5ac95",
   "ticket_id": 3,

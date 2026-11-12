@@ -1,5 +1,7 @@
 # Lire une preuve et ses limites
 
+Dans les rapports bruts, les identifiants locaux des ressources (image, projet de restauration, répertoires temporaires, révision déclarée) ont été simplifiés : leur préfixe de version a été retiré. Aucune autre valeur n’a été modifiée.
+
 ## Preuve applicative courante
 
 Le [rapport des tests actuels](../evidence/qualification/application-tests.json) et son journal enregistrent 26 tests réussis sur la source montée en lecture seule, avec PostgreSQL réel. La plupart des cas utilisent une table TEMP ; un ticket fictif par passage est committé puis relu par des connexions distinctes et conservé. Le premier passage défavorable reste archivé séparément. Aucune image reconstruite, aucun service redéployé, aucune reprise ou opération InfraOps personnelle n’est exécutée.
