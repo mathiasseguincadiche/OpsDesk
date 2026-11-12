@@ -26,7 +26,7 @@ Le volume conserve des données en dehors du cycle de vie du processus. Il doit 
 
 Contrat applicatif compris, VM et accès qualifiés ; stratégie de stockage et de secrets proposée. Vérifier la compatibilité et la disponibilité du moteur choisi avant son installation. Aucun Dockerfile ou Compose historique n’est obligatoire.
 
-Le poste de contrôle prévu est Fedora 45. Le moteur de conteneurs est préparé personnellement dans la VM Rocky Linux 10.2 qualifiée ; ne pas confondre un moteur Windows/WSL historique avec celui de la VM. Relever moteur, version, utilisateur, chemins persistants et ports réellement choisis. La recette du conteneur est à écrire à partir du contrat applicatif. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
+Le poste de contrôle prévu est Fedora 45. Le moteur de conteneurs est préparé personnellement dans la VM Rocky Linux 10.2 qualifiée ; ne pas confondre un moteur Windows/WSL historique avec celui de la VM. Relever moteur, version, utilisateur, chemins persistants et ports réellement choisis. La recette du conteneur est à écrire à partir du contrat applicatif. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 Le moteur étudié dans ce projet est Docker dans la VM ; vérifier sa version et son accès avant de proposer Dockerfile/Compose. Le service sans authentification reste un démonstrateur privé de laboratoire.
 
@@ -78,7 +78,7 @@ Séparer attendu et observé ; une cause reste hypothétique tant qu’un contr�
 
 ## Expliquer et capitaliser
 
-Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence historique et travail personnel.
 
 **Réutilisation :** Comment donner au développeur un test reproductible sans lui donner les droits administrateur de l’hôte ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
@@ -86,6 +86,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-06--conteneuriser) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-06--conteneuriser) ou demander le niveau d’aide souhaité. La référence historique n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](05-ansible.md) · [Retour au parcours](README.md) · [Exercice suivant →](07-k3s.md)

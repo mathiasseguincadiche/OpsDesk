@@ -1,12 +1,12 @@
 # Lire une preuve et ses limites
 
-## Preuve applicative courante V4.4
+## Preuve applicative courante
 
 Le [rapport des tests actuels](../evidence/v44/application-tests.json) et son journal enregistrent 26 tests réussis sur la source montée en lecture seule, avec PostgreSQL réel. La plupart des cas utilisent une table TEMP ; un ticket fictif par passage est committé puis relu par des connexions distinctes et conservé. Le premier passage défavorable reste archivé séparément. Aucune image reconstruite, aucun service redéployé, aucune reprise ou opération InfraOps personnelle n’est exécutée.
 
-## Smoke historique V4.2 conservé
+## Smoke historique conservé
 
-[Le smoke HTTP](../evidence/business-smoke.json) rapporte son heure UTC, la version servie, l’environnement d’accès local, chaque requête et son statut. Le fichier courant est daté du 3 novembre 2026 à 13:40:23 UTC ; il conserve un parcours de préparation V4.2 comprenant :
+[Le smoke HTTP](../evidence/business-smoke.json) rapporte son heure UTC, la version servie, l’environnement d’accès local, chaque requête et son statut. Le fichier courant est daté du 3 novembre 2026 à 13:40:23 UTC ; il conserve un parcours de préparation historique comprenant :
 
 - liveness, readiness et version ;
 - affichage du formulaire HTML ; création/liste/lecture d’un ticket PostgreSQL ;
@@ -23,7 +23,7 @@ L’avancement répond à « qu’est-ce qui existe ? » : prévu, en cours, ré
 
 Une preuve vaut pour les fichiers, versions, cible, méthode et critères qu’elle identifie. Si cet ensemble change, le contrôle de la nouvelle révision redevient non vérifié ; l’ancien rapport reste intact comme observation historique. Une correction ne supprime pas l’échec initial : lier la nouvelle validation. Un changement uniquement rédactionnel n’invalide pas automatiquement un résultat applicatif portant sur un code et un environnement inchangés ; il exige cependant son propre contrôle documentaire.
 
-Une déclaration sans pièce consultable se note « déclaré par Mathias — non vérifié ». Elle n’est ni rejetée ni convertie en preuve. Les niveaux L0–L3 décrivent une progression personnelle et restent distincts de ces deux axes ; aucune migration documentaire ne les remplit.
+Une déclaration sans pièce consultable se note « déclaré par l’apprenant — non vérifié ». Elle n’est ni rejetée ni convertie en preuve. Les niveaux L0–L3 décrivent une progression personnelle et restent distincts de ces deux axes ; aucune migration documentaire ne les remplit.
 
 **Exemple fictif :** un déploiement K3s a été contrôlé sur une VM et un digest précis. Changer le digest, le stockage ou les sondes ne transfère pas le PASS à la nouvelle cible. Conserver la preuve initiale, marquer le nouveau périmètre non vérifié et choisir les contrôles concernés avant de conclure.
 
@@ -58,7 +58,7 @@ Archiver uniquement la sortie réellement obtenue, avec version, environnement e
 
 ## Ce qui appartient aux exercices personnels
 
-Connexion développeur/CI → image → cible, image immuable publiée, reconstruction, idempotence de la configuration Linux Ansible, déploiement K3s, alerte, maintenance et restauration restent des évaluations personnelles distinctes. Les reprises locales Codex historiques existent ; elles ne valident pas celles de Mathias. Les quinze cellules du portfolio sont suivies par projet ; [la grille OpsDesk](parcours-apprentissage.md#cinq-piliers--réception-séparée) ne devient pas verte parce qu’un seul smoke passe.
+Connexion développeur/CI → image → cible, image immuable publiée, reconstruction, idempotence de la configuration Linux Ansible, déploiement K3s, alerte, maintenance et restauration restent des évaluations personnelles distinctes. Les reprises locales historiques existent ; elles ne valident pas celles de l’apprenant. Les quinze cellules du portfolio sont suivies par projet ; [la grille OpsDesk](parcours-apprentissage.md#cinq-piliers--réception-séparée) ne devient pas verte parce qu’un seul smoke passe.
 
 ## Compléments exécutés le 3 novembre
 
@@ -71,4 +71,4 @@ Connexion développeur/CI → image → cible, image immuable publiée, reconstr
 
 ## Reprise historique la plus récente
 
-Le [rapport V4.2 de reprise](../evidence/recovery.json) est daté du 3 novembre à 13:52:06 UTC : cible 18088 et 10,969 s. Le rapport précédent 10,769 s est conservé à part. Ces observations du même hôte ne sont pas rejouées sous V4.4, ne constituent pas un PRA physique ou un SLO, et n’attribuent aucune compétence personnelle.
+Le [rapport historique de reprise](../evidence/recovery.json) est daté du 3 novembre à 13:52:06 UTC : cible 18088 et 10,969 s. Le rapport précédent 10,769 s est conservé à part. Ces observations du même hôte ne sont pas rejouées depuis, ne constituent pas un PRA physique ou un SLO, et n’attribuent aucune compétence personnelle.

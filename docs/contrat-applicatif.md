@@ -1,6 +1,6 @@
-# Contrat de passation applicative — OpsDesk V4.4
+# Contrat de passation applicative — OpsDesk
 
-**Destinataire : Mathias, ingénieur InfraOps.** Le code métier, son schéma et les tests sont fournis par Codex. La conception des machines, réseaux, rôles PostgreSQL, conteneurs, K3s, CI/CD, supervision, sauvegardes et exploitation appartient à Mathias. Ce contrat décrit les besoins de l’application ; il ne livre pas cette infrastructure à sa place.
+**Destinataire : l’apprenant en formation InfraOps.** Le code métier, son schéma et les tests sont fournis. La conception des machines, réseaux, rôles PostgreSQL, conteneurs, K3s, CI/CD, supervision, sauvegardes et exploitation appartient à l’apprenant. Ce contrat décrit les besoins de l’application ; il ne livre pas cette infrastructure à sa place.
 
 ## 1. Présentation
 
@@ -16,7 +16,7 @@ Pages HTML `/tickets` et `/tickets/<id>` ; API JSON GET/POST `/api/tickets` et G
 
 ### Référence de l’API locale fournie
 
-Référence de la source V4.4, relue le 4 novembre 2026 : [routes et sérialisation](../app/opsdesk/web.py), [validation et transitions](../app/opsdesk/business.py), [schéma SQL](../db/schema.sql). Les fonctions Python sont internes ; les routes ci-dessous forment l’interface consommée par le laboratoire. Toute évolution de cette interface doit mettre à jour ce contrat dans le même changement ; aucun engagement de compatibilité non démontré n’est annoncé.
+Référence de la source, relue le 4 novembre 2026 : [routes et sérialisation](../app/opsdesk/web.py), [validation et transitions](../app/opsdesk/business.py), [schéma SQL](../db/schema.sql). Les fonctions Python sont internes ; les routes ci-dessous forment l’interface consommée par le laboratoire. Toute évolution de cette interface doit mettre à jour ce contrat dans le même changement ; aucun engagement de compatibilité non démontré n’est annoncé.
 
 **Accès :** aucune authentification ni autorisation utilisateur. Les opérations JSON de création/modification exigent `Content-Type: application/json`, sans jeton CSRF ; les formulaires HTML ont leur propre contrôle CSRF. Un Host non autorisé est refusé en 400, en texte brut. Cette référence ne donne aucune autorisation d’exposition Internet.
 
@@ -51,7 +51,7 @@ Modification à proposer seulement après identification d’un ticket fictif `o
 
 **Erreurs à distinguer :** 400 pour JSON/champ/forme invalide ; 404 pour ticket absent ; 409 pour statut ou transition refusé ; 413 si le corps dépasse 16 Kio ; 415 pour POST/PATCH API sans type JSON ; 503 pour une erreur PostgreSQL gérée. Les erreurs API gérées renvoient un objet `error`, sauf le refus Host en texte brut. Cette liste ne garantit pas qu’une erreur de programmation ne puisse produire un autre statut.
 
-Les routes de diagnostic ne sont pas des preuves métier complètes : `/health/live` répond 200 sans accès DB, `/health/ready` répond 200 si la requête à `tickets` aboutit (503 pour l’erreur SQL gérée), `/version` donne l’identité déclarée. `/metrics` peut répondre **200 avec `opsdesk_database_up 0`** : examiner la valeur et les journaux, pas seulement le statut HTTP. Les compteurs sont propres à chaque worker ; aucune série de durée p95 n’est fournie par cette seule route. Les méthodes exactes et sorties réellement observées seront consignées par Mathias sur sa cible.
+Les routes de diagnostic ne sont pas des preuves métier complètes : `/health/live` répond 200 sans accès DB, `/health/ready` répond 200 si la requête à `tickets` aboutit (503 pour l’erreur SQL gérée), `/version` donne l’identité déclarée. `/metrics` peut répondre **200 avec `opsdesk_database_up 0`** : examiner la valeur et les journaux, pas seulement le statut HTTP. Les compteurs sont propres à chaque worker ; aucune série de durée p95 n’est fournie par cette seule route. Les méthodes exactes et sorties réellement observées seront consignées par l’apprenant sur sa cible.
 
 ## 4. Architecture interne
 
@@ -59,7 +59,7 @@ Les routes de diagnostic ne sont pas des preuves métier complètes : `/health/l
 
 ## 5. Langages et frameworks
 
-Python, Flask 3.1.3, Jinja2, psycopg 3.3.6 et Gunicorn 26.2.0. La source des versions résolues est `requirements.lock`. Le contrôle V4.4 utilise Python 3.14.10 de l’image de développement déjà disponible ; une autre version Python n’est pas reçue par cette seule observation.
+Python, Flask 3.1.3, Jinja2, psycopg 3.3.6 et Gunicorn 26.2.0. La source des versions résolues est `requirements.lock`. Le contrôle utilise Python 3.14.10 de l’image de développement déjà disponible ; une autre version Python n’est pas reçue par cette seule observation.
 
 ## 6. Dépendances
 
@@ -71,7 +71,7 @@ Combinaison vérifiée : Python 3.14.10, Flask/psycopg/Gunicorn aux versions ci-
 
 ## 8. Démarrage en développement
 
-Préconditions : PostgreSQL accessible, base et rôle préparés, schéma métier présent, fichiers secrets locaux lisibles et port libre. Mathias préparera les accès et droits ; ce document n’exécute aucune administration de base.
+Préconditions : PostgreSQL accessible, base et rôle préparés, schéma métier présent, fichiers secrets locaux lisibles et port libre. L’apprenant préparera les accès et droits ; ce document n’exécute aucune administration de base.
 
 **NON VÉRIFIÉ de bout en bout — méthode native proposée, à préparer personnellement.** Cible : machine personnelle autorisée (la VM Rocky après réception si ce choix est retenu), racine du dépôt, utilisateur ordinaire sans `sudo`. La combinaison historique testée est Python 3.14.10/PostgreSQL 17.11 ; relever les versions de la nouvelle cible. Le premier bloc crée un environnement privé et installe les paquets verrouillés (accès aux paquets nécessaire), puis démarre Gunicorn sur la seule boucle locale de cette machine. Il ne prépare pas la DB, les rôles, le schéma ou les secrets :
 
@@ -81,13 +81,13 @@ python3 -m venv .local/venv
 PYTHONPATH=app .local/venv/bin/gunicorn --bind 127.0.0.1:18081 --workers 1 wsgi:app
 ```
 
-Définir auparavant les paramètres de la section 11, en particulier les fichiers secrets et l’adresse réelle de PostgreSQL. Ces commandes constituent une méthode de développement ; l’installation native complète n’a pas été exécutée dans cette réception. Les tests V4.4 ont réutilisé ponctuellement l’image et le réseau du laboratoire existant, avec le code actuel monté en lecture seule, sans reconstruire ni redéployer le service. Les anciennes recettes conteneurs demeurent des références historiques de Codex.
+Définir auparavant les paramètres de la section 11, en particulier les fichiers secrets et l’adresse réelle de PostgreSQL. Ces commandes constituent une méthode de développement ; l’installation native complète n’a pas été exécutée lors des essais historiques. Les tests ont réutilisé ponctuellement l’image et le réseau du laboratoire existant, avec le code actuel monté en lecture seule, sans reconstruire ni redéployer le service. Les anciennes recettes conteneurs demeurent des références historiques.
 
 Validation attendue après préparation personnelle : `/version` identifie OpsDesk, `/health/ready` répond 200 et le parcours ticket fonctionne. Si le démarrage échoue, distinguer interpréteur/paquets, fichiers secrets, port occupé, nom/port DB, droits et schéma ; conserver l’erreur sans afficher les secrets. Un refus de readiness n’autorise ni désactivation de contrôle ni effacement de volume. Pour arrêter son propre processus lancé au premier plan, utiliser son interruption normale ; ne pas arrêter un service dont on n’a pas identifié le propriétaire. Ces vérifications sont NON EXÉCUTÉES sur le laboratoire personnel.
 
 ## 9. Ports et protocoles
 
-Le processus WSGI écoute sur l’adresse/port demandés à Gunicorn ; le choix de bind appartient à l’opérateur. Le laboratoire historique publie HTTP sur `127.0.0.1:18081` et l’application y écoute en interne sur 8000. La connexion SQL utilise TCP PostgreSQL, port par défaut 5432 ; aucun besoin applicatif de publier ce port vers Internet. Aucun TLS applicatif n’est fourni dans le profil local ; la stratégie TLS cible relève de l’architecture de Mathias.
+Le processus WSGI écoute sur l’adresse/port demandés à Gunicorn ; le choix de bind appartient à l’opérateur. Le laboratoire historique publie HTTP sur `127.0.0.1:18081` et l’application y écoute en interne sur 8000. La connexion SQL utilise TCP PostgreSQL, port par défaut 5432 ; aucun besoin applicatif de publier ce port vers Internet. Aucun TLS applicatif n’est fourni dans le profil local ; la stratégie TLS cible relève de l’architecture de l’apprenant.
 
 ## 10. Paramètres de configuration
 
@@ -115,17 +115,17 @@ Les tickets doivent rester dans PostgreSQL au remplacement du processus applicat
 
 ## 13. Base de données
 
-PostgreSQL, une table `tickets` : identifiant bigint généré, titre, description, priorité, statut et dates `timestamptz`. Le code réalise SELECT, INSERT et UPDATE, ainsi que l’usage de la séquence d’identité. Il ne demande pas DELETE, administration de rôles, création de bases ou superutilisateur. Mathias détermine et applique les droits adaptés ; aucun script de création d’utilisateur n’est imposé par ce contrat.
+PostgreSQL, une table `tickets` : identifiant bigint généré, titre, description, priorité, statut et dates `timestamptz`. Le code réalise SELECT, INSERT et UPDATE, ainsi que l’usage de la séquence d’identité. Il ne demande pas DELETE, administration de rôles, création de bases ou superutilisateur. L’apprenant détermine et applique les droits adaptés ; aucun script de création d’utilisateur n’est imposé par ce contrat.
 
 ## 14. Migrations
 
-`db/schema.sql` fournit uniquement le schéma métier initial. Il s’applique une fois à un schéma applicatif vide par une identité autorisée. Il n’y a pas de moteur de migrations incrémentales ni de conversion SQLite. L’ancien `db/001-initial.sql`, cité dans les preuves V4.2, mélangeait création de rôle/droits et schéma. Il est absent du dépôt courant ; sa conservation locale hors dépôt est non vérifiée. Il n’est pas le contrat applicatif à recopier.
+`db/schema.sql` fournit uniquement le schéma métier initial. Il s’applique une fois à un schéma applicatif vide par une identité autorisée. Il n’y a pas de moteur de migrations incrémentales ni de conversion SQLite. L’ancien `db/001-initial.sql`, cité dans les preuves historiques, mélangeait création de rôle/droits et schéma. Il est absent du dépôt courant ; sa conservation locale hors dépôt est non vérifiée. Il n’est pas le contrat applicatif à recopier.
 
 Tout changement de schéma futur doit fournir une migration explicite, sa compatibilité avec l’ancienne application, les tests et ses limites de retour. Ne pas remplacer silencieusement une table existante.
 
 ## 15. Données persistantes et démonstration
 
-Le ticket et ses dates/statuts sont les données durables. Les données sont strictement fictives. La réception V4.4 ajoute un ticket nommé `FICTIF-V44-…`, volontairement conservé, puis le relit par des connexions distinctes. Les autres tests SQL travaillent principalement sur une table temporaire propre à leur connexion ; ils ne suppriment ni ne réinitialisent les tickets existants.
+Le ticket et ses dates/statuts sont les données durables. Les données sont strictement fictives. La réception ajoute un ticket nommé `FICTIF-V44-…`, volontairement conservé, puis le relit par des connexions distinctes. Les autres tests SQL travaillent principalement sur une table temporaire propre à leur connexion ; ils ne suppriment ni ne réinitialisent les tickets existants.
 
 ## 16. Endpoints de santé
 
@@ -133,11 +133,11 @@ Le ticket et ses dates/statuts sont les données durables. Les données sont str
 
 ## 17. Journaux applicatifs
 
-Le code journalise méthode, nom de route, statut et durée. L’erreur DB publiée reste générique et le journal d’application ne contient pas DSN, mot de passe ou texte de requête SQL. Gunicorn peut produire ses journaux sur stdout/stderr selon ses options. La rotation, la centralisation, journald et les alertes relèvent de l’exploitation personnelle de Mathias.
+Le code journalise méthode, nom de route, statut et durée. L’erreur DB publiée reste générique et le journal d’application ne contient pas DSN, mot de passe ou texte de requête SQL. Gunicorn peut produire ses journaux sur stdout/stderr selon ses options. La rotation, la centralisation, journald et les alertes relèvent de l’exploitation personnelle de l’apprenant.
 
 ## 18. Tests unitaires
 
-`python3 -m unittest discover -s tests/unit -v` vérifie validations, limites et transitions, sans DB. La suite complète a exécuté 26 tests (sept unitaires et dix-neuf HTTP/SQL). Le texte contenant NUL ou un substitut Unicode isolé est refusé en 400 avant PostgreSQL. Les nouveaux tests HTTP/SQL sont dans `tests/integration/test_http_postgres.py`. Le code de test ne doit pas être transformé en pipeline prêt à recopier : Mathias construira ses jobs à partir de commandes qu’il comprend.
+`python3 -m unittest discover -s tests/unit -v` vérifie validations, limites et transitions, sans DB. La suite complète a exécuté 26 tests (sept unitaires et dix-neuf HTTP/SQL). Le texte contenant NUL ou un substitut Unicode isolé est refusé en 400 avant PostgreSQL. Les nouveaux tests HTTP/SQL sont dans `tests/integration/test_http_postgres.py`. Le code de test ne doit pas être transformé en pipeline prêt à recopier : l’apprenant construira ses jobs à partir de commandes qu’il comprend.
 
 ## 19. Tests fonctionnels
 
@@ -155,11 +155,11 @@ PYTHONPATH=app .local/venv/bin/python -m unittest discover -s tests/integration 
 
 Attendu : sept tests unitaires puis dix-neuf tests HTTP/SQL sans échec ; le smoke affiche un JSON `status: PASS` seulement si son parcours complet réussit. Ce sont des critères attendus, pas un résultat personnel. En cas d’échec, lire d’abord le cas et son erreur, puis séparer paramètre/secret/DB de règle HTTP/métier ; conserver les refus négatifs attendus.
 
-La seconde commande nécessite une base de développement autorisée, des secrets présents et la permission TEMP pour ses tables de test (elle n’est pas un besoin du rôle runtime de production). Elle conserve un ticket témoin ; ne pas l’exécuter sur des données réelles. Lire le rapport `evidence/v44/application-tests.json` et son journal, en distinguant la source montée pour les tests du service historique déjà en cours. Aucun test de redémarrage, sauvegarde ou restauration n’a été relancé sous V4.4.
+La seconde commande nécessite une base de développement autorisée, des secrets présents et la permission TEMP pour ses tables de test (elle n’est pas un besoin du rôle runtime de production). Elle conserve un ticket témoin ; ne pas l’exécuter sur des données réelles. Lire le rapport `evidence/v44/application-tests.json` et son journal, en distinguant la source montée pour les tests du service historique déjà en cours. Aucun test de redémarrage, sauvegarde ou restauration n’a été relancé depuis.
 
 ## 21. Ressources recommandées
 
-Point de départ proposé pour ce petit démonstrateur : un processus applicatif et PostgreSQL, environ 1 vCPU et 512 Mio disponibles pour l’app, puis une enveloppe DB et stockage séparée à mesurer. Ce sont des hypothèses de dimensionnement, pas un benchmark ou un minimum garanti. Les limites, le nombre de workers et la capacité cible seront choisis et testés par Mathias.
+Point de départ proposé pour ce petit démonstrateur : un processus applicatif et PostgreSQL, environ 1 vCPU et 512 Mio disponibles pour l’app, puis une enveloppe DB et stockage séparée à mesurer. Ce sont des hypothèses de dimensionnement, pas un benchmark ou un minimum garanti. Les limites, le nombre de workers et la capacité cible seront choisis et testés par l’apprenant.
 
 ## 22. Contraintes de sécurité
 
@@ -171,19 +171,19 @@ Usage local et fictif uniquement ; aucune autorisation d’exposition Internet o
 
 ## 24. Compatibilité des versions
 
-Version de travail déclarée : 0.1.0, schéma initial inchangé. Les corrections V4.4 ajoutent la configuration `DB_USER`, le contrôle Host et le refus contrôlé d’un CSRF non ASCII ; elles ne transforment ni les tickets ni leurs statuts. La preuve donne les hashes des sources testées. Un label de version ou une révision déclarée ne doit pas être présenté comme un commit publié avant sa création effective.
+Version de travail déclarée : 0.1.0, schéma initial inchangé. Les corrections ajoutent la configuration `DB_USER`, le contrôle Host et le refus contrôlé d’un CSRF non ASCII ; elles ne transforment ni les tickets ni leurs statuts. La preuve donne les hashes des sources testées. Un label de version ou une révision déclarée ne doit pas être présenté comme un commit publié avant sa création effective.
 
 ## 25. Contraintes de mise à jour
 
-Avant de livrer un artefact, vérifier son identité, les paramètres requis, la compatibilité du schéma et le scénario ticket. Les dépendances ne sont pas mises à jour aveuglément. Aucune migration DB ni écrasement des secrets n’est requis pour ces corrections applicatives. Mathias construira et déploiera personnellement l’image de son exercice.
+Avant de livrer un artefact, vérifier son identité, les paramètres requis, la compatibilité du schéma et le scénario ticket. Les dépendances ne sont pas mises à jour aveuglément. Aucune migration DB ni écrasement des secrets n’est requis pour ces corrections applicatives. L’apprenant construira et déploiera personnellement l’image de son exercice.
 
 ## 26. Conditions de rollback
 
-Les corrections applicatives actuelles n’ont pas de migration de données : une ancienne application utilisant le même schéma peut relire les tickets, sous réserve de ses paramètres. La construction d’images, leur sélection, le rollout/rollback, la CI et le contrôle opérationnel sont à réaliser par Mathias. Un retour de code ne récupère pas des données perdues.
+Les corrections applicatives actuelles n’ont pas de migration de données : une ancienne application utilisant le même schéma peut relire les tickets, sous réserve de ses paramètres. La construction d’images, leur sélection, le rollout/rollback, la CI et le contrôle opérationnel sont à réaliser par l’apprenant. Un retour de code ne récupère pas des données perdues.
 
 ## 27. Conditions de sauvegarde et restauration
 
-Données à protéger : PostgreSQL et les configurations/secrets nécessaires à l’accès et à la session. L’application attend que la même table et les mêmes références métier soient disponibles après reprise. Mathias définira la cohérence, la destination, le chiffrement, la rétention, le RPO/RTO d’exercice et la restauration. Les reprises V4.2 par Codex restent des observations historiques sur le même hôte, sans SLO ni perte physique qualifiée ; elles ne sont pas rejouées ici.
+Données à protéger : PostgreSQL et les configurations/secrets nécessaires à l’accès et à la session. L’application attend que la même table et les mêmes références métier soient disponibles après reprise. L’apprenant définira la cohérence, la destination, le chiffrement, la rétention, le RPO/RTO d’exercice et la restauration. Les reprises historiques restent des observations historiques sur le même hôte, sans SLO ni perte physique qualifiée ; elles ne sont pas rejouées ici.
 
 ## 28. Dépendances externes
 
@@ -195,6 +195,6 @@ Pas d’auth, d’affectation, de commentaires, de pièces jointes, de recherche
 
 ## 30. Critères de réception applicative
 
-Application et routes disponibles dans un environnement identifié ; créer/lire/faire progresser un ticket ; relire une écriture par une autre connexion ; refus attendus cohérents ; pages échappées et CSRF contrôlé ; live/ready/version corrects ; paramètres documentés ; tests reproductibles et datés ; schéma métier distinct de l’administration PostgreSQL ; absence de secret dans les preuves. Une réception applicative ne valide aucun exercice InfraOps ni niveau d’autonomie personnel de Mathias.
+Application et routes disponibles dans un environnement identifié ; créer/lire/faire progresser un ticket ; relire une écriture par une autre connexion ; refus attendus cohérents ; pages échappées et CSRF contrôlé ; live/ready/version corrects ; paramètres documentés ; tests reproductibles et datés ; schéma métier distinct de l’administration PostgreSQL ; absence de secret dans les preuves. Une réception applicative ne valide aucun exercice InfraOps ni niveau d’autonomie personnel de l’apprenant.
 
 [État de réception](../STATUS.md) · [Provenance et références](provenance.md) · [Parcours personnel](parcours-apprentissage.md)

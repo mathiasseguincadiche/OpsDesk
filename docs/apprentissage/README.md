@@ -1,8 +1,8 @@
-# Parcours personnel OpsDesk — V4.4
+# Parcours personnel OpsDesk
 
-**Codex fournit l’application et les tests ; Mathias construit et exploite son infrastructure.** Accompagnement guidé. Le cadre technique commun reste Linux/Rocky, réseau, Terraform, Ansible, conteneurs, K3s adapté, CI/CD, supervision, sécurité, Day-2 et reprise. Aucun exercice n’est déclaré exécuté et aucun niveau personnel n’est renseigné.
+**L’application et ses tests sont fournis ; l’apprenant construit et exploite son infrastructure.** Accompagnement guidé. Le cadre technique commun reste Linux/Rocky, réseau, Terraform, Ansible, conteneurs, K3s adapté, CI/CD, supervision, sécurité, Day-2 et reprise. Aucun exercice n’est déclaré exécuté et aucun niveau personnel n’est renseigné.
 
-Commencer par [l’exercice 01](01-application.md) et [le contrat applicatif](../contrat-applicatif.md), puis suivre cet ordre. Les anciennes configurations InfraOps Codex sont des références historiques à examiner après sa propre tentative lorsqu’elles sont accessibles : leur disponibilité hors du dépôt courant reste NON VÉRIFIÉE.
+Commencer par [l’exercice 01](01-application.md) et [le contrat applicatif](../contrat-applicatif.md), puis suivre cet ordre. Les anciennes configurations InfraOps sont des références historiques à examiner après sa propre tentative lorsqu’elles sont accessibles : leur disponibilité hors du dépôt courant reste NON VÉRIFIÉE.
 
 ## Laboratoire et plateforme de travail
 
@@ -36,11 +36,11 @@ Les [corrigés](corriges.md) sont séparés de la première lecture. Les [cinq �
 
 Les fiches regroupent l’ancienne trame de 18 rubriques en sept temps de lecture. Les principes communs sont expliqués une fois ici ; les besoins, notions, consignes, critères, erreurs et situations de diagnostic restent propres à chaque exercice. Un schéma de lecture n’impose pas de restaurer une base pendant un exercice d’architecture.
 
-Le besoin métier commun est de créer, retrouver et faire avancer des tickets IT fictifs. Un ticket identifié, son titre et son état doivent rester contrôlables. Le contrat décrit ce que le programme exige et garantit ; il ne choisit pas une infrastructure à recopier. Codex fournit le programme et les tests ; Mathias propose ses choix, écrit ses configurations, exécute ses contrôles et explique ses résultats.
+Le besoin métier commun est de créer, retrouver et faire avancer des tickets IT fictifs. Un ticket identifié, son titre et son état doivent rester contrôlables. Le contrat décrit ce que le programme exige et garantit ; il ne choisit pas une infrastructure à recopier. Le programme et les tests sont fournis ; l’apprenant propose ses choix, écrit ses configurations, exécute ses contrôles et explique ses résultats.
 
-L’application ne possède pas d’authentification utilisateur : laboratoire local, données fictives et absence d’exposition Internet restent des contraintes. La protection CSRF ne constitue pas un compte utilisateur. PostgreSQL doit conserver les données ; santé du processus, disponibilité de la base, identité de version et parcours métier se vérifient séparément. Les 26 tests applicatifs historiques Codex ne prouvent ni ton laboratoire ni ta sécurité globale ; le triage historique reste FAIL dans son contexte.
+L’application ne possède pas d’authentification utilisateur : laboratoire local, données fictives et absence d’exposition Internet restent des contraintes. La protection CSRF ne constitue pas un compte utilisateur. PostgreSQL doit conserver les données ; santé du processus, disponibilité de la base, identité de version et parcours métier se vérifient séparément. Les 26 tests applicatifs historiques ne prouvent ni ton laboratoire ni ta sécurité globale ; le triage historique reste FAIL dans son contexte.
 
-Les **13 exercices V4.4** donnent l’ordre personnel. Les **16 modules historiques** sont des ressources théoriques, accessibles depuis le [parcours Notion](https://app.notion.com/p/3fc65721fa1881f7b4d2f248aafeed23), sans second ordre obligatoire. Les **trois phases** racontent l’évolution d’un seul service dans un seul dépôt. Les **cinq évaluations** vérifient les responsabilités de façon transversale, séparément du statut des exercices. OpsDesk est le seul projet du parcours actif : l’aide est progressivement réduite à l’intérieur de ses 13 exercices, jusqu’à la démonstration d’autonomie de l’exercice 13. Les autres projets antérieurs restent en archive, hors des tâches à réaliser et du CV.
+Les **13 exercices** donnent l’ordre personnel. Les **16 modules historiques** sont des ressources théoriques, accessibles depuis le [parcours Notion](https://app.notion.com/p/3fc65721fa1881f7b4d2f248aafeed23), sans second ordre obligatoire. Les **trois phases** racontent l’évolution d’un seul service dans un seul dépôt. Les **cinq évaluations** vérifient les responsabilités de façon transversale, séparément du statut des exercices. OpsDesk est le seul projet du parcours actif : l’aide est progressivement réduite à l’intérieur de ses 13 exercices, jusqu’à la démonstration d’autonomie de l’exercice 13. Les autres projets antérieurs restent en archive, hors des tâches à réaliser et du CV.
 
 <a id="avant-une-action"></a>
 
@@ -58,7 +58,7 @@ Une action sur un cloud payant, une exposition Internet, un réseau sensible, un
 
 Écrire l’attendu avant d’observer le résultat réel. Distinguer contrôle de syntaxe, contrôle d’identité de cible, état technique et effet utilisateur. Prévoir un contrôle positif et un refus attendu sûr, proportionnés au sujet ; un exercice de lecture peut utiliser un contre-exemple documentaire. Le contrôle métier sur un ticket est différé et marqué NON EXÉCUTÉ tant que le service n’est pas disponible dans le périmètre personnel.
 
-En cas d’écart, garder le fil : **symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale**. Noter le premier fait utile, les versions et l’heure ; conserver les messages expurgés. Changer un seul point justifié puis recontrôler le besoin. Un exemple fictif ou un PASS Codex ne remplace pas une observation personnelle.
+En cas d’écart, garder le fil : **symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale**. Noter le premier fait utile, les versions et l’heure ; conserver les messages expurgés. Changer un seul point justifié puis recontrôler le besoin. Un exemple fictif ou un PASS historique ne remplace pas une observation personnelle.
 
 L’aide se demande au niveau utile : indice 1 pour orienter l’observation ; indice 2 pour expliquer le mécanisme ; indice 3 après présentation de la tentative pour analyser le point bloquant. Les volets restent fermés à la première lecture. Une explication de syntaxe ou un extrait fictif minimal est recevable ; la conception et les fichiers finaux restent personnels. Une difficulté normale appelle une prochaine action, pas un verdict définitif.
 
@@ -74,7 +74,7 @@ Utiliser la base [Suivi des réalisations — OpsDesk](https://app.notion.com/p/
 
 **L0** = découverte ; **L1** = compréhension ; **L2** = réalisation personnelle ; **L3** = autonomie vérifiée sur une adaptation ou un diagnostic nouveau avec aide limitée. Le résultat technique, la compréhension, le diagnostic et l’explication se vérifient séparément. Un exercice terminé avec assistance peut relever de L2 ; il n’attribue pas automatiquement L3. Aucun niveau, acquis CV ou résultat personnel n’est prérempli par la documentation.
 
-### Validité du contrôle et précautions de lecture — charte V5
+### Validité du contrôle et précautions de lecture
 
 Un fichier peut être réalisé sans être vérifié. Un contrôle en échec ne retire pas la réalisation : conserver « réalisé — échec constaté », le symptôme et la prochaine action. Une déclaration sans preuve consultable reste « déclaré — non vérifié ». Les règles de [portée et renouvellement d’une preuve](../preuves.md#avancement-et-contrôle--deux-informations-distinctes) font autorité ; ne pas recopier PASS sur une nouvelle version ou une nouvelle cible. Les champs et statuts de la base existante sont conservés : ses valeurs servent au suivi, la preuve détaille le contrôle, et le niveau personnel reste séparé.
 

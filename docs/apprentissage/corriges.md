@@ -12,9 +12,9 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 **Vérification raisonnée.** Suivre une action utilisateur et nommer chaque composant qui peut la bloquer. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Confondre le laboratoire de Codex avec une architecture personnelle déjà choisie. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Confondre le laboratoire historique avec une architecture personnelle déjà choisie. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 
 <a id="exercice-02"></a>
@@ -26,9 +26,9 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 **Vérification raisonnée.** Partir du symptôme utilisateur et traverser client, point d’entrée, application puis stockage. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Assimiler namespace, réseau conteneur et isolation de machines ; oublier où vivent les données. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Assimiler namespace, réseau conteneur et isolation de machines ; oublier où vivent les données. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 
 <a id="exercice-03"></a>
@@ -40,9 +40,9 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 **Vérification raisonnée.** Observer utilisateur, processus/service, résolution, trajet, écoute puis autorisation ; changer une chose après confirmation. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Désactiver SELinux/le pare-feu en bloc ; utiliser root partout ; diagnostiquer une route avec un test DNS seulement. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Désactiver SELinux/le pare-feu en bloc ; utiliser root partout ; diagnostiquer une route avec un test DNS seulement. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 
 <a id="exercice-04"></a>
@@ -54,9 +54,9 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 **Vérification raisonnée.** Localiser l’erreur entre syntaxe, provider/authentification, droits, quota ou dérive ; ne pas supprimer le state comme premier réflexe. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Confondre validation syntaxique et ressource créée ; versionner le state ; forcer un apply sur la mauvaise cible. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Confondre validation syntaxique et ressource créée ; versionner le state ; forcer un apply sur la mauvaise cible. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 
 <a id="exercice-05"></a>
@@ -68,9 +68,9 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 **Vérification raisonnée.** Lire le premier hôte/tâche/code en défaut ; vérifier accès, chemin, variable, module et privilège avant correction ciblée. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Utiliser shell pour chaque action ; confondre changed=0 avec service fonctionnel ; laisser une variable sensible dans un log. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Utiliser shell pour chaque action ; confondre changed=0 avec service fonctionnel ; laisser une variable sensible dans un log. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 
 <a id="exercice-06"></a>
@@ -82,9 +82,9 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 **Vérification raisonnée.** Séparer erreur de build, commande de lancement, droits, DNS, connexion DB et schéma ; regarder le premier message utile. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Inclure secrets/données dans l’image ; utiliser latest sans identité ; croire qu’un conteneur démarré prouve le métier. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Inclure secrets/données dans l’image ; utiliser latest sans identité ; croire qu’un conteneur démarré prouve le métier. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 
 <a id="exercice-07"></a>
@@ -96,9 +96,9 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 **Vérification raisonnée.** Examiner événements, état du Pod, logs et sélecteurs/endpoints avant de relancer ; revalider la donnée utile. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Confondre port applicatif, Service et exposition ; probe qui dépend de la DB et redémarre tout ; PVC pris pour sauvegarde. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Confondre port applicatif, Service et exposition ; probe qui dépend de la DB et redémarre tout ; PVC pris pour sauvegarde. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 
 <a id="exercice-08"></a>
@@ -110,9 +110,9 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 **Vérification raisonnée.** Nommer job, étape, commande, message, hypothèse et test final ; distinguer refus d’accès, variable absente, test métier et mauvais artefact. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Déployer depuis un runner public en supposant un accès au KVM local ; secrets dans les logs ; ancien JSON PASS présenté comme preuve du run. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Déployer depuis un runner public en supposant un accès au KVM local ; secrets dans les logs ; ancien JSON PASS présenté comme preuve du run. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 
 <a id="exercice-09"></a>
@@ -124,9 +124,9 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 **Vérification raisonnée.** Formuler le symptôme, comparer métriques/logs/événements et contrôler la dépendance suspecte sans multiplier les modifications. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Compter uniquement HTTP200 ; alerte sans destinataire ; générer un identifiant de ticket comme label à forte cardinalité. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Compter uniquement HTTP200 ; alerte sans destinataire ; générer un identifiant de ticket comme label à forte cardinalité. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 
 <a id="exercice-10"></a>
@@ -138,9 +138,9 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 **Vérification raisonnée.** Comparer le premier écart à l’état de référence, isoler une cause et confirmer le retour avec le parcours témoin. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Mettre tout à jour pour rendre un scan vert ; confondre retour d’image et retour de schéma ; changer plusieurs couches d’un coup. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Mettre tout à jour pour rendre un scan vert ; confondre retour d’image et retour de schéma ; changer plusieurs couches d’un coup. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 
 <a id="exercice-11"></a>
@@ -152,9 +152,9 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 **Vérification raisonnée.** Identifier version, archive, clé, espace, accès, ordre de restauration PostgreSQL et de reconstruction de la configuration et référence attendue ; arrêter sur cible ou archive ambiguë. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Stocker clé et archive au même endroit en parlant de hors-site ; oublier la configuration et les versions nécessaires pour relire la DB ; prétendre cohérence sous écritures continues non testée. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Stocker clé et archive au même endroit en parlant de hors-site ; oublier la configuration et les versions nécessaires pour relire la DB ; prétendre cohérence sous écritures continues non testée. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 
 <a id="exercice-12"></a>
@@ -166,9 +166,9 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 **Vérification raisonnée.** Utiliser symptôme→couche→faits→hypothèse→test→correction→contrôle ; demander une aide précise si une donnée manque. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Réinstaller avant de lire les logs ; provoquer une panne hors périmètre ; appeler cause racine la première hypothèse plausible. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Réinstaller avant de lire les logs ; provoquer une panne hors périmètre ; appeler cause racine la première hypothèse plausible. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 
 <a id="exercice-13"></a>
@@ -176,12 +176,12 @@ Ces repères séparés ne sont pas une infrastructure complète. Demander un ind
 
 ## Exercice 13 — Démontrer son autonomie
 
-**Attendus à argumenter.** L’autonomie se constate sur une tâche nouvelle : comprendre le besoin, adapter une méthode, vérifier et expliquer. Un pipeline vert ou un fichier généré par Codex ne donne pas un niveau personnel. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Démonstration personnelle sur un cas proche nouveau, diagnostic et justification ; conclusion qualitative argumentée.
+**Attendus à argumenter.** L’autonomie se constate sur une tâche nouvelle : comprendre le besoin, adapter une méthode, vérifier et expliquer. Un pipeline vert ou un fichier généré ne donne pas un niveau personnel. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Démonstration personnelle sur un cas proche nouveau, diagnostic et justification ; conclusion qualitative argumentée.
 
 **Vérification raisonnée.** Décrire le blocage et les observations avant de demander une correction ; conserver ce qui a fonctionné et revoir une hypothèse à la fois. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
 
-**Points à refuser.** Recopier une référence puis revendiquer L3 ; cacher l’aide reçue ; inventer une note de certification. Un fichier de référence ou un PASS Codex n’établit ni exécution ni autonomie personnelles.
+**Points à refuser.** Recopier une référence puis revendiquer L3 ; cacher l’aide reçue ; inventer une note de certification. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser Mathias refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
 
 **Conclusion qualitative à renseigner après l’épreuve :** Autonome sur l’exercice évalué ; Réussite avec assistance ; ou Compétence à retravailler. Justifier compréhension, méthode, qualité, vérification, diagnostic, sécurité, explication et aide utilisée ; aucun score de certification.

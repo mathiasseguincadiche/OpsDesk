@@ -1,8 +1,8 @@
 # Architecture opérationnelle d’OpsDesk
 
-**V4.4 : architecture interne de l’application et référence du laboratoire de développement Codex.** La cible d’hébergement reste à concevoir personnellement par Mathias. Les choix Compose, noms de ressources et ports ci-dessous décrivent cet essai historique ; ils ne sont pas une architecture personnelle déjà réalisée ou imposée. Le [contrat autonome](contrat-applicatif.md) porte les besoins à satisfaire.
+**architecture interne de l’application et référence du laboratoire de développement historique.** La cible d’hébergement reste à concevoir personnellement par l’apprenant. Les choix Compose, noms de ressources et ports ci-dessous décrivent cet essai historique ; ils ne sont pas une architecture personnelle déjà réalisée ou imposée. Le [contrat autonome](contrat-applicatif.md) porte les besoins à satisfaire.
 
-> **Lecture des schémas : historique Codex.** Les recettes Compose/Docker et les manifests cités ne sont pas présents dans `main` `51e1a489`. Le service observé, son réseau et ses volumes appartiennent à l’essai Ubuntu/WSL documenté par les preuves ; cette page ne constitue pas une procédure exécutable ni la cible Fedora/KVM/Rocky personnelle.
+> **Lecture des schémas : référence historique.** Les recettes Compose/Docker et les manifests cités ne sont pas présents dans `main` `51e1a489`. Le service observé, son réseau et ses volumes appartiennent à l’essai Ubuntu/WSL documenté par les preuves ; cette page ne constitue pas une procédure exécutable ni la cible Fedora/KVM/Rocky personnelle.
 
 ## Besoin et choix
 
@@ -16,7 +16,7 @@ Un collaborateur doit ouvrir une demande et l’équipe IT doit retrouver son é
 | Laboratoire local reproductible | Docker Compose, secrets en fichiers locaux | Compose n’offre ni cluster ni disponibilité professionnelle | `compose up --wait` et test métier |
 | Réduire l’exposition | Port `127.0.0.1:18081` seulement ; aucune publication DB | L’absence d’authentification interdit une exposition Internet | Contrôler la configuration et les ports réellement publiés |
 
-Les alternatives ci-dessus servent à comprendre les compromis. Les sources consultées ne prouvent pas qu’une comparaison formelle SPA/Flask ou SQLite/PostgreSQL a été menée par Mathias ; ce ne sont pas ses arbitrages personnels. Pour le choix technique initial détaillé de Codex, la raison effectivement consignée reste limitée aux documents disponibles, sans reconstitution rétrospective.
+Les alternatives ci-dessus servent à comprendre les compromis. Les sources consultées ne prouvent pas qu’une comparaison formelle SPA/Flask ou SQLite/PostgreSQL a été menée par l’apprenant ; ce ne sont pas ses arbitrages personnels. Pour le choix technique initial détaillé, la raison effectivement consignée reste limitée aux documents disponibles, sans reconstitution rétrospective.
 
 ## Déploiement de l’essai historique — composants et relations
 
@@ -47,15 +47,16 @@ Les statuts progressent **open → in_progress → closed**. Sauter une étape o
 
 ## Trois phases, sans changer d’application
 
-- **Phase 1 exécutée partiellement :** application et PostgreSQL locaux, parcours positif et négatif.
-- **Phase 2 cible :** Terraform et configuration Ansible sur Rocky ; AWS seulement si budget et autorisation sont établis.
-- **Phase 3 cible :** K3s, services, stockage, probes, observabilité, incident et retour à l’état sain.
+- **Point de départ, réalisé :** application et PostgreSQL locaux, parcours positif et négatif, vérifiés par les tests ([STATUS](../STATUS.md)).
+- **Phase 1, livrer et conserver — prévue :** conteneur, livraison automatisée et analyse de l’image.
+- **Phase 2, préparer et automatiser — prévue :** Terraform et Ansible sur Rocky Linux ; AWS seulement si budget et autorisation sont établis.
+- **Phase 3, orchestrer et maintenir — prévue :** K3s, services, stockage, probes, observabilité, incident et retour à l’état sain.
 
 K3s ne remplace ni PostgreSQL, ni ses sauvegardes, ni les tests métier. Un rollback de Deployment ne restaure pas une base ou un volume. Les manifestes et configurations candidats ne sont pas des preuves d’exécution.
 
 ## Décisions durables et décisions encore personnelles
 
-Ce registre conserve les choix établis ; il ne reconstitue pas les arbitrages d’une infrastructure que Mathias n’a pas encore conçue. « Retenu » est l’état d’une décision, pas la preuve de son exécution. Les raisons ci-dessous viennent du mandat de finalisation du 4 novembre 2026 et des sources citées ; les détails non établis restent non documentés.
+Ce registre conserve les choix établis ; il ne reconstitue pas les arbitrages d’une infrastructure que l’apprenant n’a pas encore conçue. « Retenu » est l’état d’une décision, pas la preuve de son exécution. Les raisons ci-dessous viennent du mandat de finalisation du 4 novembre 2026 et des sources citées ; les détails non établis restent non documentés.
 
 | Décision et état | Contexte, choix et alternatives | Conséquence et source |
 |---|---|---|
@@ -63,8 +64,8 @@ Ce registre conserve les choix établis ; il ne reconstitue pas les arbitrages d
 | GitHub seul actif — retenu | GitLab reste une archive facultative ; pas de miroir ni de CI supplémentaire | Évite deux flux à synchroniser ; accès au dépôt privé requis. Mandat utilisateur et README |
 | Application fournie / infrastructure personnelle — retenu | Apprendre le métier en concevant et vérifiant soi-même ; écarter les fichiers InfraOps finaux copiés avant tentative | Aide graduée, effort et preuve personnels ; [parcours](apprentissage/README.md) et contrat |
 | Usage local fictif sans authentification — retenu dans le périmètre courant | Le programme ne gère pas de comptes ; une future utilisation partagée exige une décision applicative distincte | Exposition Internet bloquée ; pas de promesse de production. [Contrat §23](contrat-applicatif.md#23-sessions-et-authentification) |
-| Fedora/KVM/Rocky — cible prévue, réception non vérifiée | Cible personnelle donnée par le mandat ; raison détaillée du choix de ces distributions plutôt que d’autres : non documentée dans les sources de cette passe | Compatibilités à recevoir ; AWS facultatif. [Guide laboratoire](laboratoire-fedora-kvm-rocky.md) |
-| Topologie, stockage, providers et accès personnels — à décider | L’exercice 02 appartient à Mathias ; aucune ancienne recette ne vaut décision personnelle | Documenter options, conséquences, version et contrôles après sa proposition |
+| Fedora/KVM/Rocky — cible prévue, réception non vérifiée | Cible personnelle donnée par le mandat ; raison détaillée du choix de ces distributions plutôt que d’autres : non documentée dans les sources consultées | Compatibilités à recevoir ; AWS facultatif. [Guide laboratoire](laboratoire-fedora-kvm-rocky.md) |
+| Topologie, stockage, providers et accès personnels — à décider | L’exercice 02 appartient à l’apprenant ; aucune ancienne recette ne vaut décision personnelle | Documenter options, conséquences, version et contrôles après sa proposition |
 
 Pour une nouvelle décision coûteuse à inverser, ajouter date, contexte sourcé, choix, options écartées et conséquences positives/négatives. Une décision remplacée reste présente avec son état « remplacée » et le lien vers la suivante. Ne pas inventer la raison d’une décision ancienne pour compléter le tableau.
 

@@ -68,15 +68,15 @@ Présenter ta tentative, l’attendu, l’observé et le premier écart. Demande
 
 **Contre-exemple de lecture, sans exécution :** une capture de page tickets ne démontre pas leur persistance. Indiquer quel contrôle ultérieur pourrait réfuter cette conclusion ; aucune sortie ni preuve technique n’est à produire aujourd’hui.
 
-**Erreurs fréquentes :** Confondre le laboratoire de Codex avec une architecture personnelle déjà choisie.
+**Erreurs fréquentes :** Confondre le laboratoire historique avec une architecture personnelle déjà choisie.
 
-**Démarche en cas d’écart :** Si deux documents semblent décrire des capacités différentes, comparer leur version et la source du contrat. Distinguer une ancienne preuve Codex d’une fonction actuelle ; noter la contradiction au lieu d’inventer un résultat.
+**Démarche en cas d’écart :** Si deux documents semblent décrire des capacités différentes, comparer leur version et la source du contrat. Distinguer une ancienne preuve historique d’une fonction actuelle ; noter la contradiction au lieu d’inventer un résultat.
 
 Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#vérifier-et-diagnostiquer).
 
 ## Expliquer et capitaliser
 
-Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence historique et travail personnel.
 
 **Réutilisation :** Déplacer le même besoin vers une autre machine : qu’est-ce qui reste dans le contrat ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
@@ -84,6 +84,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-01--comprendre-lapplication) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-01--comprendre-lapplication) ou demander le niveau d’aide souhaité. La référence historique n’est pas la réponse obligatoire à reproduire.
 
 [Retour au parcours](README.md) · [Exercice suivant →](02-architecture.md)

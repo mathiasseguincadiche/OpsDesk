@@ -30,7 +30,7 @@ Références : [runners GitHub hébergés](https://docs.github.com/en/actions/co
 
 Procédure manuelle de test et de livraison comprise, artefact identifié et cible de validation autorisée. L’étude K3s est disponible ; une livraison conteneur sur la cible retenue reste possible si K3s n’a pas encore été qualifié. Ne pas contourner un blocage en prétendant un déploiement de cluster.
 
-Le poste de contrôle prévu est Fedora 45. Les sources personnelles sont conservées dans le dépôt GitHub principal du projet. Identifier séparément le runner choisi et la VM Rocky Linux 10.2 cible sous KVM ; un runner hébergé n’accède pas implicitement au laboratoire local. La cible de livraison, son accès et ses permissions doivent être proposés et vérifiés avant tout déploiement. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
+Le poste de contrôle prévu est Fedora 45. Les sources personnelles sont conservées dans le dépôt GitHub principal du projet. Identifier séparément le runner choisi et la VM Rocky Linux 10.2 cible sous KVM ; un runner hébergé n’accède pas implicitement au laboratoire local. La cible de livraison, son accès et ses permissions doivent être proposés et vérifiés avant tout déploiement. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 La chaîne étudiée est GitHub Actions, avec GHCR pour un artefact identifié et Trivy pour conserver le verdict de scan. Définir permissions minimales, secrets, rétention des preuves et arrêt sur échec. Le diagnostic du contrat de preuve historique ci-business.json/business-smoke.json reste un cas à expliquer, pas un pipeline à recopier.
 
@@ -82,7 +82,7 @@ Séparer attendu et observé ; une cause reste hypothétique tant qu’un contr�
 
 ## Expliquer et capitaliser
 
-Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence historique et travail personnel.
 
 **Réutilisation :** Comment prouver qu’une promotion n’a pas reconstruit une image différente ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
@@ -90,6 +90,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-08--construire-la-cicd) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-08--construire-la-cicd) ou demander le niveau d’aide souhaité. La référence historique n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](07-k3s.md) · [Retour au parcours](README.md) · [Exercice suivant →](09-supervision.md)

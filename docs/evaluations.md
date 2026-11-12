@@ -1,12 +1,12 @@
 # Cinq évaluations OpsDesk — preuves techniques et autonomie
 
-> **Registre historique — aucune note personnelle.** Les mentions L1/L2 dans les cellules ci-dessous décrivent l’ancien barème technique Codex, pas les niveaux L0–L3 de Mathias. Les cinq évaluations actives sont dans [apprentissage/evaluations.md](apprentissage/evaluations.md). Les observations anciennes restent datées ; le [statut consolidé](../STATUS.md) donne les preuves plus récentes et leurs limites. Les configurations InfraOps citées sont absentes de `main` `51e1a489` : aucune commande de ce registre n’est une procédure prête à copier.
+> **Registre historique — aucune note personnelle.** Les mentions L1/L2 dans les cellules ci-dessous décrivent l’ancien barème technique, pas les niveaux L0–L3 de l’apprenant. Les cinq évaluations actives sont dans [apprentissage/evaluations.md](apprentissage/evaluations.md). Les observations anciennes restent datées ; le [statut consolidé](../STATUS.md) donne les preuves plus récentes et leurs limites. Les configurations InfraOps citées sont absentes de `main` `51e1a489` : aucune commande de ce registre n’est une procédure prête à copier.
 
-## Référence historique Codex — cadre V4.4
+## Référence historique — laboratoire de développement
 
-Ce corps conserve les procédures et résultats préparés sous V4.2. Les configurations et opérations InfraOps appartiennent désormais au travail personnel de Mathias ; elles ne sont pas relancées par Codex. Consulter d’abord le [contrat applicatif](contrat-applicatif.md) et la [provenance](provenance.md). Les niveaux techniques anciens de ce texte ne sont pas les niveaux personnels V4.4 : L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée. Les preuves de reprise plus récentes sont datées dans [STATUS](../STATUS.md), sans modifier rétrospectivement cet essai.
+Les procédures et résultats ci-dessous datent des essais historiques ; ils ne sont pas relancés. Les configurations et opérations InfraOps sont à réaliser personnellement ([contrat applicatif](contrat-applicatif.md), [provenance](provenance.md)). Les niveaux techniques de ce texte suivent un ancien barème et ne sont pas les niveaux personnels du [parcours](parcours-apprentissage.md). Les preuves de reprise récentes sont datées dans [STATUS](../STATUS.md).
 
-**Périmètre du 3 novembre 2026 : laboratoire local Ubuntu/WSL.** La chaîne InfraOps complète sur K3s reste partielle. Les essais exécutés par Codex sont des preuves du laboratoire ; ils n’attribuent pas à Mathias une exécution personnelle ou une maîtrise L3.
+**Périmètre du 3 novembre 2026 : laboratoire local Ubuntu/WSL.** La chaîne InfraOps complète sur K3s reste partielle. Les essais exécuté sont des preuves du laboratoire ; ils n’attribuent pas à l’apprenant une exécution personnelle ou une maîtrise L3.
 
 L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = vérifié **et expliqué personnellement**. Aucun L3 n’est attribué ici. Le [registre JSON](../evidence/evaluations.json) reprend ces cinq évaluations pour la vue à quinze cellules du portfolio.
 
@@ -32,7 +32,7 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Diagnostic.** Les refus métier sont des résultats attendus ; aucune panne DNS/port/service n’a été injectée. Une readiness rouge devrait conduire à examiner DNS `db`, port, rôle et schéma avant d’accuser le réseau ; cette procédure n’est pas une panne observée.
 
-**Verdict et suite.** PARTIEL, niveau technique local L2. Qualifier une cible dédiée, le stockage et les secrets, exécuter K3s, diagnostiquer un défaut borné et refaire le ticket. **Explication personnelle Mathias : NON EXÉCUTÉE** ; expliquer les flux, la différence live/ready et la séparation image/volume.
+**Verdict et suite.** PARTIEL, niveau technique local L2. Qualifier une cible dédiée, le stockage et les secrets, exécuter K3s, diagnostiquer un défaut borné et refaire le ticket. **Explication personnelle : NON EXÉCUTÉE** ; expliquer les flux, la différence live/ready et la séparation image/volume.
 
 ## 2. Automatiser : rendre une configuration répétable sans fausse infrastructure
 
@@ -48,7 +48,7 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Échec et diagnostic observés.** Le premier rendu a échoué avant génération : Ansible ne pouvait pas créer son temporaire par défaut sous le HOME. `ANSIBLE_LOCAL_TEMP` n’avait pas déplacé le temporaire de la cible locale. L’inventaire fixe maintenant `ansible_remote_tmp` sous `/tmp` ; la revalidation passe. [Premier essai conservé](../evidence/automation-first-attempt.json).
 
-**Verdict et suite.** PARTIEL, sous-exercice local L2 ; provisioning/reconstruction Rocky NON EXÉCUTÉS. Qualifier KVM/VM, fournisseur/état et configuration Linux avant de revendiquer l’automatisation de l’infrastructure. **Explication personnelle Mathias : NON EXÉCUTÉE** ; expliquer ce que Terraform gère vraiment, l’état et le second passage.
+**Verdict et suite.** PARTIEL, sous-exercice local L2 ; provisioning/reconstruction Rocky NON EXÉCUTÉS. Qualifier KVM/VM, fournisseur/état et configuration Linux avant de revendiquer l’automatisation de l’infrastructure. **Explication personnelle : NON EXÉCUTÉE** ; expliquer ce que Terraform gère vraiment, l’état et le second passage.
 
 ## 3. Faciliter la livraison : relier le changement au ticket servi
 
@@ -64,7 +64,7 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Échec / diagnostic.** Les tests de règles refusent les transitions invalides. Aucun mauvais artefact n’a été promu puis diagnostiqué dans cette cellule ; la chaîne CI et ses blocages restent à constater, sans supprimer un contrôle pour la rendre verte.
 
-**Verdict et suite.** PARTIEL, local L2 / chaîne distante à qualifier. Faire passer les jobs, contrôler le commit et l’image réellement servis, promouvoir la même image puis revenir à l’image saine avec relecture du ticket. **Explication personnelle Mathias : NON EXÉCUTÉE** ; expliquer image/tag/digest, permissions CI et rollback de code versus données.
+**Verdict et suite.** PARTIEL, local L2 / chaîne distante à qualifier. Faire passer les jobs, contrôler le commit et l’image réellement servis, promouvoir la même image puis revenir à l’image saine avec relecture du ticket. **Explication personnelle : NON EXÉCUTÉE** ; expliquer image/tag/digest, permissions CI et rollback de code versus données.
 
 ## 4. Observer et diagnostiquer : comprendre l’effet utilisateur
 
@@ -78,7 +78,7 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Attendu / observé.** L’opérateur dispose de signaux locaux et de journaux ; aucun routage d’alerte, temps de détection, SLO ou panne de Pod n’est qualifié. Les éventuelles preuves de sonde ultérieures doivent être lues dans leur périmètre et ne valent pas une notification externe.
 
-**Verdict et suite.** PARTIEL, signaux locaux L2. Définir une alerte utile, constater sa détection, corréler journaux/événements/métriques et rejouer le ticket après correction autorisée. **Explication personnelle Mathias : NON EXÉCUTÉE** ; expliquer le lien symptôme → hypothèse → observation → cause établie.
+**Verdict et suite.** PARTIEL, signaux locaux L2. Définir une alerte utile, constater sa détection, corréler journaux/événements/métriques et rejouer le ticket après correction autorisée. **Explication personnelle : NON EXÉCUTÉE** ; expliquer le lien symptôme → hypothèse → observation → cause établie.
 
 ## 5. Maintenir et rétablir : conserver les tickets après intervention
 
@@ -92,4 +92,4 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Observation actuelle.** Aucune restauration ou maintenance n’est attestée par les preuves citées dans cette version du registre. Le smoke relit un ticket pendant une session normale ; il ne prouve pas une reprise. Commande de restauration effectivement exécutée : **NON EXÉCUTÉE** dans cette cellule. Cause d’incident : aucune panne provoquée ou observée à attribuer.
 
-**Verdict et suite.** NON EXÉCUTÉ. Exécuter la sauvegarde/restauration bornée puis enrichir cette cellule avec la vraie preuve, sans réécrire l’état initial. **Explication personnelle Mathias : NON EXÉCUTÉE** ; expliquer volume/sauvegarde/restauration, contrôle métier et limitations d’une copie sur le même hôte.
+**Verdict et suite.** NON EXÉCUTÉ. Exécuter la sauvegarde/restauration bornée puis enrichir cette cellule avec la vraie preuve, sans réécrire l’état initial. **Explication personnelle : NON EXÉCUTÉE** ; expliquer volume/sauvegarde/restauration, contrôle métier et limitations d’une copie sur le même hôte.

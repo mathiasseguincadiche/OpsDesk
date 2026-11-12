@@ -1,6 +1,6 @@
 # Versions et périmètres
 
-**V4.4 : les versions et configurations d’infrastructure ci-dessous décrivent l’antériorité Codex.** Le [contrat applicatif](contrat-applicatif.md) distingue combinaison testée, paramètres et besoins à satisfaire par Mathias. La source actuellement testée est identifiée par ses hashes dans `evidence/v44/application-tests.json`, sans faux SHA publié.
+**les versions et configurations d’infrastructure ci-dessous décrivent l’antériorité historique.** Le [contrat applicatif](contrat-applicatif.md) distingue combinaison testée, paramètres et besoins à satisfaire par l’apprenant. La source actuellement testée est identifiée par ses hashes dans `evidence/v44/application-tests.json`, sans faux SHA publié.
 
 Cette fiche sépare la version déclarée par l’application, les outils de l’essai et les cibles encore à qualifier. Les tags d’images ne sont pas des digests immuables ; relier toute nouvelle livraison au contenu réellement construit.
 

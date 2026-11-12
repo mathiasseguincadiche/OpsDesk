@@ -26,7 +26,7 @@ Un rollback d’image remplace la version applicative ; il ne remet pas la base 
 
 Supervision minimale et contrôle métier disponibles, composant à maintenir identifié. Lire compatibilité, données durables et conditions de retour avant la maintenance. Une dépendance supposée à jour n’est pas un prérequis vérifié.
 
-Le poste de contrôle prévu est Fedora 45. Identifier la VM Rocky Linux 10.2, le composant et la version concernés par une maintenance limitée. Préparer état initial, données témoins, accès, espace, capacité de retour et risque. Aucun changement de paquets, de service ou de version n’est implicite dans la lecture de cet exercice. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL de Codex restent distincts ; aucune vérification matérielle n’est revendiquée ici.
+Le poste de contrôle prévu est Fedora 45. Identifier la VM Rocky Linux 10.2, le composant et la version concernés par une maintenance limitée. Préparer état initial, données témoins, accès, espace, capacité de retour et risque. Aucun changement de paquets, de service ou de version n’est implicite dans la lecture de cet exercice. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
 
@@ -76,7 +76,7 @@ Séparer attendu et observé ; une cause reste hypothétique tant qu’un contr�
 
 ## Expliquer et capitaliser
 
-Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence Codex et travail personnel.
+Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence historique et travail personnel.
 
 **Réutilisation :** Quels contrôles restent valides si la maintenance ne redémarre aucun conteneur ? Relier ta réponse à un autre projet sans en recopier une solution complète.
 
@@ -84,6 +84,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-10--exploiter-et-maintenir) ou demander le niveau d’aide souhaité. La référence historique Codex n’est pas la réponse obligatoire à reproduire.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-10--exploiter-et-maintenir) ou demander le niveau d’aide souhaité. La référence historique n’est pas la réponse obligatoire à reproduire.
 
 [← Exercice précédent](09-supervision.md) · [Retour au parcours](README.md) · [Exercice suivant →](11-sauvegarde-reprise.md)
