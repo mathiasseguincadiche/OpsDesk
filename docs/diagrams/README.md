@@ -54,8 +54,8 @@ Pour les deux schémas, le `.drawio` et le SVG décrivent la même figure ; le S
 Réalisés le 12 novembre 2026 :
 
 - rendu des SVG dans Chromium : aucun texte ne dépasse son cadre (mesure des boîtes de texte) ;
-- contrastes calculés sur la présentation : texte courant entre 6,9:1 et 16:1, titres de phase et chiffres des pastilles au moins 4,7:1 (seuil WCAG AA : 4,5:1) ;
+- contrastes calculés sur les deux schémas : texte courant entre 6,7:1 et 16:1, titres colorés et chiffres des pastilles au moins 4,7:1 (seuil WCAG AA : 4,5:1) ;
 - fichiers XML valides ;
-- `presentation.drawio` ouvert dans diagrams.net : rendu identique au SVG.
+- les deux `.drawio` ouverts dans diagrams.net : rendu identique aux SVG.
 
-Restent à faire : ouverture de `architecture-technique.drawio` dans diagrams.net, mesure des contrastes du schéma technique, affichage dans GitHub et Notion à largeur étroite, thème sombre.
+Restent à faire : affichage dans GitHub et Notion à largeur étroite, thème sombre.
