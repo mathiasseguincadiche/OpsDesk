@@ -39,7 +39,7 @@ Les logos proviennent du paquet [simple-icons](https://github.com/simple-icons/s
 | Fedora | `fedora.svg` | #51A2DA |
 | QEMU (pour KVM, QEMU et libvirt) | `qemu.svg` | #FF6600 |
 
-Les pictogrammes de la personne, du navigateur, du bouclier (durcissement), des journaux, de l'alerte et du volume sont dessinés pour ce projet et suivent la licence MIT du dépôt.
+Les pictogrammes de la personne, du navigateur, du bouclier (pare-feu), des journaux, de l'alerte et du volume sont dessinés pour ce projet et suivent la licence MIT du dépôt.
 
 ## D'où viennent les faits
 
@@ -72,9 +72,9 @@ Réalisés le 12 novembre 2026 sur les deux schémas :
 
 - export des SVG par le moteur Draw.io 32.6.10 ; aucun `<foreignObject>` ; aucune image externe (les logos sont embarqués) ;
 - rendu par deux moteurs indépendants (Chromium et librsvg) : même figure, chaque composant affiche son icône ;
-- aucun texte ne dépasse son cadre (mesure des boîtes de texte sur le rendu Chromium) ; plus petite police : 13 px sur un canevas de 1600 px de large ;
+- aucun texte ne dépasse son cadre (mesure des boîtes de texte sur le rendu Chromium) ; plus petite police : 14 px sur un canevas de 1200 px de large, soit environ 9,7 px lorsque l'image est affichée sur 830 px (largeur indicative d'un README GitHub, calculée et non mesurée dans GitHub) ;
 - navigateur en thème sombre : le fond clair du SVG est conservé et tous les logos restent lisibles ;
 - contrastes calculés : texte courant entre 6,7:1 et 16:1, titres colorés et chiffres des pastilles au moins 4,7:1 (seuil WCAG AA : 4,5:1) ;
 - fichiers XML valides ; `.drawio` ouverts dans diagrams.net (application web) en thème sombre, sans inversion de couleurs.
 
-Non vérifiés : affichage dans GitHub (largeur étroite, thème sombre), affichage dans Notion, ouverture dans l'application de bureau Draw.io, lisibilité de la plus petite police à la largeur réelle d'insertion.
+Non vérifiés : affichage dans GitHub (largeur étroite, thème sombre), affichage dans Notion, ouverture dans l'application de bureau Draw.io, lisibilité de la plus petite police dans GitHub et dans Notion (calcul seulement).
