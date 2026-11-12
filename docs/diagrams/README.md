@@ -8,10 +8,10 @@
 ## Lire les schémas
 
 - **Cadre noir :** le service OpsDesk (navigateur, application, base de données).
-- **Cadre ou bloc coloré :** une phase du projet. Bleu : phase 1, livrer et conserver. Vert : phase 2, préparer et automatiser. Violet : phase 3, orchestrer et maintenir. Les pastilles P1, P2 et P3 du schéma technique reprennent ces couleurs.
+- **Cadre ou bloc coloré :** une phase du projet. Bleu : phase 1, livrer et conserver. Vert : phase 2, préparer et automatiser. Violet : phase 3, orchestrer et maintenir. Dans le schéma technique, trois cadres se suivent de haut en bas, un par phase, chacun avec sa pastille P1, P2 ou P3.
 - **Flèche bleue :** la requête de l'utilisateur (HTTP, puis SQL).
 - **Flèche grise :** la livraison de l'image, la lecture des sondes et des mesures, la sauvegarde et la restauration.
-- **Pastille numérotée (technique) :** ordre de lecture de l'encadré « Comment ça fonctionne ».
+- **Pastille numérotée (technique) :** ordre de lecture, de 1 à 7, repris dans l'encadré « Comment ça fonctionne ».
 - **Flèche grise entre les phases (présentation) :** enchaînement des trois phases.
 
 Les phases reprennent celles du [parcours](../parcours-apprentissage.md). Les schémas décrivent l'architecture du projet, pas son avancement : l'avancement et le contrôle de chaque élément sont suivis dans [STATUS](../../STATUS.md) et la [feuille de route](../../ROADMAP.md).
