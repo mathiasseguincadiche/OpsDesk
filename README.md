@@ -2,13 +2,13 @@
 
 OpsDesk est une application de tickets IT fictifs qui sert de laboratoire pour apprendre l’infrastructure et l’exploitation. Un collaborateur ouvre une demande, le support la consulte, la prend en charge puis la clôture ; PostgreSQL conserve les tickets.
 
-![Le service OpsDesk (navigateur, application Flask, PostgreSQL, volume) et les trois phases du parcours ; les phases 2 et 3 sont à concevoir, non exécutées](docs/diagrams/presentation.svg)
+![Vue fonctionnelle historique d’OpsDesk : utilisateur, application de tickets, base et stockage persistant ; données fictives et absence d’authentification](docs/diagrams/presentation.svg)
 
-Le schéma présente le service et les trois phases du parcours. Le [schéma technique](docs/diagrams/architecture-technique.svg) décrit le laboratoire historique Codex Ubuntu/WSL ; Mathias concevra son architecture personnelle à l’exercice 02.
+Le schéma présente le fonctionnement général du service. Les trois phases d’apprentissage (livrer et conserver ; préparer et automatiser ; orchestrer et maintenir) sont décrites dans le [parcours](docs/parcours-apprentissage.md), et ne constituent pas des composants déployés. Le [schéma technique](docs/diagrams/architecture-technique.svg) décrit l’essai historique Ubuntu/WSL ; l’architecture personnelle sera définie à l’exercice 02.
 
 **Répartition des responsabilités :** l’application Flask/PostgreSQL, son contrat et ses tests sont fournis comme support de laboratoire. Mathias conçoit, écrit, déploie, vérifie et explique personnellement l’infrastructure et son exploitation. L’origine détaillée des éléments est conservée dans la [provenance](docs/provenance.md) ; les essais historiques ne valent pas réalisation personnelle.
 
-**État réel :** 26 tests applicatifs PASS dans [l’environnement Codex du 3 novembre 2026](evidence/v44/application-tests.json) ; sécurité globale non validée, [triage historique FAIL](docs/triage-securite-v44.md) ; laboratoire Fedora/KVM/Rocky et exercices personnels NON EXÉCUTÉS. **Aucune authentification : usage local et données fictives uniquement, sans exposition Internet.** Les dernières évolutions documentaires et les limites des preuves sont détaillées dans [l’état daté](STATUS.md). Une PR fusionnée ne démontre ni CI exécutée ni infrastructure personnelle déployée.
+**État réel :** 26 tests applicatifs PASS dans [l’environnement Codex du 3 novembre 2026](evidence/v44/application-tests.json) ; sécurité globale non validée, [triage historique FAIL](docs/triage-securite-v44.md) ; laboratoire Fedora/KVM/Rocky et exercices personnels NON EXÉCUTÉS. **Aucune authentification : données fictives et usage de laboratoire uniquement.** La configuration historique lie le port applicatif à `127.0.0.1` ; cela ne constitue pas une preuve actuelle d’inaccessibilité depuis Internet. Les dernières évolutions documentaires et les limites des preuves sont détaillées dans [l’état daté](STATUS.md). Une PR fusionnée ne démontre ni CI exécutée ni infrastructure personnelle déployée.
 
 ## Choisir sa lecture
 

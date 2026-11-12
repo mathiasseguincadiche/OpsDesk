@@ -18,17 +18,18 @@ Un collaborateur doit ouvrir une demande et l’équipe IT doit retrouver son é
 
 Les alternatives ci-dessus servent à comprendre les compromis. Les sources consultées ne prouvent pas qu’une comparaison formelle SPA/Flask ou SQLite/PostgreSQL a été menée par Mathias ; ce ne sont pas ses arbitrages personnels. Pour le choix technique initial détaillé de Codex, la raison effectivement consignée reste limitée aux documents disponibles, sans reconstitution rétrospective.
 
-## Chemin d’une demande
+## Déploiement de l’essai historique — composants et relations
 
-![Chemin d’une demande dans le laboratoire historique Ubuntu/WSL : navigateur, application, base PostgreSQL et volume ; les cibles Fedora, KVM/QEMU, Rocky Linux, Terraform, Ansible, K3s, Grafana et GitHub sont en pointillé, non exécutées](diagrams/architecture-technique.svg)
+![Vue technique de l’essai historique : hôte Ubuntu/WSL2, navigateur, service app, service db, réseau Compose et volume nommé distinct du réseau](diagrams/architecture-technique.svg)
 
-1. Le navigateur de la machine de laboratoire contacte `127.0.0.1:18081` en HTTP. Il n’y a pas de DNS public, TLS public, VPC ou Ingress dans cette tranche.
-2. Docker transmet au port `8000` du conteneur `app`. Gunicorn sert Flask ; Jinja échappe le contenu HTML.
-3. L’application résout **`db`** grâce au DNS du réseau Compose `v42opsdesk_net`, puis contacte PostgreSQL sur `5432`.
-4. Le rôle **`opsdesk_app`** possède les droits de lecture/création/modification des tickets, pas ceux du propriétaire d’initialisation.
-5. PostgreSQL écrit dans **`v42opsdesk_pgdata`**. Cette persistance ne garantit pas qu’une restauration fonctionne : il faut tester les données et le service après reprise.
+Cette **vue de déploiement statique** indique où résident les composants et comment ils sont reliés. Elle ne constitue pas une séquence chronologique numérotée.
 
-Un réseau Compose n’est pas une VM et n’est pas une frontière de sécurité forte. Seul le port applicatif est publié ; ne pas présenter cette topologie comme une architecture de production cloisonnée.
+- **Accès :** dans la configuration historique, le navigateur utilise `127.0.0.1:18081` en HTTP ; Docker redirige vers le port `8000` du service `app`. L’adresse saisie ne prouve pas à elle seule l’interface d’écoute réelle ; il faut vérifier la configuration et l’environnement d’exécution.
+- **Application :** Gunicorn sert Flask et les fonctionnalités de tickets. Le pilote Python `psycopg` fait partie de l’application ; il ne représente ni un protocole ni un service réseau indépendant.
+- **Base :** le service `app` résout `db` dans le réseau Compose `v42opsdesk_net` et se connecte au port interne `5432`. Le rôle SQL `opsdesk_app` a les droits nécessaires aux tickets sans être le propriétaire d’initialisation : c’est une **propriété de PostgreSQL**, pas une étape de circulation.
+- **Stockage :** PostgreSQL utilise le volume nommé `v42opsdesk_pgdata`. Il s’agit d’un **montage de l’hôte**, hors du réseau logique. La persistance ne prouve ni une sauvegarde indépendante ni une restauration réussie.
+
+**Portée et limites :** ce dessin décrit l’essai Ubuntu/WSL2 historique, pas un service actuel ni une infrastructure personnelle reçue. Données fictives et absence d’authentification utilisateur. PostgreSQL n’était pas publié sur l’hôte dans la configuration de référence. Un réseau Compose n’est pas une frontière de sécurité forte. Aucune qualification de production n’est déduite de ce schéma.
 
 ## Contrat applicatif
 
@@ -69,9 +70,9 @@ Pour une nouvelle décision coûteuse à inverser, ajouter date, contexte sourc�
 
 ## Origine réelle des fichiers de schéma
 
-Les paires [présentation](diagrams/presentation.drawio) / [SVG](diagrams/presentation.svg) et [technique](diagrams/architecture-technique.drawio) / [SVG](diagrams/architecture-technique.svg) ont une source `.drawio` qui fait foi. Chaque SVG a été exporté depuis sa source par le moteur de rendu de Draw.io 16.0.0 (page d’export `export3.html`, fonction `getSvg`), sans l’application de bureau ; seules les balises d’accessibilité `title` et `desc` ont été ajoutées après l’export. Le générateur `generate.py` est supprimé : il aurait écrasé ces fichiers. La marche à suivre est dans le [README des schémas](diagrams/README.md).
+Deux figures servent désormais des objectifs distincts : [présentation](diagrams/presentation.drawio) / [SVG](diagrams/presentation.svg) et [technique](diagrams/architecture-technique.drawio) / [SVG](diagrams/architecture-technique.svg). Les anciennes figures restent accessibles dans l’historique Git, sans suppression des preuves ni des limites techniques dans les documents.
 
-Contrôlés : XML valide, identifiants uniques, aucune référence externe ni script, rendu identique dans Chromium (thèmes clair et sombre) et dans rsvg, contrastes mesurés. Non vérifiés : la réouverture dans l’application Draw.io de bureau, l’affichage natif GitHub/Notion et la lisibilité à la taille d’insertion (texte minimal de 12,5 px à taille native). Les libellés, le fond opaque et les flèches n’autorisent aucune affirmation d’architecture personnelle déjà réalisée. Les deux SVG utilisent les mêmes identifiants internes (`svg-title`, `svg-desc`) : ils doivent rester isolés si l’on tente de les intégrer ensemble dans un même document HTML.
+**Recette graphique non terminée :** les SVG proposés utilisent la même géométrie de conception que leurs sources `.drawio`, mais **aucun export natif avec diagrams.net, ni ouverture visuelle de ces sources dans l’éditeur, n’a été contrôlé** pour cette nouvelle révision. Il reste à exporter réellement, comparer les rendus, mesurer les contrastes et contrôler la lisibilité dans GitHub et Notion. Les anciens contrôles documentés avec Draw.io 16.0.0 concernent une autre révision et ne certifient pas ces fichiers. Voir la [recette de validation](diagrams/README.md).
 
 ## Références primaires
 
