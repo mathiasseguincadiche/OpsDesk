@@ -37,7 +37,7 @@ Le défaut `ci-business.json` / `business-smoke.json` du candidat CI est conserv
 | Découvrir le projet | [README](../README.md) | Quand le périmètre ou l’état change |
 | Apprendre et comprendre | [Exercices](apprentissage/README.md) et Notion | Dans le même changement que les notions concernées, sans copier le README |
 | Connaître l’interface, les champs, les contraintes | [Contrat applicatif](contrat-applicatif.md), vérifié contre `business.py`, `web.py` et `schema.sql` | À chaque évolution de l’API |
-| Expliquer un choix durable | [Registre des décisions](architecture.md#décisions-durables-et-décisions-encore-personnelles) | Après une vraie décision ; les raisons inconnues ne sont pas inventées |
+| Expliquer un choix durable | [Registre des décisions](architecture.md#décisions-retenues) | Après une vraie décision ; les raisons inconnues ne sont pas inventées |
 | Constater un résultat | [STATUS](../STATUS.md) et [preuves](preuves.md), avec date, méthode et portée | À chaque nouveau contrôle ; un résultat périmé n’est plus présenté comme actuel |
 | Agir en incident | [Triage](reprise.md#triage-court-avant-une-reprise-personnelle) | Après chaque exercice de reprise |
 

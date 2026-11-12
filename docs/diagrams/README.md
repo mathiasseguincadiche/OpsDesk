@@ -2,19 +2,75 @@
 
 | Vue | Source modifiable | Image | Question à laquelle elle répond |
 | --- | --- | --- | --- |
-| Présentation | [presentation.drawio](presentation.drawio) | [presentation.svg](presentation.svg) | Que fait OpsDesk, et quelles phases mènent de l'application à une infrastructure exploitée ? |
-| Technique | [architecture-technique.drawio](architecture-technique.drawio) | [architecture-technique.svg](architecture-technique.svg) | Comment l'application est construite, ce qu'a montré l'essai historique et ce que le laboratoire personnel doit accueillir. |
+| Présentation | [presentation.drawio](presentation.drawio) | [presentation.svg](presentation.svg) | Que fait OpsDesk, et quelles trois phases mènent de l'application à un service livré, sauvegardé et supervisé ? |
+| Technique | [architecture-technique.drawio](architecture-technique.drawio) | [architecture-technique.svg](architecture-technique.svg) | Comment les composants sont reliés : requête, base, sondes, sauvegarde, supervision et livraison. |
 
 ## Lire les schémas
 
-- **Cadre à trait plein :** existe dans le dépôt (l'application et sa base).
-- **Cadre à points fins (technique) :** référence historique, observée hors du dépôt.
-- **Cadre ou tuile en pointillé :** à réaliser (étape du parcours en présentation, laboratoire personnel en technique). Aucun exercice n'est réalisé à ce jour (suivi Notion du 12 novembre 2026 : 36 lignes « À faire »). Une couleur seule ne dit jamais l'avancement.
-- **Pastille numérotée (présentation) :** ordre des trois phases. Le schéma technique n'en a pas : il montre des emplacements, pas une chronologie.
-- **Flèche pleine :** échange entre composants (HTTP, SQL) ou montage d'un volume.
-- **Flèche pointillée :** enchaînement ou livraison prévus.
+- **Cadre noir :** le service OpsDesk (navigateur, application, base de données).
+- **Cadre ou bloc coloré :** une phase du projet. Bleu : phase 1, livrer et conserver. Vert : phase 2, préparer et automatiser. Violet : phase 3, orchestrer et maintenir. Les pastilles P1, P2 et P3 du schéma technique reprennent ces couleurs.
+- **Flèche bleue :** la requête de l'utilisateur (HTTP, puis SQL).
+- **Flèche grise :** la livraison de l'image, la lecture des sondes et des mesures, la sauvegarde et la restauration.
+- **Pastille numérotée (technique) :** ordre de lecture de l'encadré « Comment ça fonctionne ».
+- **Flèche grise entre les phases (présentation) :** enchaînement des trois phases.
 
-Les trois phases reprennent celles du [parcours](../parcours-apprentissage.md) et de Notion : conteneurisation et livraison automatisée, infrastructure et automatisation, orchestration, observabilité et fiabilité. Le schéma technique ne décide pas de la topologie du laboratoire : la case « exécution d'OpsDesk » reste à décider à l'exercice 02. L'essai historique de la phase 1 (application et base fournies, exécutées avec Docker Compose) est décrit dans la référence historique du schéma technique. Aucun des deux schémas n'affirme un déploiement, une preuve ou une mise en production.
+Les phases reprennent celles du [parcours](../parcours-apprentissage.md). Les schémas décrivent l'architecture du projet, pas son avancement : l'avancement et le contrôle de chaque élément sont suivis dans [STATUS](../../STATUS.md) et la [feuille de route](../../ROADMAP.md).
+
+## Détail des éléments du schéma technique
+
+### Routes de l'application
+
+| Route | Rôle | Codes de réponse |
+| --- | --- | --- |
+| `GET /`, `GET /tickets`, `GET /tickets/<id>` | Pages : accueil (redirige vers la liste), liste et détail d'un ticket | 302 pour `/`, 200 sinon ; 404 si le ticket n'existe pas |
+| `POST /tickets`, `POST /tickets/<id>/status` | Formulaires : créer un ticket, changer son statut | 303 puis redirection ; 400, 404 ou 409 en cas de refus |
+| `GET /api/tickets`, `POST /api/tickets` | API JSON : lister, créer | 200 ; 201 à la création ; 400 si les données sont invalides |
+| `GET /api/tickets/<id>`, `PATCH /api/tickets/<id>` | API JSON : lire un ticket, changer son statut (le champ `status` seul) | 200 ; 400, 404 ou 409 |
+
+Le statut avance dans l'ordre `open`, `in_progress`, `closed`. Sauter une étape ou rouvrir un ticket clôturé renvoie 409. Si PostgreSQL ne répond pas, les pages et l'API renvoient 503.
+
+### Sondes
+
+| Adresse | Question posée | Réponse | Lue par |
+| --- | --- | --- | --- |
+| `/health/live` | Le programme tourne-t-il ? | 200, sans interroger la base | K3s (redémarrage si la sonde échoue) |
+| `/health/ready` | La base répond-elle ? | 200 si la lecture de `tickets` réussit, 503 sinon | K3s (retrait du trafic si la sonde échoue) |
+| `/metrics` | Quels compteurs ? | Toujours 200 : `opsdesk_http_requests_total` (méthode, route, code), `opsdesk_database_up` (1 ou 0), `opsdesk_tickets` (par statut) | Prometheus, toutes les 15 secondes |
+| `/version` | Quelle version est servie ? | 200, version et révision déclarées | Contrôle manuel |
+
+Les compteurs de requêtes sont gardés en mémoire : ils repartent de zéro à chaque redémarrage de l'application.
+
+### Table `tickets`
+
+| Colonne | Type | Règle |
+| --- | --- | --- |
+| `id` | `bigint` | Clé primaire, générée automatiquement |
+| `title` | `varchar(120)` | Obligatoire, au moins 3 caractères après suppression des espaces de bord |
+| `description` | `varchar(2000)` | Obligatoire, vide par défaut |
+| `priority` | `varchar(10)` | `low`, `normal` ou `high` ; l'application propose `normal` |
+| `status` | `varchar(20)` | `open` (défaut), `in_progress` ou `closed` |
+| `created_at` | `timestamptz` | Date de création, remplie par la base |
+| `updated_at` | `timestamptz` | Date de dernière modification, mise à jour par l'application à chaque changement de statut |
+
+### Serveurs, ports et accès
+
+| Serveur | Rôle | Port | Accessible depuis |
+| --- | --- | --- | --- |
+| `srv-app` (192.168.150.10) | Application et base avec Podman | 22 (SSH) | L'hôte seulement, par clé, sans mot de passe ni connexion root |
+| | | 8000 (application) | L'hôte et `srv-k3s` |
+| | | 5432 (base) | Non publié : seule l'application l'atteint |
+| | | 9100 (mesures du serveur) | `srv-k3s` |
+| `srv-k3s` (192.168.150.20) | K3s, Prometheus, Grafana | 80 (Traefik), 6443 (API K3s) | L'hôte |
+
+Les deux serveurs sont des machines Rocky Linux 10.2 sur le réseau privé `opsdesk-lan` (192.168.150.0/24), avec SELinux en mode Enforcing et firewalld. L'utilisateur d'administration est `mathias`. `srv-app` a 2 vCPU, 4 Go de mémoire, un disque système de 20 Go et un disque de données de 10 Go monté sur `/var/lib/opsdesk` ; `srv-k3s` a 2 vCPU, 6 Go et 30 Go.
+
+### Sauvegarde et restauration
+
+| Étape | Détail |
+| --- | --- |
+| Sauvegarde | `pg_dump` chaque nuit à 02:00, lancé par un minuteur systemd ; 7 copies gardées |
+| Copie hors du serveur | `rsync` par SSH vers `~/sauvegardes` sur l'hôte Fedora |
+| Restauration | Refaire le serveur avec Terraform et Ansible, restaurer avec `pg_restore`, puis contrôler `/health/ready` |
 
 ## Logos et pictogrammes
 
@@ -24,11 +80,9 @@ Les logos proviennent du paquet [simple-icons](https://github.com/simple-icons/s
 | --- | --- | --- |
 | Flask | `flask.svg` | #000000 |
 | PostgreSQL | `postgresql.svg` | #4169E1 |
-| Docker | `docker.svg` | #2496ED |
+| Podman | `podman.svg` | #892CA0 |
 | GitHub Actions | `githubactions.svg` | #2088FF |
-| GHCR (GitHub) | `github.svg` | #181717 |
 | Trivy | `trivy.svg` | #1904DA |
-| AWS | `amazonwebservices.svg` | #232F3E |
 | Terraform | `terraform.svg` | #844FBA |
 | Rocky Linux | `rockylinux.svg` | #10B981 |
 | Ansible | `ansible.svg` | #EE0000 |
@@ -36,25 +90,20 @@ Les logos proviennent du paquet [simple-icons](https://github.com/simple-icons/s
 | Prometheus | `prometheus.svg` | #E6522C |
 | Grafana | `grafana.svg` | #F46800 |
 | k6 | `k6.svg` | #7D64FF |
-| Fedora | `fedora.svg` | #51A2DA |
-| QEMU (pour KVM, QEMU et libvirt) | `qemu.svg` | #FF6600 |
 
-Les pictogrammes de la personne, du navigateur, du bouclier (pare-feu), des journaux, de l'alerte et du volume sont dessinés pour ce projet et suivent la licence MIT du dépôt.
+Les pictogrammes de la personne, du navigateur, du volume, du dossier, de l'horloge et de la restauration sont dessinés pour ce projet et suivent la licence MIT du dépôt.
 
 ## D'où viennent les faits
 
 | Ce que montre le schéma | Source dans le dépôt |
 | --- | --- |
-| Gunicorn sert Flask ; pages `/tickets`, API `/api/tickets` | [`app/opsdesk/web.py`](../../app/opsdesk/web.py), [`requirements.lock`](../../requirements.lock), [`docs/architecture.md`](../architecture.md) |
-| Sondes `/health/live`, `/health/ready`, `/version`, `/metrics` | [`app/opsdesk/web.py`](../../app/opsdesk/web.py) |
-| PostgreSQL, requêtes paramétrées, schéma | [`db/schema.sql`](../../db/schema.sql), [`app/opsdesk/web.py`](../../app/opsdesk/web.py) |
+| Gunicorn sert Flask ; pages et API de tickets | [`app/opsdesk/web.py`](../../app/opsdesk/web.py), [`requirements.lock`](../../requirements.lock), [`docs/architecture.md`](../architecture.md) |
+| Sondes `/health/live`, `/health/ready`, `/version`, `/metrics` et leurs réponses | [`app/opsdesk/web.py`](../../app/opsdesk/web.py) |
+| PostgreSQL, table `tickets` et ses colonnes | [`db/schema.sql`](../../db/schema.sql) |
 | Aucune authentification, données fictives | [`README.md`](../../README.md), [`docs/securite.md`](../securite.md) |
-| Essai historique : `127.0.0.1:18081` vers le port 8000, `db:5432`, volume nommé | [`docs/architecture.md`](../architecture.md), [`docs/demarrage.md`](../demarrage.md) |
-| Laboratoire prévu : Fedora 45, KVM/QEMU/libvirt, Rocky Linux 10.2 | [`ROADMAP.md`](../../ROADMAP.md), [`docs/laboratoire-fedora-kvm-rocky.md`](../laboratoire-fedora-kvm-rocky.md) |
-| AWS facultatif (budget et autorisation) | [`docs/architecture.md`](../architecture.md) |
+| Serveurs, réseau, ports, sauvegarde, supervision | Décisions du [registre d'architecture](../architecture.md#décisions-retenues) |
+| Hôte Fedora 45, KVM, libvirt, Rocky Linux 10.2 | [`ROADMAP.md`](../../ROADMAP.md), [`docs/laboratoire-fedora-kvm-rocky.md`](../laboratoire-fedora-kvm-rocky.md) |
 | Phases 1 à 3 et leurs outils | [`docs/parcours-apprentissage.md`](../parcours-apprentissage.md), [`docs/apprentissage/README.md`](../apprentissage/README.md) |
-
-Les fichiers Compose de l'essai historique ne sont pas dans le dépôt : le schéma technique les décrit d'après `docs/architecture.md` et ne prouve ni leur contenu ni leur exécution.
 
 ## Modifier et exporter
 
@@ -72,9 +121,8 @@ Réalisés le 12 novembre 2026 sur les deux schémas :
 
 - export des SVG par le moteur Draw.io 32.6.10 ; aucun `<foreignObject>` ; aucune image externe (les logos sont embarqués) ;
 - rendu par deux moteurs indépendants (Chromium et librsvg) : même figure, chaque composant affiche son icône ;
-- aucun texte ne dépasse son cadre (mesure des boîtes de texte sur le rendu Chromium) ; plus petite police : 14 px sur un canevas de 1200 px de large, soit environ 9,7 px lorsque l'image est affichée sur 830 px (largeur indicative d'un README GitHub, calculée et non mesurée dans GitHub) ;
-- navigateur en thème sombre : le fond clair du SVG est conservé et tous les logos restent lisibles ;
-- contrastes calculés : texte courant entre 6,7:1 et 16:1, titres colorés et chiffres des pastilles au moins 4,7:1 (seuil WCAG AA : 4,5:1) ;
-- fichiers XML valides ; `.drawio` ouverts dans diagrams.net (application web) en thème sombre, sans inversion de couleurs.
+- aucun texte ne dépasse son cadre sur le rendu Chromium ; plus petite police : 14 px sur un canevas de 1200 px de large, soit environ 9,7 px lorsque l'image est affichée sur 830 px (largeur indicative d'un README GitHub, calculée et non mesurée dans GitHub) ;
+- contrastes calculés : tous les textes au moins 4,75:1 (seuil WCAG AA : 4,5:1) ;
+- fichiers XML valides.
 
-Non vérifiés : affichage dans GitHub (largeur étroite, thème sombre), affichage dans Notion, ouverture dans l'application de bureau Draw.io, lisibilité de la plus petite police dans GitHub et dans Notion (calcul seulement).
+Non vérifiés : ouverture des `.drawio` dans diagrams.net (application web et application de bureau), affichage dans GitHub (largeur étroite, thème sombre) et dans Notion, lisibilité de la plus petite police dans GitHub et dans Notion (calcul seulement).
