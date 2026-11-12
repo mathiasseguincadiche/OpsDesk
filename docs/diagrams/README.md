@@ -3,17 +3,18 @@
 | Vue | Source modifiable | Image | Question à laquelle elle répond |
 | --- | --- | --- | --- |
 | Présentation | [presentation.drawio](presentation.drawio) | [presentation.svg](presentation.svg) | Que fait OpsDesk, et quelles phases mènent de l'application à une infrastructure exploitée ? |
-| Technique | [architecture-technique.drawio](architecture-technique.drawio) | [architecture-technique.svg](architecture-technique.svg) | Où se trouvent les services de l'essai historique et comment communiquent-ils ? |
+| Technique | [architecture-technique.drawio](architecture-technique.drawio) | [architecture-technique.svg](architecture-technique.svg) | Comment l'application est construite, ce qu'a montré l'essai historique et ce que le laboratoire personnel doit accueillir. |
 
-## Lire la présentation
+## Lire les schémas
 
 - **Cadre à trait plein :** existe dans le dépôt (l'application et sa base).
+- **Cadre à points fins (technique) :** référence historique, observée hors du dépôt.
 - **Cadre ou tuile en pointillé :** prévu, pas encore réalisé. Une couleur seule ne dit jamais l'avancement.
-- **Pastille numérotée :** ordre des trois phases.
-- **Flèche pleine :** échange entre composants (HTTP, SQL).
-- **Flèche pointillée :** enchaînement prévu entre étapes.
+- **Pastille numérotée (présentation) :** ordre des trois phases. Le schéma technique n'en a pas : il montre des emplacements, pas une chronologie.
+- **Flèche pleine :** échange entre composants (HTTP, SQL) ou montage d'un volume.
+- **Flèche pointillée :** enchaînement ou livraison prévus.
 
-Les trois phases reprennent celles du [parcours](../parcours-apprentissage.md) et de Notion : conteneurisation et livraison automatisée, infrastructure et automatisation, orchestration, observabilité et fiabilité. Le schéma n'affirme ni déploiement, ni preuve, ni mise en production.
+Les trois phases reprennent celles du [parcours](../parcours-apprentissage.md) et de Notion : conteneurisation et livraison automatisée, infrastructure et automatisation, orchestration, observabilité et fiabilité. Le schéma technique ne décide pas de la topologie du laboratoire : la case « exécution d'OpsDesk » reste à décider à l'exercice 02. Aucun des deux schémas n'affirme un déploiement, une preuve ou une mise en production.
 
 ## Logos et pictogrammes
 
@@ -35,8 +36,10 @@ Les logos proviennent du paquet [simple-icons](https://github.com/simple-icons/s
 | Prometheus | `prometheus.svg` | #E6522C |
 | Grafana | `grafana.svg` | #F46800 |
 | k6 | `k6.svg` | #7D64FF |
+| Fedora | `fedora.svg` | #51A2DA |
+| QEMU (pour KVM, QEMU et libvirt) | `qemu.svg` | #FF6600 |
 
-Les pictogrammes de la personne, du bouclier (durcissement), des journaux et de l'alerte sont dessinés pour ce projet et suivent la licence MIT du dépôt.
+Les pictogrammes de la personne, du navigateur, du bouclier (durcissement), des journaux, de l'alerte et du volume sont dessinés pour ce projet et suivent la licence MIT du dépôt.
 
 ## Modifier et exporter
 
@@ -44,14 +47,15 @@ Les pictogrammes de la personne, du bouclier (durcissement), des journaux et de 
 2. *Fichier → Exporter → SVG*, sans l'option « Inclure une copie de mon diagramme ».
 3. Rouvrir le SVG, ajouter `role="img"`, un `<title>` et un `<desc>`, puis vérifier le rendu.
 
-Le `.drawio` et le SVG de présentation décrivent la même figure ; le SVG a été produit à partir de la même description que le `.drawio`, pas par le menu d'export.
+Pour les deux schémas, le `.drawio` et le SVG décrivent la même figure ; le SVG a été produit à partir de la même description que le `.drawio`, pas par le menu d'export de diagrams.net.
 
 ## Contrôles
 
-Réalisés le 12 novembre 2026 sur la présentation :
+Réalisés le 12 novembre 2026 :
 
-- rendu du SVG dans Chromium : aucun texte ne dépasse son cadre (mesure des boîtes de texte) ;
-- contrastes calculés : texte courant entre 6,9:1 et 16:1, titres de phase et chiffres des pastilles au moins 4,7:1 (seuil WCAG AA : 4,5:1) ;
-- fichiers XML valides.
+- rendu des SVG dans Chromium : aucun texte ne dépasse son cadre (mesure des boîtes de texte) ;
+- contrastes calculés sur la présentation : texte courant entre 6,9:1 et 16:1, titres de phase et chiffres des pastilles au moins 4,7:1 (seuil WCAG AA : 4,5:1) ;
+- fichiers XML valides ;
+- `presentation.drawio` ouvert dans diagrams.net : rendu identique au SVG.
 
-Restent à faire : ouverture du `.drawio` dans diagrams.net, affichage dans GitHub et Notion à largeur étroite, thème sombre. Le schéma technique sera refait dans un second temps selon le même style.
+Restent à faire : ouverture de `architecture-technique.drawio` dans diagrams.net, mesure des contrastes du schéma technique, affichage dans GitHub et Notion à largeur étroite, thème sombre.
