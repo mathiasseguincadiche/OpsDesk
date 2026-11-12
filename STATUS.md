@@ -40,7 +40,7 @@ Le retrait des outils d’installation de l’image ne permet pas d’annoncer u
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| Schémas de présentation et technique | Réalisé | Vérifié en partie : export Draw.io, rouverture dans diagrams.net, thème sombre ; libellés trop petits à la largeur du README | [Fiche de contrôle](docs/diagrams/README.md#contrôles) |
+| Schémas de présentation et technique | Réalisé | Vérifié en partie : export Draw.io, rouverture dans diagrams.net, thème sombre ; plus petite police 14 px sur 1200 px de large | [Fiche de contrôle](docs/diagrams/README.md#contrôles) |
 | Affichage sur GitHub et Notion | Réalisé | Non vérifié à largeur étroite | — |
 
 ## Apprentissage
