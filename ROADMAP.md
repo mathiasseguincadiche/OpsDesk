@@ -20,7 +20,7 @@ OpsDesk est le projet fil rouge unique du parcours. L’application est fournie 
 | 12 | Diagnostiquer un cas nouveau et rétablir le service | Phase 3 | [12](docs/apprentissage/12-diagnostic.md) |
 | 13 | Refaire une tâche nouvelle et expliquer ses choix avec une aide limitée | Toutes | [13](docs/apprentissage/13-autonomie.md) |
 
-Les phases, dans l’ordre où on les construit, sont : **point de départ** (l’application et PostgreSQL tournent en local), **phase 1** préparer et automatiser (deux serveurs créés par du code, l’application dans deux conteneurs Podman), **phase 2** livrer et conserver (GitHub Actions, GHCR, analyse Trivy, sauvegarde, restauration), **phase 3** orchestrer et maintenir (K3s sur une copie d’essai de l’application, supervision, test de charge). L’ordre des exercices n’est pas strictement celui des phases : l’exercice 7 (K3s, phase 3) précède l’exercice 8 (CI/CD, phase 2). Podman fait tourner le service réel ; K3s ne le pilote pas ([Podman et K3s](docs/architecture.md#podman-et-k3s)).
+Les phases, dans l’ordre où on les construit, sont : **point de départ** (l’application et PostgreSQL tournent en local), **phase 1** préparer et automatiser (deux serveurs créés et configurés par du code, l’application dans deux conteneurs Podman), **phase 2** livrer et conserver (GitHub Actions, GHCR, analyse Trivy, déploiement par Ansible, sauvegarde, restauration), **phase 3** orchestrer et maintenir (K3s sur une copie d’essai de l’application, supervision, test de charge). L’ordre des exercices n’est pas strictement celui des phases : l’exercice 7 (K3s, phase 3) précède l’exercice 8 (CI/CD, phase 2). Podman fait tourner le service réel ; K3s ne le pilote pas ([Podman et K3s](docs/architecture.md#podman-et-k3s)).
 
 ## Principes
 

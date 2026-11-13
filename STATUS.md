@@ -1,6 +1,6 @@
 # État d’OpsDesk
 
-Dernière révision : 12 novembre 2026. Les preuves ci-dessous portent chacune leur date : aucun test, scan, machine virtuelle ou pipeline n’a été rejoué lors de cette révision.
+Dernière révision : 13 novembre 2026. Les preuves ci-dessous portent chacune leur date : aucun test, scan, machine virtuelle ou pipeline n’a été rejoué lors de cette révision.
 
 **Avancement** : Prévu, En cours, Réalisé, Abandonné. **Contrôle** : Vérifié, Échec constaté, Non vérifié. Les deux informations sont distinctes : un élément réalisé peut rester non vérifié.
 
@@ -40,7 +40,7 @@ Le retrait des outils d’installation de l’image ne permet pas d’annoncer u
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| Schémas de présentation et technique | Réalisé | Vérifié en partie : phases réordonnées par dépendance (préparer, livrer, orchestrer) le 12 novembre 2026 ; export Draw.io 32.6.10, rendu Chromium et librsvg, contrastes calculés ; plus petite police 14 px sur 1200 px de large ; ouverture dans diagrams.net, affichage GitHub et Notion, thèmes clair et sombre non revérifiés sur cette version | [Fiche de contrôle](docs/diagrams/README.md#contrôles) |
+| Schémas de présentation et technique | Réalisé | Vérifié en partie : phases réordonnées par dépendance (préparer, livrer, orchestrer) le 12 novembre 2026, schéma technique refait en architecture cible le 13 novembre 2026 ; export Draw.io 32.6.10, rendu Chromium et librsvg, contrastes calculés ; plus petite police 14 px sur 1200 px de large ; ouverture dans diagrams.net, affichage GitHub et Notion, thèmes clair et sombre non revérifiés sur cette version | [Fiche de contrôle](docs/diagrams/README.md#contrôles) |
 | Affichage sur GitHub et Notion | Réalisé | Non vérifié à largeur étroite | — |
 
 ## Apprentissage
