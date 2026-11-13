@@ -183,7 +183,28 @@ Les versions précédentes affichaient davantage de détails. Ils restent dans l
 
 ## Logos et pictogrammes
 
-Les logos et pictogrammes des deux schémas sont des images PNG intégrées aux sources `.drawio` et aux `.svg`. Leur provenance et leur licence ne sont pas vérifiées. Les marques appartiennent à leurs titulaires ; les logos servent seulement à nommer les outils. Avant toute réutilisation, les remplacer par les logos officiels de chaque outil, en SVG, avec leur source et leur version.
+Les logos et pictogrammes des deux schémas sont des images intégrées aux sources `.drawio` et aux `.svg` (PNG de 128 px, sauf le pictogramme « Entrée », en SVG).
+
+**Logos de produits (15).** Ils viennent du paquet npm [simple-icons](https://github.com/simple-icons/simple-icons) 13.21.0, dont les fichiers sont publiés sous licence CC0-1.0. Le 13 novembre 2026, chaque image intégrée a été comparée à l'icône du paquet : les formes se recouvrent à 96 % ou plus (87 % pour Podman, dont les traits sont fins) et la couleur est celle indiquée par simple-icons. Aucun fichier ne garde la trace du téléchargement d'origine : cette origine est établie par recoupement, pas par un historique.
+
+| Outil | Icône simple-icons | Schéma |
+| --- | --- | --- |
+| Flask | `flask` | présentation, technique |
+| PostgreSQL | `postgresql` | présentation, technique |
+| Ansible, Terraform, Grafana, Prometheus, k6 | `ansible`, `terraform`, `grafana`, `prometheus`, `k6` | présentation, technique |
+| GitHub Actions | `githubactions` | présentation, technique |
+| Podman, Rocky Linux, Trivy, K3s | `podman`, `rockylinux`, `trivy`, `k3s` | présentation |
+| Git, GitHub, QEMU (carte de l'hôte de virtualisation) | `git`, `github`, `qemu` | technique |
+
+**Licences et marques.** La licence CC0 couvre les fichiers de simple-icons, pas les marques ni les œuvres d'origine. Trois logos gardent une licence propre :
+
+- **Git** : CC BY 3.0, logo de Jason Long. L'attribution est exigée.
+- **Rocky Linux** : CC BY-SA 4.0, logo de la Rocky Enterprise Software Foundation. L'attribution est exigée, et une adaptation du logo se partage sous la même licence.
+- **Flask** : licence propre au projet Pallets, indiquée par simple-icons ; son texte n'a pas pu être lu le 13 novembre 2026. Les conditions d'usage de ce logo sont **NON VÉRIFIÉES**.
+
+Les autres marques appartiennent à leurs titulaires ; leurs chartes graphiques existent pour GitHub, PostgreSQL, Terraform et Trivy. Les logos servent seulement à nommer les outils, sans signifier un partenariat ni une approbation. Hors du dépôt, reprendre ces attributions ou remplacer les logos par les versions officielles, en SVG.
+
+**Pictogrammes génériques (4).** « Personne », « Entrée », « Volume » et « Restauration » sont des tracés dessinés pour le projet (grille 24 × 24, un seul tracé, couleur `#33445D`) : aucune licence tierce.
 
 ## D'où viennent les faits
 
@@ -232,4 +253,6 @@ Limites connues :
 - la première livraison n'a pas de flèche propre ;
 - le script de contrôle ne détecte pas une flèche qui s'arrête à côté de la carte qu'elle devrait viser : ce contrôle est visuel.
 
-Non vérifiés : affichage réel dans GitHub et Notion, thèmes clair et sombre, application mobile, provenance et licence des logos, libellés et textes lus un à un dans Draw.io. Ces contrôles portent sur le dessin : aucune des trois VM n'existe.
+Vérifiés le 13 novembre 2026 : affichage dans GitHub (navigateur, thèmes clair et sombre, largeur mobile émulée, sans débordement) sur la branche de la PR n° 25, et dans Notion (application de bureau, thème sombre) ; ouverture des deux sources dans Draw.io, chacune tient dans son cadre. Sur un téléphone, le texte des schémas est trop petit sans zoom.
+
+Non vérifiés : applications mobiles de GitHub et de Notion, thème clair de Notion, libellés et textes lus un à un dans Draw.io, conditions d'usage du logo Flask. Ces contrôles portent sur le dessin : aucune des trois VM n'existe.
