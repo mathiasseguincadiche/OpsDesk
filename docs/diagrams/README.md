@@ -10,7 +10,7 @@
 ### Schéma technique : trois niveaux
 
 - **En haut, la livraison :** le développeur pousse son code vers le dépôt GitHub ; le dépôt déclenche GitHub Actions, qui teste, construit, analyse avec Trivy et publie l'image sur GHCR. Publier n'est pas déployer. L'utilisateur, à droite, ouvre OpsDesk dans son navigateur.
-- **Au centre, les trois VM**, cadres noirs côte à côte. `srv-admin` (contrôle) porte Git, OpenSSH, les fichiers IaC, Terraform, Ansible et k6. `srv-k3s` (essai) fait tourner, en workloads Kubernetes, la copie d'essai (Traefik, Service, Pod, base de test), Prometheus et Grafana. `srv-app` (service principal) fait tourner les conteneurs `app` et `db` avec Podman, Quadlet et systemd, et la sauvegarde. `srv-k3s` est au centre pour que chaque flèche reste courte : `srv-admin` pilote ses deux voisines, Prometheus lit `srv-app` d'à côté. K3s ne pilote pas les conteneurs de `srv-app` ([explication](../architecture.md#podman-et-k3s)).
+- **Au centre, les trois VM**, cadres noirs côte à côte. `srv-admin` (contrôle) porte Git, OpenSSH, les fichiers IaC, Terraform, Ansible et k6. `srv-k3s` (essai) fait tourner, en workloads Kubernetes, la copie d'essai (Traefik, Service, Pod, base de test), Prometheus et Grafana. `srv-app` (service principal) fait tourner les conteneurs `app` et `db` avec Podman, Quadlet et systemd, et la sauvegarde. `srv-k3s` est au centre pour que chaque flèche reste courte : `srv-admin` pilote ses deux voisines, Prometheus lit `srv-app` d'à côté. Dans `srv-k3s`, tout ce qui est dessiné (Traefik, Service, Pod, base de test, Prometheus, Grafana) est déployé comme workloads Kubernetes ; seul K3s est installé sur la VM. K3s ne pilote pas les conteneurs de `srv-app` ([explication](../architecture.md#podman-et-k3s)). Une disposition avec `srv-app` au centre a été comparée à contenu identique et n'est pas retenue ([Contrôles](#contrôles)).
 - **En bas, l'hôte des VM**, cadre gris clair qui contient les trois VM : libvirt, que Terraform pilote pour créer les VM, et le dossier des sauvegardes hors VM. L'hôte n'est pas une VM.
 - **Cinq couleurs de flèche**, chacune avec son libellé : bleu, trafic applicatif (HTTP, SQL, chaîne Traefik, Service, Pod) ; gris foncé, pilotage et déploiement (SSH, `qemu+ssh`) ; vert, code et images (push, déclenche, publie, image tirée) ; orange, sauvegarde et restauration ; violet, observation et tests (Prometheus, Grafana, k6). Une flèche vers une VM s'arrête au bord de son cadre : elle vise la machine, pas un conteneur. Pour GHCR, la flèche suit le trajet de l'image ; c'est la VM qui la demande (pull).
 - **Cinq numéros noirs :** les grandes étapes, reprises dans l'encadré du bas avec leur phase (1 et 2 : P1 ; 3 et 4 : P2 ; 5 : P3). Les échanges permanents (HTTP, SQL, collecte des mesures) n'ont pas de numéro. Les capsules P1 à P3 sont grises : les couleurs de phase restent celles de la présentation et ne se confondent pas avec celles des flux.
@@ -22,7 +22,7 @@
 - **Bloc coloré :** une phase, dans l'ordre où on la construit. Bleu : phase 1, préparer et automatiser. Vert : phase 2, livrer et conserver. Violet : phase 3, orchestrer et maintenir.
 - **Flèche grise entre les phases :** enchaînement des trois phases.
 
-Les phases reprennent celles du [parcours](../parcours-apprentissage.md). Les schémas décrivent l'architecture cible, pas son avancement : rien n'est encore réalisé ; l'avancement est suivi dans [STATUS](../../STATUS.md) et la [feuille de route](../../ROADMAP.md).
+Les phases reprennent celles du [parcours](../parcours-apprentissage.md). Les schémas décrivent l'architecture cible, pas son avancement : l'application existe en local, l'infrastructure à trois VM reste à déployer et à valider ; l'avancement est suivi dans [STATUS](../../STATUS.md) et la [feuille de route](../../ROADMAP.md).
 
 ## Détail des éléments du schéma technique
 
@@ -82,8 +82,9 @@ Le sens va de la source, qui ouvre la connexion, à la destination. La règle fi
 | `srv-admin` | `srv-app` | HTTP, 8000 | Contrôle de `/health/ready` après un déploiement | Ansible | 8000 depuis l'hôte, `srv-admin` et `srv-k3s` |
 | Navigateur de l'hôte | `srv-app` | HTTP, 8000 | Utiliser OpsDesk | Utilisateur | Même règle 8000 |
 | Conteneur `app` | Conteneur `db` | PostgreSQL, 5432 | Requêtes SQL | Application | Port non publié hors de `srv-app` |
-| Prometheus (`srv-k3s`) | `srv-app` | HTTP, 8000 (`/metrics`) et 9100 (`node_exporter`) | Collecte toutes les 15 s | Prometheus | 8000 et 9100 depuis `srv-k3s` |
-| Prometheus | Pod OpsDesk de la copie | HTTP, 8000, dans le cluster | Collecte de la copie | Prometheus | Réseau interne du cluster |
+| Prometheus (`srv-k3s`) | `srv-app` | HTTP, 8000 (`/metrics`) et 9100 (`node_exporter`) | Collecte toutes les 15 s | Prometheus | 8000 et 9100 depuis `srv-k3s` ; la requête d'un Pod sort normalement avec l'adresse du nœud, à vérifier |
+| Prometheus | Pod OpsDesk de la copie | HTTP, 8000, dans le cluster | Collecte de la copie | Prometheus | Réseau interne du cluster ; voir la ligne suivante |
+| Pods et Services de K3s | Nœud `srv-k3s`, autres Pods | Réseaux 10.42.0.0/16 (Pods) et 10.43.0.0/16 (Services), valeurs par défaut de K3s | Trafic interne du cluster | K3s | `srv-k3s` : ces deux réseaux en zone `trusted` si firewalld est gardé (exigence de la [documentation K3s](https://docs.k3s.io/installation/requirements?os=rhel), qui recommande plutôt de l'arrêter ; ce projet ne le désactive pas) ; règles à vérifier |
 | Grafana | Prometheus | HTTP, 9090, dans le cluster | Source de données | Grafana | Réseau interne du cluster |
 | k6 (`srv-admin`) | Traefik (`srv-k3s`) | HTTP, 80 | Charge de test bornée | Développeur | 80 depuis l'hôte et `srv-admin` |
 | Hôte | `srv-k3s` | HTTPS, 6443 | API K3s (`kubectl`) | Développeur | 6443 depuis l'hôte |
@@ -91,6 +92,18 @@ Le sens va de la source, qui ouvre la connexion, à la destination. La règle fi
 | `srv-admin` | GitHub | HTTPS, 443 sortant | `git clone`, `git pull` | Développeur | Sortie par le NAT libvirt |
 | `srv-app`, `srv-k3s` | GHCR (`ghcr.io`) | HTTPS, 443 sortant | Tirer l'image | Ansible, K3s | Sortie par le NAT ; jeton de lecture si le paquet est privé |
 | GitHub Actions | GHCR | HTTPS, 443, dans le cloud | Publier l'image | Événements configurés dans les workflows | — |
+
+Le dessin montre ces flux ; il ne prouve pas qu'ils passent. Les contrôles ci-dessous sont à exécuter une fois les VM créées ; aucun ne l'a été.
+
+| Flux | Contrôle, depuis la source | Résultat attendu | Statut |
+| --- | --- | --- | --- |
+| `srv-admin` vers l'hôte | `virsh -c qemu+ssh://<utilisateur>@<adresse de l'hôte>/system list --all` | Liste des domaines libvirt | NON EXÉCUTÉ |
+| `srv-admin` vers les VM | `ansible all -m ping`, inventaire de `srv-app` et `srv-k3s` | `pong` des deux VM | NON EXÉCUTÉ |
+| `srv-admin` vers `srv-app` | `curl -fsS http://192.168.150.10:8000/health/ready` | Réponse 200 | NON EXÉCUTÉ |
+| `srv-k3s` vers `srv-app` | `curl -fsS http://192.168.150.10:8000/metrics` depuis `srv-k3s`, puis depuis un Pod temporaire | Compteurs `opsdesk_*` ; un échec depuis le Pod seul indique une règle de Pod ou de pare-feu à revoir | NON EXÉCUTÉ |
+| `srv-admin` vers Traefik | `curl -sS -o /dev/null -w '%{http_code}\n' http://192.168.150.20/` | Un code HTTP, sans erreur de connexion | NON EXÉCUTÉ |
+| `srv-app`, `srv-k3s` vers GHCR | `curl -sS -o /dev/null -w '%{http_code}\n' https://ghcr.io/v2/` | Une réponse HTTP, quel que soit le code : la sortie HTTPS et le DNS fonctionnent | NON EXÉCUTÉ |
+| Pare-feu de chaque VM | `sudo firewall-cmd --get-active-zones`, puis `--list-all` | Ports et sources conformes à la matrice | NON EXÉCUTÉ |
 
 Les flux sortants supposent la route par défaut et le DNS fournis par le réseau NAT libvirt ; ils sont à vérifier au pré-check réseau. L'utilisateur est le navigateur de l'hôte, en laboratoire : aucun accès depuis Internet n'est prévu.
 
@@ -100,7 +113,7 @@ Les flux sortants supposent la route par défaut et le DNS fournis par le résea
 | --- | --- | --- | --- | --- |
 | 1 | Développeur | `srv-admin` | SSH | Pilotage |
 | 1 | Terraform | libvirt (hôte) | qemu+ssh | Pilotage : création des VM |
-| 1, 3 | Ansible | `srv-k3s`, `srv-app` | SSH ; SSH · configure, déploie | Pilotage : configuration, puis déploiement d'une version choisie |
+| 1, 3 | Ansible | `srv-k3s`, `srv-app` | SSH | Pilotage : configuration, puis déploiement d'une version choisie |
 | 3 | Développeur | Dépôt GitHub | push | Code |
 | 3 | Dépôt GitHub | GitHub Actions | déclenche | Code |
 | 3 | GitHub Actions | GHCR | publie | Image |
@@ -116,7 +129,18 @@ Les flux sortants supposent la route par défaut et le DNS fournis par le résea
 | 5 | Grafana | Prometheus | lit | Observation |
 | 5 | k6 | Traefik | charge | Test de charge |
 
-L'étape 2, la première mise en service, n'a pas de flèche propre : Ansible, depuis `srv-admin`, envoie le code cloné sur `srv-app`, qui construit une image d'exercice avec Podman et la teste en HTTP. Cette construction sur le serveur est un exercice initial, pas la pratique à garder : ensuite, l'image vient de GHCR.
+### Première livraison et livraisons suivantes
+
+| | Première mise en service (étape 2) | Livraisons suivantes (étape 3) |
+| --- | --- | --- |
+| Origine du code livré | Sources du dépôt cloné sur `srv-admin` (`git clone` depuis GitHub, HTTPS 443) | Image publiée sur GHCR par GitHub Actions, une fois la CI verte |
+| Rôle d'Ansible, lancé à la main depuis `srv-admin` | Copie les sources sur `srv-app` | Demande à `srv-app` de tirer la version choisie |
+| Où l'image est construite | Sur `srv-app`, avec Podman : image d'exercice | Dans GitHub Actions, jamais sur un serveur |
+| Contrôle | Test HTTP de l'image d'exercice | `/health/ready` après le déploiement |
+| Statut | Chemin temporaire, tant que GHCR ne contient aucune image | Pratique normale à garder |
+| Sur le dessin | Étape 2, flèche SSH d'Ansible vers `srv-app`, carte « Git · OpenSSH : dépôt cloné » | Étape 3, flèches push, déclenche, publie, image (pull), SSH |
+
+L'étape 2 n'a pas de flèche propre : elle réutilise le lien SSH d'Ansible. Aucune des deux voies n'est exécutée.
 
 Le dessin ne montre pas : la flèche de Git vers le dépôt GitHub (le clone est écrit sur la carte) ; la lecture des sondes de la copie par K3s, écrite sur la carte du Pod ; la lecture de `node_exporter` (port 9100) ; les deux règles d'alerte ; le contrôle de `/health/ready` après un déploiement, écrit dans l'étape 3 ; la copie hors de `srv-admin` de l'état Terraform et des clés SSH ; les ports, sauf les adresses de contrôle. Ces détails sont dans les tableaux ci-dessus et dans le [registre d'architecture](../architecture.md#décisions-retenues).
 
@@ -205,15 +229,28 @@ Les deux SVG sont exportés depuis les `.drawio` par le moteur d'export de Draw.
 
 ## Contrôles
 
-Réalisés le 13 novembre 2026, après la restructuration du schéma technique (variante C, retenue après comparaison de deux maquettes complètes) et l'harmonisation de la présentation :
+Réalisés le 13 novembre 2026, après la restructuration du schéma technique (variante C, retenue après comparaison de deux maquettes complètes), puis après l'audit de la V11, qui demandait une correction ciblée et non une nouvelle refonte :
 
+- corrections de l'audit : sous-titre du schéma technique (l'application existe en local, l'infrastructure reste à déployer et à valider), phase 1 de la présentation (OpsDesk fonctionne sur `srv-app` ; la copie K3s n'arrive qu'en phase 3, qui nomme `srv-k3s`), étape 2 (sources du dépôt cloné) distinguée de l'étape 3 (images de GHCR), descriptions secondaires de `srv-admin` réduites ; Prometheus et Grafana confirmés comme workloads Kubernetes ;
+- ordre des VM : la disposition `srv-admin`, `srv-app`, `srv-k3s` a été construite avec les mêmes 102 textes, 363 mots, polices et flux, puis comparée à la disposition retenue (`srv-admin`, `srv-k3s`, `srv-app`) :
+
+| Mesure | `srv-admin`, `srv-k3s`, `srv-app` (retenue) | `srv-admin`, `srv-app`, `srv-k3s` |
+| --- | --- | --- |
+| Croisements de flèches | 0 | 5 |
+| Longueur totale des flèches | 3 404 px | 4 430 px |
+| Flèches de plus de 400 px | 1 | 2 (jusqu'à 1 032 px) |
+| Coudes | 2 | 7 |
+| Hauteur du canevas | 1 364 px | 1 424 px |
+| Textes barrés par une flèche | 0 | 3 |
+
+  Avec `srv-app` au centre, l'utilisateur doit passer au-dessus de `srv-app` (une ligne de plus) et les liens de `srv-admin` vers `srv-k3s` (SSH, charge k6) passent sous `srv-app`, en coupant la sauvegarde et la restauration. Les numéros 1, 2 et 5 du dessin et l'encadré des cinq étapes donnent l'ordre de lecture dans les deux cas ; la disposition retenue est conservée ;
 - export des SVG par le moteur Draw.io 32.6.10 ; aucun `<foreignObject>` ; logos embarqués ;
 - source `.drawio` : identifiants uniques, texte alternatif présent, aucun pointillé, aucune forme `mxgraph.*`, polices Arial et Courier New ;
-- rendu par deux moteurs indépendants (Chromium et librsvg) : écart moyen 0,36 sur 255 (technique) et 0,50 (présentation) ;
+- rendu par deux moteurs indépendants (Chromium et librsvg) : écart moyen 0,48 sur 255 (technique) et 0,62 (présentation) ;
 - aucune flèche ne croise une autre flèche ; aucune flèche ne traverse une carte qui n'est pas la sienne ; aucun texte ne chevauche une flèche, une pastille ou un autre texte (mesure sur la géométrie de la source) ;
 - plus petite police : 14 px ; canevas technique de 1600 × 1364 px ; les titres des VM font 20 px ;
 - contraste minimal calculé : 4,68:1 (technique) et 4,75:1 (présentation), seuil WCAG AA 4,5:1 ;
-- comptes du schéma technique : 104 textes et 354 mots (535 mots dans la V10), 21 flèches, 5 numéros ; une seule flèche dépasse 400 px (Ansible vers `srv-app`, sous `srv-k3s`) ;
+- comptes du schéma technique : 102 textes et 363 mots (535 mots dans la V10), 21 flèches de flux (et 5 flèches d'exemple dans la légende), 5 numéros ; une seule flèche dépasse 400 px (Ansible vers `srv-app`, sous `srv-k3s`) ;
 - rendu réduit à 880 px de large (colonne d'un README GitHub) : les trois VM, leurs rôles et les flux se lisent ; les petits textes (14 px deviennent environ 8 px) demandent un agrandissement.
 
 Non vérifiés : ouverture des `.drawio` dans diagrams.net, affichage réel dans GitHub et Notion, thèmes clair et sombre, application mobile. Ces contrôles portent sur le dessin : aucune des trois VM n'existe.
