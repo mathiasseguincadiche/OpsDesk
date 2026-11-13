@@ -26,7 +26,7 @@ Un rollback d’image remplace la version applicative ; il ne remet pas la base 
 
 Supervision minimale et contrôle métier disponibles, composant à maintenir identifié. Lire compatibilité, données durables et conditions de retour avant la maintenance. Une dépendance supposée à jour n’est pas un prérequis vérifié.
 
-Le poste de contrôle prévu est Fedora 45. Identifier la VM Rocky Linux 10.2, le composant et la version concernés par une maintenance limitée. Préparer état initial, données témoins, accès, espace, capacité de retour et risque. Aucun changement de paquets, de service ou de version n’est implicite dans la lecture de cet exercice. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
+Les opérations sont lancées depuis `srv-admin`. Identifier la VM Rocky Linux 10.2 (`srv-admin`, `srv-app` ou `srv-k3s`), le composant et la version concernés par une maintenance limitée. Préparer état initial, données témoins, accès, espace, capacité de retour et risque. Aucun changement de paquets, de service ou de version n’est implicite dans la lecture de cet exercice. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
 

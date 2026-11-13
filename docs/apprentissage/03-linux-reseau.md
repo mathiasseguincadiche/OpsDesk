@@ -26,14 +26,14 @@ Les permissions Linux déterminent quel utilisateur peut lire un fichier ou agir
 
 Architecture retenue, relue et justifiée à l’exercice 02 ; accès autorisé au PC et résultats du pré-check hôte. Vérifier la disponibilité officielle de Rocky Linux 10.2 et son média avant d’en planifier l’installation. Aucun outil de virtualisation ni VM n’est considéré prêt sans contrôle.
 
-Le pré-check de l’hôte Fedora 45 se fait sur le PC personnel, pas dans WSL ni dans une VM. La première VM cible Rocky Linux 10.2 est préparée personnellement sous KVM/QEMU/libvirt uniquement après qualification du média et des prérequis. Identifier ensuite séparément l’hôte, la VM, son utilisateur, son réseau et son stockage. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
+Le pré-check de l’hôte Fedora 45 se fait sur le PC personnel, pas dans WSL ni dans une VM. La première VM, `srv-admin`, est la seule créée à la main (les deux autres le sont depuis elle à l’exercice 04) : cette VM cible Rocky Linux 10.2 est préparée personnellement sous KVM/QEMU/libvirt uniquement après qualification du média et des prérequis. Identifier ensuite séparément l’hôte, la VM, son utilisateur, son réseau et son stockage. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
 
 Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
 
 ## Réaliser soi-même et demander un indice
 
 1. Suivre les pré-checks du guide sur le PC Fedora réel ; conserver les versions, ressources et points non vérifiés avant toute installation.
-2. Préparer personnellement la première VM après validation du média ; relever hôte, invité, utilisateur, adresse, routes, stockage et protections.
+2. Préparer personnellement `srv-admin`, la première VM, après validation du média, puis relier son accès à l’hôte et noter ce qu’il faudra copier hors de la VM ; relever hôte, invité, utilisateur, adresse, routes, stockage et protections.
 3. Vérifier séparément résolution, trajet, écoute, SSH et droits ; expliquer un refus attendu sans changer plusieurs couches ensemble.
 
 Conserver ta première proposition avant la revue. Les indices se lisent à la demande, du moins direct au plus ciblé.

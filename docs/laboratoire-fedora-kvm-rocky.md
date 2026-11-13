@@ -2,14 +2,14 @@
 
 **Document préparatoire — 4 novembre 2026.** Les procédures ci-dessous sont à réaliser personnellement par l’apprenant, sur son PC identifié. Elles n’ont pas été exécutées sur Fedora ni dans une VM. Le contenu existant des projets reste conservé ; ce guide remplace les anciennes étapes de démarrage basées sur des ZIP, un script de publication ou le laboratoire WSL.
 
-Les noms retenus pour la suite (réseau `opsdesk-lan`, utilisateur `mathias`, serveurs `srv-app` et `srv-k3s`) sont dans le [registre des décisions](architecture.md#décisions-retenues).
+Les noms retenus pour la suite (réseau `opsdesk-lan`, utilisateur `mathias`, serveurs `srv-admin`, `srv-app` et `srv-k3s`) sont dans le [registre des décisions](architecture.md#décisions-retenues).
 
-L’objectif est une première VM utilisable et comprise, puis les exercices du projet. La lecture du guide n’attribue aucun résultat personnel, niveau L0–L3 ou autonomie. Aucun Terraform, playbook Ansible, Dockerfile, fichier Quadlet, manifeste K3s ou pipeline complet n’est fourni ici.
+L’objectif est une première VM utilisable et comprise, `srv-admin`, puis deux autres VM créées depuis elle, puis les exercices du projet. La lecture du guide n’attribue aucun résultat personnel, niveau L0–L3 ou autonomie. Aucun Terraform, playbook Ansible, Dockerfile, fichier Quadlet, manifeste K3s ou pipeline complet n’est fourni ici.
 
 ## 1. Identifier les rôles avant de lancer une commande
 
-- **Fedora 45 / GNOME 51 est l’hôte physique.** Il porte le bureau, KVM, QEMU, libvirt, virt-manager et les outils de contrôle choisis.
-- **Rocky Linux 10.2 est l’invité.** Chaque VM possède son propre système, disque virtuel, utilisateur, réseau et services. Les composants applicatifs du projet y seront préparés lors des exercices correspondants.
+- **Fedora 45 / GNOME 51 est l’hôte physique.** Il porte le bureau, KVM, QEMU, libvirt et virt-manager. Terraform et Ansible ne sont pas installés sur Fedora : ils sont sur `srv-admin`.
+- **Rocky Linux 10.2 est l’invité, sur trois VM :** `srv-admin` (outils d’infrastructure), `srv-app` (application et base) et `srv-k3s` (K3s). Chaque VM possède son propre système, disque virtuel, utilisateur, réseau et services. Les composants applicatifs du projet y seront préparés lors des exercices correspondants.
 - **KVM** donne au noyau Linux l’accélération de virtualisation matérielle. **QEMU** exécute la VM et présente son matériel virtuel. **libvirt** fournit une API et gère les ressources ; **virt-manager** est son interface graphique. Un outil présent ne prouve pas que toute cette chaîne fonctionne.
 - **WSL et les conteneurs historiques sont des essais antérieurs distincts.** Un résultat Ubuntu/WSL ne valide pas Fedora 45, Rocky Linux 10.2, un réseau KVM ou les compétences de l’apprenant.
 
@@ -119,9 +119,9 @@ Le critère de réussite est une connexion de gestion **autorisée et comprise**
 
 L’observation CIM du PC sous Windows indique **Ryzen 7 7700, 8 cœurs et 16 threads et 48 Gio de RAM**. Elle ne prouve ni l’installation Fedora, ni l’accélération KVM sous Fedora. Les capacités de virtualisation signalées sous Windows/Hyper-V ne doivent pas être interprétées comme un test CPU négatif pour le futur hôte. L’espace NTFS observé n’est pas l’espace alloué au stockage Fedora.
 
-**Proposition de départ à vérifier sur l’hôte : une seule VM Rocky Linux 10.2, 2 vCPU, 4 Gio RAM et 30 Gio de disque virtuel qcow2 à allocation progressive.** Il s’agit d’une hypothèse de dimensionnement, pas d’un minimum certifié. Laisser une marge pour Fedora, les autres usages, les caches d’images, les mises à jour et la croissance des données. Contrôler le chemin du pool avant de choisir le disque.
+**Proposition de départ à vérifier sur l’hôte : trois VM Rocky Linux 10.2, soit 5 vCPU, 12 Gio de RAM et 80 Gio de disques virtuels qcow2 à allocation progressive.** `srv-admin` : 1 vCPU, 2 Gio, 20 Gio. `srv-app` : 2 vCPU, 4 Gio, 20 Gio de système et un disque de données de 10 Gio. `srv-k3s` : 2 vCPU, 6 Gio, 30 Gio. Ce sont des hypothèses de dimensionnement, pas des minimums certifiés ; `srv-admin` est à mesurer en particulier, car k6 y tourne avec un seul vCPU. Laisser une marge pour Fedora, les autres usages, les caches d’images, les mises à jour et la croissance des données. Contrôler le chemin du pool avant de choisir le disque.
 
-Une deuxième VM ne se justifie que lorsqu’un exercice demande deux cibles distinctes : promotion, reconstruction ou reprise en conservant la source. Le parcours actif OpsDesk ne requiert pas plusieurs laboratoires complets allumés simultanément. Pour K3s, prévoir plus tard son propre besoin : le minimum officiel du serveur, deux cœurs et 2 Go RAM, exclut la charge applicative. Mesurer aussi PostgreSQL, l’application et la supervision avant de choisir les ressources ; aucun cluster n’est présumé installé. [Exigences K3s](https://docs.k3s.io/installation/requirements).
+Les VM arrivent dans l’ordre des exercices : `srv-admin` d’abord (exercice 03), puis `srv-app` et `srv-k3s`, créées depuis elle (exercice 04). Il n’y a pas lieu de les allumer toutes avant d’en avoir besoin ; une reprise après panne demande en plus de conserver la source pendant la reconstruction. Pour K3s, prévoir plus tard son propre besoin : le minimum officiel du serveur, deux cœurs et 2 Go RAM, exclut la charge applicative. Mesurer aussi PostgreSQL, l’application et la supervision avant de choisir les ressources ; aucun cluster n’est présumé installé. [Exigences K3s](https://docs.k3s.io/installation/requirements).
 
 | Profil réseau à comprendre | Usage possible | Limite et décision attendue |
 |---|---|---|
@@ -155,17 +155,17 @@ Exécute chaque commande seulement si la précédente a réussi. Le fichier `roc
 
 **Portée du contrôle :** seules les métadonnées publiques de la version 10.2 ont été téléchargées et la signature du CHECKSUM vérifiée avec gpgv. Le média utilisateur n’a pas été téléchargé, son intégrité n’a pas été vérifiée et aucune VM n’a été créée. L’apprenant doit donc exécuter ses propres contrôles du média. Le guide d’installation générique Rocky consulté contient encore un exemple 10.1 ; il explique la méthode mais ne change pas notre cible 10.2. [Méthode officielle d’installation](https://docs.rockylinux.org/guides/installation/).
 
-## 5. Préparer personnellement une première VM dans virt-manager
+## 5. Préparer personnellement `srv-admin`, la première VM, dans virt-manager
 
-Cette procédure prépare le support de travail. Elle ne réalise pas l’architecture OpsDesk complète. Avant chaque validation, lire le récapitulatif et conserver ses choix :
+Cette procédure prépare le support de travail. Elle ne réalise pas l’architecture OpsDesk complète. `srv-admin` est la seule VM créée à la main : c’est elle qui portera Terraform pour créer les deux autres (décision « Amorçage de `srv-admin` » du registre). Avant chaque validation, lire le récapitulatif et conserver ses choix :
 
 1. **Choisir la connexion.** Ouvrir virt-manager et identifier la connexion QEMU/KVM système contrôlée en H08. Si les VM attendues sont absentes, vérifier `qemu:///system` contre `qemu:///session` ; ne pas les recréer pour contourner une mauvaise connexion.
-2. **Créer une nouvelle VM de laboratoire.** Donner un nom personnel explicite et vérifier qu’aucune ressource existante n’a ce nom. Sélectionner le média 10.2 dont l’intégrité vient d’être contrôlée. Si la détection du système ne connaît pas le libellé10.2, relever ce point et vérifier les capacités/osinfo ; ne pas annoncer une version 9 ou 10.1 à la place.
-3. **Affecter les ressources.** Examiner l’hypothèse 2 vCPU/4 Gio/30 Gio, les ressources libres mesurées et l’espace du pool choisi. La taille virtuelle du disque ne dispense pas de surveiller sa croissance physique. Ne choisir aucun disque physique existant à écraser.
+2. **Créer une nouvelle VM de laboratoire.** Nommer la VM `srv-admin` et vérifier qu’aucune ressource existante n’a ce nom. Sélectionner le média 10.2 dont l’intégrité vient d’être contrôlée. Si la détection du système ne connaît pas le libellé10.2, relever ce point et vérifier les capacités/osinfo ; ne pas annoncer une version 9 ou 10.1 à la place.
+3. **Affecter les ressources.** Examiner l’hypothèse 1 vCPU/2 Gio/20 Gio, les ressources libres mesurées et l’espace du pool choisi. La taille virtuelle du disque ne dispense pas de surveiller sa croissance physique. Ne choisir aucun disque physique existant à écraser.
 4. **Personnaliser avant de commencer.** Vérifier accélération KVM, CPU virtuel, disque, carte réseau et firmware proposés. Un modèle générique trop ancien peut masquer x86-64-v3. Comparer `host-model` et `host-passthrough` à partir des capacités observées ; justifier le choix et refaire le test CPU dans l’invité. Le passthrough peut limiter la portabilité vers un autre CPU. [Capacités CPU libvirt](https://www.libvirt.org/formatdomaincaps.html).
-5. **Choisir le réseau.** Utiliser le profil privé/NAT existant identifié et adapté à la phase de préparation, ou présenter un autre choix motivé. Relever le nom du réseau et la méthode d’adressage. Le nom de l’interface dans Rocky et l’adresse attribuée seront observés, pas devinés.
+5. **Choisir le réseau.** Définir à la main le réseau NAT `opsdesk-lan` (192.168.150.0/24) s’il n’existe pas, après avoir vérifié l’absence de collision avec une route locale ou VPN (H12), et y attacher `srv-admin` avec l’adresse prévue 192.168.150.5 (réservation ou configuration fixe, à choisir). Relever le nom du réseau et la méthode d’adressage ; Terraform y attachera ensuite les deux autres VM. Le nom de l’interface dans Rocky et l’adresse attribuée seront observés, pas devinés.
 6. **Installer Rocky Linux 10.2.** Choisir une installation serveur minimale pour éviter une charge graphique inutile. Vérifier dans l’installateur que le disque sélectionné est le **nouveau disque virtuel de cette VM**. Les réglages de langue, fuseau, nom d’hôte et stockage doivent être relus ; la procédure ne modifie pas les partitions du PC.
-7. **Créer un utilisateur ordinaire.** Choisir une identité personnelle avec les droits d’administration utiles. Conserver les identifiants hors Git et hors preuves publiques. Revoir un besoin sudo ne signifie pas travailler en root en permanence.
+7. **Créer un utilisateur ordinaire.** Créer l’utilisateur `mathias`, avec les droits d’administration utiles. Conserver les identifiants hors Git et hors preuves publiques. Revoir un besoin sudo ne signifie pas travailler en root en permanence.
 8. **Contrôler la première session.** Démarrer la VM et exécuter l’inventaire invité ci-dessous. Garder une console disponible avant d’adapter SSH ou le réseau. Vérifier les services réellement présents avant une activation.
 9. **Mettre à jour et qualifier.** Dans cette VM nouvellement identifiée, examiner les mises à jour et la transaction DNF, puis les appliquer personnellement à un moment choisi. Noter versions avant/après et éventuel besoin de redémarrage. Refaire les contrôles de l’invité après le redémarrage. Ne pas prétendre qu’un noyau cité dans une note de sortie est le noyau corrigé installé.
 
@@ -193,7 +193,7 @@ Pour un refus, suivre l’ordre **symptôme → observation → hypothèses → 
 
 Pour vérifier les mises à jour dans la VM identifiée, `dnf check-update` renvoie 0 si aucune mise à jour n’est proposée, 100 si des mises à jour sont disponibles, et un autre code à interpréter en cas d’erreur. Lire ensuite la transaction de `sudo dnf upgrade` avant de la confirmer ; cette opération personnelle ne doit viser que la VM choisie. Le code 100 de la consultation n’est pas un échec d’installation. [Référence DNF](https://dnf.readthedocs.io/en/latest/command_ref.html#check-update-command).
 
-Depuis Fedora, après vérification de l’empreinte et de l’adresse, la connexion s’étudie sous la forme `ssh UTILISATEUR@IP_VM_RELEVEE` : remplacer ces deux repères par le compte et l’adresse réellement observés. Un refus de connexion, un nom non résolu et un refus d’authentification sont trois symptômes différents.
+Depuis Fedora, après vérification de l’empreinte et de l’adresse, la connexion s’étudie sous la forme `ssh UTILISATEUR@IP_VM_RELEVEE` : remplacer ces deux repères par le compte et l’adresse réellement observés. Un refus de connexion, un nom non résolu et un refus d’authentification sont trois symptômes différents. Cette connexion depuis Fedora vaut pour `srv-admin` ; `srv-app` et `srv-k3s` s’atteignent depuis `srv-admin`.
 
 ### 6.1. Installer les outils de base manquants dans Rocky Linux, sans supposer leur présence
 
@@ -220,6 +220,34 @@ Vérifier à nouveau `rpm -q`, `python3 --version`, `getenforce`, `systemctl is-
 
 Les outils propres à chaque exercice (Terraform/provider, Ansible/collections, moteurs de conteneurs, K3s, CI, Prometheus/Grafana, sauvegarde) seront installés et validés **au module qui les utilise**, après sélection des versions compatibles. Pour chaque outil, suivre le même ordre : *vérifier la présence → expliquer l'utilité → préparer sources et dépendances → installer si nécessaire → vérifier la version et le fonctionnement → diagnostiquer → noter les preuves personnelles*. Ce guide n'affirme aucune installation déjà réussie sur la VM de l’apprenant.
 
+### 6.2. Installer les outils de chaque VM, sans supposer leur présence
+
+**Pourquoi ?** Chaque VM reçoit seulement les outils de son rôle. Le tableau donne l’affectation retenue ; il ne présume aucune installation et ne fixe aucune version. Rien de ce qui suit n’est installé à ce jour.
+
+| VM | Outils prévus | Module | À vérifier avant d’installer |
+|---|---|---|---|
+| `srv-admin` | OpenSSH (serveur et clé), Git, client libvirt (`virsh`) pour tester la liaison à l’hôte | 03 | Paquets présents ; clé d’hôte ; accès au dépôt GitHub en lecture |
+| `srv-admin` | Terraform et fournisseur `dmacvicar/libvirt` | 04 | Paquet ou dépôt HashiCorp pour Rocky Linux 10.2 : non vérifié ; version du fournisseur (la branche 0.9 est une réécriture de 0.8) |
+| `srv-admin` | `ansible-core` | 05 | Python système 3.12 ; paquet proposé par les dépôts de Rocky Linux 10.2 : non vérifié ; collections nécessaires |
+| `srv-admin` | k6 | 09 | Source du paquet ou du binaire : non vérifiée ; un seul vCPU borne la charge |
+| `srv-app` | Podman avec Quadlet et systemd, `rsync`, `node_exporter`, `pg_dump` (dans le conteneur `db` ou par un client PostgreSQL 17, à décider) | 06, 09, 11 | Podman annoncé en 5.8.2 dans Rocky Linux 10.2 ; mode root ou rootless à décider ; SELinux sur `/var/lib/opsdesk` |
+| `srv-k3s` | K3s et `node_exporter` ; Prometheus, Grafana et la copie d’essai s’installent dans K3s | 07, 09 | `kernel-modules-extra`, SELinux, ports (section 7) |
+
+Pour chacun : vérifier la présence, lire la transaction, installer personnellement au module concerné, relever la version, noter la preuve.
+
+### 6.3. Relier `srv-admin` à l’hôte (libvirt distant)
+
+Terraform, sur `srv-admin`, ne voit pas libvirt directement : le fournisseur `dmacvicar/libvirt` documente des URI distantes de la forme `qemu+ssh://UTILISATEUR@HOTE/system`, avec un fichier de clé et un fichier d’hôtes connus ([provider](https://github.com/dmacvicar/terraform-provider-libvirt)). Cette liaison n’a été ni exécutée ni validée. Le test de principe, depuis `srv-admin`, est en lecture seule :
+
+```bash
+# OBSERVATION — sur srv-admin ; NON EXÉCUTÉ. Remplacer UTILISATEUR et HOTE par les valeurs relevées.
+virsh --readonly --connect 'qemu+ssh://UTILISATEUR@HOTE/system' list --all
+```
+
+À relever sans le présumer : sshd actif sur Fedora et port 22 de l’hôte ouvert à 192.168.150.5 seulement ; clé dédiée à cet usage ; droits libvirt de l’utilisateur ; présence sur l’hôte de l’assistant distant de libvirt. **Risque :** cette liaison donne à `srv-admin` un large pouvoir sur les VM de l’hôte ; elle est retenue pour le laboratoire et à relire (registre, décision « Terraform et Ansible »). En cas d’échec, ne pas élargir les droits de l’hôte pour faire disparaître l’erreur ; conserver le message.
+
+La copie des sauvegardes va dans l’autre sens : `srv-app` se connecte à l’hôte (port 22) avec une clé dédiée à ce seul dépôt de copie, à définir à l’exercice 11.
+
 ## 7. Vérifier la compatibilité au moment du module concerné
 
 Ce tableau conserve les technologies choisies. Il ne transforme pas une disponibilité documentaire en logiciel déjà installé ou en compatibilité entièrement testée.
@@ -228,12 +256,13 @@ Ce tableau conserve les technologies choisies. Il ne transforme pas une disponib
 |---|---|---|
 | Fedora 45/KVM/QEMU/libvirt | Paquets officiels Fedora 45 disponibles ; libvirt propose les sockets modulaires | Relever versions RPM, mode des unités, accès autorisé, capacités et test invité. Combinaison complète **NON EXÉCUTÉE** ici |
 | Rocky Linux 10.2 | Média exact disponible ; baseline Rocky 10 x86-64-v3 ; noyau de la famille 6.12 | Contrôler signature, somme du propre ISO, CPU invité, noyau et mises à jour. Aucun résultat Windows/WSL transféré |
-| Docker Engine — OpsDesk | Docker documente RHEL 10 et CentOS Stream 10 ; sa page précise que les dérivés ne sont pas vérifiés par Docker | Compatibilité exacte Rocky Linux 10.2 **PARTIELLE**. Contrôler dépôt/versions, conflits éventuels dont podman-docker, réseau, SELinux, DB et parcours métier avant de recevoir le module. Ne pas remplacer Docker par Podman à l’insu de l’apprenant. [Plateformes](https://docs.docker.com/engine/install/), [RHEL](https://docs.docker.com/engine/install/rhel/) |
-| Podman — variante à évaluer séparément (hors parcours prioritaire) | Podman 5.8.2 est publié dans Rocky Linux 10.2 ; documentation rootless correspondante disponible | Vérifier `podman --version`, `podman info`, identité sans sudo, `/etc/subuid`/`subgid`, cgroups et stockage local. Les conteneurs root et utilisateur sont distincts. Aucun alias docker=podman. [Manuel5.8.2](https://docs.podman.io/en/v5.8.2/markdown/podman.1.html) |
-| Terraform | CLI Linux proposée officiellement ; provider KVM `dmacvicar/libvirt` communautaire ; la branche 0.9 est une réécriture de 0.8 | Choisir/verrouiller CLI et provider, lire leur schéma et le plan. `terraform_data` historique ne provisionne aucune VM. Aucun apply exécuté et aucun HCL final livré. [CLI](https://developer.hashicorp.com/terraform/install), [provider](https://github.com/dmacvicar/terraform-provider-libvirt) |
-| Ansible | Fedora 45 utilise Python 3.15. La matrice core 2.21 ne couvre que Python contrôleur 3.12–3.14 ; la série 2.22 couvre contrôleur 3.13–3.15 et cibles 3.9–3.15 | Vérifier `python3 --version`, `ansible --version`, `rpm -q ansible-core` et le dépôt du paquet choisi. Les index Fedora consultés distinguent des builds bêtas et les canaux stable/testing ; leurs instantanés diffèrent. Vérifier le paquet réellement proposé et ne pas présumer une version finale déjà stable, ni activer testing automatiquement. Choisir une combinaison publiée et prise en charge, ou un environnement de contrôle Python compatible, puis qualifier collections/SSH/idempotence ; aucune compatibilité locale présumée. [Paquet Fedora](https://packages.fedoraproject.org/pkgs/ansible-core/ansible-core/), [matrice 2.22](https://docs.ansible.com/projects/ansible-core/2.22/reference_appendices/release_and_maintenance.html) |
+| Docker Engine — référence historique | L’essai historique employait Docker ; Docker documente RHEL 10 et CentOS Stream 10 et précise que les dérivés ne sont pas vérifiés par lui | Plus la cible depuis la décision Podman du 12 novembre 2026 : ne pas l’installer sur `srv-app`. [Plateformes](https://docs.docker.com/engine/install/), [RHEL](https://docs.docker.com/engine/install/rhel/) |
+| Podman — cible sur `srv-app` (décision du 12 novembre 2026) | Podman 5.8.2 est publié dans Rocky Linux 10.2 ; documentation rootless correspondante disponible | Vérifier `podman --version`, `podman info`, identité sans sudo, `/etc/subuid`/`subgid`, cgroups et stockage local. Les conteneurs root et utilisateur sont distincts. Aucun alias docker=podman. [Manuel5.8.2](https://docs.podman.io/en/v5.8.2/markdown/podman.1.html) |
+| Terraform | CLI Linux proposée officiellement ; provider KVM `dmacvicar/libvirt` communautaire ; la branche 0.9 est une réécriture de 0.8 | Installé sur `srv-admin`, pas sur l’hôte. Choisir/verrouiller CLI et provider, lire leur schéma et le plan ; l’accès à libvirt par `qemu+ssh` reste à valider (section 6.3). `terraform_data` historique ne provisionne aucune VM. Aucun apply exécuté et aucun HCL final livré. [CLI](https://developer.hashicorp.com/terraform/install), [provider](https://github.com/dmacvicar/terraform-provider-libvirt) |
+| Ansible | Contrôleur : `srv-admin` (Rocky Linux 10.2, Python système 3.12) ; cibles : `srv-app` et `srv-k3s`. La matrice core 2.21 couvre un Python contrôleur 3.12–3.14 ; la série 2.22 couvre contrôleur 3.13–3.15 et cibles 3.9–3.15 | Vérifier `python3 --version`, `ansible --version`, `rpm -q ansible-core` et le dépôt du paquet choisi sur `srv-admin` ; le Python 3.15 de Fedora 45 ne concerne plus le contrôleur. Ne pas présumer une version finale ni une compatibilité Python : choisir une combinaison publiée et prise en charge, puis qualifier collections, SSH et idempotence. [Matrice 2.22](https://docs.ansible.com/projects/ansible-core/2.22/reference_appendices/release_and_maintenance.html) |
+| k6 | Paquet ou binaire pour Rocky Linux 10.2 : **non vérifié** dans les sources consultées | Choisir la source, vérifier signature et version avant d’installer sur `srv-admin` ; ne pas exécuter un script distant sans l’avoir lu ; charge bornée par un seul vCPU |
 | K3s | Exigences RHEL 10 documentées, dont `kernel-modules-extra` ; ressources minimales hors charges applicatives ; politiques SELinux nécessaires | Choisir une version, vérifier modules/noyau, politique et ports du mode réseau retenu. Les exemples de politique el9 et anciens correctifs RHEL < 8.4 ne sont pas automatiquement des étapes Rocky Linux 10.2. Conserver firewalld avec des règles ciblées ; aucun cluster présumé. Compatibilité exacte **PARTIELLE**, installation **NON EXÉCUTÉE**. [Prérequis](https://docs.k3s.io/installation/requirements), [SELinux](https://docs.k3s.io/advanced) |
-| BorgBackup | Paquet 1.4.5 disponible dans EPEL 10.2 et méthode d’installation documentée | Vérifier dépôt choisi, version et compatibilité des archives. Le dépôt EPEL n’est pas supposé activé. Créer sauvegarde et reprise sera un exercice de l’apprenant, pas une commande de préparation générale. [Paquet](https://packages.fedoraproject.org/pkgs/borgbackup/borgbackup/), [amont](https://borgbackup.readthedocs.io/en/stable/installation.html) |
+| BorgBackup — non retenu pour OpsDesk (la sauvegarde est `pg_dump` et `rsync`, décision du 12 novembre 2026) | Paquet 1.4.5 disponible dans EPEL 10.2 et méthode d’installation documentée | Vérifier dépôt choisi, version et compatibilité des archives. Le dépôt EPEL n’est pas supposé activé. Créer sauvegarde et reprise sera un exercice de l’apprenant, pas une commande de préparation générale. [Paquet](https://packages.fedoraproject.org/pkgs/borgbackup/borgbackup/), [amont](https://borgbackup.readthedocs.io/en/stable/installation.html) |
 | Application/Python/PostgreSQL | Contrat : OpsDesk testé avec Python 3.14.10 ; PostgreSQL 17.11 utilisé dans les essais historiques | La disponibilité Python 3.12/3.14 ou PostgreSQL 18 dans Rocky ne prouve pas la réception de l’application sur ces combinaisons. Conserver les versions du contrat ou faire qualifier explicitement un changement ; pas d’upgrade majeur DB implicite |
 
 Une réserve spécifique est conservée pour K3s : dans [l’installateur amont inspecté à un commit figé](https://github.com/k3s-io/k3s/blob/2b723db54007ab1509fc86ee2712ecc93cc49843/install.sh#L621), Rocky 10.2 passe dans la sélection par défaut `el9` pour la politique SELinux. C’est une lecture de source, pas une preuve d’incompatibilité du paquet ni un test d’installation. Avant d’exécuter ce module, vérifier la version choisie et une politique effectivement applicable à Rocky 10.2 ; à défaut, reporter cette installation en NON EXÉCUTÉ plutôt que désactiver SELinux ou remplacer la distribution.
@@ -246,15 +275,17 @@ Remplis personnellement une ligne de preuve pour chacun des contrôles utiles : 
 
 | Contrôle de réception | Ce qu’il doit démontrer | Résultat personnel à renseigner |
 |---|---|---|
-| Identité | Hôte Fedora 45 et invité Rocky Linux 10.2 correctement distingués ; VM et utilisateur nommés | NON EXÉCUTÉ |
+| Identité | Hôte Fedora 45 et invité Rocky Linux 10.2 correctement distingués ; trois VM et utilisateur nommés | NON EXÉCUTÉ |
 | Accélération et CPU | KVM utilisable ; CPU virtuel réellement compatible avec x86-64-v3 | NON EXÉCUTÉ |
 | Démarrage | Premier démarrage puis redémarrage personnel de la nouvelle VM à un moment choisi ; accès retrouvé sans modifier une source existante | NON EXÉCUTÉ |
 | Réseau | Adresse, route et flux hôte↔VM conformes au réseau choisi ; DNS seulement lorsqu’il est attendu | NON EXÉCUTÉ |
 | SSH et droits | Empreinte de cible contrôlée ; utilisateur prévu connecté depuis Fedora ; sudo justifié | NON EXÉCUTÉ |
+| Administration | `srv-admin` atteinte depuis l’hôte ; `srv-app` et `srv-k3s` atteintes depuis `srv-admin` seulement ; liaison `qemu+ssh` vers libvirt testée en lecture seule | NON EXÉCUTÉ |
 | Sécurité | SELinux et pare-feu actifs ; règles adaptées au seul besoin, refus interprétés si rencontrés | NON EXÉCUTÉ |
 | Ressources | RAM, stockage et charge suffisants pour ce qui est effectivement lancé ; marge notée | NON EXÉCUTÉ |
 | Versions | Outils installés et applicatifs prévus relevés séparément ; compatibilités restantes déclarées | NON EXÉCUTÉ |
 | Reconstruction | Méthode documentée puis reproduite, lorsqu’autorisé, sur une seconde cible distincte, avec source conservée ; mêmes contrôles d’accès et de système | NON EXÉCUTÉ |
+| Reprise de `srv-admin` | État Terraform et clés SSH copiés hors de la VM ; refaire `srv-admin` à la main d’après la procédure, puis relire le plan Terraform avant tout apply | NON EXÉCUTÉ |
 | Réception métier | Plus tard seulement : service et données fictives du projet contrôlés selon son contrat, au-delà d’un HTTP 200 ou d’un processus vivant | NON EXÉCUTÉ |
 
 Un état reproductible commence par tes notes du média, versions, paramètres de VM, réseau, utilisateur, paquets et contrôles. Certains journaux de l’installateur et fichiers Kickstart peuvent contenir des secrets ou hashes de mots de passe : conserver le nécessaire en privé, ne pas les publier bruts. L’automatisation complète de cette reconstruction viendra dans tes modules Terraform/Ansible.
@@ -277,4 +308,4 @@ AWS et les objectifs cloud utiles sont conservés séparément. Ils ne sont pas 
 
 La procédure et les compatibilités documentaires sont préparées ; les contrôles du PC Fedora et de la première VM restent **NON EXÉCUTÉS**. La seule vérification technique de cette préparation concerne la signature de métadonnées publiques Rocky Linux 10.2, dans un contexte historique distinct.
 
-Pour la séance de préparation, l’apprenant identifiera d’abord Fedora et les ressources, exécutera les pré-checks et expliquera les écarts avant toute modification. Les observations peuvent ensuite être relues avec une aide ciblée sur le point de blocage. Ensuite seulement, l’apprenant créera personnellement la VM et en apportera les preuves. La présence de ce document, d’un fichier de configuration ou d’une application fournie ne valide aucune compétence personnelle.
+Pour la séance de préparation, l’apprenant identifiera d’abord Fedora et les ressources, exécutera les pré-checks et expliquera les écarts avant toute modification. Les observations peuvent ensuite être relues avec une aide ciblée sur le point de blocage. Ensuite seulement, l’apprenant créera personnellement `srv-admin` et en apportera les preuves ; `srv-app` et `srv-k3s` seront créées depuis elle. La présence de ce document, d’un fichier de configuration ou d’une application fournie ne valide aucune compétence personnelle.
