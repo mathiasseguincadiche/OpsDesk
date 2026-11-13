@@ -6,7 +6,7 @@
 | Python, Flask/Jinja, psycopg, Gunicorn, PostgreSQL | Composants tiers, sous leurs propres licences ; la licence MIT du dépôt ne les remplace pas | Dépendances de l’application |
 | Anciennes recettes conteneurs, Terraform, Ansible, K3s, CI, reprise | Générées avec l’aide d’un assistant d’IA, puis partiellement essayées | Références historiques, à comparer après une tentative personnelle |
 | Énoncés, indices, corrigés, évaluations | Préparés avec l’aide d’un assistant d’IA | Aide progressive ; aucun niveau personnel attribué |
-| Schémas | Dessinés pour le projet ; logos du paquet simple-icons (licence CC0) | Voir [`diagrams/README.md`](diagrams/README.md) |
+| Schémas | Dessinés pour le projet ; logos en images PNG dont la provenance et la licence ne sont pas vérifiées | Voir [`diagrams/README.md`](diagrams/README.md#logos-et-pictogrammes) |
 | Infrastructure cible et opérations | À concevoir, écrire, exécuter et expliquer par l’apprenant | Réalisation personnelle à prouver |
 
 Un essai historique ou un PASS n’est pas une réalisation personnelle. Le détail des preuves est dans [STATUS](../STATUS.md) et [preuves](preuves.md).

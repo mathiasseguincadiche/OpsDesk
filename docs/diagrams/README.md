@@ -7,20 +7,25 @@
 
 ## Lire les schémas
 
-### Schéma technique : trois niveaux
+### Schéma technique : trois zones
 
-- **En haut, la livraison :** le développeur pousse son code vers le dépôt GitHub ; le dépôt déclenche GitHub Actions, qui teste, construit, analyse avec Trivy et publie l'image sur GHCR. Publier n'est pas déployer. L'utilisateur, à droite, ouvre OpsDesk dans son navigateur.
-- **Au centre, les trois VM**, cadres noirs côte à côte. `srv-admin` (contrôle) porte Git, OpenSSH, les fichiers IaC, Terraform, Ansible et k6. `srv-k3s` (essai) fait tourner, en workloads Kubernetes, la copie d'essai (Traefik, Service, Pod, base de test), Prometheus et Grafana. `srv-app` (service principal) fait tourner les conteneurs `app` et `db` avec Podman, Quadlet et systemd, et la sauvegarde. `srv-k3s` est au centre pour que chaque flèche reste courte : `srv-admin` pilote ses deux voisines, Prometheus lit `srv-app` d'à côté. Dans `srv-k3s`, tout ce qui est dessiné (Traefik, Service, Pod, base de test, Prometheus, Grafana) est déployé comme workloads Kubernetes ; seul K3s est installé sur la VM. K3s ne pilote pas les conteneurs de `srv-app` ([explication](../architecture.md#podman-et-k3s)). Une disposition avec `srv-app` au centre a été comparée à contenu identique et n'est pas retenue ([Contrôles](#contrôles)).
-- **En bas, l'hôte des VM**, cadre gris clair qui contient les trois VM : libvirt, que Terraform pilote pour créer les VM, et le dossier des sauvegardes hors VM. L'hôte n'est pas une VM.
-- **Cinq couleurs de flèche**, chacune avec son libellé : bleu, trafic applicatif (HTTP, SQL, chaîne Traefik, Service, Pod) ; gris foncé, pilotage et déploiement (SSH, `qemu+ssh`) ; vert, code et images (push, déclenche, publie, image tirée) ; orange, sauvegarde et restauration ; violet, observation et tests (Prometheus, Grafana, k6). Une flèche vers une VM s'arrête au bord de son cadre : elle vise la machine, pas un conteneur. Pour GHCR, la flèche suit le trajet de l'image ; c'est la VM qui la demande (pull).
-- **Cinq numéros noirs :** les grandes étapes, reprises dans l'encadré du bas avec leur phase (1 et 2 : P1 ; 3 et 4 : P2 ; 5 : P3). Les échanges permanents (HTTP, SQL, collecte des mesures) n'ont pas de numéro. Les capsules P1 à P3 sont grises : les couleurs de phase restent celles de la présentation et ne se confondent pas avec celles des flux.
-- **Capsule violette en police à chasse fixe :** une adresse de contrôle de l'application (`/health/live`, `/health/ready`, `/metrics`).
+Le schéma se lit de haut en bas, sans ordre chronologique : ce n'est pas une procédure. Une fois l'infrastructure préparée, une mise à jour de l'application passe par GitHub, la CI, GHCR et Ansible, sans recréer de VM.
+
+- **Code et livraison (en haut) :** le développeur pousse son code vers le dépôt GitHub (`push`), qui déclenche GitHub Actions (`CI`) ; Actions teste, construit, analyse avec Trivy et publie les images versionnées sur GHCR. Publier n'est pas déployer. Une ligne sous la chaîne rappelle les deux voies : première livraison (sources clonées sur `srv-admin`, première image construite sur `srv-app`), puis versions suivantes (publiées par la CI, déployées par Ansible à la demande).
+- **Infrastructure et responsabilités (au milieu) :** trois VM Rocky Linux 10.2, de gauche à droite : `srv-admin` (piloter), `srv-app` (exécuter), `srv-k3s` (orchestrer).
+  - `srv-admin`, installée à la main une fois, porte Terraform, Ansible, Git avec OpenSSH et k6. Elle administre les deux autres : Ansible par SSH (liaison du haut), Terraform vers libvirt sur l'hôte (liaison du bas).
+  - `srv-app` exécute avec Podman, Quadlet et systemd, derrière un point d'entrée HTTP du réseau privé du laboratoire, OpsDesk (Flask et Gunicorn, adresses `/health/live`, `/health/ready`, `/metrics`) et PostgreSQL 17 sur un volume persistant. Elle porte aussi la sauvegarde de la base.
+  - `srv-k3s` fait tourner, sur un seul nœud K3s, une copie d'essai (Traefik, Service, Pod OpsDesk, base PostgreSQL de test aux données fictives), ainsi que Prometheus et Grafana. Tout ce qui est dessiné dans `srv-k3s` est déployé comme workload Kubernetes ; seul K3s est installé sur la VM. K3s ne pilote pas les conteneurs de `srv-app` ([explication](../architecture.md#podman-et-k3s)).
+- **Ressources extérieures et liaisons clés (en bas) :** l'hôte de virtualisation (libvirt), que Terraform utilise pour créer `srv-app` et `srv-k3s` ; les sauvegardes hors VM, stockées sur l'hôte physique ; un rappel des communications entre environnements. L'hôte n'est pas une VM.
+- **Cinq couleurs de flèche**, expliquées par la légende du bas : bleu, trafic applicatif (HTTP, SQL, chaîne Traefik, Service, Pod) ; gris foncé, administration (SSH, `qemu+ssh`) ; vert, code et images (push, CI, publie, images récupérées depuis GHCR) ; orange, sauvegarde et restauration ; violet, observabilité (Prometheus, Grafana). Une flèche vers une VM s'arrête au bord de son cadre : elle vise la machine. Les flèches `/metrics` aboutissent sur la carte OpsDesk de `srv-app` et sur le Pod de la copie. Un seul croisement (SSH et images GHCR) est marqué par un saut d'arc.
+- **Pastilles violettes :** adresses de contrôle de l'application.
+- **Badge « Cible • à déployer » :** l'architecture est décrite, aucune des trois VM n'existe.
 
 ### Schéma de présentation
 
-- **Cadre noir :** le service OpsDesk (utilisateur, application, base de données).
-- **Bloc coloré :** une phase, dans l'ordre où on la construit. Bleu : phase 1, préparer et automatiser. Vert : phase 2, livrer et conserver. Violet : phase 3, orchestrer et maintenir.
-- **Flèche grise entre les phases :** enchaînement des trois phases.
+- **Haut, « Le service » :** l'utilisateur appelle OpsDesk (Flask et Gunicorn), qui conserve les tickets dans PostgreSQL ; les flèches `HTTP` et `SQL` le montrent. La ligne sous le bloc précise : service pédagogique en laboratoire local, données fictives, sans authentification, non exposé publiquement.
+- **Bas, « Le parcours » :** trois blocs de phase, lus de gauche à droite dans l'ordre où on les construit. Bleu, P1 préparer et automatiser (Rocky Linux, Terraform, Ansible, Podman) ; vert, P2 livrer et conserver (GitHub Actions, Trivy, sauvegarde, restauration) ; violet, P3 orchestrer et maintenir (K3s, Prometheus, Grafana, k6). Chaque bloc se termine par un « résultat attendu », jamais par un résultat obtenu.
+- **Flèches grises entre les phases :** enchaînement des trois phases.
 
 Les phases reprennent celles du [parcours](../parcours-apprentissage.md). Les schémas décrivent l'architecture cible, pas son avancement : l'application existe en local, l'infrastructure à trois VM reste à déployer et à valider ; l'avancement est suivi dans [STATUS](../../STATUS.md) et la [feuille de route](../../ROADMAP.md).
 
@@ -109,44 +114,43 @@ Les flux sortants supposent la route par défaut et le DNS fournis par le résea
 
 ### Flux du schéma technique
 
-| Étape | De | Vers | Libellé | Type |
-| --- | --- | --- | --- | --- |
-| 1 | Développeur | `srv-admin` | SSH | Pilotage |
-| 1 | Terraform | libvirt (hôte) | qemu+ssh | Pilotage : création des VM |
-| 1, 3 | Ansible | `srv-k3s`, `srv-app` | SSH | Pilotage : configuration, puis déploiement d'une version choisie |
-| 3 | Développeur | Dépôt GitHub | push | Code |
-| 3 | Dépôt GitHub | GitHub Actions | déclenche | Code |
-| 3 | GitHub Actions | GHCR | publie | Image |
-| 3, 5 | GHCR | `srv-app`, `srv-k3s` | image (pull) | Image tirée par la VM |
-| — | Utilisateur | OpsDesk | HTTP | Trafic applicatif permanent |
-| — | OpsDesk | PostgreSQL 17 | SQL | Trafic applicatif permanent |
-| 4 | PostgreSQL 17 | Sauvegarde | pg_dump | Sauvegarde |
-| 4 | Sauvegarde | Sauvegardes hors VM | rsync, SSH | Sauvegarde |
-| 4 | Sauvegardes hors VM | PostgreSQL 17 | pg_restore | Restauration des données |
-| 5 | Traefik, Service | Pod OpsDesk | (sans libellé) | Trafic de la copie |
-| 5 | Pod OpsDesk | PostgreSQL test | SQL | Trafic de la copie |
-| 5 | Prometheus | OpsDesk (`srv-app`), Pod OpsDesk | lit /metrics, lit | Observation |
-| 5 | Grafana | Prometheus | lit | Observation |
-| 5 | k6 | Traefik | charge | Test de charge |
+| De | Vers | Libellé | Type |
+| --- | --- | --- | --- |
+| Développement | Dépôt GitHub | push | Code |
+| Dépôt GitHub | GitHub Actions | CI | Code |
+| GitHub Actions | GHCR | publie | Image |
+| GHCR | `srv-app`, `srv-k3s` | Images OCI récupérées depuis GHCR | Image tirée par chaque VM |
+| `srv-admin` | `srv-app`, `srv-k3s` | SSH | Administration : Ansible configure, puis déploie une version choisie |
+| `srv-admin` (Terraform) | Hôte libvirt | qemu+ssh • crée 2 VM | Administration : création des VM |
+| Point d'entrée HTTP | OpsDesk | (sans libellé) | Trafic applicatif |
+| OpsDesk | PostgreSQL 17 | SQL | Trafic applicatif |
+| `srv-app` | Sauvegardes hors VM | copie | Sauvegarde |
+| Sauvegardes hors VM | `srv-app` | pg_restore → PostgreSQL | Restauration des données |
+| Traefik, Service | Pod OpsDesk | (sans libellé) | Trafic de la copie |
+| Pod OpsDesk | PostgreSQL test | SQL | Trafic de la copie |
+| Prometheus | OpsDesk (`srv-app`), Pod OpsDesk | /metrics | Observation |
+| Grafana | Prometheus | interroge | Observation |
 
 ### Première livraison et livraisons suivantes
 
-| | Première mise en service (étape 2) | Livraisons suivantes (étape 3) |
+Chemin de la première livraison : dépôt source → `srv-admin` → transfert par Ansible → `srv-app` → construction initiale de l'image.
+
+| | Première mise en service (P1) | Livraisons suivantes (P2) |
 | --- | --- | --- |
 | Origine du code livré | Sources du dépôt cloné sur `srv-admin` (`git clone` depuis GitHub, HTTPS 443) | Image publiée sur GHCR par GitHub Actions, une fois la CI verte |
 | Rôle d'Ansible, lancé à la main depuis `srv-admin` | Copie les sources sur `srv-app` | Demande à `srv-app` de tirer la version choisie |
 | Où l'image est construite | Sur `srv-app`, avec Podman : image d'exercice | Dans GitHub Actions, jamais sur un serveur |
 | Contrôle | Test HTTP de l'image d'exercice | `/health/ready` après le déploiement |
 | Statut | Chemin temporaire, tant que GHCR ne contient aucune image | Pratique normale à garder |
-| Sur le dessin | Étape 2, flèche SSH d'Ansible vers `srv-app`, carte « Git · OpenSSH : dépôt cloné » | Étape 3, flèches push, déclenche, publie, image (pull), SSH |
+| Sur le dessin | Texte sous la chaîne GitHub : « P1 : sources clonées sur `srv-admin` → première image sur `srv-app` » ; la liaison SSH d'Ansible est la seule liaison dessinée entre les deux VM | Flèches push, CI, publie, images récupérées depuis GHCR et SSH ; texte « P2 : la CI publie les versions suivantes ; Ansible déploie à la demande » |
 
-L'étape 2 n'a pas de flèche propre : elle réutilise le lien SSH d'Ansible. Aucune des deux voies n'est exécutée.
+La première livraison n'a pas de flèche propre : elle n'apparaît que dans le texte sous la chaîne GitHub. Aucune des deux voies n'est exécutée.
 
-Le dessin ne montre pas : la flèche de Git vers le dépôt GitHub (le clone est écrit sur la carte) ; la lecture des sondes de la copie par K3s, écrite sur la carte du Pod ; la lecture de `node_exporter` (port 9100) ; les deux règles d'alerte ; le contrôle de `/health/ready` après un déploiement, écrit dans l'étape 3 ; la copie hors de `srv-admin` de l'état Terraform et des clés SSH ; les ports, sauf les adresses de contrôle. Ces détails sont dans les tableaux ci-dessus et dans le [registre d'architecture](../architecture.md#décisions-retenues).
+Le dessin ne montre pas : le clone du dépôt vers `srv-admin` ; le transfert initial des sources vers `srv-app` ; `pg_dump` et le transfert `rsync` (écrits dans la carte de sauvegarde, que la flèche « copie » résume) ; la charge de k6 vers Traefik (écrite dans le cadre du laboratoire d'essai) ; la lecture des sondes de la copie par K3s (écrite sur la carte du Pod) ; la lecture de `node_exporter` (port 9100) ; les deux règles d'alerte ; la copie hors de `srv-admin` de l'état Terraform et des clés SSH (la carte dit seulement « état Terraform : protégé et récupérable ») ; les ports, sauf les adresses de contrôle. Ces détails sont dans les tableaux ci-dessus et dans le [registre d'architecture](../architecture.md#décisions-retenues).
 
 ### Informations retirées du dessin et où les retrouver
 
-La V10 affichait davantage de détails. Ils restent dans le dépôt :
+Les versions précédentes affichaient davantage de détails. Ils restent dans le dépôt :
 
 | Information | Où la retrouver |
 | --- | --- |
@@ -154,16 +158,16 @@ La V10 affichait davantage de détails. Ils restent dans le dépôt :
 | Rôle détaillé des sondes et codes de réponse | Section [Sondes](#sondes) ; [contrat applicatif](../architecture.md#contrat-applicatif) |
 | Disque `vdb`, `/var/lib/opsdesk` | Section Serveurs ci-dessus ; décision « Stockage de la base » |
 | Heure de 02:00, minuteur systemd, 7 copies, format custom | Section [Sauvegarde et restauration](#sauvegarde-et-restauration) ; décision « Sauvegarde et restauration » |
-| Fichiers `.tf`, état, inventaire, playbooks, secrets (pastilles de la V10) | Carte « Fichiers IaC » ; [guide du laboratoire](../laboratoire-fedora-kvm-rocky.md), sections 6.2 et 6.3 ; exercices 04 et 05 |
+| Fichiers `.tf`, état, inventaire, playbooks, secrets | Carte « Ressources de contrôle » ; [guide du laboratoire](../laboratoire-fedora-kvm-rocky.md), sections 6.2 et 6.3 ; exercices 04 et 05 |
 | SSH par clé, `root` sans connexion SSH, clés hors de Git | Section Serveurs ; décision « Réseau, accès et protections » |
-| Première image construite sur `srv-app` | Étape 2 ; décision « Première image » ; exercice 06 |
-| Choix de la version, contrôle de `/health/ready`, retour arrière | Étape 3 et note du dessin ; décisions « Déploiement » et « Retour arrière applicatif » ; exercice 08 |
+| Première image construite sur `srv-app` | Texte sous la chaîne GitHub ; section [Première livraison](#première-livraison-et-livraisons-suivantes) ; décision « Première image » ; exercice 06 |
+| Choix de la version, contrôle de `/health/ready`, retour arrière | Carte « Version publiée sur GHCR, récupérée par Podman » ; décisions « Déploiement » et « Retour arrière applicatif » ; exercice 08 |
 | Reprise de `srv-admin` (état Terraform, clés) | Décision « Reprise de `srv-admin` » ; guide du laboratoire, section 8 |
 | Prometheus : 15 s, 15 jours, deux règles d'alerte, `node_exporter` ; contenu des tableaux Grafana | Décision « Supervision » ; exercice 09 |
 | Deployment, Service, sondes lues par K3s | Exercice 07 |
 | Dimensionnement de k6 (un vCPU) | Décision « Essai de charge » ; exercice 09 |
 | Ports et règles firewalld | [Matrice des flux réseau](#matrice-des-flux-réseau) |
-| Récit en dix phrases de la V10 | Remplacé par les cinq étapes et le [tableau des flux](#flux-du-schéma-technique) |
+| Récit en dix phrases des versions précédentes | Remplacé par les trois zones et le [tableau des flux](#flux-du-schéma-technique) |
 
 ### Sauvegarde et restauration
 
@@ -179,27 +183,7 @@ La V10 affichait davantage de détails. Ils restent dans le dépôt :
 
 ## Logos et pictogrammes
 
-Les logos proviennent du paquet [simple-icons](https://github.com/simple-icons/simple-icons) 13.21.0, dont les fichiers sont publiés sous licence CC0. Les marques appartiennent à leurs titulaires ; les logos servent seulement à nommer les outils.
-
-| Outil | Fichier source | Couleur d'origine |
-| --- | --- | --- |
-| Flask | `flask.svg` | #000000 |
-| PostgreSQL | `postgresql.svg` | #4169E1 |
-| Podman | `podman.svg` | #892CA0 |
-| GitHub Actions | `githubactions.svg` | #2088FF |
-| Trivy | `trivy.svg` | #1904DA |
-| Terraform | `terraform.svg` | #844FBA |
-| Rocky Linux | `rockylinux.svg` | #10B981 |
-| Ansible | `ansible.svg` | #EE0000 |
-| K3s | `k3s.svg` | #FFC61C |
-| Prometheus | `prometheus.svg` | #E6522C |
-| Grafana | `grafana.svg` | #F46800 |
-| k6 | `k6.svg` | #7D64FF |
-| GitHub et GHCR | `github.svg` | #181717 |
-| Git | `git.svg` | #F05032 |
-| Traefik | `traefikproxy.svg` | #24A1C1 |
-
-Les pictogrammes de la personne (acteur et développeur), du navigateur, du volume, du dossier, de l'horloge, de la restauration et du terminal (OpenSSH, `srv-admin`) sont dessinés pour ce projet et suivent la licence MIT du dépôt.
+Les logos et pictogrammes des deux schémas sont des images PNG intégrées aux sources `.drawio` et aux `.svg`. Leur provenance et leur licence ne sont pas vérifiées. Les marques appartiennent à leurs titulaires ; les logos servent seulement à nommer les outils. Avant toute réutilisation, les remplacer par les logos officiels de chaque outil, en SVG, avec leur source et leur version.
 
 ## D'où viennent les faits
 
@@ -215,7 +199,7 @@ Les pictogrammes de la personne (acteur et développeur), du navigateur, du volu
 | Rôle de K3s : copie d'essai, indépendante de Podman | [`docs/architecture.md`](../architecture.md#podman-et-k3s), [`docs/apprentissage/07-k3s.md`](../apprentissage/07-k3s.md) |
 | Phases 1 à 3, leur ordre et leurs outils | [`docs/architecture.md`](../architecture.md#trois-phases-sans-changer-dapplication), [`ROADMAP.md`](../../ROADMAP.md), [`docs/parcours-apprentissage.md`](../parcours-apprentissage.md), [`docs/apprentissage/README.md`](../apprentissage/README.md) |
 | Développeur : application et PostgreSQL en local | [`STATUS.md`](../../STATUS.md), [`docs/architecture.md`](../architecture.md#trois-phases-sans-changer-dapplication) |
-| Flux, libellés et numéros | Tableau des flux ci-dessus, décisions du [registre d'architecture](../architecture.md#décisions-retenues) |
+| Flux et libellés | Tableau des flux ci-dessus, décisions du [registre d'architecture](../architecture.md#décisions-retenues) |
 
 ## Modifier et exporter
 
@@ -223,34 +207,29 @@ Les pictogrammes de la personne (acteur et développeur), du navigateur, du volu
 2. *Fichier → Exporter en → SVG*, sans l'option « Inclure une copie de mon diagramme ». Le texte alternatif de la page devient le `<title>` du SVG.
 3. Enregistrer le `.drawio` et le SVG dans le même commit.
 
+Chaque bloc (zone, carte, colonne de machine, bandeau) contient ses éléments : le déplacer dans l'éditeur déplace son contenu. Chaque flèche est attachée à ses deux blocs ; ses coudes intermédiaires et les libellés de flèche ne suivent pas : après un déplacement, les reprendre à la main.
+
 Les sources portent `adaptiveColors="none"` : sans ce réglage, diagrams.net en thème sombre inverse les couleurs et les logos sombres deviennent presque invisibles. Les cadres de texte sont ajustés à leur contenu.
 
 Les deux SVG sont exportés depuis les `.drawio` par le moteur d'export de Draw.io 32.6.10 (page d'export du dépôt jgraph/drawio, Chromium sans interface), en thème clair et sans bordure. Cet export ne remplace pas l'ouverture des fichiers dans l'application.
 
 ## Contrôles
 
-Réalisés le 13 novembre 2026, après la restructuration du schéma technique (variante C, retenue après comparaison de deux maquettes complètes), puis après l'audit de la V11, qui demandait une correction ciblée et non une nouvelle refonte :
+Réalisés le 13 novembre 2026 sur la version des deux schémas livrée après deux audits externes. Dernière correction du schéma technique : les flèches `/metrics` aboutissent sur la carte OpsDesk de `srv-app` et sur le Pod de la copie, et le flux de restauration porte le libellé « pg_restore → PostgreSQL » ; aucun composant ni cadre n'a été ajouté, aucune VM n'a été déplacée.
 
-- corrections de l'audit : sous-titre du schéma technique (l'application existe en local, l'infrastructure reste à déployer et à valider), phase 1 de la présentation (OpsDesk fonctionne sur `srv-app` ; la copie K3s n'arrive qu'en phase 3, qui nomme `srv-k3s`), étape 2 (sources du dépôt cloné) distinguée de l'étape 3 (images de GHCR), descriptions secondaires de `srv-admin` réduites ; Prometheus et Grafana confirmés comme workloads Kubernetes ;
-- ordre des VM : la disposition `srv-admin`, `srv-app`, `srv-k3s` a été construite avec les mêmes 102 textes, 363 mots, polices et flux, puis comparée à la disposition retenue (`srv-admin`, `srv-k3s`, `srv-app`) :
+- script de contrôle des sources `.drawio` : 0 anomalie et 0 avertissement sur les deux schémas ; il mesure la géométrie, les polices, les contrastes (seuil WCAG AA de 4,5:1), l'attache des flèches et les croisements ; il ne juge ni le rendu réel ni la justesse des faits ;
+- ouverture des deux `.drawio` dans l'application Draw.io sous Windows : affichage identique à l'export, aucun élément ne dépasse de la page ; rien n'a été enregistré ;
+- export des SVG par le moteur Draw.io 32.6.10, sans `<foreignObject>` ;
+- plus petite police : 14 px ; canevas de 1920 × 1400 px (technique) et de 1640 × 1080 px (présentation) ;
+- comptes : technique, 111 textes, 453 mots, 16 icônes, 27 flèches ou traits dont 18 attachés ; présentation, 62 textes, 215 mots, 15 icônes, 5 flèches ou traits ;
+- ordre des VM : `srv-admin`, `srv-app`, `srv-k3s` de gauche à droite, soit piloter, exécuter, orchestrer ; une seule ligne SSH relie `srv-admin` à ses deux voisines ;
+- un seul croisement de flèches (SSH et images GHCR), marqué par un saut d'arc.
 
-| Mesure | `srv-admin`, `srv-k3s`, `srv-app` (retenue) | `srv-admin`, `srv-app`, `srv-k3s` |
-| --- | --- | --- |
-| Croisements de flèches | 0 | 5 |
-| Longueur totale des flèches | 3 404 px | 4 430 px |
-| Flèches de plus de 400 px | 1 | 2 (jusqu'à 1 032 px) |
-| Coudes | 2 | 7 |
-| Hauteur du canevas | 1 364 px | 1 424 px |
-| Textes barrés par une flèche | 0 | 3 |
+Limites connues :
 
-  Avec `srv-app` au centre, l'utilisateur doit passer au-dessus de `srv-app` (une ligne de plus) et les liens de `srv-admin` vers `srv-k3s` (SSH, charge k6) passent sous `srv-app`, en coupant la sauvegarde et la restauration. Les numéros 1, 2 et 5 du dessin et l'encadré des cinq étapes donnent l'ordre de lecture dans les deux cas ; la disposition retenue est conservée ;
-- export des SVG par le moteur Draw.io 32.6.10 ; aucun `<foreignObject>` ; logos embarqués ;
-- source `.drawio` : identifiants uniques, texte alternatif présent, aucun pointillé, aucune forme `mxgraph.*`, polices Arial et Courier New ;
-- rendu par deux moteurs indépendants (Chromium et librsvg) : écart moyen 0,48 sur 255 (technique) et 0,62 (présentation) ;
-- aucune flèche ne croise une autre flèche ; aucune flèche ne traverse une carte qui n'est pas la sienne ; aucun texte ne chevauche une flèche, une pastille ou un autre texte (mesure sur la géométrie de la source) ;
-- plus petite police : 14 px ; canevas technique de 1600 × 1364 px ; les titres des VM font 20 px ;
-- contraste minimal calculé : 4,68:1 (technique) et 4,75:1 (présentation), seuil WCAG AA 4,5:1 ;
-- comptes du schéma technique : 102 textes et 363 mots (535 mots dans la V10), 21 flèches de flux (et 5 flèches d'exemple dans la légende), 5 numéros ; une seule flèche dépasse 400 px (Ansible vers `srv-app`, sous `srv-k3s`) ;
-- rendu réduit à 880 px de large (colonne d'un README GitHub) : les trois VM, leurs rôles et les flux se lisent ; les petits textes (14 px deviennent environ 8 px) demandent un agrandissement.
+- le trajet de la flèche `/metrics` vers `srv-app` compte sept points dans des couloirs étroits (22 px sous la carte PostgreSQL 17) : déplacer une carte oblige à le reprendre ;
+- la restauration est dessinée au niveau de la machine ; son libellé nomme PostgreSQL ;
+- la première livraison n'a pas de flèche propre ;
+- le script de contrôle ne détecte pas une flèche qui s'arrête à côté de la carte qu'elle devrait viser : ce contrôle est visuel.
 
-Non vérifiés : ouverture des `.drawio` dans diagrams.net, affichage réel dans GitHub et Notion, thèmes clair et sombre, application mobile. Ces contrôles portent sur le dessin : aucune des trois VM n'existe.
+Non vérifiés : affichage réel dans GitHub et Notion, thèmes clair et sombre, application mobile, provenance et licence des logos, libellés et textes lus un à un dans Draw.io. Ces contrôles portent sur le dessin : aucune des trois VM n'existe.
