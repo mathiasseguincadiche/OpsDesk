@@ -3,18 +3,18 @@
 | Vue | Source modifiable | Image | Question à laquelle elle répond |
 | --- | --- | --- | --- |
 | Présentation | [presentation.drawio](presentation.drawio) | [presentation.svg](presentation.svg) | Que fait OpsDesk, et quelles trois phases, dans l'ordre, mènent de l'application locale à un service sur deux serveurs, livré, sauvegardé puis supervisé ? |
-| Technique | [architecture-technique.drawio](architecture-technique.drawio) | [architecture-technique.svg](architecture-technique.svg) | Comment les composants sont reliés et sur quelle machine ils tournent : préparation des serveurs, requête, base, livraison, sauvegarde, sondes et supervision. |
+| Technique | [architecture-technique.drawio](architecture-technique.drawio) | [architecture-technique.svg](architecture-technique.svg) | Comment les composants sont reliés et sur quelle machine ils tournent : préparation des serveurs, requête, base, livraison, sauvegarde, copie d'essai dans K3s et supervision. |
 
 ## Lire les schémas
 
 - **Cadre noir :** le service OpsDesk (navigateur, application, base de données).
 - **Cadre ou bloc coloré :** une phase du projet, dans l'ordre où on la construit. Bleu : phase 1, préparer et automatiser. Vert : phase 2, livrer et conserver. Violet : phase 3, orchestrer et maintenir. Dans le schéma technique, trois cadres se suivent de haut en bas, chacun titré du nom de sa phase et précédé de sa capsule P1, P2 ou P3 ; la présentation reprend cette capsule sous la forme « Phase 1 », « Phase 2 », « Phase 3 ».
 - **Point de départ (technique) :** le développeur, dont l'application et PostgreSQL tournent en local. Sa flèche « push » lance la livraison.
-- **Groupe gris (technique) :** un serveur ou ses conteneurs. Le groupe « Podman » réunit les deux conteneurs, `app` et `db`, que Podman fait tourner sur `srv-app` ; la petite carte `srv-k3s` rappelle le second serveur, dont le contenu est dans la phase 3.
+- **Groupe gris (technique) :** un serveur ou ses conteneurs. Le groupe « Podman » réunit les deux conteneurs, `app` et `db`, que Podman fait tourner sur `srv-app` ; la petite carte `srv-k3s` rappelle le second serveur, dont le contenu est dans la phase 3. Le groupe « K3s » réunit ce que K3s fait tourner sur `srv-k3s` : une copie d'essai de l'application, avec sa base de test, puis Prometheus et Grafana. Les deux groupes sont indépendants : K3s ne pilote pas les conteneurs de Podman ([explication](../architecture.md#podman-et-k3s)).
 - **Capsule violette en police à chasse fixe (technique) :** l'adresse de contrôle d'une sonde de l'application (`/health/live`, `/health/ready`, `/metrics`).
 - **Flèche bleue :** la requête de l'utilisateur (HTTP, puis SQL).
-- **Flèche grise :** tous les autres flux, chacun avec son libellé : préparation des serveurs, livraison de l'image, sauvegarde, restauration, lecture des sondes et des mesures. Le [tableau des flux](#flux-du-schéma-technique) les détaille.
-- **Pastille numérotée (technique) :** ordre de lecture, de 1 à 8, de haut en bas, repris dans l'encadré « Comment ça fonctionne ». Les flèches d'un même pas portent le même numéro.
+- **Flèche grise :** tous les autres flux, chacun avec son libellé : préparation des serveurs, livraison et tirage de l'image, sauvegarde, restauration, lecture des mesures. Le [tableau des flux](#flux-du-schéma-technique) les détaille.
+- **Pastille numérotée (technique) :** ordre de lecture, de 1 à 9, de haut en bas, repris dans l'encadré « Comment ça fonctionne ». Les flèches d'un même pas portent le même numéro.
 - **Flèche grise entre les phases (présentation) :** enchaînement des trois phases.
 
 Les phases reprennent celles du [parcours](../parcours-apprentissage.md). Les schémas décrivent l'architecture du projet, pas son avancement : l'avancement et le contrôle de chaque élément sont suivis dans [STATUS](../../STATUS.md) et la [feuille de route](../../ROADMAP.md).
@@ -36,12 +36,12 @@ Le statut avance dans l'ordre `open`, `in_progress`, `closed`. Sauter une étape
 
 | Adresse | Question posée | Réponse | Lue par |
 | --- | --- | --- | --- |
-| `/health/live` | Le programme tourne-t-il ? | 200, sans interroger la base | K3s (redémarrage si la sonde échoue) |
-| `/health/ready` | La base répond-elle ? | 200 si la lecture de `tickets` réussit, 503 sinon | K3s (retrait du trafic si la sonde échoue) |
-| `/metrics` | Quels compteurs ? | Toujours 200 : `opsdesk_http_requests_total` (méthode, route, code), `opsdesk_database_up` (1 ou 0), `opsdesk_tickets` (par statut) | Prometheus, toutes les 15 secondes |
+| `/health/live` | Le programme tourne-t-il ? | 200, sans interroger la base | K3s, sur la copie d'essai de `srv-k3s` (redémarrage si la sonde échoue) |
+| `/health/ready` | La base répond-elle ? | 200 si la lecture de `tickets` réussit, 503 sinon | K3s, sur la copie d'essai de `srv-k3s` (retrait du trafic si la sonde échoue) ; contrôle de la restauration sur `srv-app` |
+| `/metrics` | Quels compteurs ? | Toujours 200 : `opsdesk_http_requests_total` (méthode, route, code), `opsdesk_database_up` (1 ou 0), `opsdesk_tickets` (par statut) | Prometheus, toutes les 15 secondes, sur l'application de `srv-app` |
 | `/version` | Quelle version est servie ? | 200, version et révision déclarées | Contrôle manuel |
 
-Les compteurs de requêtes sont gardés en mémoire : ils repartent de zéro à chaque redémarrage de l'application.
+Les compteurs de requêtes sont gardés en mémoire : ils repartent de zéro à chaque redémarrage de l'application. Sur `srv-app`, aucun outil ne lit `/health/live` ni `/health/ready` en continu : K3s ne lit que les sondes de sa propre copie.
 
 ### Table `tickets`
 
@@ -63,7 +63,7 @@ Les compteurs de requêtes sont gardés en mémoire : ils repartent de zéro à 
 | | | 8000 (application) | L'hôte et `srv-k3s` |
 | | | 5432 (base) | Non publié : seule l'application l'atteint |
 | | | 9100 (mesures du serveur) | `srv-k3s` |
-| `srv-k3s` (192.168.150.20) | K3s, Prometheus, Grafana | 80 (Traefik), 6443 (API K3s) | L'hôte |
+| `srv-k3s` (192.168.150.20) | K3s (copie d'essai de l'application, base de test), Prometheus, Grafana | 80 (Traefik), 6443 (API K3s) | L'hôte |
 
 Les deux serveurs sont des machines Rocky Linux 10.2 sur le réseau privé `opsdesk-lan` (192.168.150.0/24), avec SELinux en mode Enforcing et firewalld. L'utilisateur d'administration est `mathias`. `srv-app` a 2 vCPU, 4 Go de mémoire, un disque système de 20 Go et un disque de données de 10 Go monté sur `/var/lib/opsdesk` ; `srv-k3s` a 2 vCPU, 6 Go et 30 Go.
 
@@ -82,11 +82,11 @@ Les deux serveurs sont des machines Rocky Linux 10.2 sur le réseau privé `opsd
 | 5 | Sauvegarde | Copies | rsync | Copie par SSH vers `~/sauvegardes` sur l'hôte |
 | 6 | Copies | Restauration | copie | Une copie sert à restaurer |
 | 6 | Restauration | PostgreSQL | pg_restore | Remise de la base |
-| 7 | K3s | Application | lit les sondes | `/health/live` et `/health/ready` |
-| 7 | Prometheus | Application | lit /metrics | Lecture toutes les 15 secondes |
-| 8 | Grafana | Prometheus | lit | Prometheus est la source de données de Grafana |
+| 7 | GHCR | K3s (copie d'essai) | tire l'image | K3s tire la même image que `srv-app` et lance une copie, avec sa base de test |
+| 8 | Prometheus | Application de `srv-app` | lit /metrics | Lecture toutes les 15 secondes |
+| 9 | Grafana | Prometheus | lit | Prometheus est la source de données de Grafana |
 
-Le dessin ne montre pas : la lecture de `node_exporter` (port 9100) par Prometheus, indiquée seulement dans la carte Prometheus ; les deux règles d'alerte ; le test de charge k6 ; la connexion SSH d'administration ; les ports, sauf les adresses de contrôle des sondes. Les deux règles d'alerte sont dans le [registre d'architecture](../architecture.md#décisions-retenues) ; k6 est sur le schéma de présentation.
+Le dessin ne montre pas : la lecture des sondes de la copie par K3s, écrite dans la carte de la copie parce qu'elle se passe à l'intérieur du cluster ; la base de test de la copie, nommée dans sa carte, sans carte ni flèche propre ; la lecture de `node_exporter` (port 9100) par Prometheus, indiquée seulement dans la carte Prometheus ; les deux règles d'alerte ; le test de charge k6 ; la connexion SSH d'administration ; les ports, sauf les adresses de contrôle des sondes. Les deux règles d'alerte sont dans le [registre d'architecture](../architecture.md#décisions-retenues) ; k6 est sur le schéma de présentation.
 
 ### Sauvegarde et restauration
 
@@ -127,6 +127,7 @@ Les pictogrammes de la personne (acteur et développeur), du navigateur, du volu
 | Aucune authentification, données fictives | [`README.md`](../../README.md), [`docs/securite.md`](../securite.md) |
 | Serveurs, réseau, ports, sauvegarde, supervision | Décisions du [registre d'architecture](../architecture.md#décisions-retenues) |
 | Hôte Fedora 45, KVM, libvirt, Rocky Linux 10.2 | [`ROADMAP.md`](../../ROADMAP.md), [`docs/laboratoire-fedora-kvm-rocky.md`](../laboratoire-fedora-kvm-rocky.md) |
+| Rôle de K3s : copie d'essai, indépendante de Podman | [`docs/architecture.md`](../architecture.md#podman-et-k3s), [`docs/apprentissage/07-k3s.md`](../apprentissage/07-k3s.md) |
 | Phases 1 à 3, leur ordre et leurs outils | [`docs/architecture.md`](../architecture.md#trois-phases-sans-changer-dapplication), [`ROADMAP.md`](../../ROADMAP.md), [`docs/parcours-apprentissage.md`](../parcours-apprentissage.md), [`docs/apprentissage/README.md`](../apprentissage/README.md) |
 | Point de départ : application et PostgreSQL en local | [`STATUS.md`](../../STATUS.md), [`docs/architecture.md`](../architecture.md#trois-phases-sans-changer-dapplication) |
 | Flux, libellés et numéros | Tableau des flux ci-dessus, décisions du [registre d'architecture](../architecture.md#décisions-retenues) |
@@ -143,15 +144,15 @@ Les deux SVG sont exportés depuis les `.drawio` par le moteur d'export de Draw.
 
 ## Contrôles
 
-Réalisés le 12 novembre 2026 sur les deux schémas, après leur réorganisation par ordre de dépendance :
+Réalisés le 12 novembre 2026 sur les deux schémas, après leur réorganisation par ordre de dépendance, puis après la clarification du rôle de K3s (copie d'essai, sans lien avec les conteneurs de Podman) :
 
 - export des SVG par le moteur Draw.io 32.6.10 ; aucun `<foreignObject>` ; aucune image externe (les logos sont embarqués) ;
 - source `.drawio` : XML valide, identifiants uniques, texte alternatif présent, aucun pointillé, aucune forme de la bibliothèque `mxgraph.*`, polices Arial et Courier New seulement ;
 - rendu par deux moteurs indépendants (Chromium et librsvg) : même figure, chaque composant affiche son icône ;
 - aucun texte ne dépasse son cadre sur le rendu Chromium ; aucune flèche ne traverse une carte qui n'est pas la sienne ; aucune pastille ni aucun libellé ne chevauche un texte (mesure sur la géométrie de la source) ; plus petite police : 14 px sur un canevas de 1200 px de large ;
 - contrastes calculés : tous les textes au moins 4,75:1 (seuil WCAG AA : 4,5:1) ;
-- comptes : schéma technique, 124 textes et 23 pastilles dans la source, 147 éléments texte dans le SVG ; 20 icônes dans la source, 17 images dans le SVG, les 3 autres étant des icônes répétées (Terraform, Ansible, K3s) que l'export réutilise ; présentation, 62 textes et 15 images dans la source comme dans le SVG ;
-- numéros du schéma technique : de 1 à 8 sans trou, une phrase du récit par numéro ;
+- comptes : schéma technique, 127 textes et 24 pastilles dans la source, 151 éléments texte dans le SVG ; 21 icônes dans la source, 17 images dans le SVG, les 4 autres étant des icônes répétées (Terraform, Ansible, K3s, Flask) que l'export réutilise ; présentation, 62 textes et 15 images dans la source comme dans le SVG ;
+- numéros du schéma technique : de 1 à 9 sans trou, une phrase du récit par numéro ;
 - concordance des deux schémas : mêmes noms et mêmes couleurs de phase ; chaque outil de la présentation figure dans le schéma technique, sauf k6, qui teste la charge et n'appartient pas à l'architecture d'exécution.
 
 Non vérifiés sur cette version : ouverture des `.drawio` dans diagrams.net (application web ou de bureau), affichage dans GitHub et dans Notion (thèmes clair et sombre, largeur étroite, application mobile de Notion) ; la largeur affichée de l'image, et donc la police effective, n'est pas remesurée.
