@@ -228,7 +228,7 @@ Les autres marques appartiennent à leurs titulaires ; leurs chartes graphiques 
 2. *Fichier → Exporter en → SVG*, sans l'option « Inclure une copie de mon diagramme ». Le texte alternatif de la page devient le `<title>` du SVG.
 3. Enregistrer le `.drawio` et le SVG dans le même commit.
 
-Chaque bloc (zone, carte, colonne de machine, bandeau) contient ses éléments : le déplacer dans l'éditeur déplace son contenu. Chaque flèche est attachée à ses deux blocs ; ses coudes intermédiaires et les libellés de flèche ne suivent pas : après un déplacement, les reprendre à la main.
+Chaque bloc (zone, carte, colonne de machine, bandeau) contient ses éléments : le déplacer dans l'éditeur déplace son contenu. Le bandeau de chaque VM est fait de deux formes de même couleur : le haut, aux coins arrondis concentriques à la bordure de la carte (rayon de 27,6 px), et le bas, aux coins de 4,7 px, qui porte le sous-titre « Rocky Linux 10.2 · … ». Pour le modifier, garder les deux formes alignées. Chaque flèche est attachée à ses deux blocs ; ses coudes intermédiaires et les libellés de flèche ne suivent pas : après un déplacement, les reprendre à la main.
 
 Les sources portent `adaptiveColors="none"` : sans ce réglage, diagrams.net en thème sombre inverse les couleurs et les logos sombres deviennent presque invisibles. Les cadres de texte sont ajustés à leur contenu.
 
@@ -239,12 +239,18 @@ Les deux SVG sont exportés depuis les `.drawio` par le moteur d'export de Draw.
 Réalisés le 13 novembre 2026 sur la version des deux schémas livrée après deux audits externes. Dernière correction du schéma technique : les flèches `/metrics` aboutissent sur la carte OpsDesk de `srv-app` et sur le Pod de la copie, et le flux de restauration porte le libellé « pg_restore → PostgreSQL » ; aucun composant ni cadre n'a été ajouté, aucune VM n'a été déplacée.
 
 - script de contrôle des sources `.drawio` : 0 anomalie et 0 avertissement sur les deux schémas ; il mesure la géométrie, les polices, les contrastes (seuil WCAG AA de 4,5:1), l'attache des flèches et les croisements ; il ne juge ni le rendu réel ni la justesse des faits ;
-- ouverture des deux `.drawio` dans l'application Draw.io sous Windows : affichage identique à l'export, aucun élément ne dépasse de la page ; rien n'a été enregistré ;
+- ouverture des deux `.drawio` dans l'application Draw.io sous Windows : affichage identique à l'export, aucun élément ne dépasse de la page ; dans le schéma technique, les six coins hauts des trois bandeaux de VM ont été regardés un à un (voir « Correction des bandeaux de VM ») ; rien n'a été enregistré ;
 - export des SVG par le moteur Draw.io 32.6.10, sans `<foreignObject>` ;
 - plus petite police : 14 px ; canevas de 1920 × 1400 px (technique) et de 1640 × 1080 px (présentation) ;
 - comptes : technique, 111 textes, 453 mots, 16 icônes, 27 flèches ou traits dont 18 attachés ; présentation, 62 textes, 215 mots, 15 icônes, 5 flèches ou traits ;
 - ordre des VM : `srv-admin`, `srv-app`, `srv-k3s` de gauche à droite, soit piloter, exécuter, orchestrer ; une seule ligne SSH relie `srv-admin` à ses deux voisines ;
 - un seul croisement de flèches (SSH et images GHCR), marqué par un saut d'arc.
+
+### Correction des bandeaux de VM
+
+Défaut corrigé le 13 novembre 2026, après la fusion de la PR n° 25 : les coins supérieurs des bandeaux de `srv-admin`, `srv-app` et `srv-k3s` (rayon de 4,7 px) dépassaient de la bordure arrondie des cartes (rayon de 29,6 px). Les contrôles précédents indiquaient à tort que rien ne dépassait : ni le script de contrôle ni la relecture visuelle n'avaient relevé ce défaut.
+
+Correction : le haut de chaque bandeau a un rayon de 27,6 px, concentrique à la bordure ; le bas garde son rayon de 4,7 px. Rien d'autre ne change. Vérifications : rendu agrandi quatre fois comparé à la version précédente, qui ne diffère que sur les six coins hauts ; script de contrôle à 0 anomalie, mêmes comptes ; coins regardés dans Draw.io sous Windows.
 
 Limites connues :
 
@@ -253,6 +259,6 @@ Limites connues :
 - la première livraison n'a pas de flèche propre ;
 - le script de contrôle ne détecte pas une flèche qui s'arrête à côté de la carte qu'elle devrait viser : ce contrôle est visuel.
 
-Vérifiés le 13 novembre 2026 : affichage dans GitHub (navigateur, thèmes clair et sombre, largeur mobile émulée, sans débordement) sur la branche de la PR n° 25, et dans Notion (application de bureau, thème sombre) ; ouverture des deux sources dans Draw.io, chacune tient dans son cadre. Sur un téléphone, le texte des schémas est trop petit sans zoom.
+Vérifiés le 13 novembre 2026 : affichage dans GitHub (navigateur, thèmes clair et sombre, largeur mobile émulée, sans débordement de la page) sur la branche de la PR n° 25, et dans Notion (application de bureau, thème sombre) ; ouverture des deux sources dans Draw.io (cadres vérifiés ; voir la correction des bandeaux). Sur un téléphone, le texte des schémas est trop petit sans zoom.
 
 Non vérifiés : applications mobiles de GitHub et de Notion, thème clair de Notion, libellés et textes lus un à un dans Draw.io, conditions d'usage du logo Flask. Ces contrôles portent sur le dessin : aucune des trois VM n'existe.
