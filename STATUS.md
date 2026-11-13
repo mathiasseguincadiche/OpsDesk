@@ -41,7 +41,7 @@ Le retrait des outils d’installation de l’image ne permet pas d’annoncer u
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| Schémas de présentation et technique | Réalisé | Vérifié en partie : phases réordonnées par dépendance (préparer, livrer, orchestrer) le 12 novembre 2026, schéma technique refait en architecture cible puis porté à trois VM le 13 novembre 2026 ; export Draw.io 32.6.10, rendu Chromium et librsvg, contrastes calculés ; plus petite police 14 px sur 1200 px de large ; ouverture dans diagrams.net, affichage GitHub et Notion, thèmes clair et sombre non revérifiés sur cette version | [Fiche de contrôle](docs/diagrams/README.md#contrôles) |
+| Schémas de présentation et technique | Réalisé | Vérifié en partie : phases réordonnées par dépendance (préparer, livrer, orchestrer) le 12 novembre 2026, schéma technique refait en architecture cible, porté à trois VM, puis restructuré en trois niveaux (livraison, trois VM, hôte) le 13 novembre 2026 ; export Draw.io 32.6.10, rendu Chromium et librsvg, contrastes calculés ; plus petite police 14 px sur 1600 px de large, aucune flèche croisée ; ouverture dans diagrams.net, affichage GitHub et Notion, thèmes clair et sombre non revérifiés sur cette version | [Fiche de contrôle](docs/diagrams/README.md#contrôles) |
 | Affichage sur GitHub et Notion | Réalisé | Non vérifié à largeur étroite | — |
 
 ## Apprentissage
