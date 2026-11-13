@@ -6,7 +6,7 @@ OpsDesk est une petite application de tickets IT. Un collaborateur ouvre une dem
 
 ## Problème et objectif
 
-Écrire une application ne suffit pas : il faut aussi la livrer, la faire tourner et la maintenir. OpsDesk fournit une application déjà écrite, pour travailler uniquement sur l’infrastructure. Trois phases sont prévues : **livrer et conserver** (conteneurs, livraison automatisée), **préparer et automatiser** (serveur, Terraform, Ansible), **orchestrer et maintenir** (K3s, supervision, sauvegarde). Le détail est dans le [parcours](docs/parcours-apprentissage.md).
+Écrire une application ne suffit pas : il faut aussi la livrer, la faire tourner et la maintenir. OpsDesk fournit une application déjà écrite, pour travailler uniquement sur l’infrastructure. L’application tourne d’abord en local ; trois phases sont ensuite prévues, dans l’ordre : **préparer et automatiser** (deux serveurs, Terraform, Ansible, conteneurs Podman), **livrer et conserver** (livraison automatisée, analyse de l’image, sauvegarde et restauration), **orchestrer et maintenir** (K3s, supervision, test de charge). Le détail est dans le [parcours](docs/parcours-apprentissage.md).
 
 ## État du projet
 
