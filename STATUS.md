@@ -35,12 +35,13 @@ Le retrait des outils d’installation de l’image ne permet pas d’annoncer u
 | Conteneurs, Terraform, Ansible, K3s, CI | Prévu | Non vérifié | Les essais historiques n’ont créé aucune machine, aucun cloud ni cluster ; leurs fichiers ne sont pas dans le dépôt ([provenance](docs/provenance.md)) |
 | Défaut `ci-business.json` / `business-smoke.json` du candidat CI | Prévu | Non vérifié | À diagnostiquer dans le parcours d’apprentissage |
 | Laboratoire Fedora 45, KVM, Rocky Linux 10.2 | Prévu | Non vérifié | [Guide](docs/laboratoire-fedora-kvm-rocky.md) |
+| Trois VM Rocky Linux 10.2 (`srv-admin`, `srv-app`, `srv-k3s`) | Prévu | Non vérifié | Aucune VM créée, aucun code Terraform ni Ansible dans le dépôt ; décisions du [registre](docs/architecture.md#décisions-retenues) |
 
 ## Documentation
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| Schémas de présentation et technique | Réalisé | Vérifié en partie : phases réordonnées par dépendance (préparer, livrer, orchestrer) le 12 novembre 2026, schéma technique refait en architecture cible le 13 novembre 2026 ; export Draw.io 32.6.10, rendu Chromium et librsvg, contrastes calculés ; plus petite police 14 px sur 1200 px de large ; ouverture dans diagrams.net, affichage GitHub et Notion, thèmes clair et sombre non revérifiés sur cette version | [Fiche de contrôle](docs/diagrams/README.md#contrôles) |
+| Schémas de présentation et technique | Réalisé | Vérifié en partie : phases réordonnées par dépendance (préparer, livrer, orchestrer) le 12 novembre 2026, schéma technique refait en architecture cible puis porté à trois VM le 13 novembre 2026 ; export Draw.io 32.6.10, rendu Chromium et librsvg, contrastes calculés ; plus petite police 14 px sur 1200 px de large ; ouverture dans diagrams.net, affichage GitHub et Notion, thèmes clair et sombre non revérifiés sur cette version | [Fiche de contrôle](docs/diagrams/README.md#contrôles) |
 | Affichage sur GitHub et Notion | Réalisé | Non vérifié à largeur étroite | — |
 
 ## Apprentissage

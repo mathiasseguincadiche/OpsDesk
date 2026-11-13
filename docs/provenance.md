@@ -45,6 +45,6 @@ Avant un déplacement de fichier, recenser les liens entrants. Les versions d’
 
 ## Vocabulaire
 
-- **Hôte** : le poste Fedora prévu. **Invité** : la VM Rocky prévue.
+- **Hôte** : le poste Fedora prévu. **Invité** : une des trois VM Rocky prévues (`srv-admin`, `srv-app`, `srv-k3s`).
 - **Application** : le programme fourni. **Infrastructure personnelle** : ce que l’apprenant construit. **Référence historique** : un essai daté, antérieur au travail personnel.
 - **Réalisé** : l’élément existe. **Vérifié** : un contrôle traçable l’a confirmé. **PASS** : le résultat de ce contrôle. **L3** : une adaptation ou un diagnostic personnel sur une tâche nouvelle.

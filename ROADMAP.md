@@ -8,8 +8,8 @@ OpsDesk est le projet fil rouge unique du parcours. L’application est fournie 
 | --- | --- | --- | --- |
 | 1 | Comprendre l’application et lire son contrat | Point de départ | [01](docs/apprentissage/01-application.md) |
 | 2 | Relire l’architecture retenue, justifier ressources, flux, accès et stockage, et la vérifier | Toutes | [02](docs/apprentissage/02-architecture.md) |
-| 3 | Préparer Linux, Rocky Linux et le réseau du laboratoire | Phase 1 | [03](docs/apprentissage/03-linux-reseau.md) |
-| 4 | Écrire le Terraform, lire le plan, vérifier les ressources créées | Phase 1 | [04](docs/apprentissage/04-terraform.md) |
+| 3 | Préparer Linux, Rocky Linux, le réseau du laboratoire et `srv-admin`, la première VM | Phase 1 | [03](docs/apprentissage/03-linux-reseau.md) |
+| 4 | Écrire le Terraform depuis `srv-admin`, lire le plan, vérifier les VM `srv-app` et `srv-k3s` créées | Phase 1 | [04](docs/apprentissage/04-terraform.md) |
 | 5 | Écrire l’Ansible, contrôler les changements puis la seconde passe | Phase 1 | [05](docs/apprentissage/05-ansible.md) |
 | 6 | Conteneuriser l’application ; choisir volumes, réseaux et secrets ; vérifier un ticket | Phase 1 | [06](docs/apprentissage/06-conteneurs.md) |
 | 7 | Pratiquer K3s : ressources, sondes, stockage, mise à jour et diagnostic | Phase 3 | [07](docs/apprentissage/07-k3s.md) |
@@ -20,12 +20,12 @@ OpsDesk est le projet fil rouge unique du parcours. L’application est fournie 
 | 12 | Diagnostiquer un cas nouveau et rétablir le service | Phase 3 | [12](docs/apprentissage/12-diagnostic.md) |
 | 13 | Refaire une tâche nouvelle et expliquer ses choix avec une aide limitée | Toutes | [13](docs/apprentissage/13-autonomie.md) |
 
-Les phases, dans l’ordre où on les construit, sont : **point de départ** (l’application et PostgreSQL tournent en local), **phase 1** préparer et automatiser (deux serveurs créés et configurés par du code, l’application dans deux conteneurs Podman), **phase 2** livrer et conserver (GitHub Actions, GHCR, analyse Trivy, déploiement par Ansible, sauvegarde, restauration), **phase 3** orchestrer et maintenir (K3s sur une copie d’essai de l’application, supervision, test de charge). L’ordre des exercices n’est pas strictement celui des phases : l’exercice 7 (K3s, phase 3) précède l’exercice 8 (CI/CD, phase 2). Podman fait tourner le service réel ; K3s ne le pilote pas ([Podman et K3s](docs/architecture.md#podman-et-k3s)).
+Les phases, dans l’ordre où on les construit, sont : **point de départ** (l’application et PostgreSQL tournent en local), **phase 1** préparer et automatiser (un serveur d’administration installé à la main, deux serveurs créés et configurés par du code depuis lui, l’application dans deux conteneurs Podman), **phase 2** livrer et conserver (GitHub Actions, GHCR, analyse Trivy, déploiement par Ansible, sauvegarde, restauration), **phase 3** orchestrer et maintenir (K3s sur une copie d’essai de l’application, supervision, test de charge sur la copie). L’ordre des exercices n’est pas strictement celui des phases : l’exercice 7 (K3s, phase 3) précède l’exercice 8 (CI/CD, phase 2). Podman fait tourner le service réel ; K3s ne le pilote pas ([Podman et K3s](docs/architecture.md#podman-et-k3s)).
 
 ## Principes
 
-- Le laboratoire prévu est **Fedora 45 (hôte) → KVM, QEMU, libvirt → Rocky Linux 10.2 (invité)**. Les exercices 1 et 2 se font en lecture et en dessin ; la préparation technique suit le [guide du laboratoire](docs/laboratoire-fedora-kvm-rocky.md). Une version non vérifiée reste signalée, et Rocky Linux n’est pas remplacé en silence.
-- L’architecture retenue (deux serveurs Rocky Linux, réseau `opsdesk-lan`, Podman, sauvegarde, supervision) est dans le [registre des décisions](docs/architecture.md#décisions-retenues) et sur le [schéma technique](docs/diagrams/architecture-technique.svg).
+- Le laboratoire prévu est **Fedora 45 (hôte) → KVM, QEMU, libvirt → trois VM Rocky Linux 10.2 (invités)**. Les exercices 1 et 2 se font en lecture et en dessin ; la préparation technique suit le [guide du laboratoire](docs/laboratoire-fedora-kvm-rocky.md). Une version non vérifiée reste signalée, et Rocky Linux n’est pas remplacé en silence.
+- L’architecture retenue (trois serveurs Rocky Linux `srv-admin`, `srv-app` et `srv-k3s`, réseau `opsdesk-lan`, Podman, sauvegarde, supervision) est dans le [registre des décisions](docs/architecture.md#décisions-retenues) et sur le [schéma technique](docs/diagrams/architecture-technique.svg).
 - Les corrigés se lisent après une première tentative. Les anciennes solutions sont des références datées, pas des fichiers à recopier ([provenance](docs/provenance.md)).
 - Toute ressource payante, exposition réelle, destruction ou nettoyage demande son périmètre et un accord préalable.
 - GitHub est l’unique plateforme active. GitLab reste en l’état, à titre historique.

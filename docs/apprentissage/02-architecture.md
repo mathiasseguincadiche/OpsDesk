@@ -6,7 +6,7 @@ Révision documentaire : 2026-11-12. Les [règles communes et exigences conserv�
 
 ## Situation et résultat à obtenir
 
-L’équipe veut un service compréhensible et reconstructible sur le PC disponible. L’architecture a été arrêtée avant toute réalisation, pour que les choix techniques ne ralentissent pas l’apprentissage : deux serveurs Rocky Linux sur un réseau privé, Podman, une sauvegarde copiée hors du serveur, K3s et la supervision. Elle est décrite dans le [registre des décisions](../architecture.md#décisions-retenues) et sur le [schéma technique](../diagrams/architecture-technique.svg).
+L’équipe veut un service compréhensible et reconstructible sur le PC disponible. L’architecture a été arrêtée avant toute réalisation, pour que les choix techniques ne ralentissent pas l’apprentissage : trois serveurs Rocky Linux sur un réseau privé (un d’administration, un pour l’application, un pour K3s), Podman, une sauvegarde copiée hors du serveur, K3s et la supervision. Elle est décrite dans le [registre des décisions](../architecture.md#décisions-retenues) et sur le [schéma technique](../diagrams/architecture-technique.svg).
 
 Relis cette architecture, puis justifie-la : pour chaque choix, quel besoin il couvre, quelle alternative a été écartée et ce qui se passe s’il tombe en panne. Vérifie ensuite qu’elle tient : chaque flux a une origine et une destination, chaque donnée durable a un emplacement, chaque port ouvert a une raison. Un choix que tu n’arrives pas à justifier est à signaler, pas à corriger en silence.
 
@@ -24,7 +24,7 @@ Un composant doit résoudre un besoin : séparer les données du processus évit
 
 ## Préparer la bonne cible
 
-Exercice 01 compris et besoins applicatifs reformulés. Lire le [registre des décisions](../architecture.md#décisions-retenues), le [schéma technique](../diagrams/architecture-technique.svg) et sa [notice de lecture](../diagrams/README.md) (routes, sondes, table `tickets`, ports). Relever les ressources réelles du PC ou les marquer NON VÉRIFIÉES : les deux serveurs retenus prennent 10 Go de mémoire à l’hôte.
+Exercice 01 compris et besoins applicatifs reformulés. Lire le [registre des décisions](../architecture.md#décisions-retenues), le [schéma technique](../diagrams/architecture-technique.svg) et sa [notice de lecture](../diagrams/README.md) (routes, sondes, table `tickets`, ports). Relever les ressources réelles du PC ou les marquer NON VÉRIFIÉES : les trois serveurs retenus prennent 12 Go de mémoire à l’hôte.
 
 Lecture, dessin et analyse à partir du contrat, sans création de ressource. L’hôte est Fedora 45 avec KVM/QEMU et libvirt, et le système invité Rocky Linux 10.2 ; disponibilité exacte, compatibilité et ressources restent à qualifier dans le guide de laboratoire.
 
@@ -61,7 +61,8 @@ Présenter ta tentative, l’attendu, l’observé et le premier écart. Demande
 
 ## Vérifier, puis diagnostiquer
 
-- Associer chaque composant du schéma à un besoin du contrat ; identifier hôte, serveurs, application et données.
+- Associer chaque composant du schéma à un besoin du contrat ; identifier l’hôte, les trois serveurs (`srv-admin`, `srv-app`, `srv-k3s`), application et données.
+- Expliquer le rôle de `srv-admin`, ce qui s’y trouve (outils, état Terraform, clés SSH) et ce qui se perd si elle disparaît.
 - Expliquer les flux autorisés, les accès refusés et l’emplacement de chaque donnée durable : par exemple, qui peut atteindre le port 5432, et qui peut ouvrir une session SSH.
 - Pour chaque alternative écartée, indiquer le coût en ressources, le point de panne et la méthode de reconstruction à vérifier ; si l’argument ne tient pas, le noter comme question ouverte.
 - Les décisions du registre sont « retenu, non vérifié » : écrire pour chacune le contrôle qui la ferait passer à « vérifié ».
