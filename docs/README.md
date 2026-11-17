@@ -1,36 +1,36 @@
 # Documentation OpsDesk
 
-Choisir un point d’entrée selon son objectif. Le [README](../README.md) présente le projet ; ce guide oriente vers les références existantes sans les dupliquer.
+Le [README du projet](../README.md) donne la vue d’ensemble. Choisir la référence selon le travail à réaliser.
 
 ## Comprendre
 
-| Document | Utilité |
+| Document | Ce qu’il permet de comprendre |
 | --- | --- |
-| [Contrat applicatif](contrat-applicatif.md) | Besoin métier, API, dépendances, paramètres et garanties |
-| [Architecture](architecture.md) | Cible retenue et décisions techniques |
-| [Schémas](diagrams/README.md) | Présentation, architecture technique et sources Draw.io |
+| [Contrat applicatif](contrat-applicatif.md) | Besoin métier, API, paramètres, dépendances |
+| [Architecture](architecture.md) | Trois VM, flux, décisions et limites |
+| [Schémas](diagrams/README.md) | Deux vues, sources Draw.io et contrôles |
 
 ## Préparer et pratiquer
 
-1. [Parcours et 13 exercices personnels](apprentissage/README.md) — ordre de travail unique.
-2. [Installation des outils et préparation du laboratoire](laboratoire-fedora-kvm-rocky.md) — Fedora, KVM/libvirt, Rocky, précontrôles et compatibilités.
-3. [Exercice 01](apprentissage/01-application.md) — comprendre le service sans VM.
-4. [Évaluations](apprentissage/evaluations.md) et [corrigés](apprentissage/corriges.md) — après tentative personnelle.
+1. [Exercice 01 — Comprendre l’application](apprentissage/01-application.md) et [02 — Architecture](apprentissage/02-architecture.md), sans installation.
+2. [Installation des outils et préparation du laboratoire](laboratoire-fedora-kvm-rocky.md) avant l’exercice 03.
+3. [Parcours personnel — 13 exercices](apprentissage/README.md) : ordre unique.
+4. [Évaluations](apprentissage/evaluations.md) et [corrigés](apprentissage/corriges.md) après une tentative.
 
-## Références techniques
+## Exploiter et vérifier
 
-| Domaine | Référence |
+| Objectif | Point d’entrée actif |
 | --- | --- |
-| Infrastructure | [Infrastructure](infrastructure.md) |
-| Livraison et chaîne CI/CD | [Livraison](livraison.md) · [CI/CD](cicd.md) |
-| Exploitation et reprise | [Maintenance](exploitation-day2.md) · [Reprise](reprise.md) |
-| Sécurité | [Sécurité](securite.md) · [Triage](triage-securite.md) |
-| Versions et concepts | [Versions](versions.md) · [Références InfraOps](references-infraops.md) |
+| Écrire l’infrastructure | [Terraform](apprentissage/04-terraform.md) · [Ansible](apprentissage/05-ansible.md) |
+| Livrer | [Podman](apprentissage/06-conteneurs.md) · [K3s](apprentissage/07-k3s.md) · [CI/CD](apprentissage/08-cicd.md) |
+| Observer et maintenir | [Supervision](apprentissage/09-supervision.md) · [Maintenance](apprentissage/10-maintenance.md) |
+| Rétablir | [Sauvegarde et reprise](apprentissage/11-sauvegarde-reprise.md) · [Diagnostic](apprentissage/12-diagnostic.md) |
+| Évaluer les risques | [Sécurité](securite.md) · [Triage de l’image historique](triage-securite.md) |
 
-Les références peuvent inclure des recettes historiques. Les indications de cible et de validité de chaque fichier priment : ne pas exécuter une recette historique ou non qualifiée comme un guide actif.
+[État et contrôle](../STATUS.md) · [Preuves](preuves.md) · [Provenance](provenance.md) · [Versions](versions.md) · [Références InfraOps](references-infraops.md)
 
-## État et traçabilité
+## Références historiques
 
-[STATUS.md](../STATUS.md) est la référence d’avancement et de contrôle ; [preuves.md](preuves.md) précise la méthode et les limites des observations. [Provenance](provenance.md) distingue l’application fournie, les éléments historiques et le travail personnel. [Démonstration](demonstration.md) et [démarrage historique](demarrage.md) à consulter comme références, en respectant leur périmètre.
+Les anciennes recettes Ubuntu/WSL2 et Compose restent consultables, mais leurs fichiers d’infrastructure ne sont plus présents et elles ne constituent pas des guides actifs. Accéder à leur [index historique](historique.md), au [scénario de démonstration](demonstration.md) et aux preuves associées.
 
-Le projet est réservé au laboratoire : aucune authentification et aucun déploiement d’infrastructure personnel vérifié.
+Le laboratoire actuel reste à construire et à vérifier. Aucun résultat personnel ne découle de la seule lecture.

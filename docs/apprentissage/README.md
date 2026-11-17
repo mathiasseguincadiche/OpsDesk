@@ -10,7 +10,7 @@ L’hôte prévu est **Fedora 45**, avec KVM/QEMU et libvirt ; le système invit
 
 **GitHub est l’unique plateforme active du projet.** GitLab reste en l’état ; ses références historiques sont facultatives. Aucune synchronisation ni double gestion quotidienne n’est demandée. AWS et les variantes cloud restent des objectifs distincts à justifier et à autoriser, pas un prérequis du laboratoire local.
 
-Docker, GitHub Actions/GHCR et Trivy sont reliés aux exercices 06/08 ; Prometheus/Grafana et un test k6 borné à l’exercice 09. Les outils sont à vérifier, préparer et pratiquer personnellement.
+Podman avec Quadlet (service principal), GitHub Actions/GHCR et Trivy sont reliés aux exercices 06/08 ; Prometheus/Grafana et un test k6 borné à l’exercice 09. Les outils sont à vérifier, préparer et pratiquer personnellement.
 
 | Ordre | Exercice | Responsabilité |
 |---|---|---|
@@ -50,7 +50,7 @@ Pour 01/02, préparer uniquement lecture, questions et dessin : ni VM, ni servic
 
 Avant une commande personnelle, noter son besoin, la machine visée (hôte, VM, conteneur ou runner), l’utilisateur, le répertoire de lancement, les versions, les prérequis et l’état initial. Identifier paramètres à choisir, droits, effet, fichiers ou ressources touchés, résultat attendu et contrôle. Prévoir où lire les erreurs, quelle observation ferait arrêter et quel retour est possible. Distinguer explication conceptuelle et bloc réellement prêt à copier ; un nom de commande dans une leçon n’est pas une procédure exécutable.
 
-Une action sur un cloud payant, une exposition Internet, un réseau sensible, un incident provoqué ou une suppression exige l’accord ciblé prévu. Ne pas supprimer une VM, un volume, un state ou l’unique archive pour fabriquer une preuve. Préférer un constat en lecture seule et une copie de laboratoire ; garder les protections actives. Les anciens guides de commandes sont historiques quand leurs fichiers requis sont absents.
+Une action sur un cloud payant, une exposition Internet, un réseau sensible, un incident provoqué ou une suppression exige l’accord ciblé prévu. Ne pas supprimer une VM, un volume, un state ou l’unique archive pour fabriquer une preuve. Préférer un constat en lecture seule et une copie de laboratoire ; garder les protections actives. Les anciens guides de commandes sont historiques quand leurs fichiers requis sont absents. Voir l’[index des références historiques](../historique.md).
 
 <a id="verifier-et-diagnostiquer"></a>
 

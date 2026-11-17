@@ -6,6 +6,15 @@ Les noms retenus pour la suite (réseau `opsdesk-lan`, utilisateur `mathias`, se
 
 L’objectif est une première VM utilisable et comprise, `srv-admin`, puis deux autres VM créées depuis elle, puis les exercices du projet. La lecture du guide n’attribue aucun résultat personnel, niveau L0–L3 ou autonomie. Aucun Terraform, playbook Ansible, Dockerfile, fichier Quadlet, manifeste K3s ou pipeline complet n’est fourni ici.
 
+## Accès rapide aux étapes
+
+| Quand | Où aller |
+| --- | --- |
+| Avant toute installation | [Identifier les rôles](#1-identifier-les-rôles-avant-de-lancer-une-commande) · [Pré-check Fedora](#2-pré-check-de-lhôte-fedora--observation-avant-installation) |
+| Préparer la première VM | [Dimensionnement](#3-proportionner-le-laboratoire-et-comprendre-ses-limites) · [Média Rocky](#4-choisir-et-vérifier-le-média-rocky-linux-102) · [srv-admin](#5-préparer-personnellement-srv-admin-la-première-vm-dans-virt-manager) |
+| Installer et contrôler les outils | [Accès et outils par VM](#6-contrôler-linvité-et-préparer-laccès-sans-contourner-les-protections) · [Compatibilités](#7-vérifier-la-compatibilité-au-moment-du-module-concerné) |
+| Prouver et continuer | [Réception](#8-recevoir-le-laboratoire-avec-des-preuves-interprétées) · [Parcours](apprentissage/README.md) |
+
 ## 1. Identifier les rôles avant de lancer une commande
 
 - **Fedora 45 / GNOME 51 est l’hôte physique.** Il porte le bureau, KVM, QEMU, libvirt et virt-manager. Terraform et Ansible ne sont pas installés sur Fedora : ils sont sur `srv-admin`.
@@ -230,7 +239,7 @@ Les outils propres à chaque exercice (Terraform/provider, Ansible/collections, 
 | `srv-admin` | Terraform et fournisseur `dmacvicar/libvirt` | 04 | Paquet ou dépôt HashiCorp pour Rocky Linux 10.2 : non vérifié ; version du fournisseur (la branche 0.9 est une réécriture de 0.8) |
 | `srv-admin` | `ansible-core` | 05 | Python système 3.12 ; paquet proposé par les dépôts de Rocky Linux 10.2 : non vérifié ; collections nécessaires |
 | `srv-admin` | k6 | 09 | Source du paquet ou du binaire : non vérifiée ; un seul vCPU borne la charge |
-| `srv-app` | Podman avec Quadlet et systemd, `rsync`, `node_exporter`, `pg_dump` (dans le conteneur `db` ou par un client PostgreSQL 17, à décider) | 06, 09, 11 | Podman annoncé en 5.8.2 dans Rocky Linux 10.2 ; mode root ou rootless à décider ; SELinux sur `/var/lib/opsdesk` |
+| `srv-app` | Podman avec Quadlet et systemd, `rsync`, `node_exporter`, `pg_dump` (dans le conteneur `db` ou par un client PostgreSQL 17, à décider) | 06, 09, 11 | Podman annoncé en 5.8.2 dans Rocky Linux 10.2 ; mode rootless retenu sous le compte `mathias` (décision du 16 novembre 2026) ; SELinux sur `/var/lib/opsdesk` |
 | `srv-k3s` | K3s et `node_exporter` ; Prometheus, Grafana et la copie d’essai s’installent dans K3s | 07, 09 | `kernel-modules-extra`, SELinux, ports (section 7) |
 
 Pour chacun : vérifier la présence, lire la transaction, installer personnellement au module concerné, relever la version, noter la preuve.
@@ -267,7 +276,7 @@ Ce tableau conserve les technologies choisies. Il ne transforme pas une disponib
 
 Une réserve spécifique est conservée pour K3s : dans [l’installateur amont inspecté à un commit figé](https://github.com/k3s-io/k3s/blob/2b723db54007ab1509fc86ee2712ecc93cc49843/install.sh#L621), Rocky 10.2 passe dans la sélection par défaut `el9` pour la politique SELinux. C’est une lecture de source, pas une preuve d’incompatibilité du paquet ni un test d’installation. Avant d’exécuter ce module, vérifier la version choisie et une politique effectivement applicable à Rocky 10.2 ; à défaut, reporter cette installation en NON EXÉCUTÉ plutôt que désactiver SELinux ou remplacer la distribution.
 
-La qualification InvenTree 1.7.0 couvre huit tests backend/HTTP Django et les contrôles de quantités ; le rendu JavaScript complet reste non qualifié. L’instance historique 1.6.3 n’est pas une preuve de réception 1.7.0. Les verdicts sécurité FAIL conservés ne sont pas transformés en PASS par le changement de VM ou de documentation.
+La qualification applicative d’OpsDesk est décrite dans [STATUS.md](../STATUS.md) : les essais historiques ne valident pas le laboratoire Fedora/KVM/Rocky. Les verdicts de sécurité en échec restent en échec tant qu’un nouveau contrôle pertinent ne démontre pas le contraire.
 
 ## 8. Recevoir le laboratoire avec des preuves interprétées
 
