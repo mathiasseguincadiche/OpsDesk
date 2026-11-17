@@ -107,7 +107,7 @@ Pour une nouvelle décision coûteuse à inverser, ajouter date, contexte sourc�
 
 Deux figures servent désormais des objectifs distincts : [présentation](diagrams/presentation.drawio) / [SVG](diagrams/presentation.svg) et [technique](diagrams/architecture-technique.drawio) / [SVG](diagrams/architecture-technique.svg). Les anciennes figures restent accessibles dans l’historique Git, sans suppression des preuves ni des limites techniques dans les documents.
 
-**Recette graphique partielle :** les SVG sont exportés des sources `.drawio` par le moteur Draw.io 32.6.10 ; les deux sources ont été ouvertes dans l’application Draw.io sous Windows le 13 novembre 2026, sans élément hors de la page. Il reste à contrôler la lisibilité dans GitHub et Notion, en thèmes clair et sombre. Voir la [recette de validation](diagrams/README.md).
+**Contrôles des schémas :** ce qui est vérifié, et ce qui ne l’est pas, est tenu à un seul endroit, la [fiche de contrôle](diagrams/README.md#contrôles).
 
 ## Références primaires
 
