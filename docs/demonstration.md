@@ -2,7 +2,18 @@
 
 **Scénario oral proposé, non chronométré et non présenté comme une démonstration déjà réalisée par l’apprenant.** Les durées ci-dessous sont un découpage indicatif. Les tests de source et les observations du service historique ont des preuves séparées.
 
-Ce parcours présente **les observations locales historiques et les résultats personnels qui seront disponibles au jour de la démonstration** et explique honnêtement les étapes encore cibles. Aucune disponibilité 24 h/24 ni réception cloud/K3s n’est annoncée.
+## Démonstration documentaire — disponible actuellement
+
+1. Présenter le [schéma de présentation](diagrams/presentation.svg) et le besoin métier.
+2. Examiner la [capture historique](../evidence/interface.png) et son [observation navigateur datée](../evidence/browser.json) : création et suivi de tickets, données fictives. La capture n'est pas une exécution actuelle.
+3. Ouvrir le [rapport des 26 tests applicatifs](../evidence/qualification/application-tests.json), puis le [scan en échec](../evidence/vulnerability-scan.json). Expliquer leurs périmètres respectifs, pas une validation globale.
+4. Présenter le [registre des choix](architecture.md#décisions-retenues) et les prochaines réalisations personnelles à démontrer dans le [parcours](apprentissage/README.md).
+
+Aucun service n’a besoin d'être démarré pour cette revue. Aucune disponibilité 24 h/24 ni réception cloud/K3s n’est annoncée.
+
+## Démonstration vivante — à préparer sur la cible personnelle
+
+Le scénario ci-dessous exige un laboratoire reçu et des preuves personnelles. Il n'est pas une procédure aujourd'hui exécutable.
 
 | Temps indicatif | Action | Ce que le lecteur doit comprendre |
 |---|---|---|
@@ -24,6 +35,6 @@ Avant une démonstration vivante, vérifier l’existence de sa propre cible loc
 - Qu’arrive-t-il si live passe mais ready échoue ?
 - Pourquoi un rollback de l’image ne restaure-t-il pas les tickets ?
 - Comment relier ce qui est servi à un commit et à une image précise ?
-- Pourquoi reprendre Terraform/Ansible/K3s dans plusieurs projets ? Parce qu’un besoin se retrouve dans plusieurs contextes ; adapter cibles, paramètres, droits, contrôles et reprise vaut mieux qu’une diversité décorative.
+- Comment passer de la conception à une infrastructure reproductible ? Expliquer le choix des ressources, les paramètres, les droits, les contrôles et la méthode de reprise.
 
 [État réel](../STATUS.md) · [Architecture](architecture.md) · [Preuves](preuves.md)

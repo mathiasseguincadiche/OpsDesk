@@ -1,6 +1,10 @@
 # Documentation OpsDesk
 
-Le [README du projet](../README.md) donne la vue d’ensemble. Choisir la référence selon le travail à réaliser.
+Le [README du projet](../README.md) est la vitrine. Les pages ci-dessous constituent la référence technique du laboratoire.
+
+**Pour une revue de portfolio :** [architecture](architecture.md) → [démonstration et preuves](demonstration.md) → [état daté](../STATUS.md).
+
+**Pour apprendre :** commencer par les deux exercices de lecture, préparer le laboratoire, puis suivre l’ordre des 13 exercices.
 
 ## Comprendre
 

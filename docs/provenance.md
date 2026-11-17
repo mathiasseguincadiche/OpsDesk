@@ -11,6 +11,10 @@
 
 Un essai historique ou un PASS n’est pas une réalisation personnelle. Le détail des preuves est dans [STATUS](../STATUS.md) et [preuves](preuves.md).
 
+## Captures et limites
+
+La [capture d’interface historique](../evidence/interface.png) est associée à l’[observation navigateur](../evidence/browser.json) du 3 novembre 2026, en environnement Windows/WSL. Elle ne prouve pas le rendu de la révision actuelle. Les fichiers [new_list.png](../new_list.png), [new_detail.png](../new_detail.png) et [new_error.png](../new_error.png) restent conservés, mais leur date et leur révision de capture ne sont pas établies dans les pièces consultées lors de cette refonte. Ils ne sont pas utilisés comme preuves du portfolio.
+
 ## Fichiers historiques absents du dépôt
 
 Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), les fichiers suivants ne sont plus dans le dépôt ; les rapports JSON de `evidence/` restent disponibles. La conservation des originaux dans un autre espace est **NON VÉRIFIÉE**.
