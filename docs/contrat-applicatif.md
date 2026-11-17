@@ -1,6 +1,6 @@
 # Contrat de passation applicative — OpsDesk
 
-**Destinataire : l’apprenant en formation InfraOps.** Le code métier, son schéma et les tests sont fournis. La conception des machines, réseaux, rôles PostgreSQL, conteneurs, K3s, CI/CD, supervision, sauvegardes et exploitation appartient à l’apprenant. Ce contrat décrit les besoins de l’application ; il ne livre pas cette infrastructure à sa place.
+**Destinataire : l’apprenant InfraOps, projet personnel.** Le code métier, son schéma et les tests sont fournis. La conception des machines, réseaux, rôles PostgreSQL, conteneurs, K3s, CI/CD, supervision, sauvegardes et exploitation appartient à l’apprenant. Ce contrat décrit les besoins de l’application ; il ne livre pas cette infrastructure à sa place.
 
 ## 1. Présentation
 
