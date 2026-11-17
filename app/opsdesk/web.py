@@ -19,6 +19,26 @@ COUNTERS = defaultdict(int)
 COUNTER_LOCK = Lock()
 
 
+def _utc(value):
+    from datetime import datetime
+    if isinstance(value, datetime):
+        return value.astimezone(timezone.utc)
+    return value
+
+
+def utc_day(value):
+    """Format a timestamp as a short UTC day (lun. 3 nov.)."""
+    value = _utc(value)
+    french_days = {0: "lun.", 1: "mar.", 2: "mer.", 3: "jeu.", 4: "ven.", 5: "sam.", 6: "dim."}
+    french_months = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."]
+    return f"{french_days[value.weekday()]} {value.day} {french_months[value.month - 1]}"
+
+
+def utc_hour(value):
+    """Format a timestamp as an UTC hour (14:32)."""
+    return _utc(value).strftime("%H:%M")
+
+
 def secret_file(name):
     path = os.environ.get(name)
     if not path:
@@ -77,9 +97,14 @@ def create_app():
             session["csrf"] = secrets.token_hex(24)
         return session["csrf"]
 
+    app.jinja_env.filters["utc_day"] = utc_day
+    app.jinja_env.filters["utc_hour"] = utc_hour
+
     @app.context_processor
     def context():
-        return {"identity": identity, "csrf_token": csrf, "status_labels": {"open": "Ouvert", "in_progress": "En cours", "closed": "Clôturé"}}
+        return {"identity": identity, "csrf_token": csrf,
+                "status_labels": {"open": "Ouvert", "in_progress": "En cours", "closed": "Clôturé"},
+                "priority_labels": {"low": "Basse", "normal": "Normale", "high": "Haute"}}
 
     def ensure_csrf():
         supplied = request.form.get("csrf", "")
@@ -125,7 +150,11 @@ def create_app():
 
     @app.get("/tickets")
     def list_page():
-        return render_template("tickets.html", tickets=tickets())
+        rows = tickets()
+        counts = {"total": len(rows)}
+        for status in STATUSES:
+            counts[status] = sum(1 for row in rows if row["status"] == status)
+        return render_template("tickets.html", tickets=rows, counts=counts)
 
     @app.post("/tickets")
     def new_ticket():
