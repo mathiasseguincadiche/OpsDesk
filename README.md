@@ -1,4 +1,4 @@
-# OpsDesk — gestion de tickets de support IT
+# OpsDesk - Application de Gestion de ticket IT
 
 OpsDesk est une application web de helpdesk : les collaborateurs déclarent leurs incidents, l'équipe support les prend en charge, les commente et les résout, et un tableau de bord suit l'activité en temps réel.
 
