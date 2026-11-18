@@ -8,15 +8,21 @@ OpsDesk est un service de tickets pour un laboratoire d’infrastructure. Un uti
 
 **Prochain résultat à démontrer.** Provisionner `srv-app` avec Terraform, la configurer avec Ansible, puis déployer avec Podman et Quadlet. Rejouer la configuration et relire un ticket après redémarrage. **Jalon prévu.**
 
-**[Commencer par la revue du projet](docs/demonstration.md)** · [Architecture et décisions](docs/architecture.md) · [État et preuves](STATUS.md) · [Centre de formation Notion (accès selon droits)](https://app.notion.com/p/41b65721fa18812598c1cde5c24878d9)
+**[Commencer par la revue du projet](docs/demonstration.md)** · [Architecture et schéma technique](#architecture-cible) · [État et preuves](STATUS.md) · [Centre de formation Notion (accès selon droits)](https://app.notion.com/p/41b65721fa18812598c1cde5c24878d9)
 
 > Laboratoire privé, données fictives et service sans authentification. La revue documentaire est accessible sans démarrer le laboratoire.
 
 [![Vue d’ensemble d’OpsDesk et des trois phases de l’architecture cible](docs/diagrams/presentation.svg)](docs/diagrams/presentation.svg)
 
-[Voir le schéma de présentation en grand](docs/diagrams/presentation.svg) · [Ouvrir le schéma technique](docs/diagrams/architecture-technique.svg) · [Sources Draw.io et flux réseau](docs/diagrams/README.md)
+[Voir le schéma de présentation en grand](docs/diagrams/presentation.svg)
 
 ## Architecture cible
+
+Le schéma technique montre les trois VM du laboratoire, la chaîne de livraison, les flux réseau et la sauvegarde de PostgreSQL.
+
+[![Schéma technique d’OpsDesk. La VM d’administration pilote la VM applicative et la copie d’essai K3s. Le schéma détaille aussi la livraison, la supervision et la sauvegarde.](docs/diagrams/architecture-technique.svg)](docs/diagrams/architecture-technique.svg)
+
+[Voir le schéma technique en grand](docs/diagrams/architecture-technique.svg) · [Sources Draw.io et flux réseau](docs/diagrams/README.md)
 
 | Responsabilité | Choix et résultat visé |
 | --- | --- |
