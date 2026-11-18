@@ -1,0 +1,92 @@
+# OpsDesk — pile complète : PostgreSQL + API FastAPI + interface React/nginx.
+# Compatible `podman compose`, `podman-compose` et `docker compose`.
+#
+#   cp .env.example .env      # puis changer les mots de passe
+#   podman compose up -d --build
+#   → http://localhost:8080
+name: opsdesk
+
+services:
+  db:
+    image: docker.io/library/postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-opsdesk}
+      POSTGRES_USER: ${DB_USER:-opsdesk}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD manquant dans .env}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [backend]
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Containerfile
+      args:
+        APP_VERSION: ${APP_VERSION:-2.0.0}
+        APP_REVISION: ${APP_REVISION:-dev}
+    image: ${REGISTRY:-localhost}/opsdesk-api:${APP_VERSION:-2.0.0}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-opsdesk}
+      DB_USER: ${DB_USER:-opsdesk}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET manquant dans .env}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@opsdesk.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD manquant dans .env}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
+      ALLOW_REGISTRATION: ${ALLOW_REGISTRATION:-true}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      # API exposée en local uniquement : /metrics (Prometheus) et /api/docs (Swagger).
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    # Déclaré ici et pas seulement dans le Containerfile : `podman build` (format OCI
+    # par défaut) ignore l'instruction HEALTHCHECK de l'image.
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2).status == 200 else 1)"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+    networks: [backend, frontend]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Containerfile
+      args:
+        APP_VERSION: ${APP_VERSION:-2.0.0}
+        APP_REVISION: ${APP_REVISION:-dev}
+    image: ${REGISTRY:-localhost}/opsdesk-frontend:${APP_VERSION:-2.0.0}
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      BACKEND_URL: http://backend:8000
+    ports:
+      - "${HTTP_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks: [frontend]
+
+volumes:
+  db-data:
+
+networks:
+  backend:
+  frontend:
