@@ -1,190 +1,223 @@
-# Repères de correction — à consulter après une première tentative
+# Repères de correction — à lire après ta tentative
 
-> [!IMPORTANT]
-> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). Les exercices ont été réécrits pour la version 2 le 18 novembre 2026 : voir [le parcours](README.md). Ce document n'a pas encore été repris et se lit à titre historique.
+Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont dans [le parcours](README.md) ; la même page existe dans le centre de formation Notion.
 
-Ces repères séparés ne sont pas une infrastructure complète. Demander un indice, une explication limitée ou une revue ciblée selon le besoin. Une réponse différente peut être pertinente si elle satisfait le contrat et les vérifications. Tous les résultats personnels restent NON EXÉCUTÉS / NON ÉVALUÉS.
+## Comment utiliser ces repères
 
+- **Après ta tentative, jamais avant.** Compare ta réponse, puis corrige-la toi-même et refais le contrôle.
+- **Ce ne sont pas des solutions à recopier.** Aucun fichier Terraform, Ansible, Quadlet, Kubernetes ou CI complet n'est fourni : ton infrastructure reste ton travail.
+- **Une autre réponse peut être juste** si elle respecte le registre des décisions, protège les données et passe les vérifications de la fiche.
+- **Pour chaque exercice** : les réponses attendues aux questions de la partie 8 de la fiche, ce que contient une bonne solution, et les points à refuser dans un rendu.
 
 <a id="exercice-01"></a>
-<a id="exercice-01"></a>
 
-## Exercice 01 — Comprendre l’application
+## Exercice 01 — Comprendre OpsDesk
 
-**Attendus à argumenter.** Un contrat applicatif décrit ce que le logiciel exige et garantit ; il ne choisit pas ton infrastructure. Un parcours utilisateur relie une entrée HTTP à une donnée persistante. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Un schéma fonctionnel personnel, la liste des données durables et les questions posées à l’équipe applicative.
+**Réponses attendues.**
 
-**Vérification raisonnée.** Suivre une action utilisateur et nommer chaque composant qui peut la bloquer. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+- *Le trajet d'une création.* Le navigateur envoie `POST /api/tickets` à nginx (port 8080) ; nginx relaie à l'API ; l'API lit le jeton (qui ?), le rôle (a-t-il le droit ?), valide le titre et la description, écrit le ticket et son premier événement d'historique dans PostgreSQL, puis répond `201` avec le ticket en JSON.
+- *`401` ou `403`.* `401` : l'API ne sait pas qui demande (pas de jeton, jeton expiré ou invalide). `403` : elle le sait, mais ce compte n'a pas le droit.
+- *Pourquoi le ticket survit.* Il est écrit dans PostgreSQL, dont les fichiers sont sur un volume, séparé du conteneur. Il disparaît si le volume est supprimé ou le disque perdu sans sauvegarde.
+- *`/health/live` ou `/health/ready`.* Le premier dit que le processus répond, sans interroger la base ; le second dit qu'il joint la base (`503` sinon).
+- *Si la base est arrêtée.* `/health/ready` (503, `"database":"down"`), l'état du conteneur de la base, puis les journaux de l'API et de la base.
+- *Ce qu'un `200` ne garantit pas.* Ni la persistance, ni une sauvegarde restaurable, ni la sécurité face à Internet, ni la tenue sous charge.
 
-**Points à refuser.** Confondre le laboratoire historique avec une architecture personnelle déjà choisie. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Une bonne solution contient** un schéma où le navigateur ne parle qu'à `opsdesk-web` ; la prise en charge par `POST /api/tickets/{id}/status` vers `in_progress` ; le `403` de Marie si elle tente la prise en charge ; comme données durables, les comptes, les tickets, les commentaires et l'historique (pas les jetons, qui ne sont pas stockés).
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
-
+**Points à refuser.** Une flèche du navigateur vers la base ; « nginx vérifie le mot de passe » ; « le jeton est stocké en base » ; une limite qui n'en est pas une (« l'application est lente ») sans mesure.
 
 <a id="exercice-02"></a>
-<a id="exercice-02"></a>
 
-## Exercice 02 — Relire, justifier et vérifier l’architecture retenue
+## Exercice 02 — Architecture et décisions
 
-**Attendus à argumenter.** L’architecture traduit un besoin en ressources, flux et frontières de confiance. Un dessin doit expliquer les accès et la persistance, pas seulement aligner des logos. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Note de justification des décisions du registre (besoin, alternative écartée, point de panne, contrôle prévu), flux redessinés puis comparés au schéma technique, écarts signalés.
+**Réponses attendues.**
 
-**Vérification raisonnée.** Partir du symptôme utilisateur et traverser client, point d’entrée, application puis stockage. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une critique de l’architecture retenue est recevable si elle s’appuie sur le contrat, les droits, la persistance et les critères, et si elle se consigne comme proposition avec sa raison plutôt que comme modification silencieuse.
+- *Trois serveurs.* Séparer piloter (`srv-admin`), servir (`srv-app`) et expérimenter et superviser (`srv-k3s`) : les outils d'infrastructure ont un lieu nommé et reconstructible, et les essais K3s ne menacent pas le service. Coût : 12 Go de mémoire pris à l'hôte, trois machines à maintenir.
+- *Podman et Quadlet plutôt que Compose sur le serveur.* Natif Red Hat, géré par systemd (démarrage au boot, redémarrage, journaux), sans démon ni root. `compose.yaml` reste l'outil des essais locaux.
+- *Le compte `opsdesk`.* Moindre privilège : un conteneur compromis n'atteint ni les clés SSH ni `sudo` de `mathias`.
+- *Si `srv-app` disparaît.* Le service s'arrête ; les données sont perdues depuis la dernière sauvegarde (jusqu'à 24 heures) ; le reste se reconstruit par Terraform et Ansible. *Si le PC hôte disparaît*, tout est perdu, sauvegardes comprises : aucune copie hors du PC n'est prévue.
+- *Pourquoi K3s.* Pour apprendre Kubernetes sans risque pour le service réel ; un seul nœud n'apporte aucune haute disponibilité.
 
-**Points à refuser.** Assimiler namespace, réseau conteneur et isolation de machines ; oublier où vivent les données ; recopier le registre sans expliquer un seul choix. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Une bonne revue contradictoire relève au moins** : le stockage de la base « à revoir » (droits et contexte SELinux en mode sans root) ; l'absence de copie hors du PC ; la copie du state Terraform et des clés hors de `srv-admin`, qui contient des secrets à chiffrer ; le port 8000 ouvert à `srv-k3s` pour toute l'API ; la supervision qui tombe avec `srv-k3s`.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
-
+**Points à refuser.** Une alternative inventée, sans lien avec le registre ; « vérifié » pour une décision non construite ; un défaut corrigé sans être écrit comme question ouverte ; la confusion entre volume et sauvegarde.
 
 <a id="exercice-03"></a>
-<a id="exercice-03"></a>
 
-## Exercice 03 — Préparer Linux et le réseau
+## Exercice 03 — Rocky Linux, VM, réseau et SSH
 
-**Attendus à argumenter.** Linux porte des processus, fichiers et services avec des droits. DNS résout un nom ; une route choisit un trajet ; un port écoute ; le pare-feu autorise un flux. Ces contrôles répondent à des questions différentes. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Identité de cible, carte de flux, accès vérifiés et diagnostic d’un défaut borné.
+**Réponses attendues.**
 
-**Vérification raisonnée.** Observer utilisateur, processus/service, résolution, trajet, écoute puis autorisation ; changer une chose après confirmation. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+- *VM ou conteneur.* Une VM a son propre noyau et simule une machine entière ; un conteneur partage le noyau de l'hôte et isole un processus.
+- *Pourquoi un `ping` ne suffit pas.* ICMP et TCP 22 sont deux flux différents, filtrés séparément.
+- *Les quatre messages.* `timed out` : aucune réponse (VM éteinte, mauvaise adresse). `No route to host` : souvent un rejet du pare-feu. `refused` : la machine répond, rien n'écoute sur le port. `Permission denied` : le serveur répond, l'authentification échoue.
+- *L'empreinte.* Elle prouve qu'on parle au bon serveur ; une empreinte changée signale une VM recréée ou une interception.
+- *Pourquoi garder SELinux et le pare-feu.* Les désactiver masque la cause et laisse le serveur exposé ; on corrige la règle précise.
 
-**Points à refuser.** Désactiver SELinux/le pare-feu en bloc ; utiliser root partout ; diagnostiquer une route avec un test DNS seulement. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Une bonne solution contient** le tableau des six questions avec de vraies sorties datées ; la configuration SSH dans un fichier de `/etc/ssh/sshd_config.d/`, validée par `sshd -t` ; les deux refus prouvés ; un diagnostic où la panne provoquée est retrouvée par la méthode, pas devinée.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
-
+**Points à refuser.** SELinux en `Permissive` « temporairement » ; `PermitRootLogin yes` ; une connexion qui ne marche que par mot de passe ; une ancienne empreinte effacée sans vérification.
 
 <a id="exercice-04"></a>
-<a id="exercice-04"></a>
 
-## Exercice 04 — Provisionner avec Terraform
+## Exercice 04 — Terraform
 
-**Attendus à argumenter.** Terraform compare la configuration au state et à l’état distant pour calculer un plan. Le state contient des identités et parfois des secrets ; un fichier terraform_data local ne crée pas une VM. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Code personnel, plan expliqué, état protégé et ressources observées correspondant au plan.
+**Réponses attendues.**
 
-**Vérification raisonnée.** Localiser l’erreur entre syntaxe, provider/authentification, droits, quota ou dérive ; ne pas supprimer le state comme premier réflexe. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+- *Les trois choses comparées.* Le code, le state, et ce qui existe réellement dans libvirt.
+- *`+`, `~`, `-/+`.* Créer ; modifier sur place ; détruire puis recréer (une VM perd alors son disque).
+- *Le state.* Hors de Git car il contient identifiants et parfois secrets ; copié hors de `srv-admin` car, sans lui, Terraform ne reconnaît plus ses machines.
+- *Une modification à la main.* Le plan suivant montre une dérive et propose de revenir à ce que dit le code.
+- *Terraform et Ansible.* Terraform crée les machines (disques, réseau, ressources) ; Ansible configure l'intérieur.
 
-**Points à refuser.** Confondre validation syntaxique et ressource créée ; versionner le state ; forcer un apply sur la mauvaise cible. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Une bonne solution contient** une version du fournisseur fixée ; une seule description réutilisée pour les deux VM ; le disque de données de 10 Go sur `srv-app` seulement ; aucune ressource pour `srv-admin` ; un second plan à « No changes » ; la décision image cloud ou ISO écrite au registre.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
-
+**Points à refuser.** Un `.tfstate` dans le dépôt ; un `apply` dont le plan annonçait un remplacement non expliqué ; `srv-admin` importée dans le state ; un mot de passe en clair dans le code.
 
 <a id="exercice-05"></a>
-<a id="exercice-05"></a>
 
-## Exercice 05 — Configurer avec Ansible
+## Exercice 05 — Ansible
 
-**Attendus à argumenter.** Ansible applique des tâches à un inventaire. Un module convergent décrit un état ; l’idempotence se vérifie par une seconde passe et par l’état effectif, pas par un commentaire. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Première/seconde sorties expurgées, tâches expliquées et contrôle du service/paramètre effectivement configuré.
+**Réponses attendues.**
 
-**Vérification raisonnée.** Lire le premier hôte/tâche/code en défaut ; vérifier accès, chemin, variable, module et privilège avant correction ciblée. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+- *Playbook ou liste de commandes.* Le playbook décrit l'état voulu, se relit, se versionne, et se rejoue sans dégâts.
+- *`ok`, `changed`, `failed`.* Déjà conforme ; corrigé ; échec.
+- *Pourquoi `changed=0` ne suffit pas.* Il dit qu'il n'y a plus rien à corriger, pas que le service fonctionne : on vérifie sur le serveur.
+- *Sur une VM neuve.* Toutes les tâches répondent `changed` au premier passage, puis `ok` au second.
 
-**Points à refuser.** Utiliser shell pour chaque action ; confondre changed=0 avec service fonctionnel ; laisser une variable sensible dans un log. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Une bonne solution contient** une tâche par point de l'état voulu, avec les modules dédiés (`dnf`, `user`, `ansible.posix.firewalld` avec `permanent` et `immediate`) ; pour le lingering, une commande `loginctl enable-linger` rendue idempotente par l'option `creates` pointant sur `/var/lib/systemd/linger/opsdesk` ; un compte `opsdesk` sans mot de passe ; un second passage à `changed=0`.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
-
+**Points à refuser.** `shell` partout ; `changed` à chaque passage laissé tel quel ; un mot de passe dans l'inventaire ; `firewalld` arrêté pour ouvrir le port.
 
 <a id="exercice-06"></a>
-<a id="exercice-06"></a>
 
-## Exercice 06 — Conteneuriser
+## Exercice 06 — Podman et Quadlet
 
-**Attendus à argumenter.** Une image fige le programme et ses dépendances ; un conteneur est un processus qui l’utilise. Réseau, volumes, paramètres et secrets déterminent son fonctionnement. L’image n’est pas une sauvegarde de la base. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Recette personnelle, image identifiable, configuration privée et parcours métier vérifié.
+**Réponses attendues.**
 
-**Vérification raisonnée.** Séparer erreur de build, commande de lancement, droits, DNS, connexion DB et schéma ; regarder le premier message utile. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+- *Image, conteneur, volume.* Le programme figé ; son exécution, jetable ; le stockage qui survit au conteneur.
+- *`daemon-reload`.* systemd relance le générateur Quadlet, qui transforme chaque fichier en service.
+- *Le compte `opsdesk` et le lingering.* Moindre privilège ; le lingering garde ses services actifs sans session ouverte, donc au boot.
+- *Un mot de passe sans fichier.* Un secret Podman, monté en fichier dans le conteneur et lu par la variable `*_FILE`.
+- *`active` ne suffit pas.* Le service peut tourner sans répondre ; la preuve est un ticket créé puis relu.
+- *Volume et sauvegarde.* Le volume survit au conteneur, pas à sa suppression ni à la perte du disque.
 
-**Points à refuser.** Inclure secrets/données dans l’image ; utiliser latest sans identité ; croire qu’un conteneur démarré prouve le métier. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Une bonne solution contient** un réseau commun aux trois conteneurs ; l'API joignable sous le nom `backend` ; `DB_HOST` égal au nom de la base sur ce réseau ; un `HealthCmd=` par conteneur ; seul `opsdesk-web` publiant le port 8080 ; trois secrets Podman ; `WantedBy=default.target` ; la décision sur le stockage écrite et justifiée ; un rôle Ansible qui agit avec `become_user: opsdesk` et `XDG_RUNTIME_DIR`, idempotent.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
-
+**Points à refuser.** Un secret écrit dans une unité ou un template ; des conteneurs lancés sous `root` ; la base publiée sur un port de l'hôte ; un service qui ne revient pas après un reboot.
 
 <a id="exercice-07"></a>
-<a id="exercice-07"></a>
 
-## Exercice 07 — Orchestrer avec Kubernetes/K3s
+## Exercice 07 — K3s
 
-**Attendus à argumenter.** Un Deployment pilote des réplicas ; un Service sélectionne des Pods ; readiness décide du trafic et liveness d’un redémarrage. Une donnée durable exige un choix explicite de stockage et de reprise. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Workloads/flux expliqués, version servie et parcours métier ; rollout et diagnostic sur une cible nommée.
+**Réponses attendues.**
 
-**Vérification raisonnée.** Examiner événements, état du Pod, logs et sélecteurs/endpoints avant de relancer ; revalider la donnée utile. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+- *Lancer ou déclarer.* On décrit l'état voulu ; le cluster agit en permanence pour le rejoindre.
+- *Deployment, Service, Ingress.* Garde N pods ; nom stable vers les pods prêts, choisis par leurs étiquettes ; entrée HTTP depuis l'extérieur.
+- *Readiness ou liveness.* La première retire du trafic, la seconde redémarre. `/health/ready` en liveness ferait redémarrer l'API en boucle à chaque panne de la base.
+- *Deux API, une seule base.* L'API ne garde rien en mémoire et partage le même `JWT_SECRET` ; deux PostgreSQL sur le même stockage le corrompraient.
+- *Un seul nœud.* Si `srv-k3s` tombe, tout tombe.
 
-**Points à refuser.** Confondre port applicatif, Service et exposition ; probe qui dépend de la DB et redémarre tout ; PVC pris pour sauvegarde. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Réponses attendues aux quatre expériences.** Pod de l'API supprimé : recréé en quelques secondes, erreurs `502` ou `503` pendant ce temps. Base arrêtée : l'API sort des endpoints mais ne redémarre pas (si les sondes sont justes). Pod de la base supprimé : le ticket est relu, grâce au PVC. Deux pods d'API : la session reste valide d'un pod à l'autre, grâce au jeton signé par un secret commun.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
-
+**Points à refuser.** Les valeurs du Secret dans le dépôt ; une sonde unique pour les deux rôles ; « K3s rend OpsDesk hautement disponible ».
 
 <a id="exercice-08"></a>
-<a id="exercice-08"></a>
 
-## Exercice 08 — Construire la CI/CD
+## Exercice 08 — CI/CD
 
-**Attendus à argumenter.** La CI formalise des contrôles déjà compris ; la livraison déplace un artefact identifié vers une cible autorisée. Une preuve doit appartenir au commit/run courant, pas être un ancien PASS joint au hasard. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Jobs personnels expliqués, échec discriminant diagnostiqué, même artefact testé livré et contrôle métier après livraison.
+**Réponses attendues.**
 
-**Vérification raisonnée.** Nommer job, étape, commande, message, hypothèse et test final ; distinguer refus d’accès, variable absente, test métier et mauvais artefact. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+- *Ce que prouve une CI verte.* Les tests écrits passent, les images se construisent, aucune vulnérabilité grave connue ce jour-là, une image identifiée est publiée. Elle ne prouve pas que cette image tourne quelque part.
+- *Pourquoi la CI ne déploie pas.* Ses machines ne joignent pas le réseau privé, et le déploiement reste une décision humaine, depuis `srv-admin`.
+- *Tag ou digest.* Le tag peut bouger ; on déploie par digest, ou par un tag de commit qui ne bouge jamais.
+- *PostgreSQL en CI.* Certains défauts (verrous, types) n'apparaissent pas sur SQLite.
+- *Trivy trouve une vulnérabilité grave.* On corrige (image de base plus récente) ; sinon on accepte par écrit, avec une raison et une date de réexamen.
 
-**Points à refuser.** Déployer depuis un runner public en supposant un accès au KVM local ; secrets dans les logs ; ancien JSON PASS présenté comme preuve du run. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Une bonne solution contient** des tests sur pull request sans publication ; `needs:` entre tests et images ; `permissions` minimales, `packages: write` seulement pour publier ; deux tags (version et commit) ; une règle Trivy écrite ; le rôle Ansible paramétré par la version ; le digest comparé.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
-
+**Points à refuser.** Un jeton personnel au lieu du `GITHUB_TOKEN` ; un seuil Trivy abaissé sans trace ; un déploiement sur `latest` ; une capture d'un ancien run présentée comme preuve.
 
 <a id="exercice-09"></a>
-<a id="exercice-09"></a>
 
-## Exercice 09 — Superviser
+## Exercice 09 — Supervision
 
-**Attendus à argumenter.** Une métrique est une mesure, un journal explique un événement et une alerte signale un besoin d’action. La disponibilité d’un processus ne garantit pas le succès d’un parcours métier. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Signal choisi pour le métier, alerte constatée, logs corrélés et retour observé ; pas seulement une capture de tableau vide.
+**Réponses attendues.**
 
-**Vérification raisonnée.** Formuler le symptôme, comparer métriques/logs/événements et contrôler la dépendance suspecte sans multiplier les modifications. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+- *Compteur, jauge, histogramme.* `opsdesk_http_requests_total` ne fait qu'augmenter ; `opsdesk_database_up` vaut 1 ou 0 ; `opsdesk_http_request_duration_seconds` range les durées par tranches.
+- *Pourquoi `rate`.* Un compteur brut ne dit que le total depuis le démarrage, et repart à zéro au redémarrage ; `rate` donne une vitesse et gère ces remises à zéro.
+- *Le `for`.* La condition doit tenir pendant toute la durée : un à-coup ne déclenche rien.
+- *L'API arrêtée.* La mesure `up` de sa cible passe à 0 ; l'alerte « base » ne se déclenche pas, car `/metrics` ne répond plus du tout. Il manque donc une alerte sur `up`, à proposer.
+- *`srv-k3s` tombe.* La supervision tombe avec : personne n'est prévenu.
 
-**Points à refuser.** Compter uniquement HTTP200 ; alerte sans destinataire ; générer un identifiant de ticket comme label à forte cardinalité. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Une bonne solution contient** quatre cibles `UP` ; une alerte « base » fondée sur `opsdesk_database_up` égale à 0 avec un `for` d'une minute ; une alerte 5xx fondée sur la vitesse des requêtes dont le statut commence par 5 ; une latence au 95ᵉ centile par `histogram_quantile` ; les heures de `pending`, `firing` et retour, pour chaque alerte ; le service réel épargné pendant les tests.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
-
+**Points à refuser.** Un compteur affiché sans `rate` ; une alerte jamais vue à `firing` ; une étiquette par ticket ou par utilisateur (trop de séries) ; k6 lancé sur le service réel.
 
 <a id="exercice-10"></a>
-<a id="exercice-10"></a>
 
-## Exercice 10 — Exploiter et maintenir
+## Exercice 10 — Maintenance
 
-**Attendus à argumenter.** Day-2 désigne les opérations après la première installation : mises à jour, dérive, accès, capacité et qualité des données. Une maintenance possède un état initial, un risque, un retour et un contrôle métier. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Fiche avant/action/après, risque justifié, version et vérifications ; aide reçue déclarée.
+**Réponses attendues.**
 
-**Vérification raisonnée.** Comparer le premier écart à l’état de référence, isoler une cause et confirmer le retour avec le parcours témoin. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+- *Avant.* État de départ, sauvegarde, étapes, retour arrière, critère d'abandon. On décide du critère avant, parce qu'en pleine intervention on veut toujours « encore un essai ».
+- *Retour arrière ou restauration.* Le premier redéploie l'image précédente sans toucher aux données ; la seconde remet les données d'une sauvegarde.
+- *Pourquoi des `502`.* Pendant la recréation du conteneur de l'API, nginx ne la joint plus. Mesure locale de référence : environ 2 secondes.
+- *Ce qui casse le retour arrière.* Une nouvelle version qui modifie le schéma de la base : l'ancienne image ne sait plus le lire.
+- *La sonde ailleurs.* Une sonde sur le serveur qu'on redémarre s'arrête avec lui.
 
-**Points à refuser.** Mettre tout à jour pour rendre un scan vert ; confondre retour d’image et retour de schéma ; changer plusieurs couches d’un coup. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Une bonne solution contient** deux fiches d'intervention écrites avant ; une sonde horodatée depuis `srv-admin` ; une indisponibilité chiffrée ; la version et le digest identiques à ceux de départ après le retour arrière ; le ticket témoin relu ; un compte rendu court.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
-
+**Points à refuser.** Une fiche écrite après coup ; « le service a l'air de remarcher » ; un retour arrière jamais exercé.
 
 <a id="exercice-11"></a>
-<a id="exercice-11"></a>
 
-## Exercice 11 — Sauvegarder et restaurer
+## Exercice 11 — Sauvegarde et restauration
 
-**Attendus à argumenter.** Une sauvegarde doit permettre une restauration utile. Pour OpsDesk, les tickets résident dans PostgreSQL ; aucune pièce jointe ni média utilisateur n’est géré. Le dump, le schéma et les versions doivent être cohérents ; les paramètres et secrets nécessaires à la reconstruction sont conservés séparément et protégés. Âge de capture, perte réellement observée et durée de reprise sont des mesures distinctes. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Intégrité contrôlée, mêmes références métier et mesures expliquées ; source préservée et limites explicites.
+**Réponses attendues.**
 
-**Vérification raisonnée.** Identifier version, archive, clé, espace, accès, ordre de restauration PostgreSQL et de reconstruction de la configuration et référence attendue ; arrêter sur cible ou archive ambiguë. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+- *Volume et sauvegarde.* Le volume ne protège ni d'une suppression, ni d'une erreur, ni de la perte du disque ou de la VM.
+- *`pg_dump` plutôt qu'une copie de fichiers.* Il lit la base dans une transaction : copie cohérente, sans arrêt. Une copie à chaud des fichiers peut être incohérente.
+- *RPO et RTO.* Ce qu'on peut perdre (jusqu'à 24 heures avec une sauvegarde nocturne) ; le temps pour revenir, mesuré lors du test.
+- *Ce que le dispositif ne couvre pas.* La perte du PC hôte (aucune copie ailleurs), une corruption non détectée avant la rotation des 7 copies, une suppression de données remarquée plus de 7 jours après.
+- *Pourquoi une cible séparée.* Pour ne jamais risquer la base en service, et pour prouver qu'on sait repartir de zéro.
 
-**Points à refuser.** Stocker clé et archive au même endroit en parlant de hors-site ; oublier la configuration et les versions nécessaires pour relire la DB ; prétendre cohérence sous écritures continues non testée. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Une bonne solution contient** un service et un minuteur sous `opsdesk`, avec `Persistent=true` ; un script qui s'arrête à la première erreur ; une rotation à 7 copies ; une clé SSH limitée au seul dépôt des copies ; des empreintes comparées ; un procès-verbal de restauration chronométré avec le ticket témoin relu dans l'interface.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
-
+**Points à refuser.** Des sauvegardes laissées seulement sur `srv-app` ; un test de restauration sur la base en service ; une sauvegarde « réussie » de 0 octet ; une clé SSH qui ouvre tout l'hôte.
 
 <a id="exercice-12"></a>
-<a id="exercice-12"></a>
 
-## Exercice 12 — Diagnostiquer et rétablir
+## Exercice 12 — Diagnostic
 
-**Attendus à argumenter.** Diagnostiquer consiste à éliminer des hypothèses avec des vérifications discriminantes. Rétablir exige un contrôle utilisateur après la correction ; une commande sans erreur n’est pas la fin de l’incident. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Symptôme, preuves, cause confirmée ou inconnue, correction, résultat métier et retour documentés.
+**Réponses attendues.**
 
-**Vérification raisonnée.** Utiliser symptôme→couche→faits→hypothèse→test→correction→contrôle ; demander une aide précise si une donnée manque. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+- *Pourquoi les faits avant les hypothèses.* Sinon on cherche à confirmer sa première idée et on oublie les autres.
+- *Ce que désignent les sondes.* `/healthz` en échec : nginx ou l'accès réseau. `/health/live` en échec : l'API. `/health/ready` en `503` : la base ou le chemin vers elle.
+- *Mitigation ou cause racine.* La première rétablit vite (un retour arrière) ; la seconde, corrigée, empêche le retour de la panne.
+- *Sans reproche.* Une panne est presque toujours une suite de failles du système et des procédures ; chercher un coupable fait cacher les erreurs.
 
-**Points à refuser.** Réinstaller avant de lire les logs ; provoquer une panne hors périmètre ; appeler cause racine la première hypothèse plausible. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Les six cartes d'incident, pour comparer après coup.**
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
+| Carte | Signature | Ce qui la confirme | Correction |
+| --- | --- | --- | --- |
+| Mot de passe de la base | `503` sur `/health/ready`, base en marche | Journaux de l'API : échec d'authentification PostgreSQL | Remettre le bon secret, redémarrer l'API |
+| Nom de l'API | Interface affichée, `502` sur `/api` | `/health/live` de l'API répond en direct, pas via nginx | Rétablir le nom `backend` |
+| Secret des jetons | Tous les utilisateurs renvoyés vers la connexion (`401`) | Les nouvelles connexions fonctionnent | Rien à corriger si le changement était voulu ; sinon remettre l'ancien secret |
+| Pare-feu | Délai ou rejet depuis l'hôte, service sain sur le serveur | `curl` local réussi, distant en échec ; `firewall-cmd --list-ports` | Rouvrir 8080 de façon permanente |
+| Redémarrage | Plus rien après un reboot | `loginctl show-user opsdesk -p Linger` à `no` | Réactiver le lingering, par le playbook |
+| Version | L'API ne démarre pas | `systemctl --user status` : image introuvable | Remettre un tag existant, de préférence par le rôle |
 
+**Points à refuser.** Un redémarrage général avant tout relevé ; « cause racine » écrite pour la première hypothèse plausible ; un post-mortem qui désigne une personne.
 
 <a id="exercice-13"></a>
-<a id="exercice-13"></a>
 
-## Exercice 13 — Démontrer son autonomie
+## Exercice 13 — Autonomie
 
-**Attendus à argumenter.** L’autonomie se constate sur une tâche nouvelle : comprendre le besoin, adapter une méthode, vérifier et expliquer. Un pipeline vert ou un fichier généré ne donne pas un niveau personnel. Pour OpsDesk, la preuve utile porte sur un ticket identifié, son titre et son état. Démonstration personnelle sur un cas proche nouveau, diagnostic et justification ; conclusion qualitative argumentée.
+Pas de corrigé : chaque tâche a plusieurs bonnes réponses. Ce qui s'évalue, c'est la démarche.
 
-**Vérification raisonnée.** Décrire le blocage et les observations avant de demander une correction ; conserver ce qui a fonctionné et revoir une hypothèse à la fois. Une cause reste hypothétique tant que le contrôle ne l’a pas discriminée. Une autre architecture est recevable si elle respecte le contrat, les droits, la persistance et les critères.
+**Une fiche de cas solide** a ses dix rubriques remplies pendant le travail ; des faits relevés avant l'action ; une option écartée avec sa raison ; une preuve avant et après ; une limite réelle ; l'aide déclarée avec son niveau ; une auto-évaluation prudente.
 
-**Points à refuser.** Recopier une référence puis revendiquer L3 ; cacher l’aide reçue ; inventer une note de certification. Un fichier de référence ou un PASS historique n’établit ni exécution ni autonomie personnelles.
+**Conclusion à écrire après la vérification séparée** : autonome sur la tâche évaluée (L3) ; réussite avec aide (L2, aide déclarée) ; ou compétence à retravailler, avec ce qui a manqué. Aucune note chiffrée.
 
-**Après la tentative.** Demander d’expliquer une décision, de montrer le test final et de proposer l’adaptation à un cas proche. Si nécessaire, donner une correction ciblée, puis laisser l’apprenant refaire le contrôle. Aucune configuration Terraform/Ansible/Docker/K3s/CI complète n’est fournie par ce repère.
-
-**Conclusion qualitative à renseigner après l’épreuve :** Autonome sur l’exercice évalué ; Réussite avec assistance ; ou Compétence à retravailler. Justifier compréhension, méthode, qualité, vérification, diagnostic, sécurité, explication et aide utilisée ; aucun score de certification.
+**Points à refuser.** Une tâche déjà faite présentée comme nouvelle ; une aide cachée ; L3 sans vérification séparée.

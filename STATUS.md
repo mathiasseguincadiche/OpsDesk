@@ -43,7 +43,8 @@ Dernière révision : 18 novembre 2026, après la fusion de la v2 ([PR #30](http
 | Schémas de présentation et d’architecture (v2) | Réalisé | Vérifié le 18 novembre 2026 : exportés par Draw.io depuis leurs sources, rendu contrôlé | [Schémas](docs/diagrams/README.md) ; schémas v1 dans `legacy/diagrams/` |
 | Exercices du parcours (13 énoncés) | Réalisé | Vérifié le 18 novembre 2026 par relecture contre le code, `compose.yaml` et le registre ; liens contrôlés | [Parcours](docs/apprentissage/README.md) ; cours complet dans Notion. Les exemples réels des fiches (sorties de l'API, sauvegarde et restauration PostgreSQL, panne de base, coupure mesurée) ont été obtenus sur l'environnement local le 18 novembre 2026 ; les autres sont marqués « sortie type » |
 | Schémas pédagogiques des exercices 03 à 11 | Réalisé | Vérifié le 18 novembre 2026 : exportés par Draw.io, rendu contrôlé | [Schémas](docs/diagrams/README.md) |
-| Repères de correction, évaluations et contrat applicatif | En cours | Non vérifié pour la v2 | Écrits pour la v1 ; signalés par un bandeau |
+| Repères de correction et cinq évaluations | Réalisé | Vérifié le 18 novembre 2026 par relecture contre le code et le registre | [Corrigés](docs/apprentissage/corriges.md), [évaluations](docs/apprentissage/evaluations.md) ; aucune évaluation menée |
+| Contrat applicatif | En cours | Non vérifié pour la v2 | Écrit pour la v1 ; signalé par un bandeau |
 
 ## Historique : application v1 (Flask)
 

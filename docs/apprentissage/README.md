@@ -62,6 +62,7 @@ Aide déclarée : A0 (documentation officielle), A1 (ressources générales), A2
 
 **État au 18 novembre 2026 :** aucun exercice réalisé ; aucun niveau attribué.
 
-## Documents encore en version 1
+## Corrigés et évaluations
 
-[Les repères de correction](corriges.md) et [les cinq évaluations](evaluations.md) ont été écrits pour la version 1 et n'ont pas encore été repris. Ils portent un bandeau, et se lisent à titre historique.
+- [Les repères de correction](corriges.md), à lire **après** ta tentative : réponses attendues, contenu d'une bonne solution, points à refuser. Aucun fichier d'infrastructure complet n'y est fourni.
+- [Les cinq évaluations transversales](evaluations.md), une par pilier, qui enchaînent plusieurs exercices sur un scénario complet.
