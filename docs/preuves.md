@@ -1,79 +1,53 @@
 # Lire une preuve et ses limites
 
-> [!IMPORTANT]
-> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](architecture.md) et [la référence technique](reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+Une affirmation sur OpsDesk (« les tests passent », « la sauvegarde fonctionne ») ne vaut que par la preuve qui la soutient. Ce document dit comment une preuve est tenue, et comment la lire sans lui faire dire plus qu'elle ne dit. Mise à jour : 18 novembre 2026.
 
-Dans les rapports bruts, les identifiants locaux des ressources (image, projet de restauration, répertoires temporaires, révision déclarée) ont été simplifiés : leur préfixe de version a été retiré. Aucune autre valeur n’a été modifiée.
-
-## Preuve applicative courante
-
-Le [rapport des tests actuels](../legacy/evidence/qualification/application-tests.json) et son journal enregistrent 26 tests réussis sur la source montée en lecture seule, avec PostgreSQL réel. La plupart des cas utilisent une table TEMP ; un ticket fictif par passage est committé puis relu par des connexions distinctes et conservé. Le premier passage défavorable reste archivé séparément. Aucune image reconstruite, aucun service redéployé, aucune reprise ou opération InfraOps personnelle n’est exécutée.
-
-## Smoke historique conservé
-
-[Le smoke HTTP](../legacy/evidence/business-smoke.json) rapporte son heure UTC, la version servie, l’environnement d’accès local, chaque requête et son statut. Le fichier courant est daté du 3 novembre 2026 à 13:40:23 UTC ; il conserve un parcours de préparation historique comprenant :
-
-- liveness, readiness et version ;
-- affichage du formulaire HTML ; création/liste/lecture d’un ticket PostgreSQL ;
-- transitions en cours/clôturé et refus de réouverture ;
-- refus d’entrée invalide et de ticket absent ;
-- soumission UI, contenu HTML échappé et refus sans CSRF ;
-- métrique DB disponible.
-
-La preuve déclare une révision sans commit. Elle ne fournit pas un faux SHA, un digest GHCR, un test de persistance après redémarrage ou une restauration. Le champ `persisted_ticket_id` désigne le ticket enregistré et relu pendant le test, pas une preuve de résilience à une destruction.
+L'état daté de chaque élément est tenu dans [STATUS.md](../STATUS.md) : c'est la seule source à jour.
 
 ## Avancement et contrôle : deux informations distinctes
 
-L’avancement répond à « qu’est-ce qui existe ? » : prévu, en cours, réalisé/implémenté ou abandonné. Le contrôle répond à « qu’a-t-on établi ? » : vérifié, échec constaté ou non vérifié. Ainsi, un playbook écrit peut être **réalisé — non vérifié** ; un contrôle exécuté peut être **réalisé — échec constaté**. Les résultats détaillés gardent PASS, FAIL, PARTIEL ou NON EXÉCUTÉ. Le mot « exécuté » décrit une action effectuée, jamais sa réussite implicite. Un abandon indique sa raison et sa date lorsqu’elles sont connues.
+- **Avancement** — qu'est-ce qui existe ? Prévu, En cours, Réalisé, Abandonné.
+- **Contrôle** — qu'a-t-on établi ? Vérifié, Échec constaté, Non vérifié.
 
-Une preuve vaut pour les fichiers, versions, cible, méthode et critères qu’elle identifie. Si cet ensemble change, le contrôle de la nouvelle révision redevient non vérifié ; l’ancien rapport reste intact comme observation historique. Une correction ne supprime pas l’échec initial : lier la nouvelle validation. Un changement uniquement rédactionnel n’invalide pas automatiquement un résultat applicatif portant sur un code et un environnement inchangés ; il exige cependant son propre contrôle documentaire.
+Un élément peut être **réalisé et non vérifié** (un playbook écrit, jamais rejoué), ou **réalisé avec échec constaté** (un scan qui trouve des vulnérabilités). « Exécuté » dit qu'une action a eu lieu, jamais qu'elle a réussi. Les niveaux personnels L0 à L3 du [parcours](apprentissage/README.md#preuve-et-progression-personnelles) sont une troisième information, distincte des deux autres.
 
-Une déclaration sans pièce consultable se note « déclaré par l’apprenant — non vérifié ». Elle n’est ni rejetée ni convertie en preuve. Les niveaux L0–L3 décrivent une progression personnelle et restent distincts de ces deux axes ; aucune migration documentaire ne les remplit.
+## Ce que contient une preuve
 
-**Exemple fictif :** un déploiement K3s a été contrôlé sur une VM et un digest précis. Changer le digest, le stockage ou les sondes ne transfère pas le PASS à la nouvelle cible. Conserver la preuve initiale, marquer le nouveau périmètre non vérifié et choisir les contrôles concernés avant de conclure.
+| Élément | Exemple |
+| --- | --- |
+| **Date** | 18 novembre 2026 |
+| **Cible** | Pile locale (`compose.yaml`, Docker 29.8 sous Ubuntu WSL2), ou `srv-app` |
+| **Version** | OpsDesk 2.0.0, commit ou digest d'image si disponible |
+| **Méthode** | La commande exacte, ou le parcours suivi |
+| **Attendu** | `200` et `"database":"up"` |
+| **Observé** | La sortie réelle, éventuellement raccourcie, jamais retouchée |
+| **Portée et limites** | Ce que la preuve ne couvre pas |
 
-Un « vérifié » indique toujours date, version ou hash, cible, commande/méthode, attendu, observé et limites. Si une pièce manque, préciser le manque plutôt que reconstruire une sortie probable.
+Si une pièce manque, on écrit qu'elle manque ; on ne reconstitue pas une sortie probable. Une déclaration sans pièce se note « déclaré, non vérifié ».
 
-## Registre à tenir
+## Sortie réelle ou sortie type
 
-| Champ | Attendu |
-|---|---|
-| Besoin métier | Effet attendu pour le collaborateur ou l’équipe IT |
-| Cible | Machine, runtime, namespace/volume et limites de l’isolement |
-| Version | Commit réel, image/digest si disponible ; sinon état de travail déclaré |
-| Pré-check | Ressources, droits, état initial et retour possible |
-| Exécution | Commande ou job exact réellement lancé |
-| Résultat | PASS/FAIL/PARTIEL/NON EXÉCUTÉ, observation et critère |
-| Diagnostic | Échec observé, cause établie ou hypothèse encore ouverte |
-| Traçabilité | Date UTC et fichier/log nettoyé ; aucune donnée secrète |
+Les fiches du parcours contiennent deux sortes d'exemples, toujours signalées :
 
-## Rejouer sans gonfler les statuts
+- **Sortie réelle** : obtenue sur une machine identifiée, à une date donnée. Exemples du 18 novembre 2026 : les réponses de l'API (`401`, `403`, connexion), les métriques `/metrics`, une sauvegarde et une restauration PostgreSQL, une panne de base diagnostiquée, la coupure mesurée lors de la recréation de l'API, le cycle Terraform sur `terraform_data`.
+- **Sortie type** : écrite pour illustrer, non exécutée. Elle n'est jamais une preuve.
 
-**ACTIF — exécutable depuis les sources disponibles, sous prérequis ; NON EXÉCUTÉ par cette mission documentaire.** Les tests unitaires purs sont présents. Depuis la racine OpsDesk, sur le poste personnel avec Python disponible, sous son utilisateur ordinaire et sans DB ni installation supplémentaire, leur lancement est :
+## Quand une preuve cesse de valoir
 
-```sh
-python3 -m unittest discover -s tests/unit -v
-```
+Une preuve vaut pour les fichiers, la version, la cible et la méthode qu'elle identifie. Si l'un change, le contrôle de la nouvelle situation redevient **non vérifié** ; l'ancienne preuve reste, datée, comme observation historique. Une correction n'efface pas l'échec qui l'a précédée : on garde les deux. Une modification purement rédactionnelle ne remet pas en cause un résultat portant sur un code inchangé.
 
-La preuve historique utilisait Python 3.14.10 ; relever sa propre version avant comparaison. Attendu : sept tests de règles sans échec, puis un code de sortie 0. En cas d’import introuvable ou de résultat différent, conserver l’erreur, le chemin de lancement et le commit ; lire le test et son import avant toute installation. La commande n’appelle ni DB ni service, mais Python peut créer un cache `__pycache__` dans le répertoire utilisateur du dépôt.
+**Exemple.** Les 19 tests de l'API ont réussi sur PostgreSQL 17 le 17 novembre 2026. Si une route change, ce résultat ne couvre plus la nouvelle version : il faut rejouer les tests, et dater le nouveau résultat.
 
-**ACTIF — travail personnel à réaliser : identifier et recevoir une instance avant le smoke.** `scripts/smoke.py` est présent ; il ne prépare ni n’installe le service. Le [contrat, section 20](contrat-applicatif.md#20-commandes-de-vérification) fournit le contexte du contrôle HTTP, après préparation de l’instance, des secrets et de la DB. La cible de référence `127.0.0.1:18081` désigne la boucle locale de la machine qui lance le client ; sur l’hôte, elle ne désigne pas automatiquement la VM. Le smoke crée deux tickets fictifs et ne les efface pas. Contrôler l’identité du service avec `/version`, les données autorisées et le port avant toute écriture.
+## Rejouer les contrôles de l'application
 
-Archiver uniquement la sortie réellement obtenue, avec version, environnement et date ; ne pas conserver PASS après une régression. La présence de ces consignes n’est pas un nouveau résultat.
+Les commandes et leurs résultats attendus sont dans le [contrat applicatif, point 20](contrat-applicatif.md#20-commandes-de-vérification) : tests de l'API, typage et construction de l'interface, test de bout en bout `scripts/smoke.py`, sonde de disponibilité. Avant de lancer le test de bout en bout, vérifier la cible avec `/version` : il crée des tickets fictifs et ne les efface pas.
 
-## Ce qui appartient aux exercices personnels
+On archive seulement la sortie réellement obtenue, avec sa date, sa version et sa cible.
 
-Connexion développeur/CI → image → cible, image immuable publiée, reconstruction, idempotence de la configuration Linux Ansible, déploiement K3s, alerte, maintenance et restauration restent des évaluations personnelles distinctes. Les reprises locales historiques existent ; elles ne valident pas celles de l’apprenant. Les quinze cellules du portfolio sont suivies par projet ; [la grille OpsDesk](parcours-apprentissage.md#les-cinq-piliers) ne devient pas verte parce qu’un seul smoke passe.
+## Ce qui reste à prouver
 
-## Compléments exécutés le 3 novembre
+Toute l'infrastructure : machines virtuelles, configuration, déploiement Quadlet, CI, K3s, supervision, sauvegarde et restauration, maintenance. Ce sont les exercices du [parcours](apprentissage/README.md) ; aucun n'est réalisé à ce jour, et un essai historique ne vaut pas réalisation personnelle.
 
-- [Navigateur Chrome/Playwright](../legacy/evidence/browser.json) : affichage de la liste de tickets sur la boucle locale, aucune erreur JavaScript observée.
-- [Contrat Terraform et rendu Ansible](../legacy/evidence/automation-contract.json) : état et JSON locaux, deux passages sans changement ; aucun provisioning. [Échec initial Ansible conservé](../legacy/evidence/automation-first-attempt.json).
-- [Rendu Kustomize hors ligne](../legacy/evidence/k8s-static.json) : treize objets assemblés ; aucune API de cluster contactée.
-- [Rapport de vulnérabilités](../legacy/evidence/vulnerability-scan.json) : vérifier son statut et l’image analysée ; sa seule présence ne signifie pas PASS.
+## Preuves de la version 1
 
-[Évaluations détaillées](evaluations.md) · [Contrat, choix et limites](infrastructure.md).
-
-## Reprise historique la plus récente
-
-Le [rapport historique de reprise](../legacy/evidence/recovery.json) est daté du 3 novembre à 13:52:06 UTC : cible 18088 et 10,969 s. Le rapport précédent 10,769 s est conservé à part. Ces observations du même hôte ne sont pas rejouées depuis, ne constituent pas un PRA physique ou un SLO, et n’attribuent aucune compétence personnelle.
+Les rapports bruts de la version 1 (tests, smoke HTTP, navigateur, contrat Terraform et Ansible local, rendu Kustomize, scan Trivy, reprise) sont conservés sans modification dans [`legacy/evidence/`](../legacy/evidence/). Ils datent du 3 novembre 2026 et ne s'appliquent pas à la version 2.

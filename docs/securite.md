@@ -1,32 +1,66 @@
-# Sécurité applicative, périmètre local et provenance
+# Sécurité d'OpsDesk
 
-> [!IMPORTANT]
-> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](architecture.md) et [la référence technique](reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+Ce document dit ce que l'application protège, comment, et ce qu'elle laisse à l'infrastructure. Mise à jour : 18 novembre 2026, pour la version 2.0.0, par relecture du code.
 
-## Modèle retenu
+## Le cadre
 
-**OpsDesk n’authentifie pas ses utilisateurs.** Tout visiteur du laboratoire peut lire et modifier les tickets fictifs. La session Flask ne sert qu’à signer le jeton CSRF des formulaires. Ce choix est explicite pour conserver un premier support métier limité ; aucune autorisation d’accès partagé ou Internet n’est donnée.
+OpsDesk est un service de laboratoire : **données fictives, aucune exposition sur Internet**. Les protections décrites ici sont réelles et testées, mais elles ne suffisent pas à exposer le service publiquement (voir « Limites »).
 
-Une authentification minimale a été évaluée : elle ajouterait identités, mots de passe et cycle de session au premier parcours. Elle n’est pas ajoutée sous la forme d’un jeton partagé présenté comme un contrôle utilisateur. Si le besoin évolue, une modification applicative distincte et testée sera nécessaire.
+## Ce que l'application protège
 
-## Contrôles applicatifs actuels
+| Risque | Protection | Où |
+| --- | --- | --- |
+| Accès sans compte | Toutes les routes métier exigent un jeton JWT signé ; sinon `401` | `backend/app/deps.py` |
+| Accès au-delà de son rôle | Rôle vérifié par l'API à chaque requête (`user`, `agent`, `admin`) ; sinon `403` | `backend/app/deps.py`, `routers/` |
+| Lecture des tickets d'autrui | Un collaborateur ne voit que ses propres tickets ; un ticket non visible répond `404` | `routers/tickets.py` |
+| Changement de statut abusif | Cycle de vie et droits par rôle vérifiés côté serveur ; sinon `403` ou `409` | `backend/app/workflow.py` |
+| Mots de passe volés en base | Empreinte PBKDF2-SHA256, sel aléatoire, 390 000 itérations par défaut ; jamais de mot de passe en clair | `backend/app/security.py` |
+| Compte compromis | Un administrateur peut désactiver un compte : il ne peut plus se connecter, et ses jetons sont refusés | `routers/users.py`, `deps.py` |
+| Données invalides ou démesurées | Validation de chaque champ (longueurs, valeurs permises) ; sinon `422` | `backend/app/schemas.py` |
+| Injection SQL | Requêtes construites par SQLAlchemy, toujours paramétrées | `backend/app/` |
+| Fuite d'informations par les erreurs | Erreurs internes réduites à « Erreur interne du serveur. » ; détail seulement dans les journaux | `backend/app/main.py` |
+| Fuite de secrets dans les journaux | Ni mot de passe ni jeton journalisé | `backend/app/observability.py` |
+| Injection de scripts dans l'interface | Politique de sécurité du contenu stricte (`default-src 'self'`, script en ligne autorisé par empreinte), `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy` | `frontend/nginx.conf.template` |
+| Exposition des mesures internes | `/metrics` bloqué par nginx | `frontend/nginx.conf.template` |
+| Conteneur compromis | Images non-root (UID 10001 pour l'API, 101 pour nginx), ports non privilégiés | `backend/Containerfile`, `frontend/Containerfile` |
 
-Corps HTTP limité à 16 Kio, validations de types/longueurs et du texte Unicode stockable, SQL paramétré, contraintes métier PostgreSQL, échappement Jinja, en-têtes de protection, mutations API exclusivement JSON et CSRF des formulaires. Une entrée CSRF non ASCII est refusée avec 400. `TRUSTED_HOSTS` limite par défaut les hôtes HTTP à localhost/127.0.0.1 ; son erreur est rendue sans modèle Jinja pour éviter un 500 avant l’adaptateur d’URL.
+Les refus (`401`, `403`, compte désactivé, visibilité par rôle) sont couverts par les tests de l'API ; dernier contrôle consigné le 17 novembre 2026 dans [STATUS.md](../STATUS.md).
 
-Les tests utilisent des cas négatifs réels dans la source applicative actuelle ; l’erreur DB est simulée dans un cas de test, pas provoquée dans le service source. Voir le [contrat](contrat-applicatif.md) et la [preuve actuelle](../legacy/evidence/qualification/application-tests.json).
+## Les secrets
 
-## Secrets et droits attendus
+| Secret | Usage | Règle |
+| --- | --- | --- |
+| `DB_PASSWORD` | Connexion à PostgreSQL | Fourni à l'exécution |
+| `JWT_SECRET` | Signature des jetons | 32 caractères au moins ; **obligatoire** quand `ENVIRONMENT=production` ; le changer déconnecte tout le monde |
+| `ADMIN_PASSWORD` | Premier administrateur | Utilisé une seule fois, à la création du compte |
 
-Le code reçoit les chemins `DB_PASSWORD_FILE` et `SESSION_SECRET_FILE`, jamais leurs valeurs en ligne de commande. Ils sont privés et exclus de Git. Le rôle PostgreSQL est configurable par `DB_USER` ; seuls lecture/insertion/mise à jour et usage de séquence sont requis par l’application. L’apprenant préparera la base, les accès, les droits et leur stockage.
+Chaque secret accepte une forme `*_FILE` qui lit sa valeur dans un fichier : c'est la forme attendue des secrets Podman et Kubernetes. Aucun secret n'est dans les images ni dans le dépôt : `.env` et les dossiers `secrets/` sont exclus par `.gitignore`, seul `.env.example` (sans valeur réelle) est versionné.
 
-Les anciennes références utilisaient trois fichiers sous `secrets/`. La confidentialité réelle du montage Windows/WSL ne découle pas d’un simple chmod intentionnel ; elle n’est pas qualifiée par ce contrôle applicatif. Aucun identifiant réel n’est révoqué ou modifié ici.
+## Ce qui revient à l'infrastructure
 
-## Alertes conservées
+L'application ne peut pas se protéger seule. Les décisions suivantes sont prises au [registre](architecture.md#décisions-retenues) et se construisent dans le [parcours](apprentissage/README.md) :
 
-Le [rapport d’image historique](../legacy/evidence/vulnerability-scan.json) reste FAIL : 185 occurrences dont 45 HIGH, sans correction disponible indiquée pour ces HIGH à l’heure de ce scan. Ces nombres sont des occurrences paquet/avis, pas des exploits démontrés. Le retrait passé de pip/setuptools de l’image finale et le smoke réussi ne donnent pas un feu vert global. Le tri applicatif actuel du programme et ses réserves sont distincts de ce rapport historique.
+- **Réseau** : seul le port 8080 ouvert aux utilisateurs ; 8000 ouvert à la supervision seulement ; 5432 jamais publié ; firewalld actif.
+- **Système** : SELinux en mode `Enforcing` ; SSH par clé, sans mot de passe ni connexion `root`.
+- **Exécution** : conteneurs sous le compte de service `opsdesk`, sans mot de passe, sans `sudo`, sans SSH.
+- **Secrets** : secrets Podman, jamais dans les fichiers d'unité ni dans les rôles Ansible.
+- **Images** : analyse Trivy dans la CI, avec une règle écrite pour les vulnérabilités graves (exercice 08).
+- **Sauvegardes** : copies hors du serveur, avec une clé SSH limitée à ce seul usage (exercice 11).
 
-Le choix/durcissement de l’image finale, TLS, flux, système, supervision et rotation d’infrastructure seront réalisés par l’apprenant. Les protections applicatives ne remplacent pas ces décisions.
+## Limites connues
 
-## Provenance et licences
+- **Aucune analyse de vulnérabilités des images v2** n'a encore été faite.
+- Pas de limitation du nombre de tentatives de connexion.
+- Pas d'authentification à deux facteurs ni de renouvellement automatique du jeton.
+- Pas de HTTPS dans l'application : il se termine devant elle, s'il est mis en place.
+- Le port 8000 ouvert à `srv-k3s` donne accès à toute l'API, pas seulement à `/metrics` (question ouverte relevée à l'exercice 02).
 
-Le code de démonstration est fourni ; il ne doit pas être présenté comme un produit ITSM développé personnellement par l’apprenant. Les [origines et références](provenance.md) séparent application, composants tiers, références assistées et réalisations personnelles futures. Le code propre utilise [MIT](../LICENSE) ; les dépendances gardent leurs licences respectives.
+Ces limites interdisent une exposition sur Internet en l'état ; elles sont acceptables pour un laboratoire aux données fictives.
+
+## Historique
+
+La version 1 n'avait pas d'authentification. Son scan Trivy (3 novembre 2026, échec constaté : 185 occurrences dont 45 HIGH) et sa lecture sont conservés dans [`legacy/docs/triage-securite.md`](../legacy/docs/triage-securite.md) ; ils ne s'appliquent pas à la version 2.
+
+## Licence
+
+Le code du dépôt est sous licence [MIT](../LICENSE) ; chaque dépendance garde sa propre licence. L'origine de chaque partie du dépôt est décrite dans [la provenance](provenance.md).

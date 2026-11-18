@@ -1,9 +1,9 @@
 # Versions et périmètres
 
-> [!IMPORTANT]
-> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](architecture.md) et [la référence technique](reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+> [!NOTE]
+> **Archive de la version 1** d'OpsDesk (application Flask, sans authentification), déplacée dans `legacy/` le 18 novembre 2026. Elle n'est plus tenue à jour. Pour la version 2 : [l'architecture](../../docs/architecture.md), [la référence technique](../../docs/reference-technique.md) et [le parcours](../../docs/apprentissage/README.md).
 
-**les versions et configurations d’infrastructure ci-dessous décrivent l’antériorité historique.** Le [contrat applicatif](contrat-applicatif.md) distingue combinaison testée, paramètres et besoins à satisfaire par l’apprenant. La source actuellement testée est identifiée par ses hashes dans `evidence/qualification/application-tests.json`, sans faux SHA publié.
+**les versions et configurations d’infrastructure ci-dessous décrivent l’antériorité historique.** Le [contrat applicatif](../../docs/contrat-applicatif.md) distingue combinaison testée, paramètres et besoins à satisfaire par l’apprenant. La source actuellement testée est identifiée par ses hashes dans `evidence/qualification/application-tests.json`, sans faux SHA publié.
 
 Cette fiche sépare la version déclarée par l’application, les outils de l’essai et les cibles encore à qualifier. Les tags d’images ne sont pas des digests immuables ; relier toute nouvelle livraison au contenu réellement construit.
 
@@ -21,4 +21,4 @@ Cette fiche sépare la version déclarée par l’application, les outils de l�
 | CI / registre | Candidats historiques `.github/workflows/verify.yml` et `.gitlab-ci.yml`, absents du dépôt courant | Workflow GitHub personnel à construire ; aucun run distant ni registre publié attestés par cette fiche |
 | Scan image | Version, base et identité dans le rapport Trivy | Lire le rapport complet et son état ; ne pas conclure « zéro vulnérabilité » |
 
-Une mise à jour bénigne doit préserver le ticket témoin, les variables/Secrets nécessaires et la compatibilité du schéma. Une image saine de retour et une archive restaurable sont deux éléments distincts. [Livraison](livraison.md) · [Day-2](exploitation-day2.md) · [Preuves](preuves.md).
+Une mise à jour bénigne doit préserver le ticket témoin, les variables/Secrets nécessaires et la compatibilité du schéma. Une image saine de retour et une archive restaurable sont deux éléments distincts. [Livraison](livraison.md) · [Day-2](../../docs/exploitation-day2.md) · [Preuves](../../docs/preuves.md).

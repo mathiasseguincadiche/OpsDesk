@@ -1,13 +1,13 @@
 # CI : commandes, résultats et échecs
 
-> [!IMPORTANT]
-> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](architecture.md) et [la référence technique](reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+> [!NOTE]
+> **Archive de la version 1** d'OpsDesk (application Flask, sans authentification), déplacée dans `legacy/` le 18 novembre 2026. Elle n'est plus tenue à jour. Pour la version 2 : [l'architecture](../../docs/architecture.md), [la référence technique](../../docs/reference-technique.md) et [le parcours](../../docs/apprentissage/README.md).
 
-> **HISTORIQUE — référence non exécutable depuis le dépôt courant.** Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), `.github/workflows/verify.yml`, `.gitlab-ci.yml`, `scripts/check.py`, `scripts/prepare-local.sh` et `scripts/recovery_lab.py` sont absents. Les blocs de commandes conservent les anciennes instructions pour comprendre l’essai Ubuntu/WSL ; ils ne sont pas prêts à copier et ne lancent pas le laboratoire personnel. Les versions et résultats qui suivent sont historiques. [Parcours actif](apprentissage/README.md) · [Pré-checks Fedora/KVM/Rocky](laboratoire-fedora-kvm-rocky.md).
+> **HISTORIQUE — référence non exécutable depuis le dépôt courant.** Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), `.github/workflows/verify.yml`, `.gitlab-ci.yml`, `scripts/check.py`, `scripts/prepare-local.sh` et `scripts/recovery_lab.py` sont absents. Les blocs de commandes conservent les anciennes instructions pour comprendre l’essai Ubuntu/WSL ; ils ne sont pas prêts à copier et ne lancent pas le laboratoire personnel. Les versions et résultats qui suivent sont historiques. [Parcours actif](../../docs/apprentissage/README.md) · [Pré-checks Fedora/KVM/Rocky](../../docs/laboratoire-fedora-kvm-rocky.md).
 
 ## Référence historique — laboratoire de développement
 
-Les procédures et résultats ci-dessous datent des essais historiques ; ils ne sont pas relancés. Les configurations et opérations InfraOps sont à réaliser personnellement ([contrat applicatif](contrat-applicatif.md), [provenance](provenance.md)). Les niveaux techniques de ce texte suivent un ancien barème et ne sont pas les niveaux personnels du [parcours](parcours-apprentissage.md). Les preuves de reprise récentes sont datées dans [STATUS](../STATUS.md).
+Les procédures et résultats ci-dessous datent des essais historiques ; ils ne sont pas relancés. Les configurations et opérations InfraOps sont à réaliser personnellement ([contrat applicatif](../../docs/contrat-applicatif.md), [provenance](../../docs/provenance.md)). Les niveaux techniques de ce texte suivent un ancien barème et ne sont pas les niveaux personnels du [parcours](../../docs/parcours-apprentissage.md). Les preuves de reprise récentes sont datées dans [STATUS](../../STATUS.md).
 
 Le candidat historique GitHub décrivait un laboratoire éphémère sur Ubuntu 24.04, sans accès au KVM de l’apprenant ni déploiement public. L’ancien candidat GitLab décrivait des contrôles de source et de règles métier ; il n’est plus une chaîne active. **GitHub est la seule plateforme active ; son workflow personnel reste à construire à l’exercice 08.** Aucun run distant n’est attesté par le tableau ci-dessous. Un runner GitHub hébergé n’accède pas par défaut à une VM privée du PC ; l’apprenant devra expliquer sa cible et ses accès avant toute livraison.
 

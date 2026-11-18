@@ -1,53 +1,44 @@
 # Provenance des éléments du dépôt
 
-> [!IMPORTANT]
-> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](architecture.md) et [la référence technique](reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+Ce document dit d'où vient chaque partie du dépôt, et ce qui revient à la réalisation personnelle. Mise à jour : 18 novembre 2026.
 
-| Ensemble | Origine | Usage |
+## Qui a fait quoi
+
+| Ensemble | Origine | Statut |
 | --- | --- | --- |
-| Application `app/`, schéma `db/schema.sql`, tests, contrat applicatif | Produits avec l’aide d’un assistant d’IA, pour une équipe de développement fictive | Support applicatif du laboratoire |
-| Python, Flask/Jinja, psycopg, Gunicorn, PostgreSQL | Composants tiers, sous leurs propres licences ; la licence MIT du dépôt ne les remplace pas | Dépendances de l’application |
-| Anciennes recettes conteneurs, Terraform, Ansible, K3s, CI, reprise | Générées avec l’aide d’un assistant d’IA, puis partiellement essayées | Références historiques, à comparer après une tentative personnelle |
-| Énoncés, indices, corrigés, évaluations | Préparés avec l’aide d’un assistant d’IA | Aide progressive ; aucun niveau personnel attribué |
-| Schémas | Schémas actuels (v2, `docs/diagrams/`) : dessinés pour le projet, sans logo, palette de la collection V24. Schémas v1, conservés dans `legacy/diagrams/` : dessinés pour le projet ; 15 logos de produits issus de simple-icons 13.21.0 (CC0), dont Git (CC BY 3.0) et Rocky Linux (CC BY-SA 4.0) à attribuer ; conditions du logo Flask non vérifiées ; 4 pictogrammes dessinés pour le projet | Voir [`diagrams/README.md`](../legacy/diagrams/README.md#logos-et-pictogrammes) |
-| Infrastructure cible et opérations | À concevoir, écrire, exécuter et expliquer par l’apprenant | Réalisation personnelle à prouver |
+| Application v2 : `backend/`, `frontend/`, tests, Containerfiles, `compose.yaml`, `scripts/smoke.py` | Produits avec l'aide d'un assistant d'IA, à partir d'une première version elle-même générée par IA | Fournis : support de l'apprentissage, pas une réalisation personnelle à mettre au CV comme développement |
+| Composants tiers : Python, FastAPI, SQLAlchemy, psycopg, React, Vite, Tailwind CSS, Recharts, nginx, PostgreSQL | Projets libres, sous leurs propres licences | La licence MIT du dépôt ne les remplace pas |
+| Documentation : README, architecture, référence technique, contrat applicatif, exercices, corrigés, évaluations | Rédigée avec l'aide d'un assistant d'IA, relue contre le code | Décisions validées par le propriétaire du projet |
+| Schémas v2 (`docs/diagrams/`) | Dessinés pour le projet avec Draw.io, sans logo de produit | Sources `.drawio` et exports SVG versionnés |
+| Infrastructure : laboratoire, Terraform, Ansible, unités Quadlet, CI, K3s, supervision, sauvegarde | **À concevoir, écrire, exécuter et expliquer soi-même** | Réalisation personnelle, à prouver exercice par exercice ; rien n'est réalisé à ce jour |
+| Données de démonstration | Fictives : noms, adresses et tickets inventés | Aucune donnée réelle |
 
-Un essai historique ou un PASS n’est pas une réalisation personnelle. Le détail des preuves est dans [STATUS](../STATUS.md) et [preuves](preuves.md).
+## La version 1
 
-## Fichiers historiques absents du dépôt
+La version 1 (application Flask, sans authentification), ses tests, ses preuves datées, ses schémas et ses documents d'infrastructure sont conservés dans [`legacy/`](../legacy/) :
 
-Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), les fichiers suivants ne sont plus dans le dépôt ; les rapports JSON de `evidence/` restent disponibles. La conservation des originaux dans un autre espace est **NON VÉRIFIÉE**.
+- [`legacy/evidence/`](../legacy/evidence/) : rapports bruts du 3 novembre 2026 ;
+- [`legacy/diagrams/`](../legacy/diagrams/README.md) : schémas v1 et provenance de leurs logos (simple-icons, sous licences CC0, CC BY 3.0 et CC BY-SA 4.0 selon le logo) ;
+- [`legacy/docs/`](../legacy/docs/README.md) : CI, infrastructure, livraison, triage de sécurité et versions de la v1.
 
-- Conteneurs : `Dockerfile`, `.dockerignore`, `compose.yaml`, `scripts/prepare-local.sh`.
-- Base de données : `db/001-initial.sql`, qui mélange schéma et création du rôle.
-- Terraform et Ansible : `infra/terraform/main.tf`, `infra/ansible/`, `infra/verify.py`.
-- K3s : `k8s/`, `infra/verify_k8s.py` (rendus hors cluster seulement).
-- CI : `.github/workflows/verify.yml`, `.gitlab-ci.yml` (candidats jamais exécutés à distance).
-- Exploitation : `scripts/probe.py`, `scripts/recovery_lab.py`.
-
-Les configurations Terraform ne créaient que des contrats locaux ; les rendus Ansible écrivaient des fichiers sur localhost. Aucune machine Rocky ou KVM, aucun cloud et aucun cluster K3s n’ont été créés.
-
-## Usage pédagogique
-
-Les anciens guides techniques servent après une première tentative. L’apprenant décide de son architecture et écrit ses propres fichiers. Les niveaux du [parcours](parcours-apprentissage.md) (L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée) ne se déduisent d’aucun résultat historique.
-
-Le défaut `ci-business.json` / `business-smoke.json` du candidat CI est conservé pour un exercice de diagnostic. Les durées de reprise historiques ne sont pas des objectifs de production.
+Les fichiers d'infrastructure de la v1 (Dockerfile, Terraform et Ansible locaux, manifestes Kubernetes, CI) ne sont plus dans le dépôt depuis le 4 novembre 2026 ; ils n'ont jamais créé de machine, de cluster ni de ressource cloud.
 
 ## Une source de vérité par sujet
 
-| Question du lecteur | Source de vérité | Quand la mettre à jour |
+| Question | Source de vérité | Quand la mettre à jour |
 | --- | --- | --- |
-| Découvrir le projet | [README](../README.md) | Quand le périmètre ou l’état change |
-| Apprendre et comprendre | [Exercices](apprentissage/README.md) et Notion | Dans le même changement que les notions concernées, sans copier le README |
-| Connaître l’interface, les champs, les contraintes | [Contrat applicatif](contrat-applicatif.md), vérifié contre `business.py`, `web.py` et `schema.sql` | À chaque évolution de l’API |
-| Expliquer un choix durable | [Registre des décisions](architecture.md#décisions-retenues) | Après une vraie décision ; les raisons inconnues ne sont pas inventées |
-| Constater un résultat | [STATUS](../STATUS.md) et [preuves](preuves.md), avec date, méthode et portée | À chaque nouveau contrôle ; un résultat périmé n’est plus présenté comme actuel |
-| Agir en incident | [Triage](reprise.md#triage-court-avant-une-reprise-personnelle) | Après chaque exercice de reprise |
+| Découvrir le projet | [README](../README.md) | Quand le périmètre ou l'état change |
+| Comprendre un choix | [Registre des décisions](architecture.md#décisions-retenues) | Après une vraie décision ; une raison inconnue n'est pas inventée |
+| Héberger ou exploiter l'application | [Contrat applicatif](contrat-applicatif.md) et [référence technique](reference-technique.md) | À chaque évolution de l'API ou de la configuration |
+| Apprendre | [Parcours](apprentissage/README.md) et centre de formation Notion | Dans le même changement que les notions concernées |
+| Savoir ce qui est fait et vérifié | [STATUS.md](../STATUS.md) | À chaque nouveau contrôle, daté |
+| Lire une preuve | [Preuves](preuves.md) | Quand la méthode change |
+| Agir en incident | [Reprise](reprise.md#triage-court-avant-une-reprise-personnelle) | Après chaque exercice de reprise |
 
-Avant un déplacement de fichier, recenser les liens entrants. Les versions d’outils, les compatibilités et les interfaces vieillissent : les revérifier dans leurs sources officielles avant de pratiquer.
+Avant de déplacer un fichier, recenser ses liens entrants.
 
 ## Vocabulaire
 
-- **Hôte** : le poste Fedora prévu. **Invité** : une des trois VM Rocky prévues (`srv-admin`, `srv-app`, `srv-k3s`).
-- **Application** : le programme fourni. **Infrastructure personnelle** : ce que l’apprenant construit. **Référence historique** : un essai daté, antérieur au travail personnel.
-- **Réalisé** : l’élément existe. **Vérifié** : un contrôle traçable l’a confirmé. **PASS** : le résultat de ce contrôle. **L3** : une adaptation ou un diagnostic personnel sur une tâche nouvelle.
+- **Hôte** : le poste Fedora. **Invité** : une des trois VM Rocky Linux (`srv-admin`, `srv-app`, `srv-k3s`).
+- **Application** : le programme fourni. **Infrastructure personnelle** : ce que l'on construit soi-même. **Référence historique** : un essai daté de la version 1.
+- **Réalisé** : l'élément existe. **Vérifié** : un contrôle daté et traçable l'a confirmé. **L3** : une tâche nouvelle réussie et vérifiée séparément.
