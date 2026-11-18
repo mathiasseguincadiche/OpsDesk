@@ -36,11 +36,11 @@ Chaque ligne passe à « Réalisé » seulement avec une preuve consultable. Le 
 
 ## Architecture
 
-<a href="docs/diagrams/architecture.svg"><img alt="Schéma d'architecture d'OpsDesk : le navigateur appelle le frontend nginx, qui transmet l'API à FastAPI, qui stocke les données dans PostgreSQL. Les trois conteneurs sont prévus sur srv-app avec Podman et Quadlet. srv-admin, Prometheus sur srv-k3s et la sauvegarde sont prévus." src="docs/diagrams/architecture.svg"></a>
+<a href="docs/diagrams/architecture.svg"><img alt="Vue d'ensemble de l'architecture d'OpsDesk : sur l'hôte Fedora, un réseau privé relie trois machines prévues. Sur srv-app, nginx (port 8080) transmet /api à l'API, qui lit et écrit dans PostgreSQL, non publié. srv-admin pilote srv-app par SSH, Prometheus sur srv-k3s lit /metrics, et pg_dump copie la base hors de la VM." src="docs/diagrams/architecture-globale.svg"></a>
 
 **En résumé :** le navigateur parle uniquement au **frontend** (nginx, port 8080). Celui-ci sert l'interface et transmet les appels `/api` à l'**API** (FastAPI, port 8000), qui lit et écrit dans **PostgreSQL**. En production, les trois tourneront dans des conteneurs Podman sur `srv-app`, démarrés par systemd grâce à Quadlet. En pointillés, ce qui reste à construire.
 
-[Voir le schéma en grand](docs/diagrams/architecture.svg) · [Les choix techniques expliqués](docs/architecture.md)
+[Voir le schéma détaillé](docs/diagrams/architecture.svg) (ports, flux d'administration, de supervision et de sauvegarde) · [Les choix techniques expliqués](docs/architecture.md)
 
 ### Pourquoi ces choix
 

@@ -21,7 +21,7 @@ Les deux décrivent les mêmes exercices, avec les mêmes livrables et les même
 | 02 | [Architecture et décisions techniques](02-architecture.md) | Construire | [Architecture](../diagrams/architecture.svg) |
 | 03 | [Rocky Linux, machines virtuelles, réseau et SSH](03-linux-reseau.md) | Construire | [Accès SSH](../diagrams/pedagogique-acces-ssh.svg) |
 | 04 | [Terraform : provider, ressources, state et cycle de vie](04-terraform.md) | Automatiser | [Cycle Terraform](../diagrams/pedagogique-terraform.svg) |
-| 05 | [Ansible : configurer un serveur de façon répétable](05-ansible.md) | Automatiser | — |
+| 05 | [Ansible : configurer un serveur de façon répétable](05-ansible.md) | Automatiser | [Ansible](../diagrams/pedagogique-ansible.svg) |
 | 06 | [Déployer OpsDesk avec Podman et Quadlet](06-conteneurs.md) | Livrer | [Quadlet](../diagrams/pedagogique-quadlet.svg) |
 | 07 | [Kubernetes avec K3s : une copie d'essai d'OpsDesk](07-k3s.md) | Livrer | [K3s](../diagrams/pedagogique-k3s.svg) |
 | 08 | [CI/CD avec GitHub Actions : tester, construire, publier](08-cicd.md) | Livrer | [CI/CD](../diagrams/pedagogique-cicd.svg) |

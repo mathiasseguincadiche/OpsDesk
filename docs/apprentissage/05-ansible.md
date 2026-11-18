@@ -1,6 +1,6 @@
 # 05 — Ansible : configurer un serveur de façon répétable
 
-> Énoncé de référence, lisible sans Notion. Le cours complet (explications, exemple travaillé, indices) est dans la fiche Notion de l'exercice 05, accessible sur invitation.
+> Énoncé de référence, lisible sans Notion. Le cours complet (explications, exemple travaillé, indices) est dans la fiche Notion de l'exercice 05, accessible sur invitation. Schéma : [comment Ansible rend un serveur conforme](../diagrams/pedagogique-ansible.svg).
 
 **Objectif.** Préparer un serveur Linux automatiquement, de façon répétable et vérifiable.
 
