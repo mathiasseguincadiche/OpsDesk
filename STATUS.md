@@ -1,48 +1,56 @@
 # État d’OpsDesk
 
-Dernière révision : 16 novembre 2026. Les preuves ci-dessous portent chacune leur date : aucun test, scan, machine virtuelle ou pipeline n’a été rejoué lors de cette révision.
+Dernière révision : 18 novembre 2026, après la fusion de la v2 ([PR #30](https://github.com/mathiasseguincadiche/OpsDesk/pull/30)). Chaque preuve porte sa date.
 
 **Avancement** : Prévu, En cours, Réalisé, Abandonné. **Contrôle** : Vérifié, Échec constaté, Non vérifié. Les deux informations sont distinctes : un élément réalisé peut rester non vérifié.
 
-## Application
+## Application v2 (FastAPI, React, PostgreSQL)
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| Pages, API, statuts des tickets | Réalisé | Vérifié le 3 novembre 2026 : 26 tests réussis en 2,5 s | [Rapport](evidence/qualification/application-tests.json) ; source montée en lecture seule dans un processus de développement ponctuel, PostgreSQL existant réutilisé |
-| Persistance en base | Réalisé | Vérifié le 3 novembre 2026 : un ticket fictif validé puis relu par des connexions distinctes | Même rapport ; le ticket témoin est conservé, aucune donnée existante n’est modifiée |
-| Hôte autorisé ou refusé, jeton CSRF non ASCII | Réalisé | Vérifié le 3 novembre 2026 : réponse 400 contrôlée | Même rapport ; ne démontre ni authentification ni sécurité réseau |
-| Schéma SQL et paramètres | Réalisé | Vérifié par lecture, non exécuté sur une base neuve | [Contrat applicatif](docs/contrat-applicatif.md), `db/schema.sql` ; rôle, base et droits restent à préparer |
-| Authentification des utilisateurs | Abandonné | — | [Sécurité](docs/securite.md) : évaluée puis non ajoutée ; données fictives, usage local uniquement |
-| Rendu visuel de l’interface | Réalisé | Non vérifié sur la version actuelle | [Capture et rapport](evidence/browser.json) d’une version antérieure |
+| API : tickets, cycle de vie, commentaires, historique, statistiques | Réalisé | Vérifié le 17 novembre 2026 : 19 tests réussis sur SQLite et sur PostgreSQL 17 | `backend/tests/` ; relancer avec `pytest -q`, ou `TEST_DATABASE_URL=…` pour PostgreSQL |
+| Authentification JWT et rôles (collaborateur, support, administrateur) | Réalisé | Vérifié le 17 novembre 2026 : mêmes tests (accès refusé, visibilité par rôle, compte désactivé) | `backend/app/deps.py` ; remplace la décision v1 « authentification abandonnée » |
+| Interface web : tableau de bord, tickets, fiche, utilisateurs, profil | Réalisé | Vérifié le 18 novembre 2026 : parcours complet dans un navigateur, thèmes clair et sombre, largeur mobile 375 px | Vérification manuelle, sans test automatisé de l’interface |
+| Typage et build du frontend | Réalisé | Vérifié le 18 novembre 2026 : `tsc` et build Vite sans erreur | `frontend/` |
+| Sondes, métriques et journaux | Réalisé | Vérifié le 17 novembre 2026 : `/health/live` et `/health/ready` répondent 200 sur PostgreSQL ; `/metrics` expose `opsdesk_database_up 1`, les requêtes et les tickets. Réponse 503 sans base non testée | `backend/app/observability.py` ; aucun Prometheus ni Grafana branché |
 
-Le premier passage des tests a échoué sur deux points : un refus d’hôte qui tentait d’afficher une page avant la création de l’adaptateur d’URL, et une erreur de scénario sur un en-tête `Location`. Le [rapport initial](evidence/qualification/application-tests-first-attempt.json) est conservé ; la source et le scénario ont été corrigés, puis la suite rejouée.
-
-## Sécurité
+## Conteneurs
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| Analyse Trivy 0.74.0 de l’image locale `0.1.0-local` | Réalisé | Échec constaté le 3 novembre 2026 : 185 occurrences (45 HIGH, 72 MEDIUM, 61 LOW, 7 UNKNOWN), 85 CVE distinctes | [Rapport](evidence/vulnerability-scan.json) ; image historique, aucune vulnérabilité corrigeable de niveau HIGH ou CRITICAL |
-| Tri des alertes | En cours | Non vérifié | [Triage](docs/triage-securite.md) : qualification partielle, aucune acceptation de risque, aucune validation globale |
-
-Le retrait des outils d’installation de l’image ne permet pas d’annoncer une sécurité validée.
+| Images API et frontend (multi-étapes, non-root) | Réalisé | Vérifié le 17 novembre 2026 : construites avec Docker 29.8 sous WSL2 Ubuntu | `backend/Containerfile`, `frontend/Containerfile` ; **non construites avec Podman** |
+| Pile complète (PostgreSQL 17, API, frontend) | Réalisé | Vérifié le 18 novembre 2026 : 3 services *healthy*, `scripts/smoke.py` réussi à travers nginx | `compose.yaml`, réservé aux tests locaux |
+| Résilience nginx face au backend | Réalisé | Vérifié le 18 novembre 2026 : API recréée avec une nouvelle IP puis suivie sans redémarrage ; frontend démarré sans API | `frontend/nginx.conf.template` (résolution DNS dynamique) |
+| Déploiement Podman + Quadlet sur Rocky Linux | Prévu | Non vérifié | Cible de production retenue ; contraintes dans la section « Déploiement avec Podman et Quadlet » du [README](README.md) |
+| Analyse de vulnérabilités des images v2 | Prévu | Non vérifié | Aucun scan Trivy des images v2 ; le scan v1 ci-dessous ne s’applique pas |
 
 ## Infrastructure
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| Smoke HTTP de l’essai historique | Réalisé | Vérifié le 3 novembre 2026 | [Rapport](evidence/business-smoke.json) ; Ubuntu/WSL2 avec Docker Compose, non rejoué depuis |
-| Reprise après arrêt, essai historique | Réalisé | Vérifié le 3 novembre 2026 : 10,969 s, ticket témoin identique | [Rapport](evidence/recovery.json) ; ne constitue ni objectif de production ni exercice personnel |
-| Conteneurs, Terraform, Ansible, K3s, CI | Prévu | Non vérifié | Les essais historiques n’ont créé aucune machine, aucun cloud ni cluster ; leurs fichiers ne sont pas dans le dépôt ([provenance](docs/provenance.md)) |
-| Défaut `ci-business.json` / `business-smoke.json` du candidat CI | Prévu | Non vérifié | À diagnostiquer dans le parcours d’apprentissage |
 | Laboratoire Fedora 45, KVM, Rocky Linux 10.2 | Prévu | Non vérifié | [Guide](docs/laboratoire-fedora-kvm-rocky.md) |
 | Trois VM Rocky Linux 10.2 (`srv-admin`, `srv-app`, `srv-k3s`) | Prévu | Non vérifié | Aucune VM créée, aucun code Terraform ni Ansible dans le dépôt ; décisions du [registre](docs/architecture.md#décisions-retenues) |
+| Unités Quadlet et rôle Ansible de déploiement | Prévu | Non vérifié | À écrire : un réseau, un volume PostgreSQL, trois conteneurs, secrets Podman |
+| CI GitHub Actions | Prévu | Non vérifié | Aucun workflow dans le dépôt ; la PR #30 a été fusionnée sans vérification automatique |
+| K3s, supervision, sauvegarde et restauration | Prévu | Non vérifié | [Parcours](docs/parcours-apprentissage.md) |
 
 ## Documentation
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| Schémas de présentation et technique | Réalisé | Vérifié en partie le 13 novembre 2026 : script de contrôle sans anomalie, export Draw.io 32.6.10, ouverture des deux sources dans l’application Draw.io sous Windows ; logos recoupés avec simple-icons 13.21.0 ; textes lus un à un dans Draw.io et conditions du logo Flask non vérifiés | [Fiche de contrôle](docs/diagrams/README.md#contrôles) : corrections, détail et limites |
-| Affichage des schémas sur GitHub et Notion | Réalisé | Vérifié en partie le 13 novembre 2026 : GitHub (navigateur, thèmes clair et sombre, largeur mobile émulée) et Notion (application de bureau, thème sombre) ; applications mobiles et thème clair de Notion non vérifiés | [Fiche de contrôle](docs/diagrams/README.md#contrôles) |
+| README (architecture, variables, sondes, Quadlet) | Réalisé | Vérifié le 18 novembre 2026, par relecture | [README](README.md) |
+| Schémas de présentation et technique | En cours | Non vérifié pour la v2 | [Schémas](docs/diagrams/README.md) : ils représentent encore l’application Flask v1 (deux conteneurs) |
+| Exercices du parcours et contrat applicatif | En cours | Non vérifié pour la v2 | `docs/` décrit encore l’API v1 : les routes, l’absence d’authentification et le schéma SQL ont changé |
+
+## Historique : application v1 (Flask)
+
+L’application Flask, ses tests et ses preuves sont conservés sans modification dans [`legacy/`](legacy/). Ces résultats concernent la v1 uniquement.
+
+| Élément | Contrôle | Preuve |
+| --- | --- | --- |
+| Pages, API, statuts, persistance | Vérifié le 3 novembre 2026 : 26 tests réussis | [Rapport](legacy/evidence/qualification/application-tests.json) |
+| Analyse Trivy 0.74.0 de l’image `0.1.0-local` | Échec constaté le 3 novembre 2026 : 185 occurrences, dont 45 HIGH | [Rapport](legacy/evidence/vulnerability-scan.json) et [triage](docs/triage-securite.md) |
+| Smoke HTTP et reprise après arrêt (Ubuntu/WSL2, Docker Compose) | Vérifié le 3 novembre 2026 | [Smoke](legacy/evidence/business-smoke.json), [reprise](legacy/evidence/recovery.json) |
 
 ## Apprentissage
 
