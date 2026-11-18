@@ -9,6 +9,10 @@ Chaque schéma existe en deux fichiers côte à côte : la source **Draw.io** (`
 | [Accès SSH](pedagogique-acces-ssh.svg) ([source](pedagogique-acces-ssh.drawio)) | Dans quel ordre diagnostiquer une connexion SSH qui échoue ? | Notion, exercice 03 | 18 novembre 2026 |
 | [Cycle Terraform](pedagogique-terraform.svg) ([source](pedagogique-terraform.drawio)) | Que compare Terraform pour calculer un plan ? | Notion, exercice 04 | 18 novembre 2026 |
 | [Quadlet](pedagogique-quadlet.svg) ([source](pedagogique-quadlet.drawio)) | Comment un fichier Quadlet devient-il un service systemd ? | Notion, exercice 06 | 18 novembre 2026 |
+| [K3s](pedagogique-k3s.svg) ([source](pedagogique-k3s.drawio)) | Comment Ingress, Service, pods et Deployment s'enchaînent-ils ? | Notion, exercice 07 | 18 novembre 2026 |
+| [CI/CD](pedagogique-cicd.svg) ([source](pedagogique-cicd.drawio)) | Que fait la CI, et où s'arrête-t-elle ? | Notion, exercice 08 | 18 novembre 2026 |
+| [Supervision](pedagogique-supervision.svg) ([source](pedagogique-supervision.drawio)) | Qui mesure quoi, et d'où viennent les alertes ? | Notion, exercice 09 | 18 novembre 2026 |
+| [Sauvegarde](pedagogique-sauvegarde.svg) ([source](pedagogique-sauvegarde.drawio)) | Comment la base est-elle sauvegardée, puis restaurée et prouvée ? | Notion, exercice 11 | 18 novembre 2026 |
 
 ## Lire les schémas
 
