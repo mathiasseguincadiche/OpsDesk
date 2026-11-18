@@ -1,94 +1,48 @@
-# 06 — Conteneuriser
+# 06 — Déployer OpsDesk avec Podman et Quadlet
 
-> [!IMPORTANT]
-> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](../architecture.md) et [la référence technique](../reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+> Énoncé de référence, lisible sans Notion. Le cours complet (explications, exemple travaillé, indices) est dans la fiche Notion de l'exercice 06, accessible sur invitation. Schéma : [de Quadlet aux services systemd](../diagrams/pedagogique-quadlet.svg).
 
-**Projet : OpsDesk · Pilier : Faciliter la livraison · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
+**Objectif.** Faire tourner OpsDesk sur `srv-app` : trois conteneurs gérés par systemd, sans root, qui redémarrent seuls et gardent leurs données, puis rendre ce déploiement rejouable avec un rôle Ansible.
 
-Révision documentaire : 2026-11-04. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.
+**Durée estimée** : 4 à 6 heures, en deux séances. **Prérequis** : `srv-app` préparée par le playbook de l'exercice 05. **État** : prévu, non vérifié.
 
-## Situation et résultat à obtenir
+## Pourquoi
 
-Le même programme doit pouvoir être livré avec ses dépendances tout en conservant les tickets. Conteneuriser permet de séparer l’artefact applicatif, sa configuration d’exécution et les données durables.
+`podman compose up` suffit en local. Sur un serveur, il faut que les conteneurs redémarrent au boot et après un arrêt, sans session ouverte, avec des journaux centralisés. C'est le rôle de systemd ; Quadlet fait le pont avec Podman.
 
-Conteneurise le programme fourni ; montre quelle version répond et relis un ticket après le remplacement applicatif prévu, avec stockage conservé.
+## L'essentiel à comprendre
 
-**Livrable attendu :** Recette personnelle, image identifiable, configuration privée et parcours métier vérifié. Le résultat est à produire, pas déjà obtenu.
+- Une image contient le programme ; un conteneur l'exécute ; un volume garde les données quand le conteneur disparaît.
+- Quadlet transforme des fichiers `.container`, `.volume` et `.network` de `~/.config/containers/systemd/` en services systemd, à chaque `systemctl --user daemon-reload`.
+- Le conteneur est recréé à chaque démarrage du service : tout ce qui dure va dans un volume.
+- Les conteneurs tournent sous `opsdesk` ; pour agir sous ce compte : `sudo -iu opsdesk`, puis `export XDG_RUNTIME_DIR=/run/user/$(id -u)`.
+- Les secrets passent par des secrets Podman et les variables `*_FILE`, jamais dans les fichiers.
+- Contraintes imposées par l'application : voir la section [Déployer avec Podman et Quadlet](../reference-technique.md#déployer-avec-podman-et-quadlet) de la référence technique (nom `backend` de l'API, `HealthCmd=` car le format OCI ignore `HEALTHCHECK`).
 
-## Comprendre avant de choisir
+## Ce qu'il faut obtenir
 
-Une image fige le programme et ses dépendances ; un conteneur est un processus qui l’utilise. Réseau, volumes, paramètres et secrets déterminent son fonctionnement. L’image n’est pas une sauvegarde de la base.
+1. **Les images** construites sur `srv-app` à partir des sources, avec un tag de version (chemin temporaire prévu au registre tant qu'aucune image n'est publiée).
+2. **Les unités**, sous `opsdesk` : un réseau, un volume PostgreSQL, trois conteneurs (`opsdesk-db`, `opsdesk-api`, `opsdesk-web`) avec chacun un test de santé, trois secrets Podman, et seul `opsdesk-web` publiant un port (8080).
+3. **Une décision écrite** sur l'emplacement du volume de PostgreSQL : stockage par défaut de Podman, ou disque de données de 10 Go (point « à revoir » du registre).
+4. **Un rôle Ansible**, lancé depuis `srv-admin`, qui dépose les unités, crée les secrets manquants et démarre les services ; second passage à `changed=0`.
 
-L’image contient le programme et ses dépendances ; un conteneur en est une exécution avec ses propres paramètres. Un **tag** est un nom qui peut pointer vers un autre contenu ; le **digest** identifie le contenu de l’image. Un port écouté dans le conteneur n’est pas automatiquement accessible sur la VM ou le PC.
+**Livrable** : unités et rôle (sans secret), la décision sur le stockage, les preuves datées ci-dessous.
 
-Le volume conserve des données en dehors du cycle de vie du processus. Il doit être relié au bon service et posséder des droits adaptés ; sa simple existence ne prouve pas qu’il contient la bonne base. Les secrets sont fournis à l’exécution et restent hors de l’image, du dépôt et des journaux. Refaire l’image ne restaure pas PostgreSQL.
+## Vérifications
 
-**Question :** si l’application change mais pas le volume PostgreSQL, quelles identités et quel ticket permettront de vérifier la livraison et la persistance séparément ?
+| Ce que tu vérifies | Commande | Résultat attendu |
+| --- | --- | --- |
+| Services actifs | `systemctl --user is-active opsdesk-db opsdesk-api opsdesk-web` | Trois `active` |
+| Conteneurs sains | `podman ps` | Trois `(healthy)` |
+| Service joignable | `curl -i http://192.168.150.10:8080/health/ready` depuis `srv-admin` | `200`, `"database":"up"` |
+| Parcours complet | `python3 scripts/smoke.py http://192.168.150.10:8080` | `ALL GOOD` |
+| Persistance | Ticket témoin relu après redémarrage des services | Identique |
+| Reboot | `sudo systemctl reboot`, sans ouvrir de session `opsdesk` | Tout revient seul |
+| Aucun secret en clair | `grep -ri password ~/.config/containers/systemd/` | Seulement des `*_FILE` |
+| Idempotence du rôle | 2ᵉ passage | `changed=0` |
 
-## Préparer la bonne cible
+## Pièges fréquents
 
-Contrat applicatif compris, VM et accès qualifiés ; stratégie de stockage et de secrets proposée. Vérifier la compatibilité et la disponibilité du moteur choisi avant son installation. Aucun Dockerfile ou Compose historique n’est obligatoire.
+`Failed to connect to bus` (`XDG_RUNTIME_DIR` absent) ; unité introuvable après `daemon-reload` (lire `/usr/libexec/podman/quadlet -dryrun -user`) ; `502` sur `/api` (nom `backend` manquant) ; jamais `(healthy)` (pas de `HealthCmd=`) ; services arrêtés à la déconnexion (lingering absent).
 
-Les VM sont créées et configurées depuis `srv-admin`. Le moteur de conteneurs est préparé personnellement sur `srv-app`, VM Rocky Linux 10.2 qualifiée ; ne pas confondre un moteur Windows/WSL historique avec celui de la VM. Relever moteur, version, utilisateur, chemins persistants et ports réellement choisis. La recette du conteneur est à écrire à partir du contrat applicatif. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
-
-Le moteur retenu est Podman, avec Quadlet et systemd, sur `srv-app` ; Docker Compose est la référence de l’essai historique, pas la cible (décision du 12 novembre 2026). Les conteneurs tournent sans root, sous le compte de service `opsdesk` (décision du 18 novembre 2026, qui remplace sur ce point celle du 16 novembre) : `systemctl --user` et `loginctl enable-linger`. Vérifier version et accès avant d’écrire la recette. La première image est construite sur `srv-app` (Ansible envoie le code) avant toute publication sur GHCR. Le service sans authentification reste un démonstrateur privé de laboratoire.
-
-Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
-
-## Réaliser soi-même et demander un indice
-
-1. À partir du contrat, lister sources nécessaires au build, commande d’exécution, dépendances, variables, secrets et données à exclure de l’image.
-2. Écrire personnellement ta recette et ta configuration d’exécution ; nommer les réseaux, ports et stockages avec leur cible réelle.
-3. Construire puis identifier ton image ; contrôler l’application et une donnée témoin. Préparer un remplacement applicatif borné en conservant les données et les moyens de retour.
-
-Conserver ta première proposition avant la revue. Les indices se lisent à la demande, du moins direct au plus ciblé.
-
-<details>
-<summary>Indice 1 — orientation</summary>
-
-Séparer erreur de build, commande de lancement, droits, DNS, connexion DB et schéma ; regarder le premier message utile.
-
-</details>
-
-<details>
-<summary>Indice 2 — mécanisme</summary>
-
-Pour un échec de démarrage, séparer build et runtime, puis lire commande, paramètres et premier message utile. Pour une connexion DB refusée, comparer nom/adresse, écoute et droits avant de toucher au stockage.
-
-</details>
-
-<details>
-<summary>Indice 3 — correction ciblée après tentative</summary>
-
-Présenter ta tentative, l’attendu, l’observé et le premier écart. Demander l’analyse du seul point bloquant ; tu modifies ensuite ta solution, tu retestes et tu expliques la correction. Une explication limitée peut être demandée avant l’action ; aucun fichier InfraOps définitif n’est fourni à recopier. Consigner le niveau d’aide reçu.
-
-</details>
-
-## Vérifier, puis diagnostiquer
-
-- Relier code/commit, version de l’application et image réellement exécutée ; distinguer tag et digest.
-- Vérifier séparément écoute, disponibilité des dépendances, paramètres privés et parcours utilisateur.
-- Contrôler la donnée témoin après le remplacement applicatif prévu, avec stockage préservé et sans supprimer un volume existant.
-- Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
-
-**Test négatif borné à préparer :** faire refuser une entrée métier invalide sur les données fictives de la cible autorisée, puis vérifier qu’aucun ticket invalide n’a été ajouté. Un test qui efface un volume n’est pas nécessaire.
-
-**Erreurs fréquentes :** Inclure secrets/données dans l’image ; utiliser latest sans identité ; croire qu’un conteneur démarré prouve le métier.
-
-**Démarche en cas d’écart :** Si le conteneur est vivant mais le service inutilisable, distinguer port non écouté, dépendance non prête et mauvais paramètre. Lire les journaux du seul composant concerné et tester le chemin de dépendance ; ne pas supprimer les données pour obtenir un redémarrage propre.
-
-Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#vérifier-et-diagnostiquer).
-
-## Expliquer et capitaliser
-
-Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence historique et travail personnel.
-
-**Réutilisation :** Comment donner au développeur un test reproductible sans lui donner les droits administrateur de l’hôte ? Relier ta réponse à un autre projet sans en recopier une solution complète.
-
-Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication s’évaluent séparément. Aucun niveau personnel n’est attribué par cette fiche.
-
-## Corrigé après tentative
-
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-06--conteneuriser) ou demander le niveau d’aide souhaité. La référence historique n’est pas la réponse obligatoire à reproduire.
-
-[← Exercice précédent](05-ansible.md) · [Retour au parcours](README.md) · [Exercice suivant →](07-k3s.md)
+Suite : [exercice 07](07-k3s.md).

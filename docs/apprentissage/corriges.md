@@ -1,5 +1,8 @@
 # Repères de correction — à consulter après une première tentative
 
+> [!IMPORTANT]
+> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). Les exercices ont été réécrits pour la version 2 le 18 novembre 2026 : voir [le parcours](README.md). Ce document n'a pas encore été repris et se lit à titre historique.
+
 Ces repères séparés ne sont pas une infrastructure complète. Demander un indice, une explication limitée ou une revue ciblée selon le besoin. Une réponse différente peut être pertinente si elle satisfait le contrat et les vérifications. Tous les résultats personnels restent NON EXÉCUTÉS / NON ÉVALUÉS.
 
 

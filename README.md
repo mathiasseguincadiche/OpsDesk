@@ -95,7 +95,7 @@ Les trois services doivent afficher `healthy`. Ouvrez ensuite **http://localhost
 | Exploiter, configurer, déployer, tester | [Référence technique](docs/reference-technique.md) |
 | Préparer le laboratoire Fedora, KVM et Rocky Linux | [Guide du laboratoire](docs/laboratoire-fedora-kvm-rocky.md) |
 | Suivre l'avancement et les preuves | [STATUS.md](STATUS.md) · [Feuille de route](ROADMAP.md) |
-| Apprendre pas à pas | [Les 13 exercices](docs/apprentissage/README.md) (en cours d'adaptation à la v2) · centre de formation Notion (accès sur invitation) |
+| Apprendre pas à pas | [Les 13 exercices](docs/apprentissage/README.md), énoncés de référence pour la v2 · cours complet dans le centre de formation Notion (accès sur invitation) |
 | Consulter la version 1 | [`legacy/`](legacy/) |
 
 ## Licence et provenance

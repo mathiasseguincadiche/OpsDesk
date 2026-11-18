@@ -1,92 +1,57 @@
-# 01 — Comprendre l’application
+# 01 — Comprendre OpsDesk : HTTP, API et PostgreSQL
 
-> [!IMPORTANT]
-> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](../architecture.md) et [la référence technique](../reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+> Énoncé de référence, lisible sans Notion. Le cours complet (explications, exemple travaillé, indices) est dans la fiche Notion de l'exercice 01, accessible sur invitation.
 
-**Projet : OpsDesk · Pilier : Construire · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
+**Objectif.** Raconter le trajet d'une demande dans OpsDesk, du navigateur jusqu'à la base, et dire quel composant regarder quand quelque chose ne répond pas.
 
-Révision documentaire : 2026-11-04. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.
+**Durée estimée** : 1 h 30 à 2 heures. **Prérequis** : aucun ; de quoi dessiner. Podman facultatif. **État** : prévu, non vérifié.
 
-## Situation et résultat à obtenir
+## Pourquoi
 
-Le support doit pouvoir retrouver une demande après sa création et expliquer son état. Avant de choisir une machine, comprendre ce que le programme fait permet de distinguer une panne du logiciel, de son accès et de sa base.
+Faire tourner un service sans perdre ses données suppose de savoir ce qui se passe à l'intérieur. Sans cela, à la première panne, on redémarre tout au hasard.
 
-Dessine le trajet d’une création de ticket ; relève dans le contrat le rôle de PostgreSQL, les paramètres attendus et l’absence d’authentification. Ne lance rien pour cette première lecture.
+## L'essentiel à comprendre
 
-**Livrable attendu :** Un schéma fonctionnel personnel, la liste des données durables et les questions posées à l’équipe applicative. Le résultat est à produire, pas déjà obtenu.
+- OpsDesk, ce sont trois conteneurs : l'interface (`opsdesk-web`, nginx, port 8080), l'API (`opsdesk-api`, FastAPI, port 8000) et la base (`opsdesk-db`, PostgreSQL, jamais publiée).
+- Le navigateur ne parle qu'à nginx ; nginx relaie `/api` vers l'API ; seule l'API parle à la base.
+- L'API vérifie **qui** demande (jeton JWT, valable 12 heures) et **s'il en a le droit** (rôle `user`, `agent` ou `admin`), puis applique les règles du ticket.
+- Un ticket passe par Ouvert → En cours → Résolu → Clôturé ; les sauts interdits sont refusés (`409`), et seul le support prend un ticket en charge.
+- `/health/live` dit que le processus répond ; `/health/ready` dit qu'il joint la base (`503` sinon).
+- Un ticket survit à un redémarrage parce qu'il est écrit dans PostgreSQL, sur un volume.
 
-## Comprendre avant de choisir
+Le schéma de référence est [l'architecture](../diagrams/architecture.svg) ; les détails sont dans la [référence technique](../reference-technique.md).
 
-Un contrat applicatif décrit ce que le logiciel exige et garantit ; il ne choisit pas ton infrastructure. Un parcours utilisateur relie une entrée HTTP à une donnée persistante.
+## Ce qu'il faut obtenir
 
-HTTP est l’échange entre client et application ; l’API fournit des réponses JSON, tandis que les pages HTML servent l’utilisateur. Flask traite la requête ; psycopg communique avec PostgreSQL. La mémoire du processus n’est pas la donnée durable : le ticket doit être enregistré dans la base pour survivre au remplacement de l’application.
+Marie (collaboratrice) crée le ticket « Mon poste ne se connecte plus au VPN » ; Karim (support) le prend en charge.
 
-Dans le contrat, distinguer une entrée, une règle et un effet : un titre accepté n’autorise pas toutes les transitions de statut. Une réponse de santé renseigne un aspect du service ; elle ne prouve pas, seule, qu’un ticket peut être créé puis relu. La protection CSRF limite certains envois de formulaire ; elle n’identifie aucun utilisateur.
+1. **Un schéma** du trajet de ces deux actions : chaque composant traversé, la méthode et l'adresse HTTP, le code de réponse attendu.
+2. **La liste des données durables** : ce qui doit exister après un redémarrage complet.
+3. **Deux garanties** apportées par l'application, et **deux limites**.
+4. **Trois questions** à poser avant d'héberger ce service.
 
-**Question de lecture :** quel composant conserve le titre d’un ticket si le processus Flask s’arrête ? Quelle information manquerait encore après un simple HTTP 200 sur `/health/live` ?
+## Vérifications
 
-## Préparer la bonne cible
+| Ce que tu vérifies | Réponse attendue |
+| --- | --- |
+| Le navigateur parle-t-il à l'API ou à la base ? | Non : seulement à `opsdesk-web`, port 8080 |
+| Qui vérifie le jeton et le rôle ? | `opsdesk-api`, pas nginx |
+| Où le ticket est-il écrit ? | Dans PostgreSQL, sur un volume |
+| Que reçoit Marie si elle tente la prise en charge ? | Un refus `403` |
+| Facultatif, pile locale : `curl -i http://127.0.0.1:8080/health/ready` | `200` et `"database":"up"` |
 
-Aucun module technique préalable. Lire le contrat applicatif et les règles de responsabilité ; disposer d’un outil de dessin et noter ses questions. Aucun logiciel d’infrastructure n’est supposé installé.
+## Codes à savoir lire
 
-Lecture du contrat et dessin, sans installation ni déploiement. Le poste hôte prévu est Fedora 45 ; aucune VM ni authentification à un laboratoire historique ne sont requises pour comprendre l’application.
+| Code | Sens |
+| --- | --- |
+| `401` | Pas de jeton, ou jeton expiré |
+| `403` | Compte connu, rôle insuffisant |
+| `409` | Transition de statut interdite |
+| `503` | L'API tourne mais ne joint pas la base |
+| `502` (nginx) | nginx ne joint pas l'API |
 
-Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Pour 01/02, la cible est le document ou le dessin : aucun terminal ni VM requis.
+## Ce que tu dois savoir expliquer
 
-## Réaliser soi-même et demander un indice
+Le trajet d'une création de ticket ; la différence entre `401` et `403` ; pourquoi le ticket survit au redémarrage de l'API et ce qui le ferait disparaître ; la différence entre `/health/live` et `/health/ready` ; ce qu'une réponse `200` ne garantit pas.
 
-1. Lire les fonctions, les données persistantes et les limites du contrat ; relever les termes inconnus sans installer d’outil.
-2. Dessiner soi-même le trajet d’une création puis d’une consultation ; placer les paramètres et les secrets hors des données métier.
-3. Présenter en quelques phrases le besoin, deux garanties du programme, deux limites et trois questions à poser avant son hébergement.
-
-Conserver ta première proposition avant la revue. Les indices se lisent à la demande, du moins direct au plus ciblé.
-
-<details>
-<summary>Indice 1 — orientation</summary>
-
-Suivre une action utilisateur et nommer chaque composant qui peut la bloquer.
-
-</details>
-
-<details>
-<summary>Indice 2 — mécanisme</summary>
-
-Comparer les rubriques fonctionnalités, stockage, santé et authentification du contrat. Chercher ce qui relève du programme, puis ce qui dépendra de ton infrastructure.
-
-</details>
-
-<details>
-<summary>Indice 3 — correction ciblée après tentative</summary>
-
-Présenter ta tentative, l’attendu, l’observé et le premier écart. Demander l’analyse du seul point bloquant ; tu modifies ensuite ta solution, tu retestes et tu expliques la correction. Une explication limitée peut être demandée avant l’action ; aucun fichier InfraOps définitif n’est fourni à recopier. Consigner le niveau d’aide reçu.
-
-</details>
-
-## Vérifier, puis diagnostiquer
-
-- Présenter le besoin utilisateur, les fonctions disponibles et deux limites réelles du logiciel sans confondre application et hébergement.
-- Tracer une requête jusqu’à la donnée durable ; distinguer code fourni, paramètres, secrets et données.
-- Poser les questions techniques qui restent ouvertes ; aucun test d’infrastructure n’est nécessaire à cette première lecture.
-- Expliquer comment un ticket identifié, son titre, son état et sa relecture dans PostgreSQL seront contrôlés plus tard, sans inventer de sortie ou de capture.
-
-**Contre-exemple de lecture, sans exécution :** une capture de page tickets ne démontre pas leur persistance. Indiquer quel contrôle ultérieur pourrait réfuter cette conclusion ; aucune sortie ni preuve technique n’est à produire aujourd’hui.
-
-**Erreurs fréquentes :** Confondre le laboratoire historique avec l’architecture retenue pour le projet.
-
-**Démarche en cas d’écart :** Si deux documents semblent décrire des capacités différentes, comparer leur version et la source du contrat. Distinguer une ancienne preuve historique d’une fonction actuelle ; noter la contradiction au lieu d’inventer un résultat.
-
-Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#vérifier-et-diagnostiquer).
-
-## Expliquer et capitaliser
-
-Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence historique et travail personnel.
-
-**Réutilisation :** Déplacer le même besoin vers une autre machine : qu’est-ce qui reste dans le contrat ? Relier ta réponse à un autre projet sans en recopier une solution complète.
-
-Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication s’évaluent séparément. Aucun niveau personnel n’est attribué par cette fiche.
-
-## Corrigé après tentative
-
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-01--comprendre-lapplication) ou demander le niveau d’aide souhaité. La référence historique n’est pas la réponse obligatoire à reproduire.
-
-[Retour au parcours](README.md) · [Exercice suivant →](02-architecture.md)
+Suite : [exercice 02](02-architecture.md).
