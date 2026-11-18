@@ -1,12 +1,15 @@
 # 02 — Relire, justifier et vérifier l’architecture retenue
 
+> [!IMPORTANT]
+> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](../architecture.md) et [la référence technique](../reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+
 **Projet : OpsDesk · Pilier : Construire · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
 
 Révision documentaire : 2026-11-12. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.
 
 ## Situation et résultat à obtenir
 
-L’équipe veut un service compréhensible et reconstructible sur le PC disponible. L’architecture a été arrêtée avant toute réalisation, pour que les choix techniques ne ralentissent pas l’apprentissage : trois serveurs Rocky Linux sur un réseau privé (un d’administration, un pour l’application, un pour K3s), Podman, une sauvegarde copiée hors du serveur, K3s et la supervision. Elle est décrite dans le [registre des décisions](../architecture.md#décisions-retenues) et sur le [schéma technique](../diagrams/architecture-technique.svg).
+L’équipe veut un service compréhensible et reconstructible sur le PC disponible. L’architecture a été arrêtée avant toute réalisation, pour que les choix techniques ne ralentissent pas l’apprentissage : trois serveurs Rocky Linux sur un réseau privé (un d’administration, un pour l’application, un pour K3s), Podman, une sauvegarde copiée hors du serveur, K3s et la supervision. Elle est décrite dans le [registre des décisions](../architecture.md#décisions-retenues) et sur le [schéma technique](../../legacy/diagrams/architecture-technique.svg).
 
 Relis cette architecture, puis justifie-la : pour chaque choix, quel besoin il couvre, quelle alternative a été écartée et ce qui se passe s’il tombe en panne. Vérifie ensuite qu’elle tient : chaque flux a une origine et une destination, chaque donnée durable a un emplacement, chaque port ouvert a une raison. Un choix que tu n’arrives pas à justifier est à signaler, pas à corriger en silence.
 
@@ -24,7 +27,7 @@ Un composant doit résoudre un besoin : séparer les données du processus évit
 
 ## Préparer la bonne cible
 
-Exercice 01 compris et besoins applicatifs reformulés. Lire le [registre des décisions](../architecture.md#décisions-retenues), le [schéma technique](../diagrams/architecture-technique.svg) et sa [notice de lecture](../diagrams/README.md) (routes, sondes, table `tickets`, ports). Relever les ressources réelles du PC ou les marquer NON VÉRIFIÉES : les trois serveurs retenus prennent 12 Go de mémoire à l’hôte.
+Exercice 01 compris et besoins applicatifs reformulés. Lire le [registre des décisions](../architecture.md#décisions-retenues), le [schéma technique](../../legacy/diagrams/architecture-technique.svg) et sa [notice de lecture](../diagrams/README.md) (routes, sondes, table `tickets`, ports). Relever les ressources réelles du PC ou les marquer NON VÉRIFIÉES : les trois serveurs retenus prennent 12 Go de mémoire à l’hôte.
 
 Lecture, dessin et analyse à partir du contrat, sans création de ressource. L’hôte est Fedora 45 avec KVM/QEMU et libvirt, et le système invité Rocky Linux 10.2 ; disponibilité exacte, compatibilité et ressources restent à qualifier dans le guide de laboratoire.
 
@@ -86,6 +89,6 @@ Le résultat technique, sa compréhension, un diagnostic représentatif et ton e
 
 ## Corrigé après tentative
 
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-02) ou demander le niveau d’aide souhaité. L’architecture retenue est la référence ; ce qui s’évalue, c’est ta justification et ce que tu en as vérifié.
+Après une première tentative, consulter [les repères de correction](corriges.md#exercice-02--relire-justifier-et-vérifier-larchitecture-retenue) ou demander le niveau d’aide souhaité. L’architecture retenue est la référence ; ce qui s’évalue, c’est ta justification et ce que tu en as vérifié.
 
 [← Exercice précédent](01-application.md) · [Retour au parcours](README.md) · [Exercice suivant →](03-linux-reseau.md)

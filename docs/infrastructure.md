@@ -1,5 +1,8 @@
 # Infrastructure : contrat local et candidat K3s
 
+> [!IMPORTANT]
+> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](architecture.md) et [la référence technique](reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+
 > **HISTORIQUE — référence non exécutable depuis le dépôt courant.** Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), `infra/terraform/`, `infra/ansible/`, `infra/verify.py`, `infra/verify_k8s.py` et `k8s/` sont absents. Les blocs de commandes conservent les anciennes instructions pour comprendre l’essai Ubuntu/WSL ; ils ne sont pas prêts à copier et ne lancent pas le laboratoire personnel. Les versions et résultats qui suivent sont historiques. [Parcours actif](apprentissage/README.md) · [Pré-checks Fedora/KVM/Rocky](laboratoire-fedora-kvm-rocky.md).
 
 ## Référence historique — laboratoire de développement
@@ -29,7 +32,7 @@ Commande historique depuis la racine du laboratoire Ubuntu/WSL, sans élévation
 python3 infra/verify.py
 ```
 
-Le script historique lançait `fmt`, `init`, `validate`, `plan`, `apply`, un deuxième `apply`, un deuxième `plan`, un cas négatif puis le contrôle de syntaxe et les deux rendus Ansible. Il conserve états/plans/logs dans `.local/terraform/`, les rendus dans `.local/ansible/`, et une synthèse non secrète dans [automation-contract.json](../evidence/automation-contract.json).
+Le script historique lançait `fmt`, `init`, `validate`, `plan`, `apply`, un deuxième `apply`, un deuxième `plan`, un cas négatif puis le contrôle de syntaxe et les deux rendus Ansible. Il conserve états/plans/logs dans `.local/terraform/`, les rendus dans `.local/ansible/`, et une synthèse non secrète dans [automation-contract.json](../legacy/evidence/automation-contract.json).
 
 Critères : second apply `0 added, 0 changed, 0 destroyed` ; second plan code 0 ; second rendu `changed=0 unreachable=0 failed=0` ; une tentative `bind_address=0.0.0.0` doit être refusée au plan. Une variable refusée constitue un contrôle réussi, pas une exposition réseau.
 
@@ -39,7 +42,7 @@ L’état local et le répertoire `.terraform` ne sont pas publiés. Ils ne cont
 
 Le premier rendu a échoué avant toute génération : `localhost unreachable=1`, le répertoire temporaire par défaut sous le HOME n’étant pas accessible à l’exécution. Définir `ANSIBLE_LOCAL_TEMP` ne change que le temporaire du contrôleur. L’inventaire de référence définissait **`ansible_remote_tmp` vers un répertoire dédié sous `/tmp`** pour cette connexion locale. La seconde exécution passe sans modification du HOME ni service hôte.
 
-[Échec initial conservé](../evidence/automation-first-attempt.json) · [Revalidation et limites](../evidence/automation-contract.json).
+[Échec initial conservé](../legacy/evidence/automation-first-attempt.json) · [Revalidation et limites](../legacy/evidence/automation-contract.json).
 
 ## Ce que le candidat K3s contient
 
@@ -66,7 +69,7 @@ Commande historique depuis la racine du laboratoire Ubuntu/WSL ; elle régénér
 python3 infra/verify_k8s.py
 ```
 
-La preuve [k8s-static.json](../evidence/k8s-static.json) a été produite avec kubectl **1.36.2** / Kustomize **5.8.1**. Le YAML est lisible et les identités d’objets sont uniques. Ce contrôle n’inclut pas la validation du schéma par l’API, l’admission, le pull des images, la création des volumes ou l’application des politiques réseau.
+La preuve [k8s-static.json](../legacy/evidence/k8s-static.json) a été produite avec kubectl **1.36.2** / Kustomize **5.8.1**. Le YAML est lisible et les identités d’objets sont uniques. Ce contrôle n’inclut pas la validation du schéma par l’API, l’admission, le pull des images, la création des volumes ou l’application des politiques réseau.
 
 Ce script régénère `k8s/init-configmap.json` à partir du fichier canonique `db/001-initial.sql`, rend les objets avec `kubectl kustomize k8s` et contrôle leurs identités/namespace. Il requiert PyYAML (fourni avec l’environnement Ansible de l’essai). Si le SQL change, relire la différence et le nouveau rendu. Éviter deux schémas DB divergents entre Compose et K3s.
 
