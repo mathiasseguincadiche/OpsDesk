@@ -8,7 +8,7 @@ OpsDesk est un service de tickets pour un laboratoire d’infrastructure. Un uti
 
 **Prochain résultat à démontrer.** Provisionner `srv-app` avec Terraform, la configurer avec Ansible, puis déployer avec Podman et Quadlet. Rejouer la configuration et relire un ticket après redémarrage. **Jalon prévu.**
 
-**[Commencer par la revue du projet](docs/demonstration.md)** · [Architecture et décisions](docs/architecture.md) · [État et preuves](STATUS.md) · [Centre de formation Notion](https://app.notion.com/p/41b65721fa18812598c1cde5c24878d9)
+**[Commencer par la revue du projet](docs/demonstration.md)** · [Architecture et décisions](docs/architecture.md) · [État et preuves](STATUS.md) · [Centre de formation Notion (accès selon droits)](https://app.notion.com/p/41b65721fa18812598c1cde5c24878d9)
 
 > Laboratoire privé, données fictives et service sans authentification. La revue documentaire est accessible sans démarrer le laboratoire.
 
@@ -46,7 +46,7 @@ Capture du 3 novembre 2026. [Observation navigateur datée](evidence/browser.jso
 | Pour | Ressources |
 | --- | --- |
 | **Comprendre le dossier** | [Index documentaire](docs/README.md) · [Provenance](docs/provenance.md) · [Feuille de route](ROADMAP.md) |
-| **Préparer et pratiquer** | [Préparation du laboratoire](docs/laboratoire-fedora-kvm-rocky.md) · [13 exercices](docs/apprentissage/README.md) · [Centre de formation Notion](https://app.notion.com/p/41b65721fa18812598c1cde5c24878d9) |
+| **Préparer et pratiquer** | [Préparation du laboratoire](docs/laboratoire-fedora-kvm-rocky.md) · [13 exercices](docs/apprentissage/README.md) · [Centre de formation Notion (accès selon droits)](https://app.notion.com/p/41b65721fa18812598c1cde5c24878d9) |
 | **Examiner le code fourni** | [Application](app/) · [Base](db/) · [Tests](tests/) · [Scripts](scripts/) |
 | **Consulter les traces** | [Preuves](evidence/) · [Références historiques](docs/historique.md) |
 
