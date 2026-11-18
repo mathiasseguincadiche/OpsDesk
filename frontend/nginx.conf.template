@@ -1,0 +1,58 @@
+# OpsDesk frontend — nginx (non-root, port 8080).
+# ${BACKEND_URL} is substituted at container start (envsubst, official image feature).
+server {
+    listen 8080;
+    listen [::]:8080;
+    server_name _;
+    root /usr/share/nginx/html;
+    server_tokens off;
+    client_max_body_size 1m;
+
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript image/svg+xml;
+    gzip_min_length 1024;
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-${INLINE_SCRIPT_HASH}'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" always;
+
+    # The backend name is re-resolved at request time (resolver + variable) instead of
+    # once at startup: nginx starts even if the backend is not up yet, and follows the
+    # new IP when Podman/systemd (Quadlet) or Kubernetes restarts the backend.
+    # NGINX_LOCAL_RESOLVERS comes from the container's /etc/resolv.conf (aardvark-dns, CoreDNS…).
+    resolver ${NGINX_LOCAL_RESOLVERS} valid=10s ipv6=off;
+    resolver_timeout 3s;
+
+    # API, health and version are proxied to the backend service.
+    location ~ ^/(api|health|version)(/|$) {
+        set $backend "${BACKEND_URL}";
+        proxy_pass $backend;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Request-ID $request_id;
+        proxy_read_timeout 30s;
+    }
+
+    # Backend metrics are NOT exposed publicly: scrape the backend service directly.
+    location = /metrics { return 404; }
+
+    # Front-end liveness for Kubernetes / Podman healthchecks.
+    location = /healthz { access_log off; default_type text/plain; return 200 "ok\n"; }
+
+    # Fingerprinted assets: cache for a year.
+    # (no add_header here: it would drop the security headers inherited from server{})
+    location /assets/ {
+        expires 1y;
+        try_files $uri =404;
+    }
+
+    # SPA: every other route serves index.html.
+    location / {
+        expires -1;
+        try_files $uri $uri/ /index.html;
+    }
+}

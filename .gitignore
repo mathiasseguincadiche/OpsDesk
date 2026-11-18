@@ -47,3 +47,9 @@ build/
 .local/
 
 secrets/
+
+# OpsDesk v2
+*.db
+.ruff_cache/
+frontend/dist/
+.claude/
