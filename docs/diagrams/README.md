@@ -38,7 +38,7 @@ Sous Windows, l'exécutable est `"C:\Program Files\draw.io\draw.io.exe"`. L'opti
 | --- | --- |
 | Exports produits par Draw.io depuis les sources | Fait le 18 novembre 2026 |
 | Rendu de l'export vérifié visuellement (largeur 1 000 px) | Fait le 18 novembre 2026 : aucun texte coupé, aucune étiquette sur une forme |
-| Rendu dans GitHub, clair, sombre et mobile | Vérifié avec le moteur Markdown de GitHub sur la branche de travail ; à confirmer sur `main` après fusion |
+| Rendu dans GitHub, clair, sombre et mobile | Fait le 18 novembre 2026 : images chargées sur la page d'accueil du dépôt après fusion ; clair, sombre et mobile vérifiés avec le moteur Markdown de GitHub |
 
 ## Historique
 
