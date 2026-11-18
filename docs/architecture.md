@@ -4,7 +4,9 @@ OpsDesk est une application web en trois parties : une interface, une API et une
 
 ## Vue d'ensemble
 
-![Schéma d'architecture : le navigateur appelle le frontend nginx, qui transmet l'API à FastAPI, qui stocke les données dans PostgreSQL. Les trois conteneurs sont prévus sur srv-app avec Podman et Quadlet ; srv-admin, Prometheus sur srv-k3s et la sauvegarde sont prévus.](diagrams/architecture.svg)
+[![Vue d'ensemble de l'architecture d'OpsDesk : sur l'hôte Fedora, un réseau privé relie trois machines prévues. Sur srv-app, nginx (port 8080) transmet /api à l'API, qui lit et écrit dans PostgreSQL, non publié. srv-admin pilote srv-app par SSH, Prometheus sur srv-k3s lit /metrics, et pg_dump copie la base hors de la VM.](diagrams/architecture-globale.svg)](diagrams/architecture.svg)
+
+[Voir le schéma détaillé](diagrams/architecture.svg) : les trois machines, l'environnement Podman, chaque flux typé avec son port, et ce qui est réalisé ou prévu.
 
 Le navigateur ne parle qu'au **frontend**. Celui-ci sert l'interface et relaie les appels à l'**API**, qui seule accède à la **base**. Sur le schéma, le trait plein montre l'application, testée en conteneurs locaux ; les pointillés montrent l'infrastructure prévue.
 
