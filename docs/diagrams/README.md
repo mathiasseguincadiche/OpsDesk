@@ -6,6 +6,9 @@ Chaque schéma existe en deux fichiers côte à côte : la source **Draw.io** (`
 | --- | --- | --- | --- |
 | [Présentation](presentation.svg) ([source](presentation.drawio)) | Qu'est-ce qu'OpsDesk, et comment le projet DevOps avance-t-il ? | Accueil Notion | 18 novembre 2026 |
 | [Architecture](architecture.svg) ([source](architecture.drawio)) | Qu'est-ce qui tourne sur `srv-app`, et qui parle à qui ? | [README](../../README.md), [architecture](../architecture.md) | 18 novembre 2026 |
+| [Accès SSH](pedagogique-acces-ssh.svg) ([source](pedagogique-acces-ssh.drawio)) | Dans quel ordre diagnostiquer une connexion SSH qui échoue ? | Notion, exercice 03 | 18 novembre 2026 |
+| [Cycle Terraform](pedagogique-terraform.svg) ([source](pedagogique-terraform.drawio)) | Que compare Terraform pour calculer un plan ? | Notion, exercice 04 | 18 novembre 2026 |
+| [Quadlet](pedagogique-quadlet.svg) ([source](pedagogique-quadlet.drawio)) | Comment un fichier Quadlet devient-il un service systemd ? | Notion, exercice 06 | 18 novembre 2026 |
 
 ## Lire les schémas
 
