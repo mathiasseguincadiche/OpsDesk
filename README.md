@@ -1,56 +1,53 @@
-# OpsDesk
+# OpsDesk — Déploiement et exploitation sur Linux
 
-**InfraOps · Infrastructure as Code · Livraison et exploitation**
+**Portfolio DevOps · Infrastructure et automatisation**
 
-Un service de tickets IT pour apprendre à rendre une application déployable, observable et restaurable. Le programme Flask/PostgreSQL est fourni ; le projet porte sur son infrastructure.
+OpsDesk est un service de tickets pour un laboratoire d’infrastructure. Un utilisateur ouvre un ticket, le support le suit et PostgreSQL en conserve l’état. L’application Flask et ses tests sont fournis. Le projet porte sur le provisionnement, la configuration, la livraison et l’exploitation du service.
 
-**Contribution actuelle :** conception du laboratoire local, choix d’architecture documentés et parcours de qualification. **Infrastructure à réaliser :** Terraform, Ansible, Podman, CI/CD et K3s.
+**Contribution actuelle.** Conception du laboratoire local, choix d’architecture documentés et préparation des contrôles de mise en service.
 
-[Architecture](docs/architecture.md) · [Démonstration](docs/demonstration.md) · [Documentation](docs/README.md) · [État et preuves](STATUS.md)
+**Prochain résultat à démontrer.** Provisionner `srv-app` avec Terraform, la configurer avec Ansible, puis déployer avec Podman et Quadlet. Rejouer la configuration et relire un ticket après redémarrage. **Jalon prévu.**
 
-![OpsDesk — service de tickets et trois phases InfraOps cibles](docs/diagrams/presentation.svg)
+**[Commencer par la revue du projet](docs/demonstration.md)** · [Architecture et décisions](docs/architecture.md) · [État et preuves](STATUS.md) · [Centre de formation Notion](https://app.notion.com/p/41b65721fa18812598c1cde5c24878d9)
 
-## Construire, livrer, exploiter
+> Laboratoire privé, données fictives et service sans authentification. La revue documentaire est accessible sans démarrer le laboratoire.
 
-| Responsabilité | Mise en pratique prévue |
+[![Vue d’ensemble d’OpsDesk et des trois phases de l’architecture cible](docs/diagrams/presentation.svg)](docs/diagrams/presentation.svg)
+
+[Voir le schéma de présentation en grand](docs/diagrams/presentation.svg) · [Ouvrir le schéma technique](docs/diagrams/architecture-technique.svg) · [Sources Draw.io et flux réseau](docs/diagrams/README.md)
+
+## Architecture cible
+
+| Responsabilité | Choix et résultat visé |
 | --- | --- |
-| **Préparer et automatiser** | Créer les VM Rocky avec Terraform/libvirt, les configurer avec Ansible, déployer avec Podman/Quadlet |
-| **Livrer et conserver** | Versionner et tester une image OCI avec GitHub Actions, GHCR et Trivy ; sauvegarder et restaurer PostgreSQL |
-| **Orchestrer et maintenir** | Déployer une copie d’essai sur K3s, observer avec Prometheus/Grafana, éprouver avec k6 |
+| **Provisionner et configurer** | `srv-admin` pilote Terraform/libvirt et Ansible. `srv-app` héberge le service principal et sa base PostgreSQL avec Podman et Quadlet. |
+| **Livrer et conserver les données** | GitHub Actions construit et teste l’image. GHCR la distribue et Trivy participe au contrôle. Une sauvegarde hors VM sert de point de départ à la restauration. |
+| **Orchestrer et observer** | `srv-k3s` accueille une copie d’essai, Prometheus et Grafana. k6 sert aux essais de charge sur cette copie. Le cluster mono-nœud ne fournit pas de haute disponibilité. |
 
-L’architecture distingue trois VM : `srv-admin` pilote, `srv-app` héberge le service principal, `srv-k3s` héberge la copie d’essai et la supervision. K3s ne pilote pas Podman ; le cluster mono-nœud n’est pas hautement disponible.
-
-[Architecture technique et décisions](docs/architecture.md) · [Flux réseau et sources Draw.io](docs/diagrams/README.md)
-
-## Le service
-
-![Interface historique d’OpsDesk : formulaire et liste des tickets fictifs](evidence/interface.png)
-
-*Capture historique du 3 novembre 2026 — [observation navigateur](evidence/browser.json). Le rendu actuel reste à requalifier.*
-
-Créer, suivre et clôturer un ticket ; vérifier sa persistance dans PostgreSQL. Le [contrat applicatif](docs/contrat-applicatif.md) documente les routes HTTP, la santé du service et ses métriques.
+[Lire les choix, leurs limites et les contrôles prévus](docs/architecture.md)
 
 ## État et preuves
 
-| Périmètre | Résultat |
+- **Application fournie.** [26 tests réussis le 3 novembre 2026](evidence/qualification/application-tests.json), sur un environnement de développement ponctuel.
+- **Image historique.** [Scan en échec](docs/triage-securite.md), avec 185 occurrences dont 45 HIGH.
+- **Infrastructure personnelle.** [Déploiement et chaîne de livraison à réaliser](STATUS.md). Les preuves historiques portent sur leur environnement d’essai.
+
+<details>
+<summary>Voir l’interface historique du service</summary>
+
+![Interface historique d’OpsDesk avec un formulaire et une liste de tickets fictifs](evidence/interface.png)
+
+Capture du 3 novembre 2026. [Observation navigateur datée](evidence/browser.json) · [Contrat applicatif](docs/contrat-applicatif.md)
+
+</details>
+
+## Explorer le projet
+
+| Pour | Ressources |
 | --- | --- |
-| Application fournie | [26 tests réussis](evidence/qualification/application-tests.json), 3 nov. 2026 ; développement ponctuel |
-| Image historique | [Scan en échec](docs/triage-securite.md), 185 occurrences dont 45 HIGH |
-| Infrastructure personnelle | Prévue ; aucun déploiement ni pipeline vérifié |
+| **Comprendre le dossier** | [Index documentaire](docs/README.md) · [Provenance](docs/provenance.md) · [Feuille de route](ROADMAP.md) |
+| **Préparer et pratiquer** | [Préparation du laboratoire](docs/laboratoire-fedora-kvm-rocky.md) · [13 exercices](docs/apprentissage/README.md) · [Centre de formation Notion](https://app.notion.com/p/41b65721fa18812598c1cde5c24878d9) |
+| **Examiner le code fourni** | [Application](app/) · [Base](db/) · [Tests](tests/) · [Scripts](scripts/) |
+| **Consulter les traces** | [Preuves](evidence/) · [Références historiques](docs/historique.md) |
 
-L’application est un démonstrateur sans authentification, réservé aux données fictives et au laboratoire privé. Les preuves historiques ne qualifient ni Fedora/Rocky ni les compétences personnelles.
-
-[État détaillé](STATUS.md) · [Provenance](docs/provenance.md) · [Feuille de route](ROADMAP.md)
-
-## Explorer
-
-| Pour | Consulter |
-| --- | --- |
-| Comprendre et pratiquer | [13 exercices](docs/apprentissage/README.md) · [Notion](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223) |
-| Préparer le laboratoire | [Installation des outils](docs/laboratoire-fedora-kvm-rocky.md) |
-| Examiner le code et les tests fournis | [app/](app/) · [db/](db/) · [tests/](tests/) · [scripts/](scripts/) |
-| Consulter les preuves et l’historique | [evidence/](evidence/) · [Références historiques](docs/historique.md) |
-
-Première séance sans installation : lire [l’exercice 01](docs/apprentissage/01-application.md), puis [l’architecture](docs/apprentissage/02-architecture.md).
-
-Licence : [MIT](LICENSE) — les composants tiers conservent leurs propres licences.
+Licence [MIT](LICENSE). Les composants tiers conservent leurs propres licences.
