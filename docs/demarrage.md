@@ -1,92 +1,93 @@
-# Démarrage : parcours actif et laboratoire historique
+# Démarrer OpsDesk en local
 
-> **HISTORIQUE — référence non exécutable depuis le dépôt courant.** Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), `compose.yaml`, `Dockerfile` et `scripts/prepare-local.sh` sont absents. Les blocs de commandes conservent les anciennes instructions pour comprendre l’essai Ubuntu/WSL ; ils ne sont pas prêts à copier et ne lancent pas le laboratoire personnel. Les versions et résultats qui suivent sont historiques. [Parcours actif](apprentissage/README.md) · [Pré-checks Fedora/KVM/Rocky](laboratoire-fedora-kvm-rocky.md).
+Ce guide lance OpsDesk sur un poste, en conteneurs, pour l'essayer ou le développer. Mise à jour : 18 novembre 2026, pour la version 2.0.0. Le déploiement sur serveur (Podman et Quadlet sous systemd) est l'objet de l'[exercice 06](apprentissage/06-conteneurs.md).
 
-## Parcours actif et laboratoire personnel
+## Ce qu'il faut
 
-Le parcours actif, le laboratoire prévu (Fedora 45, KVM, Rocky Linux 10.2) et la place de GitHub sont décrits dans le [parcours d’apprentissage](parcours-apprentissage.md). Commencer par l’[exercice 1](apprentissage/01-application.md) et le [contrat applicatif](contrat-applicatif.md).
+| Outil | Vérification | Remarque |
+| --- | --- | --- |
+| Git | `git --version` | Pour récupérer le dépôt |
+| Podman avec `podman compose`, ou Docker avec Compose | `podman compose version` | Les essais consignés ont été faits avec Docker 29.8 sous Ubuntu WSL2 ; Podman est la cible |
+| Python 3 | `python3 --version` | Seulement pour le test de bout en bout |
+| Le port 8080 libre | `ss -lnt \| grep ':8080 '` | Aucune ligne attendue |
 
-## Ce qui est actif aujourd’hui
-
-| Procédure | Classement | Cible, prérequis et résultat attendu |
-|---|---|---|
-| Lire l’exercice 01 et le contrat | ACTIF — exécutable depuis les sources actuellement disponibles | Poste de lecture, navigateur ou éditeur, accès au dépôt ; aucune VM ni installation. Retrouver le parcours ticket et les besoins de l’application ; comparer sa reformulation aux rubriques 1–4 et 29–30 du contrat. |
-| Relire l’architecture retenue, puis préparer son laboratoire | ACTIF — travail personnel à réaliser | Exercice 02 puis [guide commun](laboratoire-fedora-kvm-rocky.md) : nommer l’hôte, les serveurs et les versions ; relever les pré-checks avant toute installation. Aucune configuration finale n’est fournie. |
-| Démarrage Python natif | NON VÉRIFIÉ de bout en bout | Les fichiers applicatifs existent ; base, droits, secrets et environnement restent à préparer. Lire [contrat, section 8](contrat-applicatif.md#8-démarrage-en-développement), effets et réserves compris. |
-| Recette Compose ci-dessous | HISTORIQUE — non exécutable depuis ce dépôt | Configurations et script absents ; aucune création de fichiers de remplacement ni relance autorisée par cette lecture. |
-
-Pour commencer sans ambiguïté : lire [l’exercice 01](apprentissage/01-application.md), noter ce qui est compris et ce qui reste une question. Si un fichier lié manque, relever son chemin et la révision consultée ; ne pas lancer une recette historique pour compenser.
-
-## État d’essai des procédures
-
-La lecture 01 est disponible ; sa compréhension sera expliquée par l’apprenant. La procédure native du contrat n’a jamais été rejouée entièrement sur son laboratoire : **non vérifiée**. La recette Compose reste historique et non exécutable depuis main. Une procédure partiellement essayée doit préciser les étapes réellement parcourues et celles qui manquent. Un retour arrière seulement décrit reste non vérifié ; aucune durée de séance n’est annoncée sans mesure.
-
-Avant une installation ou une modification, arrêter si machine/version/droits/état initial sont inconnus, si les données source ne sont pas protégées ou si le retour nécessaire n’est pas établi. Nommer le point de non-retour éventuel avant de l’atteindre. Pour un incident, utiliser d’abord le [triage court](reprise.md#triage-court-avant-une-reprise-personnelle).
-
-## Référence historique — laboratoire conservé, pas la procédure Fedora/KVM personnelle
-
-Les procédures et résultats ci-dessous datent des essais historiques ; ils ne sont pas relancés. Les configurations et opérations InfraOps sont à réaliser personnellement ([contrat applicatif](contrat-applicatif.md), [provenance](provenance.md)). Les niveaux techniques de ce texte suivent un ancien barème et ne sont pas les niveaux personnels du [parcours](parcours-apprentissage.md). Les preuves de reprise récentes sont datées dans [STATUS](../STATUS.md).
-
-## Avant d’agir
-
-Dans l’essai historique, les commandes ci-dessous étaient lancées depuis la racine **OpsDesk**, sur Ubuntu/WSL avec Docker 29.8.0 et Compose 5.5.1. Les accès au moteur étaient déjà autorisés ; aucun privilège nouveau n’est demandé ici. Elles ne doivent pas être exécutées sur un serveur partagé ou professionnel sans qualification.
+## 1. Récupérer le dépôt et préparer la configuration
 
 ```bash
-git --version
-python3 --version
-docker version
-docker compose version
+git clone https://github.com/mathiasseguincadiche/OpsDesk.git && cd OpsDesk
 ```
-
-**Succès attendu :** client et moteur Docker accessibles, Compose présent, accès autorisé au moteur. Si le moteur est refusé, identifier les permissions ; ne pas contourner avec un chmod global du socket ni activer un accès réseau distant.
-
-Le contrôle historique utilisait Ubuntu/WSL2. Il ne certifie ni Fedora 45, ni GNOME, ni KVM/libvirt, ni Rocky. Les outils et commandes de ces environnements devront être vérifiés sur leur vraie cible.
-
-## Identifier les ressources
-
-La configuration historique utilisait un projet Compose, un réseau et un volume nommés d’après OpsDesk, et la boucle locale `127.0.0.1:18081`. Vérifier qu’ils n’appartiennent pas déjà à un autre travail avant le premier démarrage.
 
 ```bash
-docker compose config --quiet
-docker compose ps
-docker volume ls
+cp .env.example .env
 ```
 
-Avant la préparation des secrets, `compose config` peut signaler leur absence ; c’est une dépendance attendue. L’absence du volume avant le premier lancement n’est pas un échec. Si un volume existe déjà, le conserver et comprendre son origine ; aucun `down -v`, prune ou nettoyage global n’est nécessaire pour le démarrage.
+Ouvrir `.env` et remplacer les trois valeurs `change-me` : mot de passe de la base, `JWT_SECRET` (32 caractères au moins, par exemple généré par `openssl rand -base64 48`), mot de passe du premier administrateur. Le fichier `.env` n'est jamais versionné.
 
-## Préparer sans afficher les secrets
+## 2. Démarrer
 
 ```bash
-bash scripts/prepare-local.sh
+podman compose up -d --build
 ```
 
-Le script historique créait seulement les secrets absents, sans remplacer ceux existants, puis valide Compose. Ils restent hors Git. Sur un montage Windows, vérifier aussi les ACL réelles : une intention POSIX `0600` ne remplace pas la protection du dossier Windows.
+La première fois, la construction des images prend quelques minutes. La base démarre d'abord ; l'API attend qu'elle soit saine, puis l'interface attend l'API.
 
-## Construire et vérifier
+## 3. Vérifier
 
 ```bash
-docker compose up --build --detach --wait
-python3 scripts/smoke.py --base-url http://127.0.0.1:18081
+podman compose ps
 ```
 
-Dans cette ancienne procédure, l’interface était ensuite consultée à **http://127.0.0.1:18081/tickets**. Créer un ticket fictif et le faire passer par « Prendre en charge », puis « Clôturer ». Le smoke automatise aussi des erreurs attendues ; il crée de petites données de test dans la base, et ne les supprime pas silencieusement.
+Les trois services (`db`, `backend`, `frontend`) doivent afficher `healthy`.
 
 ```bash
-curl --fail http://127.0.0.1:18081/version
-curl --fail http://127.0.0.1:18081/health/ready
-docker compose logs --tail=50 app db
+curl -i http://127.0.0.1:8080/health/ready
 ```
 
-Ne pas copier des journaux sans les relire : garder seulement l’information de diagnostic et aucune donnée personnelle ou secret.
+Attendu : `200` et `"database":"up"`. Puis le test de bout en bout, qui rejoue un parcours complet à travers nginx :
+
+```bash
+python3 scripts/smoke.py http://127.0.0.1:8080
+```
+
+Attendu : une ligne `OK` par contrôle, puis `ALL GOOD`. Le test crée un ticket fictif et ne l'efface pas.
+
+Ouvrir enfin **http://localhost:8080** et cliquer sur un compte de démonstration pour se connecter.
+
+## Ce qui tourne
+
+| Service | Rôle | Accès depuis le poste |
+| --- | --- | --- |
+| `frontend` | nginx et l'interface React | `http://localhost:8080` |
+| `backend` | API FastAPI | `http://127.0.0.1:8000`, limité au poste (documentation : `/api/docs`) |
+| `db` | PostgreSQL 17 | Non publié |
+
+Les données sont dans un volume nommé : elles survivent à l'arrêt et à la recréation des conteneurs.
+
+## Arrêter
+
+```bash
+podman compose down
+```
+
+Les conteneurs sont supprimés, le volume de la base est conservé. **`podman compose down -v` supprime aussi le volume, donc tous les tickets** : à réserver à une remise à zéro voulue.
 
 ## En cas de problème
 
-| Symptôme | Première vérification | Sens du résultat |
-|---|---|---|
-| Le port 18081 répond déjà avant le lab | Identité du service existant et `compose ps` | Ne pas l’arrêter pour libérer le port sans connaître son propriétaire |
-| App non prête | Logs `app` et `db`, état des healthchecks | Une DB démarrée ne signifie pas que son schéma est initialisé |
-| Erreur de rôle/mot de passe après modification d’un secret | Historique d’initialisation du volume | Les scripts init DB s’exécutent au premier volume neuf ; changer le fichier ne modifie pas automatiquement le rôle existant |
-| HTTP 400/409 sur un ticket | Message JSON et règle de statut | Peut être un refus métier prévu, pas une panne d’infrastructure |
-| Image introuvable | Tag exact et accès au registre | Ne pas remplacer arbitrairement par `latest` |
+| Ce que tu vois | Cause probable | Que faire |
+| --- | --- | --- |
+| `address already in use` sur 8080 | Un autre service occupe le port | Identifier ce service avant de l'arrêter ; ou changer `HTTP_PORT` dans `.env` |
+| `backend` jamais `healthy` | L'API n'arrive pas à démarrer (souvent la base ou un secret) | `podman compose logs backend` |
+| L'API démarre puis s'arrête, message sur `JWT_SECRET` | `ENVIRONMENT=production` exige un `JWT_SECRET` d'au moins 32 caractères | Corriger `.env`, puis `podman compose up -d` |
+| `502` sur l'interface | nginx ne joint pas l'API | `podman compose ps`, puis les journaux de `backend` |
+| Connexion refusée avec le mot de passe administrateur modifié | Le premier administrateur n'est créé qu'une fois, sur une base vide | Le mot de passe de `.env` ne s'applique qu'au premier démarrage |
+| Pas de données de démonstration | Elles ne sont créées que si la base est vide, et si `SEED_DEMO_DATA=true` | Normal sur une base déjà utilisée |
 
-Les identifiants de ressources servent à sélectionner la cible, pas à justifier un effacement. [Exploitation et retour arrière](exploitation-day2.md).
+## Développer sans conteneur
+
+Pour modifier le code avec rechargement automatique (API sur SQLite, interface avec Vite) : voir la section [Développer sans conteneur](reference-technique.md#développer-sans-conteneur) de la référence technique.
+
+## Et ensuite
+
+- Comprendre ce qui tourne : [exercice 01](apprentissage/01-application.md) et [contrat applicatif](contrat-applicatif.md).
+- Exploiter le service : [exploitation courante](exploitation-day2.md).
+- Construire l'infrastructure : [le parcours](apprentissage/README.md).
