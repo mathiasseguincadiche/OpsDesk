@@ -38,7 +38,7 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Pourquoi.** L’opérateur doit retrouver une configuration compréhensible et détecter une dérive. Une reconstruction réelle demande ensuite une cible et des ressources explicitement gérées.
 
-**Fichiers / responsabilité.** `infra/terraform/main.tf` stocke le contrat non secret ; `infra/ansible/render.yml` le rend en JSON local ; `infra/verify.py` contrôle les sorties et le second passage. Aucune modification du code métier et aucun provisioning VM n’interviennent. [Guide et choix](infrastructure.md).
+**Fichiers / responsabilité.** `infra/terraform/main.tf` stocke le contrat non secret ; `infra/ansible/render.yml` le rend en JSON local ; `infra/verify.py` contrôle les sorties et le second passage. Aucune modification du code métier et aucun provisioning VM n’interviennent. [Guide et choix](../legacy/docs/infrastructure.md).
 
 **Pré-check.** Répertoire du dépôt autorisé, Terraform 1.15.8 et Ansible core 2.20.1 observés, absence de secret dans le contrat, état/plans ignorés par Git, temporaires sous `/tmp`. Aucun paquet, service, pare-feu ou cloud ne sera modifié.
 
@@ -54,7 +54,7 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Pourquoi.** Une équipe de développement fictive doit livrer une petite évolution sans obtenir des droits administrateur sur l’hôte ; le support doit reconnaître la bonne version et conserver ses tickets.
 
-**Fichiers / responsabilité.** Le développeur modifie l’application et ses tests. InfraOps fournit le `Dockerfile`, la configuration et les garde-fous. [Le chemin développeur](livraison.md) décrit les contrôles. Les éventuels jobs CI doivent être lus avec leur vraie exécution ; un fichier workflow n’est pas un résultat distant.
+**Fichiers / responsabilité.** Le développeur modifie l’application et ses tests. InfraOps fournit le `Dockerfile`, la configuration et les garde-fous. [Le chemin développeur](../legacy/docs/livraison.md) décrit les contrôles. Les éventuels jobs CI doivent être lus avec leur vraie exécution ; un fichier workflow n’est pas un résultat distant.
 
 **Pré-check.** Différence relue, tests positifs/négatifs, image saine identifiée, secret exclu du build, cible isolée, sauvegarde avant migration de schéma. Aucun accès runner → laboratoire ni publication de registre n’est supposé.
 

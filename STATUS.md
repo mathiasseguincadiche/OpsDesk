@@ -45,6 +45,7 @@ Dernière révision : 18 novembre 2026, après la fusion de la v2 ([PR #30](http
 | Schémas pédagogiques des exercices 03 à 11 | Réalisé | Vérifié le 18 novembre 2026 : exportés par Draw.io, rendu contrôlé | [Schémas](docs/diagrams/README.md) |
 | Repères de correction et cinq évaluations | Réalisé | Vérifié le 18 novembre 2026 par relecture contre le code et le registre | [Corrigés](docs/apprentissage/corriges.md), [évaluations](docs/apprentissage/evaluations.md) ; aucune évaluation menée |
 | Contrat applicatif (v2) | Réalisé | Vérifié le 18 novembre 2026 par relecture contre le code, `compose.yaml` et `scripts/smoke.py` | [Contrat](docs/contrat-applicatif.md) : routes, droits, configuration, données, sécurité, limites, critères de réception |
+| Sécurité, preuves et provenance (v2) | Réalisé | Vérifié le 18 novembre 2026 par relecture contre le code | [Sécurité](docs/securite.md), [preuves](docs/preuves.md), [provenance](docs/provenance.md) ; les documents propres à la v1 (CI, infrastructure, livraison, triage, versions) sont archivés dans [`legacy/docs/`](legacy/docs/README.md) |
 
 ## Historique : application v1 (Flask)
 
@@ -53,7 +54,7 @@ L’application Flask, ses tests et ses preuves sont conservés sans modificatio
 | Élément | Contrôle | Preuve |
 | --- | --- | --- |
 | Pages, API, statuts, persistance | Vérifié le 3 novembre 2026 : 26 tests réussis | [Rapport](legacy/evidence/qualification/application-tests.json) |
-| Analyse Trivy 0.74.0 de l’image `0.1.0-local` | Échec constaté le 3 novembre 2026 : 185 occurrences, dont 45 HIGH | [Rapport](legacy/evidence/vulnerability-scan.json) et [triage](docs/triage-securite.md) |
+| Analyse Trivy 0.74.0 de l’image `0.1.0-local` | Échec constaté le 3 novembre 2026 : 185 occurrences, dont 45 HIGH | [Rapport](legacy/evidence/vulnerability-scan.json) et [triage](legacy/docs/triage-securite.md) |
 | Smoke HTTP et reprise après arrêt (Ubuntu/WSL2, Docker Compose) | Vérifié le 3 novembre 2026 | [Smoke](legacy/evidence/business-smoke.json), [reprise](legacy/evidence/recovery.json) |
 
 ## Apprentissage

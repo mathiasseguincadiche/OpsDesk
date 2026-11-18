@@ -1,15 +1,15 @@
 # OpsDesk — triage de sécurité applicative
 
-> [!IMPORTANT]
-> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](architecture.md) et [la référence technique](reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+> [!NOTE]
+> **Archive de la version 1** d'OpsDesk (application Flask, sans authentification), déplacée dans `legacy/` le 18 novembre 2026. Elle n'est plus tenue à jour. Pour la version 2 : [l'architecture](../../docs/architecture.md), [la référence technique](../../docs/reference-technique.md) et [le parcours](../../docs/apprentissage/README.md).
 
 **Verdict global conservé : FAIL. Triage contextualisé : PARTIEL. Aucune autorisation d’exposition Internet ni acceptation du risque.** Ce document distingue l’application fournie et la sécurité de l’infrastructure que l’apprenant construira personnellement.
 
 ## Source et fraîcheur
 
-Le [rapport Trivy conservé](../legacy/evidence/vulnerability-scan.json) a été produit avec Trivy 0.74.0 sur l’image locale `0.1.0-local`, image `sha256:2fa15b716fd4f4df2d286f412cca1b3b323cc484677a0ac3866a8fecced5ac95`. Sa date est `2026-11-03T13:48:01.065269+00:00`. La base explicitement utilisée a été mise à jour le 3 novembre 2026 à 07:14 UTC et téléchargée à 13:36 UTC. Le cache par défaut plus ancien affiché par une commande générale de version n’est pas le cache utilisé ici.
+Le [rapport Trivy conservé](../evidence/vulnerability-scan.json) a été produit avec Trivy 0.74.0 sur l’image locale `0.1.0-local`, image `sha256:2fa15b716fd4f4df2d286f412cca1b3b323cc484677a0ac3866a8fecced5ac95`. Sa date est `2026-11-03T13:48:01.065269+00:00`. La base explicitement utilisée a été mise à jour le 3 novembre 2026 à 07:14 UTC et téléchargée à 13:36 UTC. Le cache par défaut plus ancien affiché par une commande générale de version n’est pas le cache utilisé ici.
 
-Ce triage ne relance pas un scan et ne reconstruit pas l’image. Les sources applicatives ont leurs tests distincts ; l’ancien scan ne prouve pas une nouvelle image déployée. Le [JSON de qualification](../legacy/evidence/qualification/security-triage.json) conserve empreinte SHA-256, identité d’image, métriques et réserves.
+Ce triage ne relance pas un scan et ne reconstruit pas l’image. Les sources applicatives ont leurs tests distincts ; l’ancien scan ne prouve pas une nouvelle image déployée. Le [JSON de qualification](../evidence/qualification/security-triage.json) conserve empreinte SHA-256, identité d’image, métriques et réserves.
 
 ## Lire les chiffres sans les gonfler
 
