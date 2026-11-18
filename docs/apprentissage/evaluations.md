@@ -1,5 +1,8 @@
 # Cinq évaluations personnelles
 
+> [!IMPORTANT]
+> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). Les exercices ont été réécrits pour la version 2 le 18 novembre 2026 : voir [le parcours](README.md). Ce document n'a pas encore été repris et se lit à titre historique.
+
 Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle n’est renseignée. Les essais historiques sont historiques et séparés.
 
 Ces évaluations sont transversales : elles ne constituent pas cinq exercices supplémentaires ni un second ordre de travail. Les exercices 01/02 restent sans VM ; les contrôles métier sur service déployé sont différés tant que leur cible n’est pas personnellement disponible. Renseigner alors NON EXÉCUTÉ pour cette partie, sans déclarer toute l’évaluation reçue. L’exercice 13 fournit un cas nouveau pour examiner les responsabilités et l’autonomie ; consulter les [règles de preuve et de niveau](README.md#preuve-et-progression-personnelles).

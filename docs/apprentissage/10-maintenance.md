@@ -1,89 +1,44 @@
-# 10 — Exploiter et maintenir
+# 10 — Maintenir en service : préparer, intervenir, vérifier
 
-**Projet : OpsDesk · Pilier : Maintenir/rétablir · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
+> Énoncé de référence, lisible sans Notion. Le cours complet (explications, exemple travaillé, indices) est dans la fiche Notion de l'exercice 10, accessible sur invitation.
 
-Révision documentaire : 2026-11-04. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.
+**Objectif.** Mener une intervention sur un service en fonctionnement : la préparer, prévoir son retour arrière, mesurer ce que les utilisateurs ont réellement subi, et prouver l'état obtenu.
 
-## Situation et résultat à obtenir
+**Durée estimée** : 3 à 4 heures. **Prérequis** : déploiement par le rôle Ansible (exercices 06 et 08), supervision (exercice 09), une sauvegarde récente. **État** : prévu, non vérifié.
 
-Une installation qui fonctionne aujourd’hui doit pouvoir évoluer sans perte de tickets. Une maintenance limitée rend les risques, les contrôles et le retour compréhensibles avant de modifier une version.
+## Pourquoi
 
-Choisis une maintenance limitée de ton environnement ; prépare le contrôle de ticket avant et après. Aucun patch réel n’est déclenché par la lecture de la fiche.
+Un service vit longtemps après sa mise en service : correctifs, redémarrages, nouvelles versions. Une intervention improvisée devient un incident ; « ça a l'air de remarcher » n'est pas une conclusion.
 
-**Livrable attendu :** Fiche avant/action/après, risque justifié, version et vérifications ; aide reçue déclarée. Le résultat est à produire, pas déjà obtenu.
+## L'essentiel à comprendre
 
-## Comprendre avant de choisir
+- **Avant** : relever l'état de départ, sauvegarder, écrire les étapes et le retour arrière, fixer le critère d'abandon. **Pendant** : une sonde continue, horodatée. **Après** : comparer à l'état de départ, écrire un compte rendu.
+- Redémarrer le service de l'API recrée son conteneur : nginx répond `502` pendant quelques secondes. Mesure réelle sur la pile locale le 18 novembre 2026 : 5 réponses `502` sur 144 requêtes, soit environ 2 secondes.
+- Le retour arrière applicatif (redéployer l'image précédente) ne change ni le schéma ni les données. Ce n'est pas une restauration de la base, qui est l'objet de l'exercice 11.
+- `dnf needs-restarting -r` dit si un redémarrage est nécessaire après les mises à jour.
 
-Day-2 désigne les opérations après la première installation : mises à jour, dérive, accès, capacité et qualité des données. Une maintenance possède un état initial, un risque, un retour et un contrôle métier.
+## Ce qu'il faut obtenir
 
-La maintenance Day-2 commence après la mise en service : versions, capacité, accès, dérive et qualité des données. Le périmètre utile est une couche choisie et un effet mesurable. Le point de retour doit rester disponible tant que la validation n’est pas terminée.
+- **Maintenance 1** : mises à jour de Rocky Linux sur `srv-app`, redémarrage si nécessaire, retour du service sans intervention.
+- **Maintenance 2** : déploiement d'une nouvelle version d'OpsDesk, vérification, puis retour arrière vers la version précédente.
 
-Un rollback d’image remplace la version applicative ; il ne remet pas la base dans son état antérieur. Un changement de schéma ou de format peut rendre le retour incompatible. Comparer avant/après le composant, sa configuration et le même ticket permet d’éviter de confondre succès de mise à jour et succès métier.
+Pour chacune, une **fiche d'intervention** d'une page écrite avant de commencer : but et ce qui ne doit pas changer ; état de départ ; étapes numérotées ; critère d'abandon et retour arrière ; contrôles de fin.
 
-**Question :** la version répond après maintenance, mais un ancien ticket n’est plus lisible. Quelles observations départagent un problème de format, une mauvaise base cible et une permission modifiée ?
+**Livrable** : les deux fiches, la sortie de la sonde continue, l'indisponibilité mesurée, les contrôles de fin, et un compte rendu de cinq lignes au plus pour chacune.
 
-## Préparer la bonne cible
+## Vérifications
 
-Supervision minimale et contrôle métier disponibles, composant à maintenir identifié. Lire compatibilité, données durables et conditions de retour avant la maintenance. Une dépendance supposée à jour n’est pas un prérequis vérifié.
+| Ce que tu vérifies | Résultat attendu |
+| --- | --- |
+| Sonde depuis `srv-admin` pendant le redémarrage de `srv-app` | Retour à `200` sans intervention |
+| `dnf check-update` sur `srv-app` | Code de retour 0 |
+| `/version` et digest après déploiement | Ceux publiés par la CI |
+| `/version` et digest après retour arrière | Exactement ceux de départ |
+| Ticket témoin | Relu à l'identique après chaque maintenance |
+| Indisponibilité | Une durée, en secondes, par maintenance |
 
-Les opérations sont lancées depuis `srv-admin`. Identifier la VM Rocky Linux 10.2 (`srv-admin`, `srv-app` ou `srv-k3s`), le composant et la version concernés par une maintenance limitée. Préparer état initial, données témoins, accès, espace, capacité de retour et risque. Aucun changement de paquets, de service ou de version n’est implicite dans la lecture de cet exercice. Consulter le [guide Fedora/KVM/Rocky et ses limites de compatibilité](../laboratoire-fedora-kvm-rocky.md). Les essais historiques Ubuntu/WSL restent distincts ; aucune vérification matérielle n’est revendiquée ici.
+## Pièges fréquents
 
-Avant une modification, compléter les [précontrôles communs](README.md#avant-une-action) et vérifier le retour prévu. Identifier séparément le poste de contrôle, la cible et leurs accès ; aucun outil ou service n’est supposé déjà prêt.
+Lancer la sonde sur le serveur qu'on redémarre ; déployer par un tag qui a bougé (le retour arrière redéploie alors la même version) ; décider du critère d'abandon pendant l'incident ; conclure sur l'interface (cache du navigateur) au lieu de `/version`.
 
-## Réaliser soi-même et demander un indice
-
-1. Choisir un seul composant et justifier le besoin ; lire compatibilité et limites, identifier versions initiale/cible, accès, données et moyens de retour.
-2. Écrire ta fiche avant/action/après avec critères d’arrêt et contrôle métier ; faire revoir une incertitude avant l’intervention personnelle.
-3. Réaliser uniquement le changement autorisé, puis comparer état technique, journaux et ticket témoin. Décider de conserver ou revenir selon des faits, en préservant les preuves.
-
-Conserver ta première proposition avant la revue. Les indices se lisent à la demande, du moins direct au plus ciblé.
-
-<details>
-<summary>Indice 1 — orientation</summary>
-
-Comparer le premier écart à l’état de référence, isoler une cause et confirmer le retour avec le parcours témoin.
-
-</details>
-
-<details>
-<summary>Indice 2 — mécanisme</summary>
-
-Comparer le premier écart au changement réellement effectué. Vérifier configuration et compatibilité avant de conclure à un défaut applicatif ; ne pas changer une seconde couche pour compenser sans hypothèse vérifiée.
-
-</details>
-
-<details>
-<summary>Indice 3 — correction ciblée après tentative</summary>
-
-Présenter ta tentative, l’attendu, l’observé et le premier écart. Demander l’analyse du seul point bloquant ; tu modifies ensuite ta solution, tu retestes et tu expliques la correction. Une explication limitée peut être demandée avant l’action ; aucun fichier InfraOps définitif n’est fourni à recopier. Consigner le niveau d’aide reçu.
-
-</details>
-
-## Vérifier, puis diagnostiquer
-
-- Relever version, état initial, risque et point de retour du seul composant choisi ; vérifier les conditions de compatibilité avant son changement.
-- Comparer contrôle technique et invariant métier avant/après ; lire les journaux utiles et rechercher un effet indésirable.
-- Expliquer ce qu’un retour de version peut rétablir et ce qui nécessite une restauration de données ; garder les limites et l’aide reçue.
-- Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL, lorsque le service est disponible dans le périmètre du module ; si son installation n’est pas encore l’objet de l’étape, indiquer ce contrôle métier NON EXÉCUTÉ.
-
-**Répétition sans mutation :** simuler la décision d’arrêt si le contrôle préalable de compatibilité échoue. Un refus argumenté d’engager la maintenance est un résultat de préparation ; il ne vaut pas maintenance exécutée.
-
-**Erreurs fréquentes :** Mettre tout à jour pour rendre un scan vert ; confondre retour d’image et retour de schéma ; changer plusieurs couches d’un coup.
-
-**Démarche en cas d’écart :** Si le contrôle échoue après maintenance, comparer la seule couche changée avec l’état initial : incompatibilité de version, paramètre modifié ou permission. Vérifier la cause avant un retour ; un retour d’image ne restaure pas un ancien schéma DB.
-
-Séparer attendu et observé ; une cause reste hypothétique tant qu’un contrôle ne l’a pas confirmée. Utiliser le [fil de diagnostic commun](README.md#vérifier-et-diagnostiquer).
-
-## Expliquer et capitaliser
-
-Conserver le livrable annoncé, les observations et les [métadonnées de preuve](README.md#preuve-et-progression-personnelles), expurgées de secrets. Expliquer le besoin couvert, la décision prise, le contrôle qui la soutient et ce qui reste non vérifié. Séparer programme fourni, logiciel tiers, référence historique et travail personnel.
-
-**Réutilisation :** Quels contrôles restent valides si la maintenance ne redémarre aucun conteneur ? Relier ta réponse à un autre projet sans en recopier une solution complète.
-
-Le résultat technique, sa compréhension, un diagnostic représentatif et ton explication s’évaluent séparément. Aucun niveau personnel n’est attribué par cette fiche.
-
-## Corrigé après tentative
-
-Après une première tentative, consulter [les repères de correction](corriges.md#exercice-10--exploiter-et-maintenir) ou demander le niveau d’aide souhaité. La référence historique n’est pas la réponse obligatoire à reproduire.
-
-[← Exercice précédent](09-supervision.md) · [Retour au parcours](README.md) · [Exercice suivant →](11-sauvegarde-reprise.md)
+Suite : [exercice 11](11-sauvegarde-reprise.md).

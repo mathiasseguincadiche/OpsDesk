@@ -21,7 +21,7 @@ Dernière révision : 18 novembre 2026, après la fusion de la v2 ([PR #30](http
 | Images API et frontend (multi-étapes, non-root) | Réalisé | Vérifié le 17 novembre 2026 : construites avec Docker 29.8 sous WSL2 Ubuntu | `backend/Containerfile`, `frontend/Containerfile` ; **non construites avec Podman** |
 | Pile complète (PostgreSQL 17, API, frontend) | Réalisé | Vérifié le 18 novembre 2026 : 3 services *healthy*, `scripts/smoke.py` réussi à travers nginx | `compose.yaml`, réservé aux tests locaux |
 | Résilience nginx face au backend | Réalisé | Vérifié le 18 novembre 2026 : API recréée avec une nouvelle IP puis suivie sans redémarrage ; frontend démarré sans API | `frontend/nginx.conf.template` (résolution DNS dynamique) |
-| Déploiement Podman + Quadlet sur Rocky Linux | Prévu | Non vérifié | Cible de production retenue ; contraintes dans la section « Déploiement avec Podman et Quadlet » du [README](README.md) |
+| Déploiement Podman + Quadlet sur Rocky Linux | Prévu | Non vérifié | Cible de production retenue ; contraintes dans la [référence technique](docs/reference-technique.md#déployer-avec-podman-et-quadlet) |
 | Analyse de vulnérabilités des images v2 | Prévu | Non vérifié | Aucun scan Trivy des images v2 ; le scan v1 ci-dessous ne s’applique pas |
 
 ## Infrastructure
@@ -41,7 +41,9 @@ Dernière révision : 18 novembre 2026, après la fusion de la v2 ([PR #30](http
 | README vitrine | Réalisé | Vérifié le 18 novembre 2026 : liens contrôlés, rendu par le moteur Markdown de GitHub en clair, sombre et largeur mobile | [README](README.md) ; rendu confirmé sur `main` le 18 novembre 2026 après fusion (#33) |
 | Architecture et référence technique (v2) | Réalisé | Vérifié le 18 novembre 2026, par relecture contre le code et `compose.yaml` | [Architecture](docs/architecture.md), [référence technique](docs/reference-technique.md) |
 | Schémas de présentation et d’architecture (v2) | Réalisé | Vérifié le 18 novembre 2026 : exportés par Draw.io depuis leurs sources, rendu contrôlé | [Schémas](docs/diagrams/README.md) ; schémas v1 dans `legacy/diagrams/` |
-| Exercices du parcours et contrat applicatif | En cours | Non vérifié pour la v2 | Écrits pour la v1 ; signalés par un bandeau en tête de chaque document concerné |
+| Exercices du parcours (13 énoncés) | Réalisé | Vérifié le 18 novembre 2026 par relecture contre le code, `compose.yaml` et le registre ; liens contrôlés | [Parcours](docs/apprentissage/README.md) ; cours complet dans Notion. Les exemples réels des fiches (sorties de l'API, sauvegarde et restauration PostgreSQL, panne de base, coupure mesurée) ont été obtenus sur l'environnement local le 18 novembre 2026 ; les autres sont marqués « sortie type » |
+| Schémas pédagogiques des exercices 03 à 11 | Réalisé | Vérifié le 18 novembre 2026 : exportés par Draw.io, rendu contrôlé | [Schémas](docs/diagrams/README.md) |
+| Repères de correction, évaluations et contrat applicatif | En cours | Non vérifié pour la v2 | Écrits pour la v1 ; signalés par un bandeau |
 
 ## Historique : application v1 (Flask)
 

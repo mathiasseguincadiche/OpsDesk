@@ -1,113 +1,67 @@
-# Parcours personnel OpsDesk
+# Parcours d'apprentissage OpsDesk
 
-> [!IMPORTANT]
-> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](../architecture.md) et [la référence technique](../reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+L'application et ses tests sont fournis ; l'infrastructure est à construire soi-même, exercice par exercice. Ces 13 exercices mènent d'une application qui tourne en local à un service déployé par du code, livré par une CI, supervisé, sauvegardé et diagnostiqué.
 
-**L’application et ses tests sont fournis ; l’apprenant construit et exploite son infrastructure.** Accompagnement guidé. Le cadre technique commun reste Linux/Rocky, réseau, Terraform, Ansible, conteneurs, K3s adapté, CI/CD, supervision, sécurité, Day-2 et reprise. Aucun exercice n’est déclaré exécuté et aucun niveau personnel n’est renseigné.
+Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk (FastAPI, React, PostgreSQL ; Podman et Quadlet en production).
 
-Commencer par [l’exercice 01](01-application.md) et [le contrat applicatif](../contrat-applicatif.md), puis suivre cet ordre. Les anciennes configurations InfraOps sont des références historiques à examiner après sa propre tentative lorsqu’elles sont accessibles : leur disponibilité hors du dépôt courant reste NON VÉRIFIÉE.
+## Deux niveaux de lecture
 
-## Laboratoire et plateforme de travail
+| Où | Ce qu'on y trouve | Pour qui |
+| --- | --- | --- |
+| **Ici, dans le dépôt** | L'énoncé de référence de chaque exercice : objectif, notions clés, état voulu, livrable, vérifications, pièges | Tout lecteur, sans compte |
+| **Centre de formation Notion** (accès sur invitation) | Le cours complet : explications pas à pas, exemple travaillé sur un autre cas, indices progressifs, suivi personnel | La personne qui fait le parcours |
 
-L’hôte prévu est **Fedora 45**, avec KVM/QEMU et libvirt ; le système invité cible est **Rocky Linux 10.2**. Cette cible reste prévue tant que les pré-checks et compatibilités exactes du [guide de laboratoire](../laboratoire-fedora-kvm-rocky.md) ne sont pas vérifiés. Terraform et Ansible tournent sur `srv-admin`, première des trois VM (`srv-admin`, `srv-app`, `srv-k3s`) ; ils sont distingués des services exécutés dans les deux autres. Les exercices 01 et 02 ne demandent ni VM ni installation. Les ressources restent à dimensionner d’après les mesures du PC, sans multiplier les VM.
+Les deux décrivent les mêmes exercices, avec les mêmes livrables et les mêmes vérifications. En cas d'écart, les décisions du [registre](../architecture.md#décisions-retenues) et la [référence technique](../reference-technique.md) font foi.
 
-**GitHub est l’unique plateforme active du projet.** GitLab reste en l’état ; ses références historiques sont facultatives. Aucune synchronisation ni double gestion quotidienne n’est demandée. AWS et les variantes cloud restent des objectifs distincts à justifier et à autoriser, pas un prérequis du laboratoire local.
+## Les 13 exercices
 
-Docker, GitHub Actions/GHCR et Trivy sont reliés aux exercices 06/08 ; Prometheus/Grafana et un test k6 borné à l’exercice 09. Les outils sont à vérifier, préparer et pratiquer personnellement.
+| N° | Exercice | Pilier | Schéma |
+| --- | --- | --- | --- |
+| 01 | [Comprendre OpsDesk : HTTP, API et PostgreSQL](01-application.md) | Construire | [Architecture](../diagrams/architecture.svg) |
+| 02 | [Architecture et décisions techniques](02-architecture.md) | Construire | [Architecture](../diagrams/architecture.svg) |
+| 03 | [Rocky Linux, machines virtuelles, réseau et SSH](03-linux-reseau.md) | Construire | [Accès SSH](../diagrams/pedagogique-acces-ssh.svg) |
+| 04 | [Terraform : provider, ressources, state et cycle de vie](04-terraform.md) | Automatiser | [Cycle Terraform](../diagrams/pedagogique-terraform.svg) |
+| 05 | [Ansible : configurer un serveur de façon répétable](05-ansible.md) | Automatiser | — |
+| 06 | [Déployer OpsDesk avec Podman et Quadlet](06-conteneurs.md) | Livrer | [Quadlet](../diagrams/pedagogique-quadlet.svg) |
+| 07 | [Kubernetes avec K3s : une copie d'essai d'OpsDesk](07-k3s.md) | Livrer | [K3s](../diagrams/pedagogique-k3s.svg) |
+| 08 | [CI/CD avec GitHub Actions : tester, construire, publier](08-cicd.md) | Livrer | [CI/CD](../diagrams/pedagogique-cicd.svg) |
+| 09 | [Superviser avec Prometheus et Grafana](09-supervision.md) | Observer | [Supervision](../diagrams/pedagogique-supervision.svg) |
+| 10 | [Maintenir en service : préparer, intervenir, vérifier](10-maintenance.md) | Maintenir | [Architecture](../diagrams/architecture.svg) |
+| 11 | [Sauvegarder et restaurer : prouver la reprise des tickets](11-sauvegarde-reprise.md) | Maintenir | [Sauvegarde](../diagrams/pedagogique-sauvegarde.svg) |
+| 12 | [Diagnostiquer et rétablir : un incident de bout en bout](12-diagnostic.md) | Observer | [Architecture](../diagrams/architecture.svg) |
+| 13 | [Démontrer son autonomie sur une tâche nouvelle](13-autonomie.md) | Transverse | — |
 
-| Ordre | Exercice | Responsabilité |
-|---|---|---|
-| 01 | [01 — Comprendre l’application](01-application.md) | Construire |
-| 02 | [02 — Relire, justifier et vérifier l’architecture retenue](02-architecture.md) | Construire |
-| 03 | [03 — Préparer Linux et le réseau](03-linux-reseau.md) | Construire |
-| 04 | [04 — Provisionner avec Terraform](04-terraform.md) | Automatiser |
-| 05 | [05 — Configurer avec Ansible](05-ansible.md) | Automatiser |
-| 06 | [06 — Conteneuriser](06-conteneurs.md) | Faciliter la livraison |
-| 07 | [07 — Orchestrer avec Kubernetes/K3s](07-k3s.md) | Faciliter la livraison |
-| 08 | [08 — Construire la CI/CD](08-cicd.md) | Faciliter la livraison |
-| 09 | [09 — Superviser](09-supervision.md) | Observer/diagnostiquer |
-| 10 | [10 — Exploiter et maintenir](10-maintenance.md) | Maintenir/rétablir |
-| 11 | [11 — Sauvegarder et restaurer](11-sauvegarde-reprise.md) | Maintenir/rétablir |
-| 12 | [12 — Diagnostiquer et rétablir](12-diagnostic.md) | Observer/diagnostiquer |
-| 13 | [13 — Démontrer son autonomie](13-autonomie.md) | Transverse |
+L'ordre des exercices suit les dépendances techniques : chaque exercice s'appuie sur les précédents. L'exercice 07 (K3s) précède l'exercice 08 (CI) : les images sont alors chargées à la main dans K3s.
 
-Les [corrigés](corriges.md) sont séparés de la première lecture. Les [cinq évaluations](evaluations.md) mobilisent les acquis ; l’exercice 13 demande une tâche nouvelle. Les opérations sensibles exigent cible, pré-check et accord adapté. Le CV ne se modifie pas automatiquement.
+## Le laboratoire
 
-<a id="cadre-commun-des-exercices"></a>
+Hôte **Fedora 45** avec KVM, QEMU et libvirt ; trois VM **Rocky Linux 10.2** sur le réseau `opsdesk-lan` : `srv-admin` (pilotage), `srv-app` (service réel), `srv-k3s` (copie d'essai et supervision). Les exercices 01 et 02 se font sans VM. La préparation suit le [guide du laboratoire](../laboratoire-fedora-kvm-rocky.md).
 
-## Cadre commun des exercices
+## Règles communes
 
-Les fiches regroupent l’ancienne trame de 18 rubriques en sept temps de lecture. Les principes communs sont expliqués une fois ici ; les besoins, notions, consignes, critères, erreurs et situations de diagnostic restent propres à chaque exercice. Un schéma de lecture n’impose pas de restaurer une base pendant un exercice d’architecture.
-
-Le besoin métier commun est de créer, retrouver et faire avancer des tickets IT fictifs. Un ticket identifié, son titre et son état doivent rester contrôlables. Le contrat décrit ce que le programme exige et garantit ; il ne choisit pas une infrastructure à recopier. Le programme et les tests sont fournis ; l’apprenant propose ses choix, écrit ses configurations, exécute ses contrôles et explique ses résultats.
-
-L’application ne possède pas d’authentification utilisateur : laboratoire local, données fictives et absence d’exposition Internet restent des contraintes. La protection CSRF ne constitue pas un compte utilisateur. PostgreSQL doit conserver les données ; santé du processus, disponibilité de la base, identité de version et parcours métier se vérifient séparément. Les 26 tests applicatifs historiques ne prouvent ni ton laboratoire ni ta sécurité globale ; le triage historique reste FAIL dans son contexte.
-
-Les **13 exercices** donnent l’ordre personnel. Les **16 modules historiques** sont des ressources théoriques, accessibles depuis le [parcours Notion](https://app.notion.com/p/3fc65721fa1881f7b4d2f248aafeed23), sans second ordre obligatoire. Les **trois phases** racontent l’évolution d’un seul service dans un seul dépôt. Les **cinq évaluations** vérifient les responsabilités de façon transversale, séparément du statut des exercices. OpsDesk est le seul projet du parcours actif : l’aide est progressivement réduite à l’intérieur de ses 13 exercices, jusqu’à la démonstration d’autonomie de l’exercice 13. Les autres projets antérieurs restent en archive, hors des tâches à réaliser et du CV.
-
-<a id="avant-une-action"></a>
-
-### Avant une action
-
-Pour 01/02, préparer uniquement lecture, questions et dessin : ni VM, ni service, ni installation. À partir de 03, commencer par le [guide de laboratoire et ses pré-checks](../laboratoire-fedora-kvm-rocky.md). Aucune compatibilité exacte, ressource matérielle ou installation n’est présumée reçue.
-
-Avant une commande personnelle, noter son besoin, la machine visée (hôte, VM, conteneur ou runner), l’utilisateur, le répertoire de lancement, les versions, les prérequis et l’état initial. Identifier paramètres à choisir, droits, effet, fichiers ou ressources touchés, résultat attendu et contrôle. Prévoir où lire les erreurs, quelle observation ferait arrêter et quel retour est possible. Distinguer explication conceptuelle et bloc réellement prêt à copier ; un nom de commande dans une leçon n’est pas une procédure exécutable.
-
-Une action sur un cloud payant, une exposition Internet, un réseau sensible, un incident provoqué ou une suppression exige l’accord ciblé prévu. Ne pas supprimer une VM, un volume, un state ou l’unique archive pour fabriquer une preuve. Préférer un constat en lecture seule et une copie de laboratoire ; garder les protections actives. Les anciens guides de commandes sont historiques quand leurs fichiers requis sont absents.
-
-<a id="verifier-et-diagnostiquer"></a>
-
-### Vérifier et diagnostiquer
-
-Écrire l’attendu avant d’observer le résultat réel. Distinguer contrôle de syntaxe, contrôle d’identité de cible, état technique et effet utilisateur. Prévoir un contrôle positif et un refus attendu sûr, proportionnés au sujet ; un exercice de lecture peut utiliser un contre-exemple documentaire. Le contrôle métier sur un ticket est différé et marqué NON EXÉCUTÉ tant que le service n’est pas disponible dans le périmètre personnel.
-
-En cas d’écart, garder le fil : **symptôme → observation → hypothèses → test discriminant → cause confirmée ou inconnue → correction justifiée → validation finale**. Noter le premier fait utile, les versions et l’heure ; conserver les messages expurgés. Changer un seul point justifié puis recontrôler le besoin. Un exemple fictif ou un PASS historique ne remplace pas une observation personnelle.
-
-L’aide se demande au niveau utile : indice 1 pour orienter l’observation ; indice 2 pour expliquer le mécanisme ; indice 3 après présentation de la tentative pour analyser le point bloquant. Les volets restent fermés à la première lecture. Une explication de syntaxe ou un extrait fictif minimal est recevable ; la conception et les fichiers finaux restent personnels. Une difficulté normale appelle une prochaine action, pas un verdict définitif.
+- **Lire avant de lancer.** Avant une commande : sur quelle machine, sous quel compte, avec quel effet attendu, et comment revenir en arrière.
+- **Ne pas affaiblir les protections.** SELinux reste `Enforcing`, firewalld reste actif ; on cherche la règle précise.
+- **Ne jamais exposer de secret.** Ni dans le dépôt, ni dans les preuves, ni dans les captures.
+- **Tester sur la copie, pas sur le service réel**, sauf intervention préparée (exercice 10).
+- **Un exemple n'est pas une solution.** Chaque fiche Notion montre un cas voisin ; l'exercice demande d'écrire sa propre configuration.
 
 <a id="preuve-et-progression-personnelles"></a>
 
-### Preuve et progression personnelles
+## Preuve et progression personnelles
 
-Conserver la première tentative, puis le livrable et le contrôle final. Pour chaque preuve réellement obtenue, renseigner date, cible/environnement, version ou commit, méthode/action personnelle, attendu/observé, résultat, difficulté, hypothèses, correction, test final, limites et aide reçue. Retirer secrets, cookies, jetons, données privées et state. Un lien de suivi indique où travailler ; il ne valide pas le travail.
+Un exercice compte quand ses vérifications ont été menées et consignées avec leur date, leur sortie réelle et l'aide reçue. Une sortie type (illustration) n'est jamais une preuve.
 
-Utiliser la base [Suivi des réalisations — OpsDesk](https://app.notion.com/p/f6cbd99a06334863a17a0b53521b813d) : une entrée par exercice, les évaluations distinctes, l’historique conservé. Une tâche créée reste À faire sans date de vérification, preuve, résultat ou niveau anticipé. Renseigner les observations après la séance réelle.
+| Niveau | Signification |
+| --- | --- |
+| L0 — Découverte | Savoir ce qu'est l'outil et à quoi il sert |
+| L1 — Compréhension | Prévoir ce qu'une commande va faire avant de la lancer |
+| L2 — Réalisation personnelle | L'avoir mis en œuvre soi-même, avec une fiche |
+| L3 — Autonomie vérifiée | L'avoir appliqué à un cas nouveau, vérifié séparément (exercice 13) |
 
-**PRÉVU**, **EN COURS**, **IMPLÉMENTÉ/RÉALISÉ**, **EXÉCUTÉ** et **VÉRIFIÉ** décrivent des états distincts. Un état VÉRIFIÉ exige une méthode, une version/référence, une cible, une date et un résultat traçables. Pour un contrôle : **PASS**, **FAIL**, **PARTIEL**, **NON EXÉCUTÉ**. Utiliser **NON VÉRIFIÉ** lorsque la portée du contrôle n’est pas établie.
+Aide déclarée : A0 (documentation officielle), A1 (ressources générales), A2 (indice ciblé), A3 (solution partielle comprise et adaptée).
 
-**L0** = découverte ; **L1** = compréhension ; **L2** = réalisation personnelle ; **L3** = autonomie vérifiée sur une adaptation ou un diagnostic nouveau avec aide limitée. Le résultat technique, la compréhension, le diagnostic et l’explication se vérifient séparément. Un exercice terminé avec assistance peut relever de L2 ; il n’attribue pas automatiquement L3. Aucun niveau, acquis CV ou résultat personnel n’est prérempli par la documentation.
+**État au 18 novembre 2026 :** aucun exercice réalisé ; aucun niveau attribué.
 
-### Validité du contrôle et précautions de lecture
+## Documents encore en version 1
 
-Un fichier peut être réalisé sans être vérifié. Un contrôle en échec ne retire pas la réalisation : conserver « réalisé — échec constaté », le symptôme et la prochaine action. Une déclaration sans preuve consultable reste « déclaré — non vérifié ». Les règles de [portée et renouvellement d’une preuve](../preuves.md#avancement-et-contrôle--deux-informations-distinctes) font autorité ; ne pas recopier PASS sur une nouvelle version ou une nouvelle cible. Les champs et statuts de la base existante sont conservés : ses valeurs servent au suivi, la preuve détaille le contrôle, et le niveau personnel reste séparé.
-
-Avant toute procédure, distinguer l’état de sa rédaction de son état d’essai : jamais rejouée, partiellement rejouée ou entièrement rejouée, avec date/cible/version. Le laboratoire prévu et ses versions demandent une revérification au moment de la pratique ; cette charte ne les certifie pas.
-
-Une commande mentionnée dans un exercice n’a pas été exécutée par cette mise à jour. Vérifier options et sous-commandes dans l’aide de la version réellement disponible avant de les utiliser. `terraform validate` suppose une initialisation ; `init` peut télécharger des providers, et `plan` peut accéder au fournisseur et à l’état. Une sortie de configuration résolue, par exemple `docker compose config`, peut dévoiler des secrets. Ne pas la publier sans relecture. Avant un script téléchargé, lire le fichier et son origine ; ne pas l’exécuter directement par un tube vers un shell.
-
-**Arrêter avant modification** si la cible, l’autorisation, la version, la sauvegarde restaurable ou le retour nécessaire est ambigu. Nommer le point de non-retour lorsqu’il existe ; un retour décrit mais jamais essayé reste non vérifié. Les exercices 01/02 restent des activités de lecture et dessin.
-
-### Conservation des 18 exigences
-
-| Ancienne rubrique | Emplacement après regroupement |
-|---|---|
-| 1. Situation professionnelle | Situation et résultat à obtenir, propre à la fiche |
-| 2. Objectif pédagogique | Titre, résultat observable, consignes et questions ; responsabilité en tête de fiche |
-| 3. Besoin applicatif | Besoin commun ci-dessus, appliqué à la situation de chaque fiche |
-| 4. Concepts à comprendre | Comprendre avant de choisir, notions et cas propres à la fiche |
-| 5. Prérequis | Préparer la bonne cible |
-| 6. Environnement et matériel | Préparer la bonne cible et guide de laboratoire référencé |
-| 7. Travail personnel | Réaliser soi-même, avec micro-jalons et décisions propres au sujet |
-| 8. Contraintes | Cadre commun et Avant une action ; limites spécifiques dans la fiche |
-| 9. Indices progressifs | Trois volets distincts de la fiche, du moins direct au plus ciblé |
-| 10. Vérifications à effectuer | Vérifier, puis diagnostiquer, critères propres conservés |
-| 11. Résultat attendu | Livrable annoncé dès la situation |
-| 12. Erreurs fréquentes | Erreurs propres dans Vérifier, puis diagnostiquer |
-| 13. Démarche de diagnostic | Cas propre à la fiche et fil commun ci-dessus |
-| 14. Preuves à conserver | Livrable propre, Expliquer et capitaliser, métadonnées communes |
-| 15. Synthèse | Expliquer besoin, choix, contrôle et limites |
-| 16. Réutilisation des acquis | Question de réutilisation propre à chaque fiche |
-| 17. Validation et autonomie | Critères propres et niveaux communs ci-dessus ; cinq évaluations séparées |
-| 18. Corrigé séparé | Corrigé après tentative, lien propre à chaque exercice |
-
-Révision documentaire : 2026-11-04. Contrôles de cette réorganisation : structure et cohérence documentaires ; aucune réalisation InfraOps personnelle, aucun test utilisateur réel ni rendu Notion/mobile n’est établi par cette fiche.
+[Les repères de correction](corriges.md) et [les cinq évaluations](evaluations.md) ont été écrits pour la version 1 et n'ont pas encore été repris. Ils portent un bandeau, et se lisent à titre historique.

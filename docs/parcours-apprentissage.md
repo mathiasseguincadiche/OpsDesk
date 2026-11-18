@@ -1,60 +1,33 @@
-# Apprendre OpsDesk par des résultats observables
+# Apprendre avec OpsDesk
 
-## Parcours actif et laboratoire personnel
+OpsDesk sert de support à un parcours DevOps complet : l'application et ses tests sont fournis, et l'infrastructure se construit soi-même, en 13 exercices. Le détail des exercices, leurs livrables et leurs vérifications sont dans [le parcours d'apprentissage](apprentissage/README.md).
 
-Commencer par [l’exercice personnel n° 1 — comprendre l’application](apprentissage/01-application.md) et [le contrat applicatif](contrat-applicatif.md). Les [13 exercices prioritaires](apprentissage/README.md) sont distincts des supports théoriques et preuves historiques conservés. Les corrigés se consultent après une tentative ; les cinq évaluations personnelles sont dans `docs/apprentissage/evaluations.md`.
+Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk.
 
-Le laboratoire prévu est **Fedora 45 hôte → KVM/QEMU/libvirt → trois VM Rocky Linux 10.2 invitées** (`srv-admin`, `srv-app`, `srv-k3s`). Les exercices 01/02 se font en lecture et dessin ; pour la préparation technique, lire [le guide de laboratoire et ses contrôles](laboratoire-fedora-kvm-rocky.md). Aucune compatibilité, installation ou VM personnelle n’est validée par les essais historiques Ubuntu/WSL. Une version ou un contrôle non vérifié reste signalé ; aucune substitution silencieuse de Rocky Linux n’est autorisée.
+## L'idée
 
-GitHub est l’unique plateforme active de ce parcours. GitLab est laissé en l’état ; ses anciennes références sont historiques et facultatives, sans synchronisation ni second flux quotidien.
+Chaque exercice part d'un problème réel d'exploitation, explique le mécanisme, montre un exemple sur un cas voisin, puis demande de construire et de **prouver** le résultat. Une configuration écrite ou une coche verte ne suffit pas : on vérifie l'effet réel, et on sait l'expliquer.
 
-**parcours unique OpsDesk, d’abord accompagné puis progressivement autonome.** L’apprenant écrit et réalise lui-même ses configurations ; des indices progressifs et l’examen de sa tentative accompagnent l’apprentissage. Le Notion OpsDesk existant garde sa fonction pédagogique et son historique. Ce dépôt fournit les sources et les preuves ; il ne crée pas un deuxième parent Notion ni une duplication littérale des leçons.
+## Les cinq piliers
 
-## Ordre de progression
+| Pilier | Exercices | La preuve directrice |
+| --- | --- | --- |
+| Construire | 01, 02, 03 | Le trajet d'une requête compris ; `srv-admin` joignable par clé, protections actives |
+| Automatiser | 04, 05 | Les VM recréées par Terraform ; un second passage Ansible à `changed=0` |
+| Livrer | 06, 07, 08 | Le service sous Quadlet qui survit au reboot ; l'image déployée identique à celle vérifiée par la CI |
+| Observer | 09, 12 | Une alerte vue passer à `firing` ; un incident inconnu diagnostiqué et rétabli |
+| Maintenir | 10, 11 | Une maintenance mesurée avec retour arrière ; une restauration prouvée par un ticket témoin |
 
-Application → architecture retenue → Linux/réseau → Terraform → Ansible → conteneurisation → K3s → CI/CD → supervision → Day-2 → sauvegarde/restauration → diagnostic/rétablissement → épreuve nouvelle d’autonomie. Les contenus utiles sont conservés ; les 13 exercices sont maintenant identifiables individuellement. Les énoncés complets, indices et corrigés séparés sont préparés avec le parcours Notion ; les anciennes solutions sont des références à consulter après la première tentative, pas des réponses imposées.
+L'exercice 13 est transversal : une tâche nouvelle, menée seul, et vérifiée séparément.
 
-L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée. **Aucun niveau n’est attribué par les tests historiques.** Le premier exercice porte sur le contrat et les flux applicatifs, sans VM ; la relecture et la justification de l’architecture retenue relèvent de l’exercice 02.
+## Où se trouve quoi
 
-## Méthode progressive conservée
+- **Les énoncés de référence** : [docs/apprentissage/](apprentissage/README.md), lisibles par tous.
+- **Le cours complet** (explications, exemples, indices, suivi) : le centre de formation Notion, accessible sur invitation.
+- **Les décisions** à respecter : le [registre](architecture.md#décisions-retenues).
+- **La préparation du laboratoire** : le [guide Fedora, KVM et Rocky Linux](laboratoire-fedora-kvm-rocky.md).
+- **L'état réel**, daté : [STATUS.md](../STATUS.md).
 
-Pour chaque tâche : **problème → prérequis → mécanisme → minimum utile → test → diagnostic → explication personnelle**. Progresser de « je reconnais les composants » à « j’exécute guidé », puis « j’interprète », « je diagnostique » et enfin « je reproduis et j’explique ». Un fichier écrit ou un job vert ne suffit pas à valider la dernière étape.
+## Les niveaux
 
-## Approfondissements après mise en service personnelle
-
-Les manipulations ci-dessous sont différées : elles exigent une cible applicative qualifiée et ne constituent pas le démarrage de l’exercice 01.
-
-1. Ouvrir un ticket dans l’UI, le retrouver par l’API et expliquer pourquoi il est dans PostgreSQL.
-2. Comparer `/health/live`, `/health/ready`, `/version` et `/metrics` ; décrire les limites de chaque signal.
-3. Envoyer une entrée trop courte et une transition interdite ; expliquer pourquoi les refus attendus sont des tests réussis.
-4. Dessiner le trajet navigateur → port local → app → DNS `db` → PostgreSQL → volume.
-5. Lire un échec réel, formuler une hypothèse, vérifier une seule chose à la fois et conserver l’observation.
-6. Préparer les exercices de livraison, maintenance et restauration ; ne les compter que lorsqu’ils ont été exécutés sur une cible identifiée.
-
-## Cinq piliers — réception séparée
-
-| Pilier | Preuve directrice OpsDesk | État personnel |
-|---|---|---|
-| Construire | Chemin réseau jusqu’au service tickets sur la cible retenue ; K3s lors du module dédié et après qualification | **NON EXÉCUTÉ personnellement** dans les preuves suivies ; niveau non évalué |
-| Automatiser | Terraform/Ansible reconstruisent l’environnement autorisé | **NON EXÉCUTÉ personnellement** ; les anciens rendus locaux sont historiques |
-| Faciliter la livraison | CI d’image et vérification d’un ticket sans SSH administrateur développeur | **NON EXÉCUTÉ personnellement** ; construire ses jobs à partir d’une procédure comprise |
-| Observer/diagnostiquer | Alerte applicative et panne analysée | **NON EXÉCUTÉ personnellement** ; signaux/alerte/diagnostic à proposer et vérifier |
-| Maintenir/rétablir | Maintenance Day-2 et reprise des tickets | **NON EXÉCUTÉ personnellement** ; les reprises historiques restent distinctes |
-
-Pour chaque ligne, renseigner : pourquoi, fichiers, pré-check, commande/version réelle, contrôle positif et négatif, diagnostic, preuve datée et explication personnelle. Ne pas annoncer « cinq piliers vérifiés » avec la seule tranche HTTP locale.
-
-## Glossaire ciblé
-
-- **Image** : artefact d’exécution ; un tag précis n’est pas nécessairement immuable, un digest identifie le contenu.
-- **Volume** : données séparées du cycle de vie du conteneur ; pas une sauvegarde.
-- **CI** : contrôles répétés sur un changement ; lire les étapes et leurs échecs.
-- **Idempotence** : répétition sans changement indésirable, à constater sur une seconde exécution.
-- **Readiness** : dépendances nécessaires disponibles ; pas une preuve exhaustive du parcours utilisateur.
-- **Observabilité** : indices pour comprendre un état ; une métrique n’est ni un log ni une alerte.
-- **Rollback** : retour d’une version applicative ; distinct d’une restauration de données.
-
-## Conservation des supports antérieurs
-
-Les premiers guides de conception portaient déjà sur les trois phases, les secrets, la persistance, la CI et le diagnostic. Ces connaissances restent présentes dans [architecture](architecture.md), [démarrage](demarrage.md), [livraison](livraison.md) et [Day-2](exploitation-day2.md). Les anciennes assertions « aucune application » ne décrivent plus cette révision ; les originaux sont conservés dans la sauvegarde d’audit et l’historique du dépôt.
-
-Les [cinq évaluations personnelles](apprentissage/evaluations.md) fixent les contrôles à produire. Les [anciennes évaluations](evaluations.md) conservent leurs essais datés et indiquent besoins, pré-checks, commandes réelles, erreurs, preuves et suites. Le [guide infrastructure](infrastructure.md) explique la différence entre contrat local testé et infrastructure réellement provisionnée.
+L0 découverte, L1 compréhension, L2 réalisation personnelle, L3 autonomie vérifiée. Ils sont définis dans [le parcours](apprentissage/README.md#preuve-et-progression-personnelles). Aucun niveau n'est attribué à ce jour, et les tests de la version 1 n'en attribuent aucun.
