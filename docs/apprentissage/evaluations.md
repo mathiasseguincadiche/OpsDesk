@@ -1,107 +1,106 @@
-# Cinq évaluations personnelles
+# Cinq évaluations transversales
 
-> [!IMPORTANT]
-> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). Les exercices ont été réécrits pour la version 2 le 18 novembre 2026 : voir [le parcours](README.md). Ce document n'a pas encore été repris et se lit à titre historique.
+Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk.
 
-Toutes restent NON EXÉCUTÉES ; niveau NON ÉVALUÉ. Aucune preuve personnelle n’est renseignée. Les essais historiques sont historiques et séparés.
+Les exercices apprennent un outil à la fois. Les évaluations vérifient qu'on sait **les enchaîner** pour répondre à un besoin réel, comme en poste. Il y en a une par pilier ; chacune mobilise plusieurs exercices et se mène sur un scénario complet, du besoin à la preuve.
 
-Ces évaluations sont transversales : elles ne constituent pas cinq exercices supplémentaires ni un second ordre de travail. Les exercices 01/02 restent sans VM ; les contrôles métier sur service déployé sont différés tant que leur cible n’est pas personnellement disponible. Renseigner alors NON EXÉCUTÉ pour cette partie, sans déclarer toute l’évaluation reçue. L’exercice 13 fournit un cas nouveau pour examiner les responsabilités et l’autonomie ; consulter les [règles de preuve et de niveau](README.md#preuve-et-progression-personnelles).
+## Règles communes
 
+- **Quand** : après les exercices concernés, jamais avant.
+- **Où** : sur la cible indiquée ; toute action perturbatrice se fait sur la copie d'essai, ou sur `srv-app` dans une fenêtre annoncée, après une sauvegarde.
+- **Aide** : déclarée avec son niveau, de A0 à A3 (voir [le parcours](README.md#preuve-et-progression-personnelles)).
+- **Preuve** : sorties réelles datées, liens vers les commits et les exécutions de CI, chronométrages. Une sortie type n'est jamais une preuve.
+- **Conclusion** : réussie, réussie avec aide, ou à retravailler, avec ce qui a manqué. Pas de note chiffrée. Le niveau L3 demande en plus une vérification séparée (exercice 13).
+
+**État au 18 novembre 2026** : aucune évaluation menée.
 
 <a id="evaluation-1"></a>
 
-<a id="evaluation-1"></a>
+## Évaluation 1 — Construire : accueillir un nouveau venu
 
-## Évaluation 1 — Construire
+**Exercices mobilisés** : 01, 02, 03.
 
-**Objectif/scénario :** démontrer construire pour des demandes IT créées, consultables et suivies sans perdre les tickets, à partir des exercices 1, 2, 3 et d’une variante nouvelle.
+**Scénario.** Une personne arrive dans l'équipe. En 30 minutes, tu lui expliques OpsDesk et son infrastructure, puis tu lui ouvres un accès d'administration à `srv-admin`, sans mot de passe et sans affaiblir aucune protection.
 
-**Environnement/pré-check :** cible personnelle identifiée, version, accès, ressources, données fictives, état initial et retour ; aucun incident destructif sans accord ciblé.
+**À démontrer.**
 
-**Action personnelle :** L’apprenant propose la méthode, écrit les configurations nécessaires, exécute et explique. Niveau d’aide initial : guidé.
+1. Le trajet d'une demande, du navigateur à la base, sur le schéma d'architecture, et ce que fait chaque composant.
+2. Trois décisions du registre défendues avec leurs quatre réponses (besoin, alternative, panne, contrôle).
+3. Un compte nominatif créé sur `srv-admin`, avec sa clé, son empreinte d'hôte vérifiée, et des droits justifiés.
+4. Un refus attendu, prouvé : ce compte ne peut pas se connecter par mot de passe.
 
-**Contrôle :** Expliquer le besoin et justifier l’architecture retenue ; distinguer Fedora hôte et Rocky invité. Vérifier réseau/SSH/droits/protections sur la VM réelle, puis expliquer un refus attendu. La présence d’un dessin ou le démarrage d’une VM ne suffit pas. Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL.
-
-**Résultat/preuve/niveau :** NON EXÉCUTÉ / aucune preuve personnelle / NON ÉVALUÉ. Après exécution : date, environnement, version/commit, action, résultat, difficulté, correction, test final, aide reçue.
-
-**Correction/consolidation :** à définir sur la tentative réelle. Une réussite avec assistance est distincte d’une autonomie sur un cas nouveau.
-
+**Critères de réussite.** Explication juste sans notes ; accès fonctionnel par clé ; SELinux `Enforcing` et firewalld actif à la fin ; aucun secret transmis par un canal non protégé.
 
 <a id="evaluation-2"></a>
 
-<a id="evaluation-2"></a>
+## Évaluation 2 — Automatiser : reconstruire `srv-app` de zéro
 
-## Évaluation 2 — Automatiser
+**Exercices mobilisés** : 04, 05, 06, 11.
 
-**Objectif/scénario :** démontrer automatiser pour des demandes IT créées, consultables et suivies sans perdre les tickets, à partir des exercices 4, 5 et d’une variante nouvelle.
+**Scénario.** `srv-app` est déclarée perdue. Tu la détruis, puis tu la reconstruis entièrement par ton code : Terraform, puis Ansible, puis ton rôle de déploiement, puis la restauration de la dernière sauvegarde. Aucune action à la main sur la nouvelle VM.
 
-**Environnement/pré-check :** cible personnelle identifiée, version, accès, ressources, données fictives, état initial et retour ; aucun incident destructif sans accord ciblé.
+**À démontrer.**
 
-**Action personnelle :** L’apprenant propose la méthode, écrit les configurations nécessaires, exécute et explique. Niveau d’aide initial : guidé.
+1. Le plan Terraform avant destruction et avant recréation, lu et commenté.
+2. La VM recréée, configurée et servant OpsDesk, sans intervention manuelle.
+3. Les données restaurées : le ticket témoin relu dans l'interface.
+4. La durée totale, de la destruction au ticket relu.
 
-**Contrôle :** Relier chaque objet Terraform à une ressource réellement gérée et à son state protégé ; expliquer le plan puis le résultat observé. Montrer une configuration Ansible sur la bonne VM, la seconde passe interprétée et le paramètre ou service effectivement conforme. Un contrat local terraform_data ou changed=0 seul ne valide pas l’automatisation. Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL.
-
-**Résultat/preuve/niveau :** NON EXÉCUTÉ / aucune preuve personnelle / NON ÉVALUÉ. Après exécution : date, environnement, version/commit, action, résultat, difficulté, correction, test final, aide reçue.
-
-**Correction/consolidation :** à définir sur la tentative réelle. Une réussite avec assistance est distincte d’une autonomie sur un cas nouveau.
-
+**Critères de réussite.** Aucune commande manuelle sur `srv-app` ; second passage Ansible à `changed=0` ; second plan Terraform à « No changes » ; durée mesurée et RPO de la copie utilisée écrit.
 
 <a id="evaluation-3"></a>
 
-<a id="evaluation-3"></a>
+## Évaluation 3 — Livrer : une modification, du commit au service
 
-## Évaluation 3 — Faciliter la livraison
+**Exercices mobilisés** : 06, 07, 08, 10.
 
-**Objectif/scénario :** démontrer faciliter la livraison pour des demandes IT créées, consultables et suivies sans perdre les tickets, à partir des exercices 6, 7, 8 et d’une variante nouvelle.
+**Scénario.** Une petite modification de l'application (par exemple, un libellé de l'interface) doit partir en service. Elle passe par une pull request, la CI, la copie d'essai dans K3s, puis le service réel, avec un retour arrière exercé.
 
-**Environnement/pré-check :** cible personnelle identifiée, version, accès, ressources, données fictives, état initial et retour ; aucun incident destructif sans accord ciblé.
+**À démontrer.**
 
-**Action personnelle :** L’apprenant propose la méthode, écrit les configurations nécessaires, exécute et explique. Niveau d’aide initial : guidé.
+1. La pull request testée, puis fusionnée ; l'image publiée avec son digest.
+2. La nouvelle version vérifiée d'abord sur la copie d'essai.
+3. Le déploiement sur `srv-app` par le rôle Ansible, avec une sonde continue et l'indisponibilité mesurée.
+4. Le digest de l'image qui tourne identique à celui publié par la CI.
+5. Un retour arrière vers la version précédente, puis le retour à la nouvelle.
 
-**Contrôle :** Relier commit, tests, run et artefact identifiable ; expliquer permissions et accès à la cible. Promouvoir le même artefact sans reconstruction cachée, contrôler la version servie et les données, puis démontrer un retour borné compatible avec le schéma. Un fichier CI présent ou un job textuel de succès ne prouve pas une livraison. Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL. GHCR et Trivy font partie des contrôles à préparer, sans publier automatiquement une image ou un dépôt.
-
-**Résultat/preuve/niveau :** NON EXÉCUTÉ / aucune preuve personnelle / NON ÉVALUÉ. Après exécution : date, environnement, version/commit, action, résultat, difficulté, correction, test final, aide reçue.
-
-**Correction/consolidation :** à définir sur la tentative réelle. Une réussite avec assistance est distincte d’une autonomie sur un cas nouveau.
-
-
-<a id="evaluation-4"></a>
+**Critères de réussite.** Aucune image construite à la main ; aucun accès SSH à `srv-app` nécessaire pour livrer, en dehors du rôle Ansible ; chaque étape reliée à son commit et à son exécution de CI.
 
 <a id="evaluation-4"></a>
 
-## Évaluation 4 — Observer/diagnostiquer
+## Évaluation 4 — Observer : de l'alerte au post-mortem
 
-**Objectif/scénario :** démontrer observer/diagnostiquer pour des demandes IT créées, consultables et suivies sans perdre les tickets, à partir des exercices 9, 12 et d’une variante nouvelle.
+**Exercices mobilisés** : 09, 12.
 
-**Environnement/pré-check :** cible personnelle identifiée, version, accès, ressources, données fictives, état initial et retour ; aucun incident destructif sans accord ciblé.
+**Scénario.** Une autre personne provoque une panne sur la copie d'essai, sans te prévenir. Tu dois être alerté par ta supervision, puis diagnostiquer et rétablir.
 
-**Action personnelle :** L’apprenant propose la méthode, écrit les configurations nécessaires, exécute et explique. Niveau d’aide initial : guidé.
+**À démontrer.**
 
-**Contrôle :** Justifier un signal métier, montrer collecte/visualisation et règle avec destinataire autorisé ; distinguer défaut de collecte et défaut du service. Pour un symptôme borné, formuler deux hypothèses, exécuter un contrôle discriminant puis corréler métriques, journaux et résultat utilisateur. Aucune panne destructive n’est requise. Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL.
+1. L'alerte reçue : laquelle, à quelle heure, combien de temps après le début de la panne.
+2. Le diagnostic en sept temps, avec son journal d'incident.
+3. Le rétablissement, recontrôlé jusqu'au parcours d'un utilisateur.
+4. Un post-mortem d'une page, sans reproche, avec au moins une amélioration de la supervision.
 
-**Résultat/preuve/niveau :** NON EXÉCUTÉ / aucune preuve personnelle / NON ÉVALUÉ. Après exécution : date, environnement, version/commit, action, résultat, difficulté, correction, test final, aide reçue.
-
-**Correction/consolidation :** à définir sur la tentative réelle. Une réussite avec assistance est distincte d’une autonomie sur un cas nouveau.
-
-
-<a id="evaluation-5"></a>
+**Critères de réussite.** Panne détectée par la supervision et non par hasard, ou absence de détection expliquée et corrigée ; cause démontrée par un test qui en écarte une autre ; une seule correction à la fois.
 
 <a id="evaluation-5"></a>
 
-## Évaluation 5 — Maintenir/rétablir
+## Évaluation 5 — Maintenir : une maintenance sous contrainte
 
-**Objectif/scénario :** démontrer maintenir/rétablir pour des demandes IT créées, consultables et suivies sans perdre les tickets, à partir des exercices 10, 11 et d’une variante nouvelle.
+**Exercices mobilisés** : 10, 11.
 
-**Environnement/pré-check :** cible personnelle identifiée, version, accès, ressources, données fictives, état initial et retour ; aucun incident destructif sans accord ciblé.
+**Scénario.** Il faut appliquer les mises à jour de Rocky Linux à `srv-app`, avec redémarrage, en garantissant moins de 5 minutes d'indisponibilité et zéro perte de données. Le critère d'abandon est fixé avant de commencer.
 
-**Action personnelle :** L’apprenant propose la méthode, écrit les configurations nécessaires, exécute et explique. Niveau d’aide initial : guidé.
+**À démontrer.**
 
-**Contrôle :** Préparer une maintenance limitée avec état initial, compatibilité et retour. Contrôler une archive cohérente puis restaurer sur une cible distincte ; retrouver les mêmes références métier et expliquer les mesures de perte/durée. Un backup créé, un conteneur redémarré ou un disque virtuel sur le même PC ne prouve pas à lui seul une reprise utile ou hors site. Revalider un ticket identifié, son titre, son état et sa relecture dans PostgreSQL.
+1. La fiche d'intervention, écrite et datée avant l'intervention.
+2. Une sauvegarde faite juste avant, copiée hors de la VM, empreinte vérifiée.
+3. L'intervention, avec une sonde continue depuis `srv-admin`.
+4. Les contrôles après : version, sondes, ticket témoin, courbes de supervision avant et après.
+5. Un compte rendu de cinq lignes.
 
-**Résultat/preuve/niveau :** NON EXÉCUTÉ / aucune preuve personnelle / NON ÉVALUÉ. Après exécution : date, environnement, version/commit, action, résultat, difficulté, correction, test final, aide reçue.
+**Critères de réussite.** Indisponibilité mesurée et sous la limite, ou abandon déclenché par le critère écrit et retour à l'état initial prouvé ; ticket témoin intact ; système à jour.
 
-**Correction/consolidation :** à définir sur la tentative réelle. Une réussite avec assistance est distincte d’une autonomie sur un cas nouveau.
+## Historique
 
-[Retour au parcours](README.md) · [Épreuve nouvelle d’autonomie](13-autonomie.md) · [Repères après tentative](corriges.md)
-
-Révision documentaire : 2026-11-04.
+Les évaluations de la version 1 et leurs essais datés sont conservés dans [le registre historique](../evaluations.md).
