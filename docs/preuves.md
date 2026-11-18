@@ -63,7 +63,7 @@ Archiver uniquement la sortie réellement obtenue, avec version, environnement e
 
 ## Ce qui appartient aux exercices personnels
 
-Connexion développeur/CI → image → cible, image immuable publiée, reconstruction, idempotence de la configuration Linux Ansible, déploiement K3s, alerte, maintenance et restauration restent des évaluations personnelles distinctes. Les reprises locales historiques existent ; elles ne valident pas celles de l’apprenant. Les quinze cellules du portfolio sont suivies par projet ; [la grille OpsDesk](parcours-apprentissage.md#cinq-piliers--réception-séparée) ne devient pas verte parce qu’un seul smoke passe.
+Connexion développeur/CI → image → cible, image immuable publiée, reconstruction, idempotence de la configuration Linux Ansible, déploiement K3s, alerte, maintenance et restauration restent des évaluations personnelles distinctes. Les reprises locales historiques existent ; elles ne valident pas celles de l’apprenant. Les quinze cellules du portfolio sont suivies par projet ; [la grille OpsDesk](parcours-apprentissage.md#les-cinq-piliers) ne devient pas verte parce qu’un seul smoke passe.
 
 ## Compléments exécutés le 3 novembre
 
