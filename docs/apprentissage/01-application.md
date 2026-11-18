@@ -1,5 +1,8 @@
 # 01 — Comprendre l’application
 
+> [!IMPORTANT]
+> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](../architecture.md) et [la référence technique](../reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+
 **Projet : OpsDesk · Pilier : Construire · Accompagnement : guidé.** Exercice préparé ; réalisation et vérification personnelles NON EXÉCUTÉES ; autonomie NON ÉVALUÉE.
 
 Révision documentaire : 2026-11-04. Les [règles communes et exigences conservées](README.md#cadre-commun-des-exercices) complètent cette fiche.

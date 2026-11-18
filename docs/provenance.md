@@ -1,12 +1,15 @@
 # Provenance des éléments du dépôt
 
+> [!IMPORTANT]
+> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](architecture.md) et [la référence technique](reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+
 | Ensemble | Origine | Usage |
 | --- | --- | --- |
 | Application `app/`, schéma `db/schema.sql`, tests, contrat applicatif | Produits avec l’aide d’un assistant d’IA, pour une équipe de développement fictive | Support applicatif du laboratoire |
 | Python, Flask/Jinja, psycopg, Gunicorn, PostgreSQL | Composants tiers, sous leurs propres licences ; la licence MIT du dépôt ne les remplace pas | Dépendances de l’application |
 | Anciennes recettes conteneurs, Terraform, Ansible, K3s, CI, reprise | Générées avec l’aide d’un assistant d’IA, puis partiellement essayées | Références historiques, à comparer après une tentative personnelle |
 | Énoncés, indices, corrigés, évaluations | Préparés avec l’aide d’un assistant d’IA | Aide progressive ; aucun niveau personnel attribué |
-| Schémas | Dessinés pour le projet ; 15 logos de produits issus de simple-icons 13.21.0 (CC0), dont Git (CC BY 3.0) et Rocky Linux (CC BY-SA 4.0) à attribuer ; conditions du logo Flask non vérifiées ; 4 pictogrammes dessinés pour le projet | Voir [`diagrams/README.md`](diagrams/README.md#logos-et-pictogrammes) |
+| Schémas | Schémas actuels (v2, `docs/diagrams/`) : dessinés pour le projet, sans logo, palette de la collection V24. Schémas v1, conservés dans `legacy/diagrams/` : dessinés pour le projet ; 15 logos de produits issus de simple-icons 13.21.0 (CC0), dont Git (CC BY 3.0) et Rocky Linux (CC BY-SA 4.0) à attribuer ; conditions du logo Flask non vérifiées ; 4 pictogrammes dessinés pour le projet | Voir [`diagrams/README.md`](../legacy/diagrams/README.md#logos-et-pictogrammes) |
 | Infrastructure cible et opérations | À concevoir, écrire, exécuter et expliquer par l’apprenant | Réalisation personnelle à prouver |
 
 Un essai historique ou un PASS n’est pas une réalisation personnelle. Le détail des preuves est dans [STATUS](../STATUS.md) et [preuves](preuves.md).

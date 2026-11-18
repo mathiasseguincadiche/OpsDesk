@@ -1,14 +1,17 @@
 # Lire une preuve et ses limites
 
+> [!IMPORTANT]
+> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](architecture.md) et [la référence technique](reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+
 Dans les rapports bruts, les identifiants locaux des ressources (image, projet de restauration, répertoires temporaires, révision déclarée) ont été simplifiés : leur préfixe de version a été retiré. Aucune autre valeur n’a été modifiée.
 
 ## Preuve applicative courante
 
-Le [rapport des tests actuels](../evidence/qualification/application-tests.json) et son journal enregistrent 26 tests réussis sur la source montée en lecture seule, avec PostgreSQL réel. La plupart des cas utilisent une table TEMP ; un ticket fictif par passage est committé puis relu par des connexions distinctes et conservé. Le premier passage défavorable reste archivé séparément. Aucune image reconstruite, aucun service redéployé, aucune reprise ou opération InfraOps personnelle n’est exécutée.
+Le [rapport des tests actuels](../legacy/evidence/qualification/application-tests.json) et son journal enregistrent 26 tests réussis sur la source montée en lecture seule, avec PostgreSQL réel. La plupart des cas utilisent une table TEMP ; un ticket fictif par passage est committé puis relu par des connexions distinctes et conservé. Le premier passage défavorable reste archivé séparément. Aucune image reconstruite, aucun service redéployé, aucune reprise ou opération InfraOps personnelle n’est exécutée.
 
 ## Smoke historique conservé
 
-[Le smoke HTTP](../evidence/business-smoke.json) rapporte son heure UTC, la version servie, l’environnement d’accès local, chaque requête et son statut. Le fichier courant est daté du 3 novembre 2026 à 13:40:23 UTC ; il conserve un parcours de préparation historique comprenant :
+[Le smoke HTTP](../legacy/evidence/business-smoke.json) rapporte son heure UTC, la version servie, l’environnement d’accès local, chaque requête et son statut. Le fichier courant est daté du 3 novembre 2026 à 13:40:23 UTC ; il conserve un parcours de préparation historique comprenant :
 
 - liveness, readiness et version ;
 - affichage du formulaire HTML ; création/liste/lecture d’un ticket PostgreSQL ;
@@ -64,13 +67,13 @@ Connexion développeur/CI → image → cible, image immuable publiée, reconstr
 
 ## Compléments exécutés le 3 novembre
 
-- [Navigateur Chrome/Playwright](../evidence/browser.json) : affichage de la liste de tickets sur la boucle locale, aucune erreur JavaScript observée.
-- [Contrat Terraform et rendu Ansible](../evidence/automation-contract.json) : état et JSON locaux, deux passages sans changement ; aucun provisioning. [Échec initial Ansible conservé](../evidence/automation-first-attempt.json).
-- [Rendu Kustomize hors ligne](../evidence/k8s-static.json) : treize objets assemblés ; aucune API de cluster contactée.
-- [Rapport de vulnérabilités](../evidence/vulnerability-scan.json) : vérifier son statut et l’image analysée ; sa seule présence ne signifie pas PASS.
+- [Navigateur Chrome/Playwright](../legacy/evidence/browser.json) : affichage de la liste de tickets sur la boucle locale, aucune erreur JavaScript observée.
+- [Contrat Terraform et rendu Ansible](../legacy/evidence/automation-contract.json) : état et JSON locaux, deux passages sans changement ; aucun provisioning. [Échec initial Ansible conservé](../legacy/evidence/automation-first-attempt.json).
+- [Rendu Kustomize hors ligne](../legacy/evidence/k8s-static.json) : treize objets assemblés ; aucune API de cluster contactée.
+- [Rapport de vulnérabilités](../legacy/evidence/vulnerability-scan.json) : vérifier son statut et l’image analysée ; sa seule présence ne signifie pas PASS.
 
 [Évaluations détaillées](evaluations.md) · [Contrat, choix et limites](infrastructure.md).
 
 ## Reprise historique la plus récente
 
-Le [rapport historique de reprise](../evidence/recovery.json) est daté du 3 novembre à 13:52:06 UTC : cible 18088 et 10,969 s. Le rapport précédent 10,769 s est conservé à part. Ces observations du même hôte ne sont pas rejouées depuis, ne constituent pas un PRA physique ou un SLO, et n’attribuent aucune compétence personnelle.
+Le [rapport historique de reprise](../legacy/evidence/recovery.json) est daté du 3 novembre à 13:52:06 UTC : cible 18088 et 10,969 s. Le rapport précédent 10,769 s est conservé à part. Ces observations du même hôte ne sont pas rejouées depuis, ne constituent pas un PRA physique ou un SLO, et n’attribuent aucune compétence personnelle.

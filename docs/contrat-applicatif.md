@@ -1,5 +1,8 @@
 # Contrat de passation applicative — OpsDesk
 
+> [!IMPORTANT]
+> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](architecture.md) et [la référence technique](reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+
 **Destinataire : l’apprenant InfraOps, projet personnel.** Le code métier, son schéma et les tests sont fournis. La conception des machines, réseaux, rôles PostgreSQL, conteneurs, K3s, CI/CD, supervision, sauvegardes et exploitation appartient à l’apprenant. Ce contrat décrit les besoins de l’application ; il ne livre pas cette infrastructure à sa place.
 
 ## 1. Présentation
@@ -16,7 +19,7 @@ Pages HTML `/tickets` et `/tickets/<id>` ; API JSON GET/POST `/api/tickets` et G
 
 ### Référence de l’API locale fournie
 
-Référence de la source, relue le 4 novembre 2026 : [routes et sérialisation](../app/opsdesk/web.py), [validation et transitions](../app/opsdesk/business.py), [schéma SQL](../db/schema.sql). Les fonctions Python sont internes ; les routes ci-dessous forment l’interface consommée par le laboratoire. Toute évolution de cette interface doit mettre à jour ce contrat dans le même changement ; aucun engagement de compatibilité non démontré n’est annoncé.
+Référence de la source, relue le 4 novembre 2026 : [routes et sérialisation](../legacy/app/opsdesk/web.py), [validation et transitions](../legacy/app/opsdesk/business.py), [schéma SQL](../legacy/db/schema.sql). Les fonctions Python sont internes ; les routes ci-dessous forment l’interface consommée par le laboratoire. Toute évolution de cette interface doit mettre à jour ce contrat dans le même changement ; aucun engagement de compatibilité non démontré n’est annoncé.
 
 **Accès :** aucune authentification ni autorisation utilisateur. Les opérations JSON de création/modification exigent `Content-Type: application/json`, sans jeton CSRF ; les formulaires HTML ont leur propre contrôle CSRF. Un Host non autorisé est refusé en 400, en texte brut. Cette référence ne donne aucune autorisation d’exposition Internet.
 

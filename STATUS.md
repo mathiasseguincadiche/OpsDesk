@@ -38,9 +38,10 @@ Dernière révision : 18 novembre 2026, après la fusion de la v2 ([PR #30](http
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| README (architecture, variables, sondes, Quadlet) | Réalisé | Vérifié le 18 novembre 2026, par relecture | [README](README.md) |
-| Schémas de présentation et technique | En cours | Non vérifié pour la v2 | [Schémas](docs/diagrams/README.md) : ils représentent encore l’application Flask v1 (deux conteneurs) |
-| Exercices du parcours et contrat applicatif | En cours | Non vérifié pour la v2 | `docs/` décrit encore l’API v1 : les routes, l’absence d’authentification et le schéma SQL ont changé |
+| README vitrine | Réalisé | Vérifié le 18 novembre 2026 : liens contrôlés, rendu par le moteur Markdown de GitHub en clair, sombre et largeur mobile | [README](README.md) ; rendu sur `main` à confirmer après fusion |
+| Architecture et référence technique (v2) | Réalisé | Vérifié le 18 novembre 2026, par relecture contre le code et `compose.yaml` | [Architecture](docs/architecture.md), [référence technique](docs/reference-technique.md) |
+| Schémas de présentation et d’architecture (v2) | Réalisé | Vérifié le 18 novembre 2026 : exportés par Draw.io depuis leurs sources, rendu contrôlé | [Schémas](docs/diagrams/README.md) ; schémas v1 dans `legacy/diagrams/` |
+| Exercices du parcours et contrat applicatif | En cours | Non vérifié pour la v2 | Écrits pour la v1 ; signalés par un bandeau en tête de chaque document concerné |
 
 ## Historique : application v1 (Flask)
 

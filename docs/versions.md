@@ -1,5 +1,8 @@
 # Versions et périmètres
 
+> [!IMPORTANT]
+> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](architecture.md) et [la référence technique](reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+
 **les versions et configurations d’infrastructure ci-dessous décrivent l’antériorité historique.** Le [contrat applicatif](contrat-applicatif.md) distingue combinaison testée, paramètres et besoins à satisfaire par l’apprenant. La source actuellement testée est identifiée par ses hashes dans `evidence/qualification/application-tests.json`, sans faux SHA publié.
 
 Cette fiche sépare la version déclarée par l’application, les outils de l’essai et les cibles encore à qualifier. Les tags d’images ne sont pas des digests immuables ; relier toute nouvelle livraison au contenu réellement construit.

@@ -8,7 +8,7 @@ Les procédures et résultats ci-dessous datent des essais historiques ; ils ne 
 
 **Périmètre du 3 novembre 2026 : laboratoire local Ubuntu/WSL.** La chaîne InfraOps complète sur K3s reste partielle. Les essais exécuté sont des preuves du laboratoire ; ils n’attribuent pas à l’apprenant une exécution personnelle ou une maîtrise L3.
 
-L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = vérifié **et expliqué personnellement**. Aucun L3 n’est attribué ici. Le [registre JSON](../evidence/evaluations.json) reprend ces cinq évaluations pour la vue à quinze cellules du portfolio.
+L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = vérifié **et expliqué personnellement**. Aucun L3 n’est attribué ici. Le [registre JSON](../legacy/evidence/evaluations.json) reprend ces cinq évaluations pour la vue à quinze cellules du portfolio.
 
 | Pilier | Verdict sur le besoin complet | Sous-preuve réelle | Manque bloquant |
 |---|---|---|---|
@@ -22,11 +22,11 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Pourquoi.** Le collaborateur doit pouvoir ouvrir puis retrouver sa demande ; l’équipe IT doit lire son état. La réception doit suivre l’utilisateur jusqu’aux données, pas seulement constater qu’un conteneur tourne.
 
-**Code fourni / rôle InfraOps.** `app/opsdesk/` fournit les règles et pages du démonstrateur ; `compose.yaml`, `Dockerfile`, `db/001-initial.sql`, `scripts/prepare-local.sh` et `k8s/` définissent l’exécution, les droits et les dépendances. L’architecture sur [le schéma technique](diagrams/architecture-technique.svg) montre navigateur → application → PostgreSQL, avec la sauvegarde et la supervision autour.
+**Code fourni / rôle InfraOps.** `app/opsdesk/` fournit les règles et pages du démonstrateur ; `compose.yaml`, `Dockerfile`, `db/001-initial.sql`, `scripts/prepare-local.sh` et `k8s/` définissent l’exécution, les droits et les dépendances. L’architecture sur [le schéma technique](../legacy/diagrams/architecture-technique.svg) montre navigateur → application → PostgreSQL, avec la sauvegarde et la supervision autour.
 
 **Pré-check.** Identifier le projet Compose, le port local 18081, le réseau et le volume ; vérifier ressources et absence d’accès public. Données fictives et secrets privés uniquement. La preuve initiale ne qualifie ni Fedora ni une VM Rocky. Ne pas employer le contexte Kubernetes existant.
 
-**Exécution réelle.** `docker compose up --build --detach --wait`, puis `python3 scripts/smoke.py --base-url http://127.0.0.1:18081` ont exercé la cible Compose. Le [rapport de smoke actualisé le 3 novembre à 13:40:23 UTC](../evidence/business-smoke.json) vérifie création/relecture/transitions et 400/404/409 attendus ; [Chrome/Playwright](../evidence/browser.json) a affiché la liste le 3 novembre 03:41:03 UTC. `kubectl kustomize k8s` a seulement [rendu les objets hors ligne](../evidence/k8s-static.json).
+**Exécution réelle.** `docker compose up --build --detach --wait`, puis `python3 scripts/smoke.py --base-url http://127.0.0.1:18081` ont exercé la cible Compose. Le [rapport de smoke actualisé le 3 novembre à 13:40:23 UTC](../legacy/evidence/business-smoke.json) vérifie création/relecture/transitions et 400/404/409 attendus ; [Chrome/Playwright](../legacy/evidence/browser.json) a affiché la liste le 3 novembre 03:41:03 UTC. `kubectl kustomize k8s` a seulement [rendu les objets hors ligne](../legacy/evidence/k8s-static.json).
 
 **Attendu / observé.** Le ticket témoin est relu dans PostgreSQL et sa transition interdite est refusée. Effet utilisateur positif localement. Un volume persistant pendant cette requête ne démontre pas une reprise après perte de machine.
 
@@ -42,11 +42,11 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Pré-check.** Répertoire du dépôt autorisé, Terraform 1.15.8 et Ansible core 2.20.1 observés, absence de secret dans le contrat, état/plans ignorés par Git, temporaires sous `/tmp`. Aucun paquet, service, pare-feu ou cloud ne sera modifié.
 
-**Exécution réelle.** `python3 infra/verify.py` lance init/validate/plan/apply, répète apply/plan, refuse `bind_address=0.0.0.0`, puis lance syntax-check et deux rendus Ansible. [La preuve du 3 novembre 13:37:46 UTC](../evidence/automation-contract.json) porte sur ce contrat uniquement.
+**Exécution réelle.** `python3 infra/verify.py` lance init/validate/plan/apply, répète apply/plan, refuse `bind_address=0.0.0.0`, puis lance syntax-check et deux rendus Ansible. [La preuve du 3 novembre 13:37:46 UTC](../legacy/evidence/automation-contract.json) porte sur ce contrat uniquement.
 
 **Attendu / observé.** Deuxième apply `0 added, 0 changed, 0 destroyed` ; deuxième plan code 0 ; deuxième rendu `changed=0 unreachable=0 failed=0`. Le bind public est refusé au plan. Aucun endpoint réseau n’est créé par `terraform_data`.
 
-**Échec et diagnostic observés.** Le premier rendu a échoué avant génération : Ansible ne pouvait pas créer son temporaire par défaut sous le HOME. `ANSIBLE_LOCAL_TEMP` n’avait pas déplacé le temporaire de la cible locale. L’inventaire fixe maintenant `ansible_remote_tmp` sous `/tmp` ; la revalidation passe. [Premier essai conservé](../evidence/automation-first-attempt.json).
+**Échec et diagnostic observés.** Le premier rendu a échoué avant génération : Ansible ne pouvait pas créer son temporaire par défaut sous le HOME. `ANSIBLE_LOCAL_TEMP` n’avait pas déplacé le temporaire de la cible locale. L’inventaire fixe maintenant `ansible_remote_tmp` sous `/tmp` ; la revalidation passe. [Premier essai conservé](../legacy/evidence/automation-first-attempt.json).
 
 **Verdict et suite.** PARTIEL, sous-exercice local L2 ; provisioning/reconstruction Rocky NON EXÉCUTÉS. Qualifier KVM/VM, fournisseur/état et configuration Linux avant de revendiquer l’automatisation de l’infrastructure. **Explication personnelle : NON EXÉCUTÉE** ; expliquer ce que Terraform gère vraiment, l’état et le second passage.
 
@@ -60,7 +60,7 @@ L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = v
 
 **Exécution réelle.** Sept tests unitaires ont été exécutés localement. Le smoke et le navigateur contrôlent l’application en service. La version initiale est `0.1.0`, sans commit associé : la révision déclarée n’est pas un SHA publié. Le contrôle structurel et les runs CI nouvellement publiés doivent être ajoutés avec leurs références effectives.
 
-**Attendu / observé.** L’image démarre avec PostgreSQL et sert le parcours positif et les refus attendus. La relation commit → image immuable → cible → ticket n’est pas entièrement établie par ce succès local. Le [scan d’image disponible](../evidence/vulnerability-scan.json) est un résultat de sécurité distinct à lire ; aucun feu vert production n’en est déduit.
+**Attendu / observé.** L’image démarre avec PostgreSQL et sert le parcours positif et les refus attendus. La relation commit → image immuable → cible → ticket n’est pas entièrement établie par ce succès local. Le [scan d’image disponible](../legacy/evidence/vulnerability-scan.json) est un résultat de sécurité distinct à lire ; aucun feu vert production n’en est déduit.
 
 **Échec / diagnostic.** Les tests de règles refusent les transitions invalides. Aucun mauvais artefact n’a été promu puis diagnostiqué dans cette cellule ; la chaîne CI et ses blocages restent à constater, sans supprimer un contrôle pour la rendre verte.
 

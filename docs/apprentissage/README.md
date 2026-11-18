@@ -1,5 +1,8 @@
 # Parcours personnel OpsDesk
 
+> [!IMPORTANT]
+> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](../architecture.md) et [la référence technique](../reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+
 **L’application et ses tests sont fournis ; l’apprenant construit et exploite son infrastructure.** Accompagnement guidé. Le cadre technique commun reste Linux/Rocky, réseau, Terraform, Ansible, conteneurs, K3s adapté, CI/CD, supervision, sécurité, Day-2 et reprise. Aucun exercice n’est déclaré exécuté et aucun niveau personnel n’est renseigné.
 
 Commencer par [l’exercice 01](01-application.md) et [le contrat applicatif](../contrat-applicatif.md), puis suivre cet ordre. Les anciennes configurations InfraOps sont des références historiques à examiner après sa propre tentative lorsqu’elles sont accessibles : leur disponibilité hors du dépôt courant reste NON VÉRIFIÉE.

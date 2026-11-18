@@ -1,5 +1,8 @@
 # Sécurité applicative, périmètre local et provenance
 
+> [!IMPORTANT]
+> **Document écrit pour la version 1** d'OpsDesk (application Flask, sans authentification). L'application actuelle est la version 2 : voir [l'architecture](architecture.md) et [la référence technique](reference-technique.md), qui font foi en cas de contradiction. Ce document sera mis à jour.
+
 ## Modèle retenu
 
 **OpsDesk n’authentifie pas ses utilisateurs.** Tout visiteur du laboratoire peut lire et modifier les tickets fictifs. La session Flask ne sert qu’à signer le jeton CSRF des formulaires. Ce choix est explicite pour conserver un premier support métier limité ; aucune autorisation d’accès partagé ou Internet n’est donnée.
@@ -10,7 +13,7 @@ Une authentification minimale a été évaluée : elle ajouterait identités, mo
 
 Corps HTTP limité à 16 Kio, validations de types/longueurs et du texte Unicode stockable, SQL paramétré, contraintes métier PostgreSQL, échappement Jinja, en-têtes de protection, mutations API exclusivement JSON et CSRF des formulaires. Une entrée CSRF non ASCII est refusée avec 400. `TRUSTED_HOSTS` limite par défaut les hôtes HTTP à localhost/127.0.0.1 ; son erreur est rendue sans modèle Jinja pour éviter un 500 avant l’adaptateur d’URL.
 
-Les tests utilisent des cas négatifs réels dans la source applicative actuelle ; l’erreur DB est simulée dans un cas de test, pas provoquée dans le service source. Voir le [contrat](contrat-applicatif.md) et la [preuve actuelle](../evidence/qualification/application-tests.json).
+Les tests utilisent des cas négatifs réels dans la source applicative actuelle ; l’erreur DB est simulée dans un cas de test, pas provoquée dans le service source. Voir le [contrat](contrat-applicatif.md) et la [preuve actuelle](../legacy/evidence/qualification/application-tests.json).
 
 ## Secrets et droits attendus
 
@@ -20,7 +23,7 @@ Les anciennes références utilisaient trois fichiers sous `secrets/`. La confid
 
 ## Alertes conservées
 
-Le [rapport d’image historique](../evidence/vulnerability-scan.json) reste FAIL : 185 occurrences dont 45 HIGH, sans correction disponible indiquée pour ces HIGH à l’heure de ce scan. Ces nombres sont des occurrences paquet/avis, pas des exploits démontrés. Le retrait passé de pip/setuptools de l’image finale et le smoke réussi ne donnent pas un feu vert global. Le tri applicatif actuel du programme et ses réserves sont distincts de ce rapport historique.
+Le [rapport d’image historique](../legacy/evidence/vulnerability-scan.json) reste FAIL : 185 occurrences dont 45 HIGH, sans correction disponible indiquée pour ces HIGH à l’heure de ce scan. Ces nombres sont des occurrences paquet/avis, pas des exploits démontrés. Le retrait passé de pip/setuptools de l’image finale et le smoke réussi ne donnent pas un feu vert global. Le tri applicatif actuel du programme et ses réserves sont distincts de ce rapport historique.
 
 Le choix/durcissement de l’image finale, TLS, flux, système, supervision et rotation d’infrastructure seront réalisés par l’apprenant. Les protections applicatives ne remplacent pas ces décisions.
 
