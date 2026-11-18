@@ -1,31 +1,37 @@
-# Reprise minimale d’un ticket — essais historiques
+# Reprise : retrouver les tickets après une panne
 
-> **HISTORIQUE — référence non exécutable depuis le dépôt courant.** Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), `scripts/recovery_lab.py` et la configuration Compose sont absents. Les blocs de commandes conservent les anciennes instructions pour comprendre l’essai Ubuntu/WSL ; ils ne sont pas prêts à copier et ne lancent pas le laboratoire personnel. Les versions et résultats qui suivent sont historiques. [Parcours actif](apprentissage/README.md) · [Pré-checks Fedora/KVM/Rocky](laboratoire-fedora-kvm-rocky.md).
+Ce document dit comment décider d'une reprise, et comment la mener sans aggraver la situation. Mise à jour : 18 novembre 2026, pour la version 2.0.0.
+
+**État** : le dispositif de sauvegarde et la restauration de la base d'OpsDesk sont **prévus, non réalisés** ([exercice 11](apprentissage/11-sauvegarde-reprise.md)). La méthode ci-dessous a été démontrée sur une base de démonstration le 18 novembre 2026, pas encore sur OpsDesk.
 
 ## Triage court avant une reprise personnelle
 
-**Méthode documentaire réalisée — non vérifiée sur le laboratoire personnel.** Cette section aide à décider quoi observer ; elle ne rend pas la recette historique ci-dessous exécutable. Symptômes d’entrée : tickets inaccessibles, lecture/écriture refusée, readiness en échec ou données attendues absentes.
+Symptômes d'entrée : tickets inaccessibles, lecture ou écriture refusée, `/health/ready` en `503`, ou données attendues absentes.
 
-1. Identifier la machine, la version, le point d’entrée et le ticket témoin ; noter heure, symptôme et impact. Si l’identité est ambiguë, arrêter avant modification.
-2. Lire les observations déjà accessibles : processus/ports, live/ready, réponse métier et journaux expurgés. Sans instance personnelle préparée, consigner l’impossibilité et revenir à l’exercice concerné, sans essayer le port historique au hasard.
-3. Séparer défaut d’accès, application, connexion DB, schéma et stockage. `/metrics` HTTP 200 peut accompagner une DB indisponible : sa valeur est à lire dans le contrat. Choisir une vérification discriminante en lecture seule ; ne pas réinitialiser le stockage pour tester une hypothèse.
-4. Si une restauration est justifiée, vérifier version de l’archive, destination indépendante, sauvegarde source et retour réellement essayé. Sans archive identifiée/restaurable ou sans accord pour une action risquée, arrêter et préparer le [protocole personnel](apprentissage/11-sauvegarde-reprise.md). Aucun point de non-retour n’est franchi par cette fiche.
-5. Après une correction personnellement choisie et autorisée, contrôler accès, identité, lecture/écriture et ticket témoin ; consigner attendu/observé et durée/perte réellement mesurées. Une réponse 200 isolée ne suffit pas.
+1. **Identifier.** La machine, la version (`/version`), le point d'entrée et un ticket témoin connu. Noter l'heure, le symptôme et l'impact. Si la cible est ambiguë, s'arrêter avant toute modification.
+2. **Observer sans rien changer.** Les trois sondes, l'état des services, les journaux de l'API et de la base, l'espace disque. `/metrics` peut répondre `200` alors que la base est arrêtée : c'est `opsdesk_database_up` qu'il faut lire.
+3. **Séparer les causes.** Accès (réseau, pare-feu), application, connexion à la base, données. La plupart des pannes se corrigent **sans restauration** : redémarrer la base, remettre un secret, rouvrir un port. Ne jamais réinitialiser un stockage pour tester une hypothèse.
+4. **Décider d'une restauration** seulement si les données sont perdues ou corrompues. Vérifier alors : la copie à utiliser (date, empreinte), une destination séparée, et que la base actuelle, même abîmée, est conservée.
+5. **Contrôler après.** Connexion, lecture et écriture d'un ticket, ticket témoin relu. Noter ce qui a été perdu (le RPO réel) et le temps écoulé (le RTO réel).
 
-**Passer le relais :** L’apprenant est le responsable du laboratoire personnel. Si la cause reste inconnue après la vérification discriminante, si des données risquent d’être perdues ou si un secret apparaît, arrêter les mutations et lui soumettre les faits expurgés. Aucun service d’astreinte ni contact externe n’est défini ou sollicité par ce projet. Après incident, mettre à jour la procédure et conserver l’échec suivi de sa nouvelle validation.
+**Passer le relais.** Si la cause reste inconnue après une vérification qui tranche, si des données risquent d'être perdues, ou si un secret apparaît : arrêter toute modification et consigner les faits. Le propriétaire du laboratoire décide de la suite. Aucune astreinte ni contact externe n'est prévu par ce projet.
 
-## Référence historique — laboratoire de développement
+## Restaurer la base
 
-Les procédures et résultats ci-dessous datent des essais historiques ; ils ne sont pas relancés. Les configurations et opérations InfraOps sont à réaliser personnellement ([contrat applicatif](contrat-applicatif.md), [provenance](provenance.md)). Les niveaux techniques de ce texte suivent un ancien barème et ne sont pas les niveaux personnels du [parcours](parcours-apprentissage.md). Les preuves de reprise récentes sont datées dans [STATUS](../STATUS.md).
+Principe retenu au [registre](architecture.md#décisions-retenues), détaillé dans l'[exercice 11](apprentissage/11-sauvegarde-reprise.md) :
 
-Le 3 novembre 2026 à 13:48:10 UTC, `scripts/recovery_lab.py` a exporté PostgreSQL puis restauré les tickets dans une base et une application sur volumes/réseau neufs. Le ticket fermé a été relu via HTTP : ID, titre, description, priorité, statut et dates strictement identiques. La source 18081 est restée disponible, la cible 18086 distincte. Durée observée : 10,769 s, dans [le rapport historique conservé](../legacy/evidence/recovery-history-20261103T135154Z.json). Un essai ultérieur, le même jour à 13:52:06 UTC, utilise la cible 18088 et mesure 10,969 s dans [le dernier rapport historique](../legacy/evidence/recovery.json). Aucune de ces mesures n’est une réception personnelle ni un essai rejoué par cette mission documentaire.
+1. Prendre la copie `pg_dump` la plus récente sur l'hôte, et vérifier son empreinte `sha256`.
+2. Vérifier qu'elle est lisible : `pg_restore --list`.
+3. La restaurer dans une **base vide**, sur une cible séparée de la base actuelle, avec `pg_restore --no-owner`, en utilisant les outils de PostgreSQL 17.
+4. Faire pointer l'API vers cette base, puis contrôler `/health/ready` et relire le ticket témoin dans l'interface.
+5. Seulement ensuite, décider du sort de l'ancienne base.
 
-Prérequis : laboratoire local OpsDesk sain, ticket référencé dans business-smoke.json, Docker autorisé, PyYAML 6.0.3 et port 18086 libre sur Ubuntu/WSL. La commande historique, depuis la racine du laboratoire, créait une nouvelle cible et des fichiers privés ; elle est non exécutable depuis le dépôt courant :
+Une restauration remet les données de la nuit précédente : ce qui a été saisi depuis est perdu (jusqu'à 24 heures). Redéployer une image ne restaure jamais un ticket.
 
-```bash
-python3 scripts/recovery_lab.py --port 18086
-```
+## Ce qui a été démontré
 
-Les notes historiques décrivent un refus des ports utilisés, un nom de cible aléatoire et l’absence de suppression de source ou de `down -v`. Le dump, les fichiers privés de cible et les secrets étaient placés sous `.local/` ; leur présence actuelle hors dépôt est NON VÉRIFIÉE. Le dump de cet exercice OpsDesk était signalé non chiffré ; il ne constitue pas une politique de sauvegarde exploitable. Prévoir chiffrement, destination indépendante, rétention, fraîcheur et identités protégées avant usage réel.
+Le 18 novembre 2026, sur le poste de développement, avec deux conteneurs PostgreSQL 17.12 jetables : une base de 501 lignes sauvegardée par `pg_dump`, son empreinte relevée, restaurée par `pg_restore` dans une base vide d'un autre serveur, la ligne témoin retrouvée, la source intacte, le tout en 0,49 seconde. Les sorties sont reproduites dans la fiche Notion de l'exercice 11. Cette démonstration valide la méthode, pas la reprise d'OpsDesk.
 
-Un ticket comparé démontre ce contrôle précis ; il ne qualifie pas tous les volumes, les écritures concurrentes, une perte physique, K3s ni Rocky. Un redéploiement d’image seul n’aurait pas restauré un ticket perdu. Le rapport historique identifie l’image locale exacte par son ID et des droits applicatifs limités après restauration.
+## Historique de la version 1
+
+Le 3 novembre 2026, un script de la version 1 a restauré la base dans une application et des volumes neufs, et relu un ticket à l'identique : 10,769 s puis 10,969 s. Les rapports sont conservés dans [`legacy/evidence/recovery-history-20261103T135154Z.json`](../legacy/evidence/recovery-history-20261103T135154Z.json) et [`legacy/evidence/recovery.json`](../legacy/evidence/recovery.json). Ils concernent la v1 et ne valent pas pour la v2.

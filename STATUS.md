@@ -45,7 +45,7 @@ Dernière révision : 18 novembre 2026, après la fusion de la v2 ([PR #30](http
 | Schémas pédagogiques des exercices 03 à 11 | Réalisé | Vérifié le 18 novembre 2026 : exportés par Draw.io, rendu contrôlé | [Schémas](docs/diagrams/README.md) |
 | Repères de correction et cinq évaluations | Réalisé | Vérifié le 18 novembre 2026 par relecture contre le code et le registre | [Corrigés](docs/apprentissage/corriges.md), [évaluations](docs/apprentissage/evaluations.md) ; aucune évaluation menée |
 | Contrat applicatif (v2) | Réalisé | Vérifié le 18 novembre 2026 par relecture contre le code, `compose.yaml` et `scripts/smoke.py` | [Contrat](docs/contrat-applicatif.md) : routes, droits, configuration, données, sécurité, limites, critères de réception |
-| Sécurité, preuves et provenance (v2) | Réalisé | Vérifié le 18 novembre 2026 par relecture contre le code | [Sécurité](docs/securite.md), [preuves](docs/preuves.md), [provenance](docs/provenance.md) ; les documents propres à la v1 (CI, infrastructure, livraison, triage, versions) sont archivés dans [`legacy/docs/`](legacy/docs/README.md) |
+| Sécurité, preuves, provenance, démarrage, exploitation et reprise (v2) | Réalisé | Vérifié le 18 novembre 2026 par relecture contre le code et `compose.yaml` | [Sécurité](docs/securite.md), [preuves](docs/preuves.md), [provenance](docs/provenance.md), [démarrage](docs/demarrage.md), [exploitation](docs/exploitation-day2.md), [reprise](docs/reprise.md) ; les documents propres à la v1 (CI, infrastructure, livraison, triage, versions) sont archivés dans [`legacy/docs/`](legacy/docs/README.md) |
 
 ## Historique : application v1 (Flask)
 
