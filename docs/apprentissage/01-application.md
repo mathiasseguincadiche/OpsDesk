@@ -12,9 +12,9 @@ Faire tourner un service sans perdre ses données suppose de savoir ce qui se pa
 
 ## L'essentiel à comprendre
 
-- OpsDesk, ce sont trois conteneurs : l'interface (`opsdesk-web`, nginx, port 8080), l'API (`opsdesk-api`, FastAPI, port 8000) et la base (`opsdesk-db`, PostgreSQL, jamais publiée).
-- Le navigateur ne parle qu'à nginx ; nginx relaie `/api` vers l'API ; seule l'API parle à la base.
-- L'API vérifie **qui** demande (jeton JWT, valable 12 heures) et **s'il en a le droit** (rôle `user`, `agent` ou `admin`), puis applique les règles du ticket.
+- La pile `compose.yaml` déclare trois services : `frontend` (nginx/React, port 8080), `backend` (FastAPI, port 8000) et `db` (PostgreSQL, port interne 5432, non publié). Les images applicatives s'appellent `opsdesk-frontend` et `opsdesk-api` ; un nom d'image n'est pas un nom de service. Les noms DNS internes utilisés par Compose sont ceux des services.
+- Dans le parcours utilisateur, le navigateur parle à nginx ; nginx relaie `/api` vers l'API ; seule l'API accède à la base. Dans la pile de référence, l'accès direct à l'API sur `127.0.0.1:8000` est réservé aux essais et au diagnostic local.
+- L'API vérifie **qui** demande (jeton JWT, valable 12 heures par défaut) et **s'il en a le droit** (rôle `user`, `agent` ou `admin`), puis applique les règles du ticket.
 - Un ticket passe par Ouvert → En cours → Résolu → Clôturé ; les sauts interdits sont refusés (`409`), et seul le support prend un ticket en charge.
 - `/health/live` dit que le processus répond ; `/health/ready` dit qu'il joint la base (`503` sinon).
 - Un ticket survit à un redémarrage parce qu'il est écrit dans PostgreSQL, sur un volume.
@@ -34,8 +34,8 @@ Marie (collaboratrice) crée le ticket « Mon poste ne se connecte plus au VPN �
 
 | Ce que tu vérifies | Réponse attendue |
 | --- | --- |
-| Le navigateur parle-t-il à l'API ou à la base ? | Non : seulement à `opsdesk-web`, port 8080 |
-| Qui vérifie le jeton et le rôle ? | `opsdesk-api`, pas nginx |
+| Le navigateur parle-t-il à l'API ou à la base ? | Non, dans le parcours utilisateur : `frontend`, port 8080 |
+| Qui vérifie le jeton et le rôle ? | `backend`, pas nginx |
 | Où le ticket est-il écrit ? | Dans PostgreSQL, sur un volume |
 | Que reçoit Marie si elle tente la prise en charge ? | Un refus `403` |
 | Facultatif, pile locale : `curl -i http://127.0.0.1:8080/health/ready` | `200` et `"database":"up"` |

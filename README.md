@@ -4,7 +4,7 @@
 
 Un collaborateur signale une panne, l'équipe support la prend en charge, la résout, et chacun suit l'avancement en temps réel. OpsDesk sert de support à un projet DevOps complet : conteneuriser, déployer, automatiser, surveiller et sauvegarder un vrai service, avec une preuve datée pour chaque étape.
 
-**Découvrir** : [architecture et choix](#architecture) · **Essayer** : [démarrage local](#lancer-le-projet-en-local) · **Apprendre** : [parcours](docs/apprentissage/README.md) · **Évaluer** : [état et preuves](STATUS.md) · **Approfondir** : [référence technique](docs/reference-technique.md)
+**Découvrir** : [architecture et choix](#architecture) · **Essayer** : [démarrage local](#lancer-le-projet-en-local) · **Apprendre** : [parcours](docs/apprentissage/README.md) · **Évaluer** : [état et preuves](STATUS.md) · **Approfondir** : [documentation par besoin](docs/README.md)
 
 ## Mon rôle dans ce projet
 
@@ -52,7 +52,7 @@ Les trois premières lignes décrivent le socle fourni et qualifié, pas des com
 
 ## Lancer le projet en local
 
-Il vous faut Docker Engine avec le plugin Compose (commande `docker compose`) et Git. La première construction dépend notamment du téléchargement des images et de votre machine. Le [guide de démarrage](docs/demarrage.md) détaille les prérequis, contrôles, erreurs et arrêt sans perte de données.
+Il vous faut Docker Engine avec le plugin Compose (commande `docker compose`) et Git. Vérifiez les ports locaux 8080 et 8000 avant le démarrage. La première construction dépend notamment du téléchargement des images et de votre machine. Le [guide de démarrage](docs/demarrage.md) détaille les prérequis, contrôles, erreurs et arrêt sans perte de données.
 
 **1. Récupérer le projet et préparer la configuration**
 
@@ -61,7 +61,7 @@ git clone https://github.com/mathiasseguincadiche/OpsDesk.git && cd OpsDesk
 cp .env.example .env
 ```
 
-Ouvrez `.env` et remplacez les trois valeurs `change-me` par vos propres mots de passe.
+Ouvrez `.env` et remplacez `DB_PASSWORD`, `JWT_SECRET` (secret aléatoire d'au moins 32 caractères) et `ADMIN_PASSWORD` par des valeurs distinctes. Ne versionnez pas `.env`.
 
 **2. Démarrer les trois conteneurs**
 
@@ -75,7 +75,7 @@ docker compose up -d --build
 docker compose ps
 ```
 
-Les trois services doivent afficher `healthy`. Ouvrez ensuite **http://localhost:8080** et cliquez sur un compte de démonstration pour vous connecter. Les ports de la pile de référence sont liés à la boucle locale par défaut : données fictives et essai local uniquement. Ne publiez pas cette pile de démonstration sur Internet.
+Les trois services doivent afficher `healthy` (attendez la fin du démarrage). Cela ne prouve pas, à lui seul, la disponibilité métier : `curl -i http://127.0.0.1:8080/health/ready` doit renvoyer `200` et `"database":"up"`. Ouvrez ensuite **http://localhost:8080** et cliquez sur un compte de démonstration pour vous connecter. Les ports de la pile de référence sont liés à la boucle locale par défaut : données fictives et essai local uniquement. Ne publiez pas cette pile de démonstration sur Internet.
 
 > [!NOTE]
 > `compose.yaml` construit les images et prouve qu'une version démarre. Sur le serveur, un fichier Compose de production tire les images publiées par digest : ce qu'il doit respecter est dans la [référence technique](docs/reference-technique.md#déployer-avec-docker-compose-sur-un-serveur).
@@ -88,6 +88,8 @@ Les trois services doivent afficher `healthy`. Ouvrez ensuite **http://localhost
 - **Un tableau de bord** : tickets actifs, activité sur 14 jours, charge de l'équipe.
 
 ## Documentation
+
+L'[index de la documentation](docs/README.md) regroupe tous les guides, exercices, procédures et preuves par besoin. Voici les accès principaux.
 
 | Pour… | Lire |
 | --- | --- |

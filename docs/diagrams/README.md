@@ -1,6 +1,6 @@
 # Schémas d'OpsDesk
 
-Chaque schéma existe en deux fichiers côte à côte : la source **Draw.io** (`.drawio`), que l'on modifie, et son export **SVG**, que l'on affiche. Le SVG est toujours exporté depuis la source, jamais retouché à la main. Tous suivent le système graphique de la collection V24 : mêmes couleurs, icônes, formes et conventions de flux, mais une composition propre à chaque sujet.
+Chaque schéma existe en deux fichiers côte à côte : la source **Draw.io** (`.drawio`), que l'on modifie, et son export **SVG**, que l'on affiche. Le SVG est toujours exporté depuis la source, jamais retouché à la main. Tous suivent le système graphique initial V24, consolidé dans la collection V25 : mêmes couleurs, icônes, formes et conventions de flux, mais une composition propre à chaque sujet.
 
 ## Les schémas
 
@@ -71,6 +71,10 @@ Sous Windows, l'exécutable est `"C:\Program Files\draw.io\draw.io.exe"`. `--the
 ### Nouvelle recette — 19 novembre 2026
 
 Sur le [runner de qualification](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44606981184), génération des six sources et exports corrigés avec Draw.io 32.7.4 : architecture détaillée, SSH, Ansible, Terraform, CI/CD, sauvegarde. Les sept autres exports sont inchangés. Les 13 paires source/export ont été contrôlées (identifiants uniques, références parent/source/cible valides), puis les SVG affichés dans Chromium : 950 px pour la présentation et l’architecture détaillée, 700 px pour les vues pédagogiques et la vue Notion, 375 px pour le mobile. Les 26 captures en clair et sombre ont été examinées ; le contenu intérieur reste identique entre thèmes. La superposition Terraform et le libellé extérieur de l’architecture sont corrigés. La lisibilité dans le navigateur ne constitue pas un nouveau test dans l’application Notion native. [Journaux de la recette visuelle](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44606981184/job/135853169678).
+
+### Maintenir la référence graphique
+
+Ne pas ajouter une illustration uniquement parce qu'un gabarit V25 existe. Pour une évolution réelle : définir la question à laquelle répond le schéma, mettre à jour ses sources et son générateur, exporter le SVG, contrôler le rendu et les liens, puis réattacher le fichier exact dans Notion avec sa légende. Les conventions de statut et le texte alternatif restent obligatoires. Les rendus navigateur historiques ne prouvent ni l'affichage des nouvelles pièces jointes dans Notion ni leur lisibilité sur un appareil réel. La vue globale reste l'illustration de lecture courante ; la vue détaillée est accessible en grand.
 
 ## Historique
 
