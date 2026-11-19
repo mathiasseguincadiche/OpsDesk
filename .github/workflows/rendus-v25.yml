@@ -1,0 +1,50 @@
+name: Recette visuelle des gabarits V25 (isole)
+on:
+  push:
+    branches: ["qualification/recette-visuelle-v25"]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  rendu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: complements-v25
+          run-id: '44624240587'
+          github-token: ${{ github.token }}
+          path: /tmp/v25
+      - uses: actions/download-artifact@v4
+        with:
+          name: catalogue-v25
+          run-id: '44625499491'
+          github-token: ${{ github.token }}
+          path: /tmp/v25
+      - name: Afficher les exports exacts en clair et sombre
+        run: |
+          mkdir -p /tmp/rendus
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess, xml.etree.ElementTree as E, shutil
+          chrome=shutil.which("google-chrome") or shutil.which("chromium")
+          assert chrome
+          for f in sorted(Path("/tmp/v25").glob("*.svg")):
+              _,_,sw,sh=map(float,E.parse(f).getroot().attrib["viewBox"].split())
+              w=1100 if f.stem=="catalogue" else 760
+              h=int(sh*w/sw)+4
+              for mode,color in (("clair","#fff"),("sombre","#0d1117")):
+                  out=Path("/tmp/rendus")/(f.stem+"-"+mode+".png")
+                  page=Path("/tmp/v25")/"rendu.html"
+                  page.write_text(f'<!doctype html><body style="margin:0;background:{color}"><img src="{f.as_uri()}" style="display:block;width:{w}px"></body>')
+                  subprocess.run([chrome,"--headless","--no-sandbox","--disable-dev-shm-usage","--disable-gpu","--hide-scrollbars",f"--window-size={w},{h}",f"--screenshot={out}",page.as_uri()],check=True,timeout=30)
+                  assert out.stat().st_size>1000
+                  print(f.stem,mode,w,h)
+          PY
+          sha256sum /tmp/v25/*.svg > /tmp/rendus/sha256-svg.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rendus-v25
+          path: /tmp/rendus/
+          retention-days: 7
