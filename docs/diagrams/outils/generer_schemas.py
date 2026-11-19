@@ -106,6 +106,81 @@ def presentation(dossier):
 
 
 # --------------------------------------------------------------------------- #
+# 1 bis. Présentation à 760 px : la même infographie, pour une page Notion     #
+# --------------------------------------------------------------------------- #
+
+def presentation_notion(dossier):
+    """Même contenu que la présentation, recomposé à 760 px : affichée dans environ 700 px, aucun texte sous 11 px."""
+    W, H = 760, 688
+    d = Diagramme("presentation-notion", W, H)
+    d.forme("canevas", 0, 0, W, H, "", style_canevas(), calque="fond")
+    titre(d, "OpsDesk", "Une application de tickets de support informatique, et le projet DevOps qui la rend exploitable",
+          l=W - 64)
+
+    COL, APP_X, APP_L = 184, 232, 296          # 24 + 184 + 24 + 296 + 24 + 184 + 24 = 760
+    DROITE = APP_X + APP_L + 24
+    d.forme("acteurs-titre", 24, 100, COL, 20, "QUI L'UTILISE", style_texte("categorie", MUTED), calque="annotations")
+    for i, (ident, ic, nom, det) in enumerate([("collaborateur", "utilisateur", "Collaborateur", "signale, suit sa demande"),
+                                                ("support", "utilisateur", "Support", "prend en charge, résout"),
+                                                ("administrateur", "administrateur", "Administrateur", "gère comptes et rôles")]):
+        composant(d, ident, 24, 128 + i * 72, COL, 60, ACCES, ic, "", nom, det)
+
+    app = d.forme("application", APP_X, 108, APP_L, 236, "", f"rounded=1;arcSize=14;absoluteArcSize=1;fillColor={CARD};"
+                  f"strokeColor={ACCES.trait};strokeWidth=2.25;shadow=0;", calque="composants")
+    d.forme("application-icone", 16, 20, 32, 32, "", icone_style("navigateur", ACCES.trait), app)
+    d.forme("application-nom", 60, 16, 224, 40, f'<span style="font-size:22px;font-weight:bold;color:{INK}">OpsDesk</span><br>'
+            f'<span style="font-size:12px;color:{MUTED}">version 2 · interface web et API</span>', style_texte("detail", INK), app)
+    d.forme("application-fonctions", 16, 68, 264, 52, "Créer et suivre des tickets, les commenter, garder l'historique "
+            "de chaque changement, voir l'activité sur un tableau de bord.", style_texte("detail", INK, valign="top"), app)
+    for i, e in enumerate(["Ouvert", "En cours", "Résolu", "Clôturé"]):
+        pid = pastille(d, f"etat-{i}", 16 + i * 68, 132, 58, e, ACCES, plein=(i == 0), parent=app)
+        if i:
+            d.lien(f"etat-lien-{i}", f"etat-{i - 1}", pid, "", style_flux("applicatif", ortho=False) + "strokeWidth=1.25;endSize=4;",
+                   calque="annotations")
+    d.forme("application-cycle", 16, 162, 264, 18, "le cycle de vie d'un ticket, vérifié par l'API", style_texte("note", MUTED), app)
+    statut(d, "application-statut", 16, 196, 232, ("verifie", "Réalisée · vérifiée en local"), parent=app)
+
+    d.forme("garanties-titre", DROITE, 100, COL, 20, "CE QU'ELLE GARANTIT", style_texte("categorie", MUTED), calque="annotations")
+    for i, (ident, f, ic, nom, det) in enumerate([("garantie-acces", SECURITE, "cadenas", "Accès par rôle", "jeton signé, droits"),
+                                                   ("garantie-donnees", DONNEES, "base", "Données conservées", "PostgreSQL, volume"),
+                                                   ("garantie-signaux", OBSERVABILITE, "mesures", "Signaux", "sondes, métriques")]):
+        composant(d, ident, DROITE, 128 + i * 72, COL, 60, f, ic, "", nom, det)
+    for i, a in enumerate(["collaborateur", "support", "administrateur"]):
+        ey = (128 + i * 72 + 30 - 108) / 236
+        d.lien(f"usage-{i}", a, app, "", style_flux("applicatif", ortho=False) + f"exitX=1;exitY=0.5;entryX=0;entryY={ey:.4f};")
+    for i, g in enumerate(["garantie-acces", "garantie-donnees", "garantie-signaux"]):
+        ey = (128 + i * 72 + 30 - 108) / 236
+        d.lien(f"garantie-{i}", app, g, "", style_flux("applicatif", ortho=False) + f"exitX=1;exitY={ey:.4f};entryX=0;entryY=0.5;"
+               + "endArrow=oval;endFill=1;endSize=6;")
+
+    # Ligne de temps : quatre colonnes de 172 px ; noms et détails peuvent passer sur deux lignes.
+    d.forme("projet", 24, 376, 712, 288, "LE PROJET DEVOPS : RENDRE CE SERVICE EXPLOITABLE", style_regroupement(), calque="frontieres")
+    y, x0, pas = 440, 64, 172
+    d.trait_libre("ligne-temps", x0, y, 712, y, f"endArrow=block;endFill=1;strokeColor={RULE};strokeWidth=3;")
+    jalons = [("depart", "Point de départ", "application et conteneurs testés en local", ["FastAPI", "React", "PostgreSQL"], True),
+              ("phase1", "1 · Préparer et automatiser", "serveurs créés et configurés par du code", ["Terraform", "Ansible", "Docker Compose"], False),
+              ("phase2", "2 · Livrer et conserver", "chaîne de livraison, sauvegarde testée", ["GitHub Actions", "Trivy", "pg_dump"], False),
+              ("phase3", "3 · Orchestrer et observer", "copie d'essai, supervision, charge", ["K3s", "Prometheus", "Grafana"], False)]
+    for i, (ident, nom, det, outils, fait) in enumerate(jalons):
+        x = x0 + i * pas
+        cx0, larg = x - 12, pas - 16
+        d.forme(f"{ident}-point", x - 9, y - 9, 18, 18, "", f"ellipse;fillColor={ACCES.trait if fait else CARD};"
+                f"strokeColor={ACCES.trait if fait else SLATE};strokeWidth=2;", calque="composants")
+        d.forme(f"{ident}-nom", cx0, y + 16, larg, 36, nom, style_texte("composant", INK, valign="top"), calque="composants")
+        d.forme(f"{ident}-detail", cx0, y + 56, larg, 34, det, style_texte("detail", MUTED, valign="top"), calque="composants")
+        cx, cy = cx0, y + 98
+        for j, o in enumerate(outils):
+            w = 20 + int(len(o) * 6.8)
+            if cx + w > cx0 + larg:
+                cx, cy = cx0, cy + 30
+            pastille(d, f"{ident}-outil-{j}", cx, cy, w, o, NEUTRE)
+            cx += w + 6
+        statut(d, f"{ident}-statut", cx0, y + 168, 150 if fait else 96,
+               ("verifie", "Réalisé · vérifié") if fait else ("prevu", "Prévu"))
+    return d.enregistrer(dossier)
+
+
+# --------------------------------------------------------------------------- #
 # 2. Architecture : vue de déploiement par zones                               #
 # --------------------------------------------------------------------------- #
 
@@ -678,7 +753,7 @@ def pedagogique_sauvegarde(dossier):
     return d.enregistrer(dossier)
 
 
-CONSTRUCTIONS = (presentation, presentation_mobile, architecture, architecture_globale, pedagogique_ansible,
+CONSTRUCTIONS = (presentation, presentation_mobile, presentation_notion, architecture, architecture_globale, pedagogique_ansible,
                  pedagogique_acces_ssh, pedagogique_terraform, pedagogique_compose, pedagogique_k3s,
                  pedagogique_cicd, pedagogique_supervision, pedagogique_sauvegarde)
 
