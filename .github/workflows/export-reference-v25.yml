@@ -1,0 +1,27 @@
+name: Export de reference V25 (lecture seule)
+on:
+  push:
+    branches: ["qualification/reference-v25-20261119"]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a2a2ca997e950ec31dea0d8c5ccbeda5da9928d5
+          persist-credentials: false
+      - name: Assembler la référence exacte
+        run: |
+          set -eu
+          mkdir -p /tmp/opsdesk-v25
+          cp -r docs /tmp/opsdesk-v25/
+          cp README.md STATUS.md ROADMAP.md compose.yaml /tmp/opsdesk-v25/
+          git rev-parse HEAD > /tmp/opsdesk-v25/COMMIT.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reference-opsdesk-v25
+          path: /tmp/opsdesk-v25/
+          retention-days: 7
