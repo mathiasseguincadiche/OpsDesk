@@ -2,7 +2,7 @@
 
 L'application et ses tests sont fournis ; l'infrastructure est à construire soi-même, exercice par exercice. Ces 13 exercices mènent d'une application qui tourne en local à un service déployé par du code, livré par une CI, supervisé, sauvegardé et diagnostiqué.
 
-Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk (FastAPI, React, PostgreSQL ; Podman et Quadlet en production).
+Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk (FastAPI, React, PostgreSQL ; Docker Engine et Compose en production, décision du 18 novembre 2026).
 
 ## Deux niveaux de lecture
 
@@ -22,7 +22,7 @@ Les deux décrivent les mêmes exercices, avec les mêmes livrables et les même
 | 03 | [Rocky Linux, machines virtuelles, réseau et SSH](03-linux-reseau.md) | Construire | [Accès SSH](../diagrams/pedagogique-acces-ssh.svg) |
 | 04 | [Terraform : provider, ressources, state et cycle de vie](04-terraform.md) | Automatiser | [Cycle Terraform](../diagrams/pedagogique-terraform.svg) |
 | 05 | [Ansible : configurer un serveur de façon répétable](05-ansible.md) | Automatiser | [Ansible](../diagrams/pedagogique-ansible.svg) |
-| 06 | [Déployer OpsDesk avec Podman et Quadlet](06-conteneurs.md) | Livrer | [Quadlet](../diagrams/pedagogique-quadlet.svg) |
+| 06 | [Déployer OpsDesk avec Docker Engine et Compose](06-conteneurs.md) | Livrer | [Compose](../diagrams/pedagogique-compose.svg) |
 | 07 | [Kubernetes avec K3s : une copie d'essai d'OpsDesk](07-k3s.md) | Livrer | [K3s](../diagrams/pedagogique-k3s.svg) |
 | 08 | [CI/CD avec GitHub Actions : tester, construire, publier](08-cicd.md) | Livrer | [CI/CD](../diagrams/pedagogique-cicd.svg) |
 | 09 | [Superviser avec Prometheus et Grafana](09-supervision.md) | Observer | [Supervision](../diagrams/pedagogique-supervision.svg) |

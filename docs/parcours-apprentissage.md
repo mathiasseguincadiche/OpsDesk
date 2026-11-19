@@ -14,7 +14,7 @@ Chaque exercice part d'un problème réel d'exploitation, explique le mécanisme
 | --- | --- | --- |
 | Construire | 01, 02, 03 | Le trajet d'une requête compris ; `srv-admin` joignable par clé, protections actives |
 | Automatiser | 04, 05 | Les VM recréées par Terraform ; un second passage Ansible à `changed=0` |
-| Livrer | 06, 07, 08 | Le service sous Quadlet qui survit au reboot ; l'image déployée identique à celle vérifiée par la CI |
+| Livrer | 06, 07, 08 | Le service sous Docker Compose qui survit au reboot ; l'image déployée identique à celle vérifiée par la CI |
 | Observer | 09, 12 | Une alerte vue passer à `firing` ; un incident inconnu diagnostiqué et rétabli |
 | Maintenir | 10, 11 | Une maintenance mesurée avec retour arrière ; une restauration prouvée par un ticket témoin |
 

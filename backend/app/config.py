@@ -1,7 +1,7 @@
 """Application settings, read from environment variables.
 
 Every secret can be given either directly (``JWT_SECRET``) or through a file
-(``JWT_SECRET_FILE``), which is the convention used by Podman/Docker secrets
+(``JWT_SECRET_FILE``), which is the convention used by Docker Compose secrets
 and Kubernetes secret volumes.
 """
 from __future__ import annotations

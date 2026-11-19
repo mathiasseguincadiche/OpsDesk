@@ -5,7 +5,7 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 ## Comment utiliser ces repères
 
 - **Après ta tentative, jamais avant.** Compare ta réponse, puis corrige-la toi-même et refais le contrôle.
-- **Ce ne sont pas des solutions à recopier.** Aucun fichier Terraform, Ansible, Quadlet, Kubernetes ou CI complet n'est fourni : ton infrastructure reste ton travail.
+- **Ce ne sont pas des solutions à recopier.** Aucun fichier Terraform, Ansible, Compose de production, Kubernetes ou CI complet n'est fourni : ton infrastructure reste ton travail.
 - **Une autre réponse peut être juste** si elle respecte le registre des décisions, protège les données et passe les vérifications de la fiche.
 - **Pour chaque exercice** : les réponses attendues aux questions de la partie 8 de la fiche, ce que contient une bonne solution, et les points à refuser dans un rendu.
 
@@ -33,8 +33,8 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 **Réponses attendues.**
 
 - *Trois serveurs.* Séparer piloter (`srv-admin`), servir (`srv-app`) et expérimenter et superviser (`srv-k3s`) : les outils d'infrastructure ont un lieu nommé et reconstructible, et les essais K3s ne menacent pas le service. Coût : 12 Go de mémoire pris à l'hôte, trois machines à maintenir.
-- *Podman et Quadlet plutôt que Compose sur le serveur.* Natif Red Hat, géré par systemd (démarrage au boot, redémarrage, journaux), sans démon ni root. `compose.yaml` reste l'outil des essais locaux.
-- *Le compte `opsdesk`.* Moindre privilège : un conteneur compromis n'atteint ni les clés SSH ni `sudo` de `mathias`.
+- *Docker Compose sur le serveur.* Un seul fichier versionné décrit toute la pile ; c'est l'outil le plus répandu pour un service sur une machine. Il ne répartit rien entre plusieurs machines : c'est ce qu'apporte Kubernetes, pratiqué à part sur `srv-k3s`. Podman et Quadlet ont été écartés le 18 novembre 2026, au profit d'outils plus généralistes.
+- *Le groupe `docker`.* Il vaut root : qui parle au démon peut monter `/` dans un conteneur. On administre donc par `sudo`, tracé dans le journal.
 - *Si `srv-app` disparaît.* Le service s'arrête ; les données sont perdues depuis la dernière sauvegarde (jusqu'à 24 heures) ; le reste se reconstruit par Terraform et Ansible. *Si le PC hôte disparaît*, tout est perdu, sauvegardes comprises : aucune copie hors du PC n'est prévue.
 - *Pourquoi K3s.* Pour apprendre Kubernetes sans risque pour le service réel ; un seul nœud n'apporte aucune haute disponibilité.
 
@@ -85,26 +85,27 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 - *Pourquoi `changed=0` ne suffit pas.* Il dit qu'il n'y a plus rien à corriger, pas que le service fonctionne : on vérifie sur le serveur.
 - *Sur une VM neuve.* Toutes les tâches répondent `changed` au premier passage, puis `ok` au second.
 
-**Une bonne solution contient** une tâche par point de l'état voulu, avec les modules dédiés (`dnf`, `user`, `ansible.posix.firewalld` avec `permanent` et `immediate`) ; pour le lingering, une commande `loginctl enable-linger` rendue idempotente par l'option `creates` pointant sur `/var/lib/systemd/linger/opsdesk` ; un compte `opsdesk` sans mot de passe ; un second passage à `changed=0`.
+**Une bonne solution contient** une tâche par point de l'état voulu, avec les modules dédiés (`dnf` avec `state: absent` puis `present`, `yum_repository` ou le fichier `.repo` officiel avec sa clé, `systemd_service` avec `enabled` et `state`, `file`, `ansible.posix.firewalld` avec `permanent` et `immediate`) ; aucun `shell` pour installer ; aucun `user` ajouté au groupe `docker` ; un second passage à `changed=0`.
 
-**Points à refuser.** `shell` partout ; `changed` à chaque passage laissé tel quel ; un mot de passe dans l'inventaire ; `firewalld` arrêté pour ouvrir le port.
+**Points à refuser.** `shell` partout ; `changed` à chaque passage laissé tel quel ; un mot de passe dans l'inventaire ; `firewalld` arrêté pour ouvrir le port ; le script `get.docker.com` lancé par `curl | sh` ; `mathias` ajouté au groupe `docker` « pour éviter `sudo` ».
 
 <a id="exercice-06"></a>
 
-## Exercice 06 — Podman et Quadlet
+## Exercice 06 — Docker Engine et Compose
 
 **Réponses attendues.**
 
 - *Image, conteneur, volume.* Le programme figé ; son exécution, jetable ; le stockage qui survit au conteneur.
-- *`daemon-reload`.* systemd relance le générateur Quadlet, qui transforme chaque fichier en service.
-- *Le compte `opsdesk` et le lingering.* Moindre privilège ; le lingering garde ses services actifs sans session ouverte, donc au boot.
-- *Un mot de passe sans fichier.* Un secret Podman, monté en fichier dans le conteneur et lu par la variable `*_FILE`.
-- *`active` ne suffit pas.* Le service peut tourner sans répondre ; la preuve est un ticket créé puis relu.
+- *Qui fait quoi.* Le fichier décrit ; `docker compose` le transmet au démon ; le démon crée réseaux, volumes et conteneurs ; systemd ne démarre que le démon.
+- *Au reboot.* systemd lance `docker` parce qu'il est activé ; Docker relance les conteneurs `unless-stopped`, sauf ceux arrêtés à la main.
+- *Un mot de passe sans fichier.* Un fichier sur le serveur, monté par le bloc `secrets:` de Compose dans `/run/secrets/`, lu par la variable `*_FILE` ; il doit rester lisible par l'utilisateur du conteneur.
+- *Port publié et firewalld.* Docker écrit ses propres règles : la zone du serveur ne dit pas à elle seule qui joint un port publié. La preuve se fait depuis une autre machine.
+- *`healthy` ne suffit pas.* La sonde de l'API vise `/health/live` : l'API reste saine sans base. La preuve est un ticket créé puis relu.
 - *Volume et sauvegarde.* Le volume survit au conteneur, pas à sa suppression ni à la perte du disque.
 
-**Une bonne solution contient** un réseau commun aux trois conteneurs ; l'API joignable sous le nom `backend` ; `DB_HOST` égal au nom de la base sur ce réseau ; un `HealthCmd=` par conteneur ; seul `opsdesk-web` publiant le port 8080 ; trois secrets Podman ; `WantedBy=default.target` ; la décision sur le stockage écrite et justifiée ; un rôle Ansible qui agit avec `become_user: opsdesk` et `XDG_RUNTIME_DIR`, idempotent.
+**Une bonne solution contient** des images référencées par digest ; deux réseaux, la base absente de celui de nginx ; l'API joignable sous le nom `backend` ; une sonde et `restart: unless-stopped` par service ; la rotation des journaux ; trois secrets en fichiers ; le port 8080 publié sur l'adresse de `srv-app` et le port 8000 accessible à `srv-k3s` seule, prouvé depuis les autres machines ; `selinux-enabled` dans `daemon.json` et `container_t` constaté ; la décision sur le stockage écrite et justifiée ; un rôle Ansible avec `community.docker.docker_compose_v2`, idempotent, qui ne recrée rien au second passage.
 
-**Points à refuser.** Un secret écrit dans une unité ou un template ; des conteneurs lancés sous `root` ; la base publiée sur un port de l'hôte ; un service qui ne revient pas après un reboot.
+**Points à refuser.** Un secret écrit dans le fichier Compose ou un template ; des images en `:latest` ; la base publiée sur un port de l'hôte ; le socket Docker monté dans un conteneur ; SELinux désactivé ou `--privileged` pour « faire marcher » un montage ; un service qui ne revient pas après un reboot ; `docker compose down -v` sur le service réel.
 
 <a id="exercice-07"></a>
 
@@ -182,7 +183,7 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 - *Ce que le dispositif ne couvre pas.* La perte du PC hôte (aucune copie ailleurs), une corruption non détectée avant la rotation des 7 copies, une suppression de données remarquée plus de 7 jours après.
 - *Pourquoi une cible séparée.* Pour ne jamais risquer la base en service, et pour prouver qu'on sait repartir de zéro.
 
-**Une bonne solution contient** un service et un minuteur sous `opsdesk`, avec `Persistent=true` ; un script qui s'arrête à la première erreur ; une rotation à 7 copies ; une clé SSH limitée au seul dépôt des copies ; des empreintes comparées ; un procès-verbal de restauration chronométré avec le ticket témoin relu dans l'interface.
+**Une bonne solution contient** un service et un minuteur systemd du système, avec `Persistent=true`, qui lance `pg_dump` dans le conteneur de la base (`docker compose exec -T`) ; un script qui s'arrête à la première erreur ; une rotation à 7 copies ; une clé SSH limitée au seul dépôt des copies ; des empreintes comparées ; un procès-verbal de restauration chronométré avec le ticket témoin relu dans l'interface.
 
 **Points à refuser.** Des sauvegardes laissées seulement sur `srv-app` ; un test de restauration sur la base en service ; une sauvegarde « réussie » de 0 octet ; une clé SSH qui ouvre tout l'hôte.
 
@@ -205,8 +206,8 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 | Nom de l'API | Interface affichée, `502` sur `/api` | `/health/live` de l'API répond en direct, pas via nginx | Rétablir le nom `backend` |
 | Secret des jetons | Tous les utilisateurs renvoyés vers la connexion (`401`) | Les nouvelles connexions fonctionnent | Rien à corriger si le changement était voulu ; sinon remettre l'ancien secret |
 | Pare-feu | Délai ou rejet depuis l'hôte, service sain sur le serveur | `curl` local réussi, distant en échec ; `firewall-cmd --list-ports` | Rouvrir 8080 de façon permanente |
-| Redémarrage | Plus rien après un reboot | `loginctl show-user opsdesk -p Linger` à `no` | Réactiver le lingering, par le playbook |
-| Version | L'API ne démarre pas | `systemctl --user status` : image introuvable | Remettre un tag existant, de préférence par le rôle |
+| Redémarrage | Plus rien après un reboot | `systemctl is-enabled docker` à `disabled` | Réactiver le service `docker`, par le playbook |
+| Version | L'API ne démarre pas | `docker compose ps -a` et `docker compose logs backend` : image introuvable (`manifest unknown`) | Remettre un digest existant, de préférence par le rôle |
 
 **Points à refuser.** Un redémarrage général avant tout relevé ; « cause racine » écrite pour la première hypothèse plausible ; un post-mortem qui désigne une personne.
 

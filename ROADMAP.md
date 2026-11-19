@@ -2,7 +2,7 @@
 
 OpsDesk est le projet fil rouge unique du parcours. L’application est fournie ; l’infrastructure et son exploitation sont à construire, exercice après exercice. Aucun exercice d’infrastructure n’est réalisé à ce jour : tous les éléments ci-dessous sont au statut **Prévu**, et leur contrôle est **Non vérifié**. L’[état détaillé](STATUS.md) donne les preuves existantes.
 
-**Depuis le 18 novembre 2026, l’application fournie est la v2** : trois services (PostgreSQL, API FastAPI, frontend React servi par nginx), authentification par rôles, images non-root et sondes de santé. La cible de production est **Podman + Quadlet sur Rocky Linux, déployée par Ansible** ; `compose.yaml` sert uniquement aux tests locaux. Les exercices de `docs/` ont été écrits pour la v1 (Flask, deux conteneurs) et restent à adapter.
+**Depuis le 18 novembre 2026, l’application fournie est la v2** : trois services (PostgreSQL, API FastAPI, frontend React servi par nginx), authentification par rôles, images non-root et sondes de santé. La cible de production est **Docker Engine et Docker Compose sur Rocky Linux, déployés par Ansible** (décision du 18 novembre 2026, qui remplace Podman et Quadlet) ; `compose.yaml` est la pile de référence qui construit les images. Les exercices de `docs/` ont été écrits pour la v1 (Flask, deux conteneurs) et restent à adapter.
 
 ## Étapes
 
@@ -13,7 +13,7 @@ OpsDesk est le projet fil rouge unique du parcours. L’application est fournie 
 | 3 | Préparer Linux, Rocky Linux, le réseau du laboratoire et `srv-admin`, la première VM | Phase 1 | [03](docs/apprentissage/03-linux-reseau.md) |
 | 4 | Écrire le Terraform depuis `srv-admin`, lire le plan, vérifier les VM `srv-app` et `srv-k3s` créées | Phase 1 | [04](docs/apprentissage/04-terraform.md) |
 | 5 | Écrire l’Ansible, contrôler les changements puis la seconde passe | Phase 1 | [05](docs/apprentissage/05-ansible.md) |
-| 6 | Déployer les trois conteneurs avec Quadlet ; choisir volumes, réseaux et secrets Podman ; vérifier un ticket | Phase 1 | [06](docs/apprentissage/06-conteneurs.md) |
+| 6 | Déployer les trois conteneurs avec Docker Compose ; choisir volumes, réseaux, secrets et exposition des ports ; prouver SELinux, pare-feu et reprise au reboot ; vérifier un ticket | Phase 1 | [06](docs/apprentissage/06-conteneurs.md) |
 | 7 | Pratiquer K3s : ressources, sondes, stockage, mise à jour et diagnostic | Phase 3 | [07](docs/apprentissage/07-k3s.md) |
 | 8 | Construire la CI/CD à partir d’une livraison manuelle comprise | Phase 2 | [08](docs/apprentissage/08-cicd.md) |
 | 9 | Choisir des signaux utiles, construire la supervision, vérifier une alerte | Phase 3 | [09](docs/apprentissage/09-supervision.md) |
@@ -22,12 +22,12 @@ OpsDesk est le projet fil rouge unique du parcours. L’application est fournie 
 | 12 | Diagnostiquer un cas nouveau et rétablir le service | Phase 3 | [12](docs/apprentissage/12-diagnostic.md) |
 | 13 | Refaire une tâche nouvelle et expliquer ses choix avec une aide limitée | Toutes | [13](docs/apprentissage/13-autonomie.md) |
 
-Les phases, dans l’ordre où on les construit, sont : **point de départ** (l’application et PostgreSQL tournent en local), **phase 1** préparer et automatiser (un serveur d’administration installé à la main, deux serveurs créés et configurés par du code depuis lui, l’application dans trois conteneurs Podman gérés par Quadlet et systemd), **phase 2** livrer et conserver (GitHub Actions, GHCR, analyse Trivy, déploiement par Ansible, sauvegarde, restauration), **phase 3** orchestrer et maintenir (K3s sur une copie d’essai de l’application, supervision, test de charge sur la copie). L’ordre des exercices n’est pas strictement celui des phases : l’exercice 7 (K3s, phase 3) précède l’exercice 8 (CI/CD, phase 2). Podman fait tourner le service réel ; K3s ne le pilote pas ([Podman et K3s](docs/architecture.md#podman-et-k3s)).
+Les phases, dans l’ordre où on les construit, sont : **point de départ** (l’application et PostgreSQL tournent en local), **phase 1** préparer et automatiser (un serveur d’administration installé à la main, deux serveurs créés et configurés par du code depuis lui, l’application dans trois conteneurs décrits par Compose et lancés par Docker Engine), **phase 2** livrer et conserver (GitHub Actions, GHCR, analyse Trivy, déploiement par Ansible, sauvegarde, restauration), **phase 3** orchestrer et maintenir (K3s sur une copie d’essai de l’application, supervision, test de charge sur la copie). L’ordre des exercices n’est pas strictement celui des phases : l’exercice 7 (K3s, phase 3) précède l’exercice 8 (CI/CD, phase 2). Docker Compose fait tourner le service réel ; K3s ne le pilote pas ([Docker Compose et K3s](docs/architecture.md#docker-compose-et-k3s)).
 
 ## Principes
 
 - Le laboratoire prévu est **Fedora 45 (hôte) → KVM, QEMU, libvirt → trois VM Rocky Linux 10.2 (invités)**. Les exercices 1 et 2 se font en lecture et en dessin ; la préparation technique suit le [guide du laboratoire](docs/laboratoire-fedora-kvm-rocky.md). Une version non vérifiée reste signalée, et Rocky Linux n’est pas remplacé en silence.
-- L’architecture retenue (trois serveurs Rocky Linux `srv-admin`, `srv-app` et `srv-k3s`, réseau `opsdesk-lan`, Podman, sauvegarde, supervision) est dans le [registre des décisions](docs/architecture.md#décisions-retenues) et sur le [schéma technique](docs/diagrams/architecture.svg).
+- L’architecture retenue (trois serveurs Rocky Linux `srv-admin`, `srv-app` et `srv-k3s`, réseau `opsdesk-lan`, Docker Engine et Compose, sauvegarde, supervision) est dans le [registre des décisions](docs/architecture.md#décisions-retenues) et sur le [schéma technique](docs/diagrams/architecture.svg).
 - Les corrigés se lisent après une première tentative. Les anciennes solutions sont des références datées, pas des fichiers à recopier ([provenance](docs/provenance.md)).
 - Toute ressource payante, exposition réelle, destruction ou nettoyage demande son périmètre et un accord préalable.
 - GitHub est l’unique plateforme active. GitLab reste en l’état, à titre historique.

@@ -13,7 +13,7 @@ Sous pression, le réflexe est de tout redémarrer : les indices disparaissent e
 ## L'essentiel à comprendre
 
 - Sept temps : **symptôme, faits, hypothèses, test qui tranche, correction, recontrôle, post-mortem**.
-- On descend couche par couche : `/healthz` (nginx), `/health/live` (API vivante), `/health/ready` (API prête, base joignable), puis les journaux (`journalctl --user -u opsdesk-api`) et le système (disque, mémoire, SELinux, pare-feu).
+- On descend couche par couche : `/healthz` (nginx), `/health/live` (API vivante), `/health/ready` (API prête, base joignable), puis les journaux (`docker compose logs backend`) et le système (disque, mémoire, SELinux, pare-feu).
 - La supervision date le début de la panne ; les sondes du moment ne le savent pas.
 - Une seule action à la fois ; le recontrôle va jusqu'au parcours d'un utilisateur, pas seulement une sonde.
 - Le post-mortem est sans reproche : il cherche ce qui a rendu la panne possible.

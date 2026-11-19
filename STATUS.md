@@ -18,10 +18,10 @@ Dernière révision : 18 novembre 2026, après la fusion de la v2 ([PR #30](http
 
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
-| Images API et frontend (multi-étapes, non-root) | Réalisé | Vérifié le 17 novembre 2026 : construites avec Docker 29.8 sous WSL2 Ubuntu | `backend/Containerfile`, `frontend/Containerfile` ; **non construites avec Podman** |
-| Pile complète (PostgreSQL 17, API, frontend) | Réalisé | Vérifié le 18 novembre 2026 : 3 services *healthy*, `scripts/smoke.py` réussi à travers nginx | `compose.yaml`, réservé aux tests locaux |
+| Images API et frontend (multi-étapes, non-root) | Réalisé | Vérifié le 17 novembre 2026, puis le 18 novembre 2026 après le renommage en `Dockerfile` : construites avec Docker 29.8 sous WSL2 Ubuntu | `backend/Dockerfile`, `frontend/Dockerfile` |
+| Pile de référence (PostgreSQL 17, API, frontend) | Réalisé | Vérifié le 18 novembre 2026 avec Docker 29.8 et Compose 5.5.1 sous WSL2 Ubuntu : `docker compose config` valide ; 3 services *healthy* ; `scripts/smoke.py` réussi à travers nginx ; base non joignable depuis nginx ; `no-new-privileges` et rotation des journaux appliqués ; API relancée seule après un SIGTERM ; 17 tickets conservés après `down` puis `up`. **Non testé** : redémarrage du démon Docker ou du serveur | `compose.yaml` : construit les images, ne remplace pas le fichier de production |
 | Résilience nginx face au backend | Réalisé | Vérifié le 18 novembre 2026 : API recréée avec une nouvelle IP puis suivie sans redémarrage ; frontend démarré sans API | `frontend/nginx.conf.template` (résolution DNS dynamique) |
-| Déploiement Podman + Quadlet sur Rocky Linux | Prévu | Non vérifié | Cible de production retenue ; contraintes dans la [référence technique](docs/reference-technique.md#déployer-avec-podman-et-quadlet) |
+| Déploiement Docker Engine + Compose sur Rocky Linux | Prévu | Non vérifié | Cible retenue le 18 novembre 2026, à la place de Podman et Quadlet ; contraintes dans la [référence technique](docs/reference-technique.md#déployer-avec-docker-compose-sur-un-serveur) |
 | Analyse de vulnérabilités des images v2 | Prévu | Non vérifié | Aucun scan Trivy des images v2 ; le scan v1 ci-dessous ne s’applique pas |
 
 ## Infrastructure
@@ -30,7 +30,7 @@ Dernière révision : 18 novembre 2026, après la fusion de la v2 ([PR #30](http
 | --- | --- | --- | --- |
 | Laboratoire Fedora 45, KVM, Rocky Linux 10.2 | Prévu | Non vérifié | [Guide](docs/laboratoire-fedora-kvm-rocky.md) |
 | Trois VM Rocky Linux 10.2 (`srv-admin`, `srv-app`, `srv-k3s`) | Prévu | Non vérifié | Aucune VM créée, aucun code Terraform ni Ansible dans le dépôt ; décisions du [registre](docs/architecture.md#décisions-retenues) |
-| Unités Quadlet et rôle Ansible de déploiement | Prévu | Non vérifié | À écrire : un réseau, un volume PostgreSQL, trois conteneurs, secrets Podman |
+| Fichier Compose de production et rôles Ansible (Docker, déploiement) | Prévu | Non vérifié | À écrire (exercices 05, 06, 08) : installation de Docker depuis son dépôt officiel, images par digest, secrets en fichiers, SELinux et pare-feu prouvés |
 | CI GitHub Actions | Prévu | Non vérifié | Aucun workflow dans le dépôt ; la PR #30 a été fusionnée sans vérification automatique |
 | K3s, supervision, sauvegarde et restauration | Prévu | Non vérifié | [Parcours](docs/parcours-apprentissage.md) |
 

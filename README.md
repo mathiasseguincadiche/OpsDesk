@@ -24,10 +24,10 @@ Un collaborateur signale une panne, l'équipe support la prend en charge, la ré
 
 | État | Compétence | Où la voir |
 | --- | --- | --- |
-| ✅ Réalisé | Conteneurisation | [`backend/Containerfile`](backend/Containerfile), [`frontend/Containerfile`](frontend/Containerfile) : images multi-étapes, non-root |
+| ✅ Réalisé | Conteneurisation | [`backend/Dockerfile`](backend/Dockerfile), [`frontend/Dockerfile`](frontend/Dockerfile) : images multi-étapes, non-root ; [`compose.yaml`](compose.yaml) : sondes, réseaux séparés, rotation des journaux |
 | ✅ Réalisé | Tests automatisés | [`backend/tests/`](backend/tests/) : 19 tests, joués sur SQLite et sur PostgreSQL 17 |
 | ✅ Réalisé | Sondes, métriques, journaux | `/health/live`, `/health/ready`, `/metrics` (Prometheus), journaux JSON : voir la [référence technique](docs/reference-technique.md#points-daccès-pour-lexploitation) |
-| 🔜 Prévu | Déploiement Podman + Quadlet | Unités systemd sur Rocky Linux |
+| 🔜 Prévu | Déploiement Docker Compose | Docker Engine sur Rocky Linux, SELinux et firewalld actifs, déployé par Ansible |
 | 🔜 Prévu | Infrastructure as Code | Terraform (libvirt) et Ansible depuis `srv-admin` |
 | 🔜 Prévu | Livraison continue | GitHub Actions : tests, build, scan Trivy, publication |
 | 🔜 Prévu | Supervision et sauvegarde | Prometheus, Grafana, `pg_dump` avec test de restauration |
@@ -38,7 +38,7 @@ Chaque ligne passe à « Réalisé » seulement avec une preuve consultable. Le 
 
 <a href="docs/diagrams/architecture.svg"><img alt="Vue d'ensemble de l'architecture d'OpsDesk : sur l'hôte Fedora, un réseau privé relie trois machines prévues. Sur srv-app, nginx (port 8080) transmet /api à l'API, qui lit et écrit dans PostgreSQL, non publié. srv-admin pilote srv-app par SSH, Prometheus sur srv-k3s lit /metrics, et pg_dump copie la base hors de la VM." src="docs/diagrams/architecture-globale.svg"></a>
 
-**En résumé :** le navigateur parle uniquement au **frontend** (nginx, port 8080). Celui-ci sert l'interface et transmet les appels `/api` à l'**API** (FastAPI, port 8000), qui lit et écrit dans **PostgreSQL**. En production, les trois tourneront dans des conteneurs Podman sur `srv-app`, démarrés par systemd grâce à Quadlet. En pointillés, ce qui reste à construire.
+**En résumé :** le navigateur parle uniquement au **frontend** (nginx, port 8080). Celui-ci sert l'interface et transmet les appels `/api` à l'**API** (FastAPI, port 8000), qui lit et écrit dans **PostgreSQL**. En production, les trois tourneront sur `srv-app` sous Docker Engine, décrits par un fichier Compose et déployés par Ansible. En pointillés, ce qui reste à construire.
 
 [Voir le schéma détaillé](docs/diagrams/architecture.svg) (ports, flux d'administration, de supervision et de sauvegarde) · [Les choix techniques expliqués](docs/architecture.md)
 
@@ -46,13 +46,13 @@ Chaque ligne passe à « Réalisé » seulement avec une preuve consultable. Le 
 
 | Choix | Raison | Limite assumée |
 | --- | --- | --- |
-| **Podman + Quadlet** plutôt que Docker Compose | Conteneurs sans root, gérés par systemd : redémarrage automatique, démarrage au boot, journaux dans journald | Un seul serveur : pas de haute disponibilité |
+| **Docker Engine + Compose** sur le serveur | Les outils de conteneurs les plus répandus en entreprise ; un fichier versionné décrit toute la pile, et Docker la relance au boot | Démon en root : le groupe `docker` vaut root, donc administration par `sudo`. Un seul serveur : pas de haute disponibilité |
 | **Trois conteneurs séparés** | Chaque partie se met à jour, se surveille et se redémarre indépendamment | Plus d'éléments à configurer qu'un seul conteneur |
 | **K3s sur une copie d'essai** | Apprendre Kubernetes sans risquer le service principal | La copie n'est pas le service réel |
 
 ## Lancer le projet en local
 
-Il vous faut Podman (ou Docker) et Git. Comptez deux minutes.
+Il vous faut Docker Engine avec le plugin Compose (commande `docker compose`) et Git. Comptez deux minutes.
 
 **1. Récupérer le projet et préparer la configuration**
 
@@ -66,19 +66,19 @@ Ouvrez `.env` et remplacez les trois valeurs `change-me` par vos propres mots de
 **2. Démarrer les trois conteneurs**
 
 ```bash
-podman compose up -d --build
+docker compose up -d --build
 ```
 
 **3. Vérifier que tout fonctionne**
 
 ```bash
-podman compose ps
+docker compose ps
 ```
 
 Les trois services doivent afficher `healthy`. Ouvrez ensuite **http://localhost:8080** et cliquez sur un compte de démonstration pour vous connecter.
 
 > [!NOTE]
-> Ce mode local sert aux essais. En production, chaque conteneur sera géré par systemd via Quadlet : les contraintes à respecter sont dans la [référence technique](docs/reference-technique.md#déployer-avec-podman-et-quadlet).
+> `compose.yaml` construit les images et prouve qu'une version démarre. Sur le serveur, un fichier Compose de production tire les images publiées par digest : ce qu'il doit respecter est dans la [référence technique](docs/reference-technique.md#déployer-avec-docker-compose-sur-un-serveur).
 
 ## Ce que fait l'application
 

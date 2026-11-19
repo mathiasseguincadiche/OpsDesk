@@ -13,7 +13,7 @@ Chaque schéma existe en deux fichiers côte à côte : la source **Draw.io** (`
 | [Accès SSH](pedagogique-acces-ssh.svg) ([source](pedagogique-acces-ssh.drawio)) | Une connexion SSH échoue : par où commencer ? | Deux couloirs (poste, VM), six étapes | 760 | Notion, exercice 03 |
 | [Terraform](pedagogique-terraform.svg) ([source](pedagogique-terraform.drawio)) | Que compare Terraform pour calculer un plan ? | Trois sources qui convergent, issues, cycle | 760 | Notion, exercice 04 |
 | [Ansible](pedagogique-ansible.svg) ([source](pedagogique-ansible.drawio)) | Comment Ansible rend-il un serveur conforme ? | Mécanisme en trois temps, avec décision | 760 | Notion, exercice 05 |
-| [Quadlet](pedagogique-quadlet.svg) ([source](pedagogique-quadlet.drawio)) | Comment des fichiers deviennent-ils des services ? | Transformation en trois colonnes | 760 | Notion, exercice 06 |
+| [Compose](pedagogique-compose.svg) ([source](pedagogique-compose.drawio)) | Comment une définition Compose devient-elle des conteneurs ? | Transformation en trois colonnes, puis cycle de vie | 760 | Notion, exercice 06 |
 | [K3s](pedagogique-k3s.svg) ([source](pedagogique-k3s.drawio)) | Que fait K3s des déclarations ? | Boucle de contrôle, pod prêt ou non | 760 | Notion, exercice 07 |
 | [CI/CD](pedagogique-cicd.svg) ([source](pedagogique-cicd.drawio)) | Du commit au service : qui fait quoi ? | Deux couloirs (automatique, humain), points d'arrêt | 760 | Notion, exercice 08 |
 | [Supervision](pedagogique-supervision.svg) ([source](pedagogique-supervision.drawio)) | De la mesure à l'alerte ? | Collecte, puis machine à états | 760 | Notion, exercice 09 |
@@ -59,9 +59,9 @@ Sous Windows, l'exécutable est `"C:\Program Files\draw.io\draw.io.exe"`. `--the
 
 | Contrôle | Résultat |
 | --- | --- |
-| Exports produits par Draw.io depuis les sources | Fait le 18 novembre 2026, pour les douze schémas |
+| Exports produits par Draw.io depuis les sources | Fait le 18 novembre 2026, pour les douze schémas ; refait le 19 novembre 2026 pour les six schémas touchés par le passage à Docker Compose |
 | Structure des sources | Fait le 18 novembre 2026 : aucun identifiant en double, aucun connecteur orphelin, cinq calques nommés |
-| Rendu à la largeur réelle | Fait le 18 novembre 2026 : vues pédagogiques et vue d'ensemble à 700 px, présentation et architecture détaillée à 950 px, présentation pour téléphone à 375 px ; aucun texte coupé, aucune flèche à travers une forme |
+| Rendu à la largeur réelle | Refait le 19 novembre 2026 pour la vue d'ensemble, l'architecture détaillée, Ansible et Compose. Fait le 18 novembre 2026 : vues pédagogiques et vue d'ensemble à 700 px, présentation et architecture détaillée à 950 px, présentation pour téléphone à 375 px ; aucun texte coupé, aucune flèche à travers une forme |
 | Thème sombre | Fait le 18 novembre 2026, sur fond `#0d1117` : fond du schéma intégré, palette intacte |
 | Rendu dans GitHub et dans Notion | Non vérifié à cette date |
 | Édition dans l'interface de Draw.io | Non vérifié : les sources ont été ouvertes et exportées par Draw.io en ligne de commande |

@@ -21,7 +21,7 @@ Un volume garde les données quand le conteneur disparaît ; il ne les protège 
 
 ## Ce qu'il faut obtenir
 
-1. Un minuteur systemd sous `opsdesk` lance chaque nuit à 02:00 un `pg_dump` au format custom.
+1. Un minuteur systemd du système lance chaque nuit à 02:00 un `pg_dump` au format custom, exécuté dans le conteneur de la base (`docker compose exec -T db pg_dump …`). C'est une vraie responsabilité de systemd : planifier, journaliser, rattraper une nuit manquée.
 2. Seules les 7 dernières copies restent sur `srv-app`.
 3. Chaque copie part sur l'hôte avec une clé SSH dédiée ; son empreinte est vérifiée à l'arrivée.
 4. Une restauration complète dans la base de la copie d'essai ; le ticket témoin est relu dans l'interface de la copie.
@@ -33,7 +33,7 @@ Un volume garde les données quand le conteneur disparaît ; il ne les protège 
 
 | Ce que tu vérifies | Résultat attendu |
 | --- | --- |
-| `systemctl --user list-timers` sous `opsdesk` | Prochaine exécution à 02:00 |
+| `systemctl list-timers` | Prochaine exécution à 02:00 |
 | `pg_restore --list` sur la copie de la nuit | Les tables d'OpsDesk |
 | `sha256sum` sur `srv-app` et sur l'hôte | Empreintes identiques |
 | Fichiers après 8 nuits | 7 fichiers |
@@ -42,6 +42,6 @@ Un volume garde les données quand le conteneur disparaît ; il ne les protège 
 
 ## Pièges fréquents
 
-Fichier de 0 octet laissé par une commande en échec ; minuteur jamais activé ou lingering absent ; restauration dans une base qui n'est pas vide ; ticket témoin absent parce que la copie est plus ancienne (c'est le RPO, pas une panne).
+Fichier de 0 octet laissé par une commande en échec ; minuteur jamais activé ; `exec` sans `-T`, qui échoue hors d'un terminal ; restauration dans une base qui n'est pas vide ; ticket témoin absent parce que la copie est plus ancienne (c'est le RPO, pas une panne).
 
 Suite : [exercice 12](12-diagnostic.md).

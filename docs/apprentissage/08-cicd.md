@@ -35,7 +35,7 @@ Un chemin manuel finit par laisser passer une version non testée, et personne n
 | Une PR qui ne change qu'un commentaire | Coche verte, aucune image publiée |
 | Une PR avec un test volontairement faux | Coche rouge, pas d'image |
 | Après fusion sur `main` | Deux images sur GHCR, avec version et commit |
-| Digest de l'API sur `srv-app` (`podman inspect --format '{{.ImageDigest}}'`) et sur GHCR | Identiques |
+| Digest de l'API sur `srv-app` (`sudo docker inspect --format '{{index .RepoDigests 0}}' <image>`) et sur GHCR | Identiques |
 | `curl -i http://192.168.150.10:8080/version` | La version déployée |
 
 ## Pièges fréquents

@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-# OpsDesk API — image multi-étapes, non-root, compatible Podman et Docker.
+# OpsDesk API — image multi-étapes, non-root, au format OCI (Docker, Kubernetes).
 
 FROM docker.io/library/python:3.13-slim AS build
 ENV PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1

@@ -1,10 +1,21 @@
-# OpsDesk — pile complète : PostgreSQL + API FastAPI + interface React/nginx.
-# Compatible `podman compose`, `podman-compose` et `docker compose`.
+# OpsDesk — pile de référence : PostgreSQL + API FastAPI + interface React/nginx.
+# Docker Engine avec le plugin Compose (commande `docker compose`).
 #
 #   cp .env.example .env      # puis changer les mots de passe
-#   podman compose up -d --build
+#   docker compose up -d --build
 #   → http://localhost:8080
+#
+# Ce fichier est le livrable de l'application : il construit les images et prouve
+# qu'une version démarre. Le déploiement sur srv-app (images tirées de GHCR par
+# digest, secrets en fichiers, réglages du serveur) est l'exercice 06 du parcours.
 name: opsdesk
+
+# Rotation des journaux : sans limite, le pilote json-file de Docker remplit le disque.
+x-journaux: &journaux
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
 
 services:
   db:
@@ -21,12 +32,14 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+    security_opt: ["no-new-privileges:true"]
+    # Aucun port publié : seule l'API joint la base, par le réseau interne.
     networks: [backend]
+    logging: *journaux
 
   backend:
     build:
       context: ./backend
-      dockerfile: Containerfile
       args:
         APP_VERSION: ${APP_VERSION:-2.0.0}
         APP_REVISION: ${APP_REVISION:-dev}
@@ -49,22 +62,23 @@ services:
       ALLOW_REGISTRATION: ${ALLOW_REGISTRATION:-true}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
     ports:
-      # API exposée en local uniquement : /metrics (Prometheus) et /api/docs (Swagger).
+      # Publié sur 127.0.0.1 seulement : /metrics (Prometheus) et /api/docs (Swagger) en local.
       - "127.0.0.1:${API_PORT:-8000}:8000"
-    # Déclaré ici et pas seulement dans le Containerfile : `podman build` (format OCI
-    # par défaut) ignore l'instruction HEALTHCHECK de l'image.
+    # L'image porte déjà un HEALTHCHECK, que Docker applique. Le redéclarer ici rend la
+    # sonde visible dans la définition du déploiement et réglable sans reconstruire l'image.
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2).status == 200 else 1)"]
       interval: 10s
       timeout: 3s
       retries: 5
       start_period: 20s
+    security_opt: ["no-new-privileges:true"]
     networks: [backend, frontend]
+    logging: *journaux
 
   frontend:
     build:
       context: ./frontend
-      dockerfile: Containerfile
       args:
         APP_VERSION: ${APP_VERSION:-2.0.0}
         APP_REVISION: ${APP_REVISION:-dev}
@@ -82,11 +96,14 @@ services:
       interval: 10s
       timeout: 3s
       retries: 5
+    security_opt: ["no-new-privileges:true"]
     networks: [frontend]
+    logging: *journaux
 
 volumes:
   db-data:
 
 networks:
+  # La base n'est que sur « backend » : nginx ne peut pas la joindre.
   backend:
   frontend:
