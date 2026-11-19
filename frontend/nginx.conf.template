@@ -19,8 +19,8 @@ server {
 
     # The backend name is re-resolved at request time (resolver + variable) instead of
     # once at startup: nginx starts even if the backend is not up yet, and follows the
-    # new IP when Podman/systemd (Quadlet) or Kubernetes restarts the backend.
-    # NGINX_LOCAL_RESOLVERS comes from the container's /etc/resolv.conf (aardvark-dns, CoreDNS…).
+    # new IP when Docker recreates the backend container or Kubernetes restarts its pod.
+    # NGINX_LOCAL_RESOLVERS comes from the container's /etc/resolv.conf (Docker embedded DNS 127.0.0.11, CoreDNS…).
     resolver ${NGINX_LOCAL_RESOLVERS} valid=10s ipv6=off;
     resolver_timeout 3s;
 
@@ -40,7 +40,7 @@ server {
     # Backend metrics are NOT exposed publicly: scrape the backend service directly.
     location = /metrics { return 404; }
 
-    # Front-end liveness for Kubernetes / Podman healthchecks.
+    # Front-end liveness for Docker healthchecks and Kubernetes probes.
     location = /healthz { access_log off; default_type text/plain; return 200 "ok\n"; }
 
     # Fingerprinted assets: cache for a year.

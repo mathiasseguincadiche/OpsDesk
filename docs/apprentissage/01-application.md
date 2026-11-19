@@ -4,7 +4,7 @@
 
 **Objectif.** Raconter le trajet d'une demande dans OpsDesk, du navigateur jusqu'à la base, et dire quel composant regarder quand quelque chose ne répond pas.
 
-**Durée estimée** : 1 h 30 à 2 heures. **Prérequis** : aucun ; de quoi dessiner. Podman facultatif. **État** : prévu, non vérifié.
+**Durée estimée** : 1 h 30 à 2 heures. **Prérequis** : aucun ; de quoi dessiner. Docker facultatif. **État** : prévu, non vérifié.
 
 ## Pourquoi
 

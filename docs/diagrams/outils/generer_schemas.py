@@ -84,7 +84,7 @@ def presentation(dossier):
     y = 432
     d.trait_libre("ligne-temps", 72, y, 920, y, f"endArrow=block;endFill=1;strokeColor={RULE};strokeWidth=3;")
     jalons = [("depart", "Point de départ", "application et conteneurs testés en local", ["FastAPI", "React", "PostgreSQL"], True),
-              ("phase1", "1 · Préparer et automatiser", "serveurs créés et configurés par du code", ["Terraform", "Ansible", "Podman + Quadlet"], False),
+              ("phase1", "1 · Préparer et automatiser", "serveurs créés et configurés par du code", ["Terraform", "Ansible", "Docker Compose"], False),
               ("phase2", "2 · Livrer et conserver", "chaîne de livraison, sauvegarde testée", ["GitHub Actions", "Trivy", "pg_dump"], False),
               ("phase3", "3 · Orchestrer et observer", "copie d'essai, supervision, charge", ["K3s", "Prometheus", "Grafana"], False)]
     for i, (ident, nom, det, outils, fait) in enumerate(jalons):
@@ -153,23 +153,23 @@ def architecture(dossier):
                                                    ("prometheus", OBSERVABILITE, "mesures", "Prometheus", "15 s, 15 jours, 2 alertes")]):
         composant(d, ident, 16 + (i % 2) * 168, 52 + (i // 2) * 60, 160, 52, f, ic, "", nom, det, prevu=True, parent=k3s)
 
-    # srv-app (source : compose.yaml, Containerfiles, registre « Exécution » et « Compte de service »)
+    # srv-app (source : compose.yaml, Dockerfiles, registre « Exécution » et « Administration de Docker par sudo »)
     app = machine(d, "srv-app", 280, 488, 848, 324, "srv-app",
                   "192.168.150.10 · 2 vCPU, 4 Go, disque de données 10 Go", prevu=True)
-    run = d.forme("podman", 16, 48, 624, 260, "PODMAN + QUADLET · COMPTE opsdesk",
+    run = d.forme("docker", 16, 48, 624, 260, "DOCKER ENGINE + COMPOSE · /opt/opsdesk",
                   style_zone(prevu=True, teinte="#F7F9FC"), parent=app, calque="frontieres")
-    composant(d, "web", 24, 64, 176, 76, ACCES, "navigateur", "opsdesk-web", "nginx", "interface React<br>port 8080", parent=run)
-    composant(d, "api", 236, 64, 176, 76, TRAITEMENT, "api", "opsdesk-api", "FastAPI", "jeton, rôles<br>port 8000", parent=run)
+    composant(d, "web", 24, 64, 176, 76, ACCES, "navigateur", "frontend", "nginx", "interface React<br>port 8080", parent=run)
+    composant(d, "api", 236, 64, 176, 76, TRAITEMENT, "api", "backend", "FastAPI", "jeton, rôles<br>port 8000", parent=run)
     d.forme("db", 448, 52, 152, 100,
-            f'<span style="font-size:11px;font-weight:bold;letter-spacing:0.6px;color:{DONNEES.texte}">OPSDESK-DB</span><br>'
+            f'<span style="font-size:11px;font-weight:bold;letter-spacing:0.6px;color:{DONNEES.texte}">DB</span><br>'
             f'<span style="font-size:14px;font-weight:bold">PostgreSQL 17</span><br>'
             f'<span style="font-size:12px;color:{MUTED}">port 5432, non publié</span>', style_cylindre(DONNEES), parent=run)
     composant(d, "volume", 448, 184, 152, 52, DONNEES, "volume", "", "Volume", "données de la base", parent=run)
     composant(d, "pg-dump", 24, 184, 176, 52, RESILIENCE, "horloge", "", "pg_dump", "minuteur 02:00 · 7 copies", prevu=True, parent=run)
-    composant(d, "secrets", 236, 184, 176, 52, SECURITE, "cle", "", "Secrets Podman", "base, JWT, admin", prevu=True, parent=run)
+    composant(d, "secrets", 236, 184, 176, 52, SECURITE, "cle", "", "Secrets en fichiers", "base, JWT, admin", prevu=True, parent=run)
     composant(d, "node-app", 664, 64, 168, 52, OBSERVABILITE, "mesures", "", "node_exporter", "système, port 9100", prevu=True, parent=app)
     d.forme("note-app", 664, 136, 168, 156,
-            "Conteneurs sans root, gérés par systemd (unités --user). Seul le port 8080 est ouvert aux utilisateurs ; "
+            "Conteneurs sans root, relancés par Docker ; systemd démarre le démon. Aucun membre du groupe docker. Seul le port 8080 sert aux utilisateurs ; "
             "le port 8000 ne l'est qu'à srv-k3s, pour /metrics ; la base n'est jamais publiée.", style_texte("note", MUTED, valign="top"), parent=app, calque="annotations")
 
     # Flux applicatifs : testés en conteneurs locaux (source : compose.yaml, smoke.py)
@@ -262,7 +262,7 @@ def presentation_mobile(dossier):
 
     d.forme("projet", 24, y, 352, H - 24 - y, "LE PROJET DEVOPS", style_regroupement(), calque="frontieres")
     jalons = [("Point de départ", "application et conteneurs testés en local", "FastAPI · React · PostgreSQL", True),
-              ("1 · Préparer et automatiser", "serveurs créés et configurés par du code", "Terraform · Ansible · Podman + Quadlet", False),
+              ("1 · Préparer et automatiser", "serveurs créés et configurés par du code", "Terraform · Ansible · Docker Compose", False),
               ("2 · Livrer et conserver", "chaîne de livraison, sauvegarde testée", "GitHub Actions · Trivy · pg_dump", False),
               ("3 · Orchestrer et observer", "copie d'essai, supervision, charge", "K3s · Prometheus · Grafana", False)]
     ligne_x, y0, pas = 56, y + 56, 96
@@ -339,11 +339,11 @@ def architecture_globale(dossier):
     d.forme("reseau", 176, 138, 556, 426, "RÉSEAU opsdesk-lan", style_zone(prevu=True, teinte="#E4EAF3"), calque="frontieres")
 
     app = machine(d, "srv-app", 192, 176, 292, 372, "srv-app", "le service", prevu=True)
-    d.forme("podman", 12, 46, 268, 270, "PODMAN + QUADLET", style_zone(prevu=True, teinte="#F7F9FC"), parent=app, calque="frontieres")
-    composant(d, "web", 12, 38, 244, 52, ACCES, "navigateur", "", "nginx", "interface · port 8080", parent="podman")
-    composant(d, "api", 12, 122, 244, 52, TRAITEMENT, "api", "", "API FastAPI", "jeton, rôles · port 8000", parent="podman")
-    d.forme("db", 12, 196, 244, 64, f'{b("PostgreSQL 17")}<br>{s("port 5432, non publié")}', style_cylindre(DONNEES), parent="podman")
-    d.forme("note-app", 12, 322, 268, 40, "Compte de service opsdesk, sans root.", style_texte("note", MUTED, valign="top"),
+    d.forme("docker", 12, 46, 268, 270, "DOCKER ENGINE + COMPOSE", style_zone(prevu=True, teinte="#F7F9FC"), parent=app, calque="frontieres")
+    composant(d, "web", 12, 38, 244, 52, ACCES, "navigateur", "", "nginx", "interface · port 8080", parent="docker")
+    composant(d, "api", 12, 122, 244, 52, TRAITEMENT, "api", "", "API FastAPI", "jeton, rôles · port 8000", parent="docker")
+    d.forme("db", 12, 196, 244, 64, f'{b("PostgreSQL 17")}<br>{s("port 5432, non publié")}', style_cylindre(DONNEES), parent="docker")
+    d.forme("note-app", 12, 322, 268, 40, "Conteneurs sans root ; administration par sudo.", style_texte("note", MUTED, valign="top"),
             parent=app, calque="annotations")
     d.lien("flux-api", "web", "api", "/api", style_flux("applicatif", fort=True, ortho=False) + "exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
     d.lien("flux-sql", "api", "db", "SQL", style_flux("applicatif", fort=True, ortho=False) + "exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
@@ -385,17 +385,17 @@ def pedagogique_ansible(dossier):
     d.forme("inventaire", 12, 72, 236, 76, f'{b("inventory.ini", 12)} {s("· où agir")}<br>' +
             html_code(["[app]", "srv-app ansible_host=…10"]), style_document(AUTOMATISATION), adm)
     d.forme("playbook", 12, 160, 236, 152, f'{b("playbook.yml", 12)} {s("· quoi obtenir")}<br>' +
-            html_code(["- podman : present", "- opsdesk : present", "- 8080/tcp : ouvert"]) +
+            html_code(["- docker-ce : present", "- docker : actif", "- 8080/tcp : ouvert"]) +
             f'<br><br>{s("Un résultat à obtenir,<br>pas une suite de commandes.")}', style_document(AUTOMATISATION), adm)
 
     app = machine(d, "srv-app", 340, 96, 396, 328, "srv-app", "Python exécute chaque tâche")
     d.forme("etape-2", 12, 46, 372, 20, "② POUR CHAQUE TÂCHE", style_texte("categorie", TRAITEMENT.texte), app)
-    carte_simple(d, "observe", 12, 76, 120, 108, NEUTRE, f'{b("État observé", 12)}<br>{s("podman : là", INK)}<br>'
-                 f'{s("opsdesk : absent", INK)}<br>{s("8080 : fermé", INK)}', parent=app)
+    carte_simple(d, "observe", 12, 76, 120, 108, NEUTRE, f'{b("État observé", 12)}<br>{s("docker-ce : là", INK)}<br>'
+                 f'{s("docker : arrêté", INK)}<br>{s("8080 : fermé", INK)}', parent=app)
     q = d.forme("conforme", 144, 82, 104, 96, "Conforme ?", style_losange(TRAITEMENT), app)
     ok = carte_simple(d, "ok", 288, 102, 96, 56, DONNEES, f'{b("ok", 14, DONNEES.texte)}<br>{s("rien ne change")}',
                       parent=app, fond=DONNEES.fond, centre=True)
-    corr = carte_simple(d, "corrige", 140, 236, 112, 56, TRAITEMENT, f'{b("corrige")}<br>{s("installe, ouvre")}',
+    corr = carte_simple(d, "corrige", 140, 236, 112, 56, TRAITEMENT, f'{b("corrige")}<br>{s("démarre, ouvre")}',
                         parent=app, centre=True)
     ch = carte_simple(d, "changed", 288, 236, 96, 56, RESILIENCE, f'{b("changed", 14, RESILIENCE.texte)}<br>{s("a changé")}',
                       parent=app, fond=RESILIENCE.fond, centre=True)
@@ -418,7 +418,7 @@ def pedagogique_ansible(dossier):
                  f'<br>{s("<b>idempotent</b> : plus rien à corriger", DONNEES.texte)}', style_document(DONNEES), res)
     d.lien("rejouer", p1, p2, "", style_flux("applicatif", fort=True, ortho=False) + "exitX=1;exitY=0.5;entryX=0;entryY=0.5;")
     d.forme("verifier", 16, 140, 680, 56,
-            f'{b("Puis on vérifie sur le serveur", 13)}<br>' + code("podman --version · id opsdesk · loginctl show-user opsdesk -p Linger"),
+            f'{b("Puis on vérifie sur le serveur", 13)}<br>' + code("docker --version · systemctl is-enabled docker · getent group docker"),
             style_texte("detail", INK, valign="top"), res, calque="annotations")
     d.forme("limite", 16, 212, 680, 60, "<b>Limite</b> : changed=0 dit qu'il n'y a plus rien à corriger, pas que le service fonctionne. "
             "Les compteurs incluent la collecte des faits.", style_texte("note", INK, valign="top"), res, calque="annotations")
@@ -492,35 +492,35 @@ def pedagogique_terraform(dossier):
 
 
 # --------------------------------------------------------------------------- #
-# Exercice 06 : des fichiers aux services (transformation)                     #
+# Exercice 06 : de la définition Compose aux conteneurs (transformation)       #
 # --------------------------------------------------------------------------- #
 
-def pedagogique_quadlet(dossier):
-    d = _fond("pedagogique-quadlet", 600, "Comment des fichiers deviennent des services",
-              "Sous le compte opsdesk, systemd transforme chaque fichier Quadlet en service, puis le service crée la ressource.",
-              ("principe", "Noms d'exemple"))
-    cols = [(24, "① CE QUE TU ÉCRIS", "~/.config/containers/systemd/", AUTOMATISATION),
-            (280, "② CE QUE SYSTEMD GÉNÈRE", "systemctl --user daemon-reload", TRAITEMENT),
-            (536, "③ CE QUI TOURNE", "au démarrage du service", DONNEES)]
+def pedagogique_compose(dossier):
+    d = _fond("pedagogique-compose", 600, "De la définition Compose aux conteneurs",
+              "docker compose lit le fichier, le démon Docker crée chaque objet, puis le maintient en marche.",
+              ("principe", "Schéma de principe"))
+    cols = [(24, "① CE QUE TU ÉCRIS", "compose.yaml", AUTOMATISATION),
+            (280, "② CE QUE DOCKER CRÉE", "docker compose up -d", TRAITEMENT),
+            (536, "③ CE QUI TOURNE", "projet opsdesk", DONNEES)]
     for x, t, sous, f in cols:
         d.forme(f"col-{x}", x, 100, 200, 20, t, style_texte("categorie", f.texte), calque="annotations")
         d.forme(f"col-{x}-s", x, 120, 216, 18, sous, style_texte("note", MUTED), calque="annotations")
-    lignes = [("opsdesk.network", "opsdesk-network.service", "réseau", "reseau", INFRA),
-              ("opsdesk-db.volume", "opsdesk-db-volume.service", "volume", "volume", DONNEES),
-              ("opsdesk-db.container", "opsdesk-db.service", "conteneur base", "base", DONNEES),
-              ("opsdesk-api.container", "opsdesk-api.service", "conteneur API", "api", TRAITEMENT),
-              ("opsdesk-web.container", "opsdesk-web.service", "conteneur nginx", "navigateur", ACCES)]
-    for i, (fichier, service, res, ic, f) in enumerate(lignes):
+    lignes = [("networks: backend", "opsdesk_backend", "réseau, DNS : db", "reseau", INFRA),
+              ("volumes: db-data", "opsdesk_db-data", "données PostgreSQL", "volume", DONNEES),
+              ("services: db", "opsdesk-db-1", "base", "base", DONNEES),
+              ("services: backend", "opsdesk-backend-1", "API, port 8000", "api", TRAITEMENT),
+              ("services: frontend", "opsdesk-frontend-1", "nginx, port 8080", "navigateur", ACCES)]
+    for i, (cle, objet, res, ic, f) in enumerate(lignes):
         y = 152 + i * 64
-        a = d.forme(f"fichier-{i}", 24, y, 200, 48, code(fichier), style_document(AUTOMATISATION) + "verticalAlign=middle;spacingTop=0;")
-        bb = carte_simple(d, f"service-{i}", 280, y, 200, 48, TRAITEMENT, code(service), centre=True)
+        a = d.forme(f"fichier-{i}", 24, y, 200, 48, code(cle), style_document(AUTOMATISATION) + "verticalAlign=middle;spacingTop=0;")
+        bb = carte_simple(d, f"objet-{i}", 280, y, 200, 48, TRAITEMENT, code(objet), centre=True)
         c = composant(d, f"ressource-{i}", 536, y, 200, 48, f, ic, "", res, "")
-        d.lien(f"genere-{i}", a, bb, "", style_flux("administration", ortho=False) + "exitX=1;exitY=0.5;entryX=0;entryY=0.5;")
-        d.lien(f"cree-{i}", bb, c, "", style_flux("applicatif", ortho=False) + "exitX=1;exitY=0.5;entryX=0;entryY=0.5;")
+        d.lien(f"cree-{i}", a, bb, "", style_flux("administration", ortho=False) + "exitX=1;exitY=0.5;entryX=0;entryY=0.5;")
+        d.lien(f"tourne-{i}", bb, c, "", style_flux("applicatif", ortho=False) + "exitX=1;exitY=0.5;entryX=0;entryY=0.5;")
     d.forme("cycle", 24, 480, 712, 96, "", style_regroupement(), calque="frontieres")
-    for i, (t, det) in enumerate([("Au boot", "le lingering démarre les services du compte, sans session"),
-                                  ("S'il s'arrête", "Restart= le relance ; le conteneur est recréé"),
-                                  ("Journaux", "journalctl --user -u opsdesk-api")]):
+    for i, (t, det) in enumerate([("Au boot", "systemd démarre docker, qui relance les conteneurs unless-stopped"),
+                                  ("S'il s'arrête", "relancé par sa politique ; un docker stop le laisse arrêté"),
+                                  ("Journaux", "docker compose logs backend")]):
         d.forme(f"cycle-{i}", 40 + i * 236, 496, 220, 64, f'{b(t, 13)}<br>{s(det)}', style_texte("detail", INK, valign="top"), calque="annotations")
     return d.enregistrer(dossier)
 
@@ -679,7 +679,7 @@ def pedagogique_sauvegarde(dossier):
 
 
 CONSTRUCTIONS = (presentation, presentation_mobile, architecture, architecture_globale, pedagogique_ansible,
-                 pedagogique_acces_ssh, pedagogique_terraform, pedagogique_quadlet, pedagogique_k3s,
+                 pedagogique_acces_ssh, pedagogique_terraform, pedagogique_compose, pedagogique_k3s,
                  pedagogique_cicd, pedagogique_supervision, pedagogique_sauvegarde)
 
 if __name__ == "__main__":

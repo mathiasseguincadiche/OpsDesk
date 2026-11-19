@@ -12,7 +12,7 @@ Un choix qu'on ne sait pas expliquer ne se défend pas en entretien, et ne se co
 
 ## L'essentiel à comprendre
 
-- L'architecture est déjà décidée : trois serveurs Rocky Linux (`srv-admin`, `srv-app`, `srv-k3s`), Podman et Quadlet, une sauvegarde copiée hors des serveurs, K3s pour une copie d'essai.
+- L'architecture est déjà décidée : trois serveurs Rocky Linux (`srv-admin`, `srv-app`, `srv-k3s`), Docker Engine et Compose sur `srv-app`, une sauvegarde copiée hors des serveurs, K3s pour une copie d'essai.
 - Une décision se défend avec quatre réponses : **besoin, alternative écartée, point de panne, contrôle**.
 - Un schéma est juste quand chaque flux a une origine et une destination, chaque donnée durable un emplacement, chaque port ouvert une raison.
 - Une décision « retenue » n'est pas « vérifiée » : rien n'est encore construit.
@@ -20,7 +20,7 @@ Un choix qu'on ne sait pas expliquer ne se défend pas en entretien, et ne se co
 
 ## Ce qu'il faut obtenir
 
-1. **Un tableau de cinq décisions**, avec les quatre réponses : trois serveurs Rocky Linux ; Podman et Quadlet plutôt que Docker Compose ; le compte de service `opsdesk` distinct de `mathias` ; la sauvegarde `pg_dump` copiée hors des serveurs ; K3s pour une copie d'essai seulement.
+1. **Un tableau de cinq décisions**, avec les quatre réponses : trois serveurs Rocky Linux ; Docker Compose sur le serveur plutôt que Kubernetes ou Podman ; l'administration de Docker par `sudo` plutôt que par le groupe `docker` ; la sauvegarde `pg_dump` copiée hors des serveurs ; K3s pour une copie d'essai seulement.
 2. **Les flux redessinés de mémoire**, puis comparés au [schéma](../diagrams/architecture.svg) : requête d'utilisateur, connexion SSH de l'administrateur, sauvegarde nocturne, restauration.
 3. **Une revue contradictoire** : au moins trois points qui ne tiennent pas ou qui manquent, chacun avec sa raison.
 
@@ -36,7 +36,7 @@ Un choix qu'on ne sait pas expliquer ne se défend pas en entretien, et ne se co
 
 ## Un exemple de revue, déjà mené
 
-Le flux Prometheus → `srv-app:8000` est cohérent sur le papier (nginx bloque `/metrics`, le port 8000 est ouvert à `srv-k3s` seulement). Il impose de publier le port 8000 dans les unités Quadlet, et il ouvre toute l'API à `srv-k3s`, pas seulement `/metrics` : une question ouverte à inscrire au registre.
+Le flux Prometheus → `srv-app:8000` est cohérent sur le papier (nginx bloque `/metrics`, le port 8000 est ouvert à `srv-k3s` seulement). Il impose de publier le port 8000 dans le fichier Compose de production, et il ouvre toute l'API à `srv-k3s`, pas seulement `/metrics` : une question ouverte à inscrire au registre.
 
 ## Pièges fréquents
 

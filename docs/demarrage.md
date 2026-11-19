@@ -1,13 +1,13 @@
 # Démarrer OpsDesk en local
 
-Ce guide lance OpsDesk sur un poste, en conteneurs, pour l'essayer ou le développer. Mise à jour : 18 novembre 2026, pour la version 2.0.0. Le déploiement sur serveur (Podman et Quadlet sous systemd) est l'objet de l'[exercice 06](apprentissage/06-conteneurs.md).
+Ce guide lance OpsDesk sur un poste, en conteneurs, pour l'essayer ou le développer. Mise à jour : 18 novembre 2026, pour la version 2.0.0. Le déploiement sur serveur (Docker Engine et Compose sur Rocky Linux) est l'objet de l'[exercice 06](apprentissage/06-conteneurs.md).
 
 ## Ce qu'il faut
 
 | Outil | Vérification | Remarque |
 | --- | --- | --- |
 | Git | `git --version` | Pour récupérer le dépôt |
-| Podman avec `podman compose`, ou Docker avec Compose | `podman compose version` | Les essais consignés ont été faits avec Docker 29.8 sous Ubuntu WSL2 ; Podman est la cible |
+| Docker Engine avec le plugin Compose | `docker compose version` | Les essais consignés ont été faits avec Docker 29.8 et Compose 5.5.1 sous Ubuntu WSL2. L'ancienne commande `docker-compose` (Compose v1, en Python) n'est plus maintenue |
 | Python 3 | `python3 --version` | Seulement pour le test de bout en bout |
 | Le port 8080 libre | `ss -lnt \| grep ':8080 '` | Aucune ligne attendue |
 
@@ -26,7 +26,7 @@ Ouvrir `.env` et remplacer les trois valeurs `change-me` : mot de passe de la ba
 ## 2. Démarrer
 
 ```bash
-podman compose up -d --build
+docker compose up -d --build
 ```
 
 La première fois, la construction des images prend quelques minutes. La base démarre d'abord ; l'API attend qu'elle soit saine, puis l'interface attend l'API.
@@ -34,7 +34,7 @@ La première fois, la construction des images prend quelques minutes. La base d�
 ## 3. Vérifier
 
 ```bash
-podman compose ps
+docker compose ps
 ```
 
 Les trois services (`db`, `backend`, `frontend`) doivent afficher `healthy`.
@@ -66,19 +66,19 @@ Les données sont dans un volume nommé : elles survivent à l'arrêt et à la r
 ## Arrêter
 
 ```bash
-podman compose down
+docker compose down
 ```
 
-Les conteneurs sont supprimés, le volume de la base est conservé. **`podman compose down -v` supprime aussi le volume, donc tous les tickets** : à réserver à une remise à zéro voulue.
+Les conteneurs sont supprimés, le volume de la base est conservé. **`docker compose down -v` supprime aussi le volume, donc tous les tickets** : à réserver à une remise à zéro voulue.
 
 ## En cas de problème
 
 | Ce que tu vois | Cause probable | Que faire |
 | --- | --- | --- |
 | `address already in use` sur 8080 | Un autre service occupe le port | Identifier ce service avant de l'arrêter ; ou changer `HTTP_PORT` dans `.env` |
-| `backend` jamais `healthy` | L'API n'arrive pas à démarrer (souvent la base ou un secret) | `podman compose logs backend` |
-| L'API démarre puis s'arrête, message sur `JWT_SECRET` | `ENVIRONMENT=production` exige un `JWT_SECRET` d'au moins 32 caractères | Corriger `.env`, puis `podman compose up -d` |
-| `502` sur l'interface | nginx ne joint pas l'API | `podman compose ps`, puis les journaux de `backend` |
+| `backend` jamais `healthy` | L'API n'arrive pas à démarrer (souvent la base ou un secret) | `docker compose logs backend` |
+| L'API démarre puis s'arrête, message sur `JWT_SECRET` | `ENVIRONMENT=production` exige un `JWT_SECRET` d'au moins 32 caractères | Corriger `.env`, puis `docker compose up -d` |
+| `502` sur l'interface | nginx ne joint pas l'API | `docker compose ps`, puis les journaux de `backend` |
 | Connexion refusée avec le mot de passe administrateur modifié | Le premier administrateur n'est créé qu'une fois, sur une base vide | Le mot de passe de `.env` ne s'applique qu'au premier démarrage |
 | Pas de données de démonstration | Elles ne sont créées que si la base est vide, et si `SEED_DEMO_DATA=true` | Normal sur une base déjà utilisée |
 

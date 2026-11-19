@@ -75,7 +75,7 @@ API en Python 3.13 avec FastAPI, SQLAlchemy 2 et psycopg 3. Interface en TypeScr
 | Node (construction de l'interface) | 22 | Seulement à la construction |
 | nginx (image de l'interface) | 1.29 | `nginxinc/nginx-unprivileged:1.29-alpine` |
 | PostgreSQL | 17 | Testé sur PostgreSQL 17 ; SQLite seulement pour le développement et les tests |
-| Moteur de conteneurs | Podman 5 en cible ; Docker 29.8 utilisé pour les essais du 17 et du 18 novembre 2026 | Images au format OCI |
+| Moteur de conteneurs | Docker Engine avec le plugin Compose ; Docker 29.8 et Compose 5.5.1 utilisés pour les essais du 17 et du 18 novembre 2026 | Images au format OCI, donc utilisables aussi par K3s (containerd) |
 
 ## 8. Démarrage en développement
 
@@ -86,7 +86,7 @@ cp .env.example .env
 ```
 
 ```bash
-podman compose up -d --build
+docker compose up -d --build
 ```
 
 Sans conteneur, API sur SQLite et interface avec Vite : voir la section [Développer sans conteneur](reference-technique.md#développer-sans-conteneur) de la référence technique.
@@ -103,7 +103,7 @@ Aucun port privilégié ; aucun TLS dans l'application : HTTPS, s'il est voulu, 
 
 ## 10. Paramètres de configuration
 
-Toute la configuration passe par des variables d'environnement ; aucun fichier de configuration n'est lu au démarrage. Chaque secret accepte aussi une forme `*_FILE` qui lit sa valeur dans un fichier : c'est la forme attendue des secrets Podman et Kubernetes.
+Toute la configuration passe par des variables d'environnement ; aucun fichier de configuration n'est lu au démarrage. Chaque secret accepte aussi une forme `*_FILE` qui lit sa valeur dans un fichier : c'est la forme attendue des secrets de Compose et de Kubernetes.
 
 ## 11. Variables d'environnement
 
@@ -158,7 +158,7 @@ Au premier démarrage sur une base vide, l'API crée le premier administrateur, 
 
 ## 17. Journaux applicatifs
 
-Une ligne JSON par événement sur la sortie standard, avec l'heure, le niveau et un identifiant de requête (`request_id`, renvoyé aussi dans l'en-tête `x-request-id`). Les mots de passe et les jetons ne sont jamais journalisés. Sous Quadlet, les journaux arrivent dans journald.
+Une ligne JSON par événement sur la sortie standard, avec l'heure, le niveau et un identifiant de requête (`request_id`, renvoyé aussi dans l'en-tête `x-request-id`). Les mots de passe et les jetons ne sont jamais journalisés. Docker les garde par conteneur (`docker compose logs`) ; leur rotation se règle dans Compose ou dans la configuration du démon.
 
 ## 18. Tests unitaires
 

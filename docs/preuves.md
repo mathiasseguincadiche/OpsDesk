@@ -46,7 +46,7 @@ On archive seulement la sortie réellement obtenue, avec sa date, sa version et 
 
 ## Ce qui reste à prouver
 
-Toute l'infrastructure : machines virtuelles, configuration, déploiement Quadlet, CI, K3s, supervision, sauvegarde et restauration, maintenance. Ce sont les exercices du [parcours](apprentissage/README.md) ; aucun n'est réalisé à ce jour, et un essai historique ne vaut pas réalisation personnelle.
+Toute l'infrastructure : machines virtuelles, configuration, déploiement Docker Compose, CI, K3s, supervision, sauvegarde et restauration, maintenance. Ce sont les exercices du [parcours](apprentissage/README.md) ; aucun n'est réalisé à ce jour, et un essai historique ne vaut pas réalisation personnelle.
 
 ## Preuves de la version 1
 

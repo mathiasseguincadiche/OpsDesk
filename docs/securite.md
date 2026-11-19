@@ -22,7 +22,7 @@ OpsDesk est un service de laboratoire : **données fictives, aucune exposition s
 | Fuite de secrets dans les journaux | Ni mot de passe ni jeton journalisé | `backend/app/observability.py` |
 | Injection de scripts dans l'interface | Politique de sécurité du contenu stricte (`default-src 'self'`, script en ligne autorisé par empreinte), `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy` | `frontend/nginx.conf.template` |
 | Exposition des mesures internes | `/metrics` bloqué par nginx | `frontend/nginx.conf.template` |
-| Conteneur compromis | Images non-root (UID 10001 pour l'API, 101 pour nginx), ports non privilégiés | `backend/Containerfile`, `frontend/Containerfile` |
+| Conteneur compromis | Images non-root (UID 10001 pour l'API, 101 pour nginx), ports non privilégiés | `backend/Dockerfile`, `frontend/Dockerfile` ; `no-new-privileges` dans `compose.yaml` |
 
 Les refus (`401`, `403`, compte désactivé, visibilité par rôle) sont couverts par les tests de l'API ; dernier contrôle consigné le 17 novembre 2026 dans [STATUS.md](../STATUS.md).
 
@@ -34,7 +34,7 @@ Les refus (`401`, `403`, compte désactivé, visibilité par rôle) sont couvert
 | `JWT_SECRET` | Signature des jetons | 32 caractères au moins ; **obligatoire** quand `ENVIRONMENT=production` ; le changer déconnecte tout le monde |
 | `ADMIN_PASSWORD` | Premier administrateur | Utilisé une seule fois, à la création du compte |
 
-Chaque secret accepte une forme `*_FILE` qui lit sa valeur dans un fichier : c'est la forme attendue des secrets Podman et Kubernetes. Aucun secret n'est dans les images ni dans le dépôt : `.env` et les dossiers `secrets/` sont exclus par `.gitignore`, seul `.env.example` (sans valeur réelle) est versionné.
+Chaque secret accepte une forme `*_FILE` qui lit sa valeur dans un fichier : c'est la forme attendue des secrets de Compose et de Kubernetes. Aucun secret n'est dans les images ni dans le dépôt : `.env` et les dossiers `secrets/` sont exclus par `.gitignore`, seul `.env.example` (sans valeur réelle) est versionné.
 
 ## Ce qui revient à l'infrastructure
 
@@ -42,8 +42,9 @@ L'application ne peut pas se protéger seule. Les décisions suivantes sont pris
 
 - **Réseau** : seul le port 8080 ouvert aux utilisateurs ; 8000 ouvert à la supervision seulement ; 5432 jamais publié ; firewalld actif.
 - **Système** : SELinux en mode `Enforcing` ; SSH par clé, sans mot de passe ni connexion `root`.
-- **Exécution** : conteneurs sous le compte de service `opsdesk`, sans mot de passe, sans `sudo`, sans SSH.
-- **Secrets** : secrets Podman, jamais dans les fichiers d'unité ni dans les rôles Ansible.
+- **Exécution** : Docker Engine, dont le démon tourne en root. Personne n'est dans le groupe `docker` (qui vaut root) : administration par `sudo`, tracée. Le socket Docker n'est monté dans aucun conteneur et l'API Docker n'écoute pas sur le réseau. Les conteneurs tournent sans root, avec `no-new-privileges`.
+- **Pare-feu et SELinux face à Docker** : Docker écrit ses propres règles de filtrage (zone firewalld `docker`) ; l'exposition réelle d'un port se prouve depuis une autre machine. SELinux ne s'applique aux conteneurs que si le démon l'active (`selinux-enabled`).
+- **Secrets** : fichiers lisibles par le seul conteneur qui les lit, montés par le bloc `secrets:` de Compose ; jamais dans le fichier Compose, ni dans Git, ni en clair dans les rôles Ansible.
 - **Images** : analyse Trivy dans la CI, avec une règle écrite pour les vulnérabilités graves (exercice 08).
 - **Sauvegardes** : copies hors du serveur, avec une clé SSH limitée à ce seul usage (exercice 11).
 

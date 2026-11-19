@@ -1,16 +1,16 @@
 # Référence technique
 
-Ce document rassemble ce qu'il faut savoir pour exploiter, déployer ou faire évoluer OpsDesk : les points d'accès, la configuration, le déploiement avec Quadlet, le développement local et les tests. Pour comprendre les choix qui ont mené à cette architecture, lire [l'architecture](architecture.md) ; pour l'état d'avancement, [STATUS.md](../STATUS.md).
+Ce document rassemble ce qu'il faut savoir pour exploiter, déployer ou faire évoluer OpsDesk : les points d'accès, la configuration, le déploiement avec Docker Compose, le développement local et les tests. Pour comprendre les choix qui ont mené à cette architecture, lire [l'architecture](architecture.md) ; pour l'état d'avancement, [STATUS.md](../STATUS.md).
 
 ## Les trois services
 
 | Service | Image | Port | Rôle |
 | --- | --- | --- | --- |
-| `opsdesk-web` | `frontend/Containerfile` (nginx non-root, UID 101) | 8080 | Sert l'interface React et relaie `/api`, `/health` et `/version` vers l'API |
-| `opsdesk-api` | `backend/Containerfile` (Python 3.13, UID 10001) | 8000 | API FastAPI : authentification, tickets, statistiques, métriques |
-| `opsdesk-db` | `postgres:17-alpine` | 5432 | Stockage des comptes, tickets, commentaires et historique |
+| `frontend` | `frontend/Dockerfile` (nginx non-root, UID 101) | 8080 | Sert l'interface React et relaie `/api`, `/health` et `/version` vers l'API |
+| `backend` | `backend/Dockerfile` (Python 3.13, UID 10001) | 8000 | API FastAPI : authentification, tickets, statistiques, métriques |
+| `db` | `postgres:17-alpine` | 5432 | Stockage des comptes, tickets, commentaires et historique |
 
-Seul le frontend est destiné aux utilisateurs. L'API n'est pas exposée publiquement : nginx bloque `/metrics`, que Prometheus lit directement sur le port 8000.
+Les noms sont ceux des services de `compose.yaml` ; Compose nomme les conteneurs `opsdesk-<service>-1`. Seul le frontend est destiné aux utilisateurs. L'API n'est pas exposée publiquement : nginx bloque `/metrics`, que Prometheus lit directement sur le port 8000.
 
 ## Points d'accès pour l'exploitation
 
@@ -22,11 +22,11 @@ Seul le frontend est destiné aux utilisateurs. L'API n'est pas exposée publiqu
 | `GET /metrics` (API uniquement, bloqué par nginx) | Métriques Prometheus : requêtes HTTP par route et statut, latences (histogramme), tickets par statut et priorité, utilisateurs par rôle, connexions, transitions, `opsdesk_database_up` |
 | `GET /version` | Version et révision (`APP_VERSION`, `APP_REVISION`, également en étiquettes OCI de l'image) |
 | `GET /api/docs` | Documentation interactive de l'API (OpenAPI) |
-| Journaux | JSON sur la sortie standard, une ligne par requête (`request_id`, route, statut, durée), prêts pour Loki ou journald |
+| Journaux | JSON sur la sortie standard, une ligne par requête (`request_id`, route, statut, durée), lisibles par `docker compose logs` |
 
 ## Comportements à connaître
 
-- **Configuration par variables d'environnement.** Chaque secret accepte aussi la forme `*_FILE` (`DB_PASSWORD_FILE`, `JWT_SECRET_FILE`, `ADMIN_PASSWORD_FILE`), lue depuis un fichier : c'est la forme attendue des secrets Podman et Kubernetes.
+- **Configuration par variables d'environnement.** Chaque secret accepte aussi la forme `*_FILE` (`DB_PASSWORD_FILE`, `JWT_SECRET_FILE`, `ADMIN_PASSWORD_FILE`), lue depuis un fichier : c'est la forme attendue des secrets de Compose et de Kubernetes.
 - **L'API attend la base** au démarrage (30 tentatives espacées de 2 secondes), puis crée le schéma et le premier administrateur. L'opération est rejouable sans effet, et un verrou consultatif PostgreSQL évite les conflits quand plusieurs instances démarrent ensemble.
 - **L'API ne garde aucun état en mémoire** (sessions par jeton JWT) : plusieurs instances peuvent tourner côte à côte, à condition de partager le même `JWT_SECRET`. Il est obligatoire quand `ENVIRONMENT=production`.
 - **Le frontend résout l'adresse de l'API à chaque requête**, toutes les 10 secondes au plus (`resolver` de nginx). Il démarre même si l'API n'est pas encore là, et suit sa nouvelle adresse quand elle est recréée. L'adresse vient de `BACKEND_URL` (par défaut `http://backend:8000`).
@@ -50,23 +50,30 @@ Seul le frontend est destiné aux utilisateurs. L'API n'est pas exposée publiqu
 
 Le frontend n'a qu'une variable : `BACKEND_URL`.
 
-## Déployer avec Podman et Quadlet
+## Déployer avec Docker Compose sur un serveur
 
-`compose.yaml` sert aux essais locaux. En production, chaque service devient une unité Quadlet (`.container`, `.network`, `.volume`) que systemd démarre et surveille. Les unités elles-mêmes sont à écrire (exercice 06) ; voici les contraintes que l'application impose.
+`compose.yaml` est la pile de référence livrée avec l'application : il construit les images et prouve qu'une version démarre. Sur `srv-app`, le déploiement utilise un fichier Compose de production, à écrire à l'exercice 06, qui **tire** les images de GHCR par digest au lieu de les construire. Voici ce que l'application et Docker imposent à ce fichier et au serveur.
 
-- **Noms sur le réseau.** Quadlet nomme les conteneurs `systemd-<unité>` par défaut. Le frontend cherche l'API sous le nom `backend` : définir `ContainerName=backend` (ou `NetworkAlias=backend`) dans l'unité de l'API, ou adapter `BACKEND_URL`. Même chose pour `DB_HOST` côté API.
-- **Ordre de démarrage.** Aucun ordre strict n'est nécessaire : l'API réessaie la base pendant environ une minute, et nginx suit l'API dès qu'elle apparaît. Pour un ordre explicite : `Requires=` et `After=`, et `Notify=healthy` (Podman 5 ou plus) sur les unités qui déclarent un `HealthCmd=`.
-- **Sondes de santé.** `podman build` produit par défaut une image au format OCI, qui ignore l'instruction `HEALTHCHECK` des Containerfile. Les déclarer dans les unités, ou construire avec `--format docker` :
-  - API : `HealthCmd=python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=2).status == 200 else 1)"`
-  - frontend : `HealthCmd=wget -qO- http://127.0.0.1:8080/healthz`
-- **Secrets.** Créer des secrets Podman, puis les monter en fichiers : `Secret=opsdesk-db-password` dans l'unité, et `Environment=DB_PASSWORD_FILE=/run/secrets/opsdesk-db-password`. Même principe pour `JWT_SECRET_FILE` et `ADMIN_PASSWORD_FILE`.
-- **Sans root.** Les images tournent avec un utilisateur non privilégié et écoutent sur des ports supérieurs à 1024.
-- **Journaux.** Les journaux JSON arrivent dans journald : `journalctl --user -u opsdesk-api`.
-- **Mises à jour automatiques.** `AutoUpdate=registry` fonctionne, car les images sont référencées par leur nom complet ; il suffit de les publier sur un registre.
+**Ce que l'application impose**
+
+- **Noms sur le réseau.** Compose inscrit chaque service dans le DNS de son réseau sous son nom. Le frontend cherche l'API sous le nom `backend` (`BACKEND_URL`), et l'API cherche la base sous `DB_HOST` : garder ces noms de service, ou adapter les deux variables.
+- **Ordre de démarrage.** `depends_on` avec `condition: service_healthy` fait attendre l'API jusqu'à ce que la base soit prête, et nginx jusqu'à ce que l'API le soit. Sans cet ordre, l'API réessaie la base pendant environ une minute et nginx suit l'API dès qu'elle apparaît : la pile finit par démarrer, mais plus lentement et avec des erreurs dans les journaux.
+- **Sondes de santé.** Les deux images portent un `HEALTHCHECK`, que Docker applique. Le redéclarer dans le fichier Compose le rend visible et réglable sans reconstruire l'image. L'API a deux sondes : `/health/live` pour dire si le processus vit, `/health/ready` pour dire s'il peut servir. Une sonde Docker qui viserait `/health/ready` marquerait l'API malade à chaque coupure de la base.
+- **Secrets.** Chaque secret de l'API accepte la forme `*_FILE`. Avec un bloc `secrets:` de Compose (`file: /opt/opsdesk/secrets/db_password`), le fichier est monté dans `/run/secrets/<nom>` ; on donne alors `DB_PASSWORD_FILE=/run/secrets/db_password`. Hors de Swarm, ce montage garde le propriétaire et les droits du fichier sur le serveur : il doit rester lisible par l'utilisateur du conteneur (UID 10001 pour l'API). Ce comportement n'a pas encore été vérifié sur `srv-app`.
+- **Sans root dans le conteneur.** Les images tournent avec un utilisateur non privilégié (10001 pour l'API, 101 pour nginx) et écoutent sur des ports supérieurs à 1024. `no-new-privileges` empêche un processus d'y regagner des droits ; il a été vérifié le 18 novembre 2026 sur les trois services.
+
+**Ce que Docker impose au serveur**
+
+- **Le démon tourne en root.** Qui peut parler au socket `/var/run/docker.sock` peut lancer un conteneur qui monte `/` : appartenir au groupe `docker` revient à être root. On administre donc par `sudo`, on ne monte jamais ce socket dans un conteneur, et l'API Docker n'écoute pas sur le réseau. Docker sans root (*rootless*) existe ; il est écarté ici, car il complique le réseau, les ports et la supervision ([registre](architecture.md#décisions-retenues)).
+- **Pare-feu.** Docker écrit ses propres règles et crée une zone firewalld `docker`, qui accepte le trafic vers ses réseaux. Un port publié peut donc être joignable même s'il n'est pas ouvert dans la zone du serveur. Publier sur une adresse précise (`192.168.150.10:8080:8080`) plutôt que sur toutes, puis prouver l'accès et le refus depuis les autres machines, pas seulement avec `firewall-cmd --list-all`.
+- **SELinux.** Le démon n'applique SELinux aux conteneurs que si `"selinux-enabled": true` figure dans `/etc/docker/daemon.json` ; `docker info` doit alors afficher `selinux` dans ses options de sécurité. Un dossier du serveur monté dans un conteneur doit porter le bon contexte : l'option `:Z` le réétiquette pour ce seul conteneur. Un volume nommé n'en a pas besoin.
+- **Journaux.** Le pilote par défaut, `json-file`, ne fait tourner ses fichiers que si on le lui demande (`max-size`, `max-file`, dans le fichier Compose ou dans `daemon.json`). Lecture : `docker compose logs backend`. Le pilote `journald` est une autre option : les journaux se lisent alors avec `journalctl CONTAINER_NAME=…`.
+- **Démarrage au boot.** systemd démarre le service `docker` s'il est activé (`systemctl enable docker`). Docker relance ensuite les conteneurs dont la politique est `unless-stopped`, sauf ceux arrêtés à la main. Aucune unité systemd propre à OpsDesk n'est nécessaire.
+- **Mises à jour.** Aucune mise à jour automatique : on change le digest de l'image dans le fichier, puis `docker compose pull` et `docker compose up -d`. Compose ne recrée que les services dont la définition ou l'image a changé.
 
 ## Lancer les essais locaux
 
-Avec Podman (ou Docker) :
+Avec Docker Engine et le plugin Compose :
 
 ```bash
 cp .env.example .env
@@ -75,11 +82,11 @@ cp .env.example .env
 Remplacer les valeurs `change-me` dans `.env`, puis :
 
 ```bash
-podman compose up -d --build
+docker compose up -d --build
 ```
 
 ```bash
-podman compose ps
+docker compose ps
 ```
 
 Les trois services doivent afficher `healthy`. Pour un test de bout en bout de l'API à travers nginx (il utilise les comptes de démonstration) :
@@ -123,10 +130,10 @@ Les tests de l'API tournent sur SQLite par défaut, et sur un vrai PostgreSQL si
 ## Organisation du dépôt
 
 ```text
-backend/       API FastAPI (app/), tests (tests/), Containerfile
-frontend/      Interface React (src/), configuration nginx, Containerfile
+backend/       API FastAPI (app/), tests (tests/), Dockerfile
+frontend/      Interface React (src/), configuration nginx, Dockerfile
 scripts/       smoke.py : test de bout en bout d'un déploiement
-compose.yaml   Pile complète pour les essais locaux
+compose.yaml   Pile de référence : construit les images et démarre la pile
 docs/          Architecture, référence technique, laboratoire, parcours d'apprentissage
 legacy/        Version 1 (Flask), ses preuves et ses schémas, conservés pour référence
 ```
