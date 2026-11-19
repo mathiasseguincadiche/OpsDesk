@@ -80,7 +80,7 @@ Les conteneurs sont supprimés, le volume de la base est conservé. **`docker co
 | `address already in use` sur 8080 | Un autre service occupe le port | Identifier ce service avant de l'arrêter ; ou changer `HTTP_PORT` dans `.env` |
 | `backend` jamais `healthy` | L'API n'arrive pas à démarrer (souvent la base ou un secret) | `docker compose logs backend` |
 | L'API démarre puis s'arrête, message sur `JWT_SECRET` | `ENVIRONMENT=production` exige un `JWT_SECRET` d'au moins 32 caractères | Corriger `.env`, puis `docker compose up -d` |
-| `502` sur l'interface | nginx ne joint pas l'API | `docker compose ps`, puis les journaux de `backend` |
+| `502` ou `504` sur l’interface | nginx ne joint pas l’API ou n’obtient pas de réponse à temps | `docker compose ps`, puis les journaux de `backend` et `frontend` |
 | Connexion refusée avec le mot de passe administrateur modifié | Le premier administrateur n'est créé qu'une fois, sur une base vide | Le mot de passe de `.env` ne s'applique qu'au premier démarrage |
 | Pas de données de démonstration | Elles ne sont créées que si la base est vide, et si `SEED_DEMO_DATA=true` | Normal sur une base déjà utilisée |
 

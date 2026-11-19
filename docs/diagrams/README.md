@@ -68,6 +68,10 @@ Sous Windows, l'exécutable est `"C:\Program Files\draw.io\draw.io.exe"`. `--the
 | Rendu dans Notion | Fait le 19 novembre 2026 dans l'application Notion pour Windows, thème sombre : la présentation à 760 px de l'accueil et le schéma Compose de l'exercice 06 sont lisibles sans zoom, légendes affichées |
 | Édition dans l'interface de Draw.io | Fait le 19 novembre 2026 sur `architecture.drawio` : ouverture sans erreur, calques nommés visibles, une machine sélectionnée comme conteneur avec son contenu ; fichier refermé sans modification |
 
+### Nouvelle recette — 19 novembre 2026
+
+Sur le [runner de qualification](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44606981184), génération des six sources et exports corrigés avec Draw.io 32.7.4 : architecture détaillée, SSH, Ansible, Terraform, CI/CD, sauvegarde. Les sept autres exports sont inchangés. Les 13 paires source/export ont été contrôlées (identifiants uniques, références parent/source/cible valides), puis les SVG affichés dans Chromium : 950 px pour la présentation et l’architecture détaillée, 700 px pour les vues pédagogiques et la vue Notion, 375 px pour le mobile. Les 26 captures en clair et sombre ont été examinées ; le contenu intérieur reste identique entre thèmes. La superposition Terraform et le libellé extérieur de l’architecture sont corrigés. La lisibilité dans le navigateur ne constitue pas un nouveau test dans l’application Notion native. [Journaux de la recette visuelle](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44606981184/job/135853169678).
+
 ## Historique
 
 Les schémas de la version 1 (application Flask, deux conteneurs), leur fiche de contrôle et la provenance de leurs logos sont conservés dans [`legacy/diagrams/`](../../legacy/diagrams/).

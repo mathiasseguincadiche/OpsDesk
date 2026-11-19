@@ -6,7 +6,7 @@
 
 Les procédures et résultats ci-dessous datent des essais historiques ; ils ne sont pas relancés. Les configurations et opérations InfraOps sont à réaliser personnellement ([contrat applicatif](contrat-applicatif.md), [provenance](provenance.md)). Les niveaux techniques de ce texte suivent un ancien barème et ne sont pas les niveaux personnels du [parcours](parcours-apprentissage.md). Les preuves de reprise récentes sont datées dans [STATUS](../STATUS.md).
 
-**Périmètre du 3 novembre 2026 : laboratoire local Ubuntu/WSL.** La chaîne InfraOps complète sur K3s reste partielle. Les essais exécuté sont des preuves du laboratoire ; ils n’attribuent pas à l’apprenant une exécution personnelle ou une maîtrise L3.
+**Périmètre du 3 novembre 2026 : laboratoire local Ubuntu/WSL.** La chaîne InfraOps complète sur K3s reste partielle. Les essais exécutés sont des preuves du laboratoire ; ils n’attribuent pas à l’apprenant une exécution personnelle ou une maîtrise L3.
 
 L0 = connu ; L1 = implémenté/contrôlé statiquement ; L2 = exécuté ; L3 = vérifié **et expliqué personnellement**. Aucun L3 n’est attribué ici. Le [registre JSON](../legacy/evidence/evaluations.json) reprend ces cinq évaluations pour la vue à quinze cellules du portfolio.
 

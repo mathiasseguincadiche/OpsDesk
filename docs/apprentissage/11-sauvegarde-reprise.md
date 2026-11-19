@@ -16,7 +16,7 @@ Un volume garde les données quand le conteneur disparaît ; il ne les protège 
 - `pg_dump` lit la base dans une seule transaction : une copie cohérente, sans arrêt. Copier le dossier de données à chaud ne l'est pas.
 - `pg_restore --list` vérifie qu'un fichier est lisible ; `--no-owner` évite les erreurs de rôle absent ; `pg_restore` doit être d'une version au moins égale à `pg_dump`.
 - Une empreinte `sha256` vérifiée après chaque copie détecte un fichier abîmé.
-- **RPO** : ce qu'on peut perdre (jusqu'à 24 heures avec une sauvegarde nocturne). **RTO** : le temps pour revenir, à mesurer.
+- **RPO** : objectif de perte de données maximale acceptable, exprimé en durée. La copie nocturne vise une fenêtre de 24 heures si les sauvegardes réussissent. **RTO** : objectif de durée maximale de rétablissement. Fixe ces objectifs avant l’essai, puis compare-les à la fenêtre de perte observée et au délai réellement mesuré ; ne confonds pas cible et résultat.
 - La copie sur l'hôte survit à la perte de la VM, pas à celle du PC.
 
 ## Ce qu'il faut obtenir
@@ -25,9 +25,9 @@ Un volume garde les données quand le conteneur disparaît ; il ne les protège 
 2. Seules les 7 dernières copies restent sur `srv-app`.
 3. Chaque copie part sur l'hôte avec une clé SSH dédiée ; son empreinte est vérifiée à l'arrivée.
 4. Une restauration complète dans la base de la copie d'essai ; le ticket témoin est relu dans l'interface de la copie.
-5. RPO et RTO mesurés et écrits.
+5. Objectifs RPO/RTO définis avant l’essai ; fenêtre de perte et durée de reprise mesurées, comparées aux objectifs.
 
-**Livrable** : `.service` et `.timer` (dans le rôle Ansible), la liste des copies avec leurs empreintes, un procès-verbal de restauration (heures, étapes, RTO, RPO).
+**Livrable** : `.service` et `.timer` (dans le rôle Ansible), la liste des copies avec leurs empreintes, un procès-verbal de restauration (heures, étapes, objectifs RTO/RPO, perte et délai observés).
 
 ## Vérifications
 
@@ -42,6 +42,6 @@ Un volume garde les données quand le conteneur disparaît ; il ne les protège 
 
 ## Pièges fréquents
 
-Fichier de 0 octet laissé par une commande en échec ; minuteur jamais activé ; `exec` sans `-T`, qui échoue hors d'un terminal ; restauration dans une base qui n'est pas vide ; ticket témoin absent parce que la copie est plus ancienne (c'est le RPO, pas une panne).
+Fichier de 0 octet laissé par une commande en échec ; minuteur jamais activé ; `exec` sans `-T`, qui échoue hors d'un terminal ; restauration dans une base qui n'est pas vide ; ticket témoin absent parce que la copie est plus ancienne (perte liée à la fenêtre entre la sauvegarde et l’incident ; à comparer au RPO).
 
 Suite : [exercice 09](09-supervision.md).

@@ -12,7 +12,7 @@ Symptômes d'entrée : tickets inaccessibles, lecture ou écriture refusée, `/h
 2. **Observer sans rien changer.** Les trois sondes, l'état des services, les journaux de l'API et de la base, l'espace disque. `/metrics` peut répondre `200` alors que la base est arrêtée : c'est `opsdesk_database_up` qu'il faut lire.
 3. **Séparer les causes.** Accès (réseau, pare-feu), application, connexion à la base, données. La plupart des pannes se corrigent **sans restauration** : redémarrer la base, remettre un secret, rouvrir un port. Ne jamais réinitialiser un stockage pour tester une hypothèse.
 4. **Décider d'une restauration** seulement si les données sont perdues ou corrompues. Vérifier alors : la copie à utiliser (date, empreinte), une destination séparée, et que la base actuelle, même abîmée, est conservée.
-5. **Contrôler après.** Connexion, lecture et écriture d'un ticket, ticket témoin relu. Noter ce qui a été perdu (le RPO réel) et le temps écoulé (le RTO réel).
+5. **Contrôler après.** Connexion, lecture et écriture d'un ticket, ticket témoin relu. Noter la fenêtre de perte et le temps écoulé, puis les comparer aux objectifs RPO et RTO fixés avant l’incident.
 
 **Passer le relais.** Si la cause reste inconnue après une vérification qui tranche, si des données risquent d'être perdues, ou si un secret apparaît : arrêter toute modification et consigner les faits. Le propriétaire du laboratoire décide de la suite. Aucune astreinte ni contact externe n'est prévu par ce projet.
 

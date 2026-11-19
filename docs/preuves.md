@@ -44,6 +44,10 @@ Les commandes et leurs résultats attendus sont dans le [contrat applicatif, poi
 
 On archive seulement la sortie réellement obtenue, avec sa date, sa version et sa cible. Pour la v2, conserver à mesure des essais les rapports bruts expurgés de secrets (tests PostgreSQL, frontend, Compose, smoke, isolation réseau, redémarrage, scans) dans un répertoire de preuves datées ou des artefacts de CI identifiables, et relier chaque pièce depuis `STATUS.md`. Ne pas fabriquer de journaux pour combler les pièces historiques manquantes.
 
+## Recette ponctuelle du socle (19 novembre 2026)
+
+Les [extraits datés des journaux](../evidence/qualification/2026-11-19-socle.txt) conservent les résultats du [premier essai](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44605747954) et de la [recette finale](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44606981184). Le premier a échoué sur le contrôle d’API arrêtée après une attente d’environ une minute ; le second a prouvé une réponse `504` en 3,003651 s, la reprise et la persistance d’un ticket. Les captures SVG sont accessibles dans les artefacts du run (durée de conservation 7 jours). Aucun exercice personnel n’est validé par cette recette.
+
 ## Ce qui reste à prouver
 
 Toute l'infrastructure : machines virtuelles, configuration, déploiement Docker Compose, CI, K3s, supervision, sauvegarde et restauration, maintenance. Ce sont les exercices du [parcours](apprentissage/README.md) ; aucun n'est réalisé à ce jour, et un essai historique ne vaut pas réalisation personnelle.

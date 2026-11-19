@@ -1,0 +1,69 @@
+OpsDesk — Extraits de journaux de qualification, 19 novembre 2026
+Cible : runners hébergés GitHub Actions Ubuntu, données fictives.
+Premier code testé : 4d0c1334b037fc38b2f4343103099a4f28c0928c (branche de recette c8ab930).
+Code de la recette finale : a1a2bb65b6455c4ec7d38b738e53ee6f0e41235d.
+Exports régénérés : 15ddac96a03fc35ea4d18e4cf34809d58a9f6404.
+Les lignes ci-dessous sont des extraits sélectionnés des journaux réels, sans reconstitution ; les séquences ANSI de couleur ont été retirées. Consulter les jobs pour leur contexte. Les secrets et les affichages de commandes sont exclus.
+Les résultats ne qualifient pas une VM Rocky, un déploiement AWS/K3s, une restauration PostgreSQL depuis sauvegarde, Trivy ou les compétences personnelles.
+
+=== Premier essai Compose — échec de l'assertion après arrêt de l'API ===
+https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44605747954/job/135848843537
+2026-11-19T20:10:36.6830290Z ALL GOOD
+2026-11-19T20:10:38.0534505Z Test hors boucle locale terminé
+2026-11-19T20:10:38.4897797Z  Container opsdesk-backend-1 Stopped 
+2026-11-19T20:11:38.6021404Z  Container opsdesk-frontend-1 Stopping 
+2026-11-19T20:11:38.7195255Z  Container opsdesk-backend-1 Stopped 
+2026-11-19T20:11:38.9124309Z ##[error]Process completed with exit code 1.
+
+=== Backend final — SQLite, PostgreSQL et Ruff ===
+https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44606981184/job/135853171751
+2026-11-19T20:16:58.3395784Z All checks passed!
+2026-11-19T20:17:00.8586254Z   /opt/hostedtoolcache/Python/3.13.18/x64/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+2026-11-19T20:17:00.8590591Z 19 passed, 1 warning in 0.97s
+2026-11-19T20:17:03.9880932Z   /opt/hostedtoolcache/Python/3.13.18/x64/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+2026-11-19T20:17:03.9885663Z 19 passed, 1 warning in 2.06s
+
+=== Frontend final — npm, typage, build ===
+https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44606981184/job/135853168661
+2026-11-19T20:16:52.6482374Z found 0 vulnerabilities
+2026-11-19T20:17:00.3336034Z vite v8.3.8 building client environment for production...
+2026-11-19T20:17:00.9376811Z ✓ built in 602ms
+
+=== Compose final — publication, smoke, panne/reprise et persistance ===
+https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44606981184/job/135853170284
+2026-11-19T20:16:41.3365831Z Docker Compose version v5.1.3
+2026-11-19T20:17:35.0295681Z opsdesk-backend-1    localhost/opsdesk-api:2.0.0            "sh -c 'exec uvicorn…"   backend    22 seconds ago   Up 16 seconds (healthy)   127.0.0.1:8000->8000/tcp
+2026-11-19T20:17:35.0296645Z opsdesk-db-1         docker.io/library/postgres:17-alpine   "docker-entrypoint.s…"   db         23 seconds ago   Up 22 seconds (healthy)   5432/tcp
+2026-11-19T20:17:35.0297557Z opsdesk-frontend-1   localhost/opsdesk-frontend:2.0.0       "/docker-entrypoint.…"   frontend   22 seconds ago   Up 10 seconds (healthy)   127.0.0.1:8080->8080/tcp
+2026-11-19T20:17:35.2647472Z frontend publication 127.0.0.1:8080 OK
+2026-11-19T20:17:35.2648176Z backend publication 127.0.0.1:8000 OK
+2026-11-19T20:17:35.2649024Z PostgreSQL non publié: OK
+2026-11-19T20:17:36.1030386Z ALL GOOD
+2026-11-19T20:17:37.5762071Z Port 8080 refusé depuis un autre espace réseau (code curl 7)
+2026-11-19T20:17:37.7652586Z Port 8000 refusé depuis un autre espace réseau (code curl 7)
+2026-11-19T20:17:37.8760762Z Ticket témoin créé: 18
+2026-11-19T20:17:41.4120873Z API arrêtée : 504 3.003651
+2026-11-19T20:17:48.2381208Z {"status":"ready","database":"up","application":"OpsDesk","version":"2.0.0","revision":"a1a2bb65b6455c4ec7d38b738e53ee6f0e41235d","environment":"production"}Reprise API vérifiée
+2026-11-19T20:17:48.4059956Z Base arrêtée : readiness=503
+2026-11-19T20:17:55.1609942Z {"status":"alive","application":"OpsDesk","version":"2.0.0","revision":"a1a2bb65b6455c4ec7d38b738e53ee6f0e41235d","environment":"production"}{"status":"ready","database":"up","application":"OpsDesk","version":"2.0.0","revision":"a1a2bb65b6455c4ec7d38b738e53ee6f0e41235d","environment":"production"}Reprise PostgreSQL vérifiée
+2026-11-19T20:18:18.1157502Z Ticket témoin relu: 18
+2026-11-19T20:18:18.1256887Z PERSISTANCE OK après recréation des trois conteneurs
+
+=== Graphisme final — 13 sources et 26 rendus ===
+https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44606981184/job/135853169678
+2026-11-19T20:16:40.0000522Z /tmp/drawio.deb: OK
+2026-11-19T20:17:20.3338402Z architecture-globale 51 cellules 700 x 609 px, 2 rendus
+2026-11-19T20:17:20.3340954Z architecture 84 cellules 950 x 745 px, 2 rendus
+2026-11-19T20:17:20.3341717Z pedagogique-acces-ssh 36 cellules 700 x 627 px, 2 rendus
+2026-11-19T20:17:20.3342455Z pedagogique-ansible 37 cellules 700 x 664 px, 2 rendus
+2026-11-19T20:17:20.3343138Z pedagogique-cicd 39 cellules 700 x 572 px, 2 rendus
+2026-11-19T20:17:20.3343808Z pedagogique-compose 51 cellules 700 x 553 px, 2 rendus
+2026-11-19T20:17:20.3344705Z pedagogique-k3s 28 cellules 700 x 553 px, 2 rendus
+2026-11-19T20:17:20.3345427Z pedagogique-sauvegarde 45 cellules 700 x 553 px, 2 rendus
+2026-11-19T20:17:20.3346120Z pedagogique-supervision 34 cellules 700 x 590 px, 2 rendus
+2026-11-19T20:17:20.3346826Z pedagogique-terraform 29 cellules 700 x 590 px, 2 rendus
+2026-11-19T20:17:20.3347472Z presentation-mobile 54 cellules 375 x 1191 px, 2 rendus
+2026-11-19T20:17:20.3348123Z presentation-notion 77 cellules 700 x 634 px, 2 rendus
+2026-11-19T20:17:20.3348735Z presentation 77 cellules 950 x 609 px, 2 rendus
+2026-11-19T20:17:21.4913492Z Artifact exports-corriges.zip successfully finalized. Artifact ID 14569268723
+2026-11-19T20:17:22.9125852Z Artifact recette-visuelle-svg-corriges.zip successfully finalized. Artifact ID 14569929725
