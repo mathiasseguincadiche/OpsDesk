@@ -16,7 +16,7 @@ Un collaborateur signale une panne, l'équipe support la prend en charge, la ré
 
 **L'application** a été développée avec l'aide d'outils d'IA, puis relue, testée et conteneurisée. Elle me sert de service réaliste à exploiter.
 
-**Mon travail** consiste à concevoir et automatiser son infrastructure : machines virtuelles, déploiement, livraison continue, supervision et sauvegarde.
+**Mon positionnement : ingénieur DevOps spécialisé dans l’automatisation des infrastructures (InfraOps).** L’application est un support, pas un projet de développement full stack. Mon objectif est de transformer un besoin applicatif en une infrastructure Linux reproductible : concevoir le réseau et le stockage, provisionner les machines, sécuriser et configurer les serveurs, déployer des artefacts versionnés, industrialiser la livraison, puis superviser, maintenir, diagnostiquer et restaurer le service. J’écris et teste le code d’infrastructure et les automatisations nécessaires ; je lis le code applicatif pour comprendre ses contraintes et collaborer avec le développement. Les exercices et leurs preuves distinguent le travail personnel du socle fourni.
 
 **Où j'en suis :** l'application et ses conteneurs sont prêts et testés. L'infrastructure se construit étape par étape, avec une preuve datée pour chaque résultat.
 
@@ -75,7 +75,7 @@ docker compose up -d --build
 docker compose ps
 ```
 
-Les trois services doivent afficher `healthy`. Ouvrez ensuite **http://localhost:8080** et cliquez sur un compte de démonstration pour vous connecter.
+Les trois services doivent afficher `healthy`. Ouvrez ensuite **http://localhost:8080** et cliquez sur un compte de démonstration pour vous connecter. Les ports de la pile de référence sont liés à la boucle locale par défaut : données fictives et essai local uniquement. Ne publiez pas cette pile de démonstration sur Internet.
 
 > [!NOTE]
 > `compose.yaml` construit les images et prouve qu'une version démarre. Sur le serveur, un fichier Compose de production tire les images publiées par digest : ce qu'il doit respecter est dans la [référence technique](docs/reference-technique.md#déployer-avec-docker-compose-sur-un-serveur).

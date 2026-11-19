@@ -64,9 +64,15 @@
 - **`permission denied` sur le socket Docker** : c'est voulu, utilise `sudo`, pas le groupe `docker`.
 - **PostgreSQL refuse son dossier de données** : mauvais propriétaire ou contexte SELinux sur un montage. Lire `sudo ausearch -m avc -ts recent`, puis corriger le contexte du seul dossier concerné, sans désactiver SELinux.
 - **L'API ne lit pas son secret** : fichier illisible par l'UID 10001.
-- **Port 8000 joignable depuis toutes les machines** : publié sur `0.0.0.0` ; Docker contourne la zone firewalld.
+- **Port 8000 joignable depuis une machine non autorisée** : vérifier les liaisons d’adresse, les règles de filtrage Docker et les tests depuis les sources autorisées et interdites ; une adresse de publication précise ne filtre pas à elle seule les clients.
 - **`502` sur `/api`** : service de l'API renommé, sans adapter `BACKEND_URL`.
 - **Rien ne revient après un reboot** : `systemctl is-enabled docker` à `disabled`.
 - **Le rôle recrée les conteneurs à chaque passage** : un modèle qui change à chaque exécution, une date ou un ordre de clés par exemple.
 
-Suite : [exercice 07](07-k3s.md).
+## Atelier réseau et TLS — partie intégrante de l’exercice
+
+Sur une cible privée et isolée, ajoute un nom `opsdesk.lab` résolu par le DNS du laboratoire (une entrée `hosts` peut servir de comparaison, mais ne prouve pas un DNS fonctionnel). Configure un point d’entrée HTTPS Nginx sur un port dédié, par exemple 8443, avec certificat valable pour ce nom (SAN), signé par une autorité de laboratoire approuvée par le client. N’expose ni la clé ni les données ; garde le point d’entrée HTTP de référence jusqu’à validation. Le choix de l’implantation Nginx et des flux est à justifier, pas à recopier.
+
+**Preuves attendues :** résolution du nom et adresse attendue (`getent ahosts`, interrogation du DNS avec `dig` si disponible), chaîne et nom vérifiés (`openssl s_client` avec SNI et vérification du nom, puis `curl --cacert` sans `-k`), refus d’un certificat non approuvé, réponse `/health/ready` et parcours fonctionnel via HTTPS. Documente les accès autorisés, le retour arrière et le retrait des éléments temporaires. Aucun domaine public ni exposition Internet.
+
+Suite : [exercice 08](08-cicd.md).

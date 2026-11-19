@@ -16,7 +16,7 @@ Sans supervision, on apprend une panne par les utilisateurs, sans savoir depuis 
 - Mesures exposées par l'API : `opsdesk_http_requests_total` (méthode, route, statut), `opsdesk_http_request_duration_seconds` (histogramme), `opsdesk_database_up`, `opsdesk_tickets` (statut, priorité), `opsdesk_users`, `opsdesk_logins_total`, `opsdesk_ticket_transitions_total`.
 - Un compteur se lit avec `rate(…[5m])` ; une jauge se lit telle quelle ; une latence au 95ᵉ centile se calcule avec `histogram_quantile`.
 - Le `for` d'une alerte évite les fausses alertes : la condition doit tenir pendant toute la durée.
-- nginx bloque `/metrics` : Prometheus lit l'API directement sur le port 8000, ouvert à `srv-k3s` seulement.
+- nginx bloque `/metrics` sur l’entrée utilisateur. La cible initiale autorise le port 8000 depuis `srv-k3s` seulement. Dans cet exercice, réduis cette surface : réserve une entrée privée aux seules métriques, sans routes métier, restreins sa source à la supervision, et referme le port direct de l’API. Vérifie un scrape réussi, le refus d’une route métier sur l’entrée de métriques et le refus des sources non autorisées. Justifie les règles réellement appliquées par Docker ; mettre à jour le registre et les schémas après validation.
 - Si `srv-k3s` tombe, la supervision tombe avec.
 
 ## Ce qu'il faut obtenir

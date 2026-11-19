@@ -38,7 +38,7 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 - *Si `srv-app` disparaît.* Le service s'arrête ; les données sont perdues depuis la dernière sauvegarde (jusqu'à 24 heures) ; le reste se reconstruit par Terraform et Ansible. *Si le PC hôte disparaît*, tout est perdu, sauvegardes comprises : aucune copie hors du PC n'est prévue.
 - *Pourquoi K3s.* Pour apprendre Kubernetes sans risque pour le service réel ; un seul nœud n'apporte aucune haute disponibilité.
 
-**Une bonne revue contradictoire relève au moins** : le stockage de la base « à revoir » (droits et contexte SELinux en mode sans root) ; l'absence de copie hors du PC ; la copie du state Terraform et des clés hors de `srv-admin`, qui contient des secrets à chiffrer ; le port 8000 ouvert à `srv-k3s` pour toute l'API ; la supervision qui tombe avec `srv-k3s`.
+**Une bonne revue contradictoire relève au moins** : le stockage de la base « à revoir » (droits et contexte SELinux, y compris l’UID du conteneur) ; l'absence de copie hors du PC ; la copie du state Terraform et des clés hors de `srv-admin`, qui contient des secrets à chiffrer ; le port 8000 ouvert à `srv-k3s` pour toute l'API ; la supervision qui tombe avec `srv-k3s`.
 
 **Points à refuser.** Une alternative inventée, sans lien avec le registre ; « vérifié » pour une décision non construite ; un défaut corrigé sans être écrit comme question ouverte ; la confusion entre volume et sauvegarde.
 
@@ -205,7 +205,7 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 | Mot de passe de la base | `503` sur `/health/ready`, base en marche | Journaux de l'API : échec d'authentification PostgreSQL | Remettre le bon secret, redémarrer l'API |
 | Nom de l'API | Interface affichée, `502` sur `/api` | `/health/live` de l'API répond en direct, pas via nginx | Rétablir le nom `backend` |
 | Secret des jetons | Tous les utilisateurs renvoyés vers la connexion (`401`) | Les nouvelles connexions fonctionnent | Rien à corriger si le changement était voulu ; sinon remettre l'ancien secret |
-| Pare-feu | Délai ou rejet depuis l'hôte, service sain sur le serveur | `curl` local réussi, distant en échec ; `firewall-cmd --list-ports` | Rouvrir 8080 de façon permanente |
+| Pare-feu | Délai ou rejet depuis l'hôte, service sain sur le serveur | `curl` local réussi, distant en échec ; examiner les règles Docker et le pare-feu | Rétablir uniquement l’accès autorisé, puis vérifier le refus des autres sources |
 | Redémarrage | Plus rien après un reboot | `systemctl is-enabled docker` à `disabled` | Réactiver le service `docker`, par le playbook |
 | Version | L'API ne démarre pas | `docker compose ps -a` et `docker compose logs backend` : image introuvable (`manifest unknown`) | Remettre un digest existant, de préférence par le rôle |
 

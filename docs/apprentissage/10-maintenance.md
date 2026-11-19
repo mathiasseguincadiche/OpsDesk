@@ -41,4 +41,4 @@ Pour chacune, une **fiche d'intervention** d'une page écrite avant de commencer
 
 Lancer la sonde sur le serveur qu'on redémarre ; déployer par un tag qui a bougé (le retour arrière redéploie alors la même version) ; décider du critère d'abandon pendant l'incident ; conclure sur l'interface (cache du navigateur) au lieu de `/version`.
 
-Suite : [exercice 11](11-sauvegarde-reprise.md).
+Suite : [exercice 12](12-diagnostic.md).

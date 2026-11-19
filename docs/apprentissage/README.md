@@ -31,7 +31,7 @@ Les deux décrivent les mêmes exercices, avec les mêmes livrables et les même
 | 12 | [Diagnostiquer et rétablir : un incident de bout en bout](12-diagnostic.md) | Observer | [Architecture](../diagrams/architecture.svg) |
 | 13 | [Démontrer son autonomie sur une tâche nouvelle](13-autonomie.md) | Transverse | — |
 
-L'ordre des exercices suit les dépendances techniques : chaque exercice s'appuie sur les précédents. L'exercice 07 (K3s) précède l'exercice 08 (CI) : les images sont alors chargées à la main dans K3s.
+**Ordre de réalisation conseillé : 01 → 02 → 03 → 04 → 05 → 06 → 08 → 07 → 11 → 09 → 10 → 12 → 13.** Les numéros restent stables pour le suivi. La CI publie avant K3s ; la copie K3s est nécessaire à la restauration isolée et à la supervision. La maintenance exige une sauvegarde récente et des mesures de supervision.
 
 ## Le laboratoire
 

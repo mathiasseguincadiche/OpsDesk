@@ -82,7 +82,7 @@ Si la base ne répond pas, l'API renvoie une erreur 503 explicite, et sa sonde `
 
 ## L'infrastructure prévue
 
-L'application tourne d'abord en local, puis sur des serveurs créés et configurés par du code. Les phases suivent l'ordre des dépendances ; l'ordre des exercices du [parcours](parcours-apprentissage.md) en diffère légèrement ([feuille de route](../ROADMAP.md)).
+L'application tourne d'abord en local, puis sur des serveurs créés et configurés par du code. Les phases regroupent les responsabilités ; l’ordre pratique du [parcours](parcours-apprentissage.md) suit les dépendances (01 à 06, puis 08, 07, 11, 09, 10, 12 et 13).
 
 - **Phase 1, préparer et automatiser :** `srv-admin`, installée à la main, porte Terraform, Ansible, Git, OpenSSH et k6. Depuis elle, Terraform crée `srv-app` et `srv-k3s` par libvirt, et Ansible les configure. Sur `srv-app`, Docker Engine fait tourner les trois conteneurs, décrits dans un fichier Compose ; le port 8080 du frontend est ouvert à l'hôte, à `srv-admin` et à `srv-k3s`, le port 8000 de l'API seulement à `srv-k3s` (supervision), et la base n'est jamais publiée.
 - **Phase 2, livrer et conserver :** GitHub Actions lance les tests, construit les images, les analyse avec Trivy et les publie sur GHCR. Ansible, lancé depuis `srv-admin`, déploie la version choisie. La base est sauvegardée chaque nuit par `pg_dump`, copiée hors de la machine, et sa restauration est testée.

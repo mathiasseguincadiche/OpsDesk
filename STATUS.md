@@ -2,6 +2,8 @@
 
 Dernière révision : 18 novembre 2026, après la fusion de la v2 ([PR #30](https://github.com/mathiasseguincadiche/OpsDesk/pull/30)). Chaque preuve porte sa date.
 
+**Note de recette documentaire (19 novembre 2026)** : la pile locale est désormais configurée pour publier uniquement sur la boucle locale ; ce changement doit être rejoué avant de qualifier le nouveau périmètre. Les essais historiques du 18 novembre restent valables pour leur configuration d’origine. Les ateliers DNS/TLS, livraison contrôlée et restriction de l’accès aux métriques sont prévus, non vérifiés.
+
 **Avancement** : Prévu, En cours, Réalisé, Abandonné. **Contrôle** : Vérifié, Échec constaté, Non vérifié. Les deux informations sont distinctes : un élément réalisé peut rester non vérifié.
 
 ## Application v2 (FastAPI, React, PostgreSQL)
