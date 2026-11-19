@@ -6,7 +6,8 @@ Chaque schéma existe en deux fichiers côte à côte : la source **Draw.io** (`
 
 | Schéma | Question à laquelle il répond | Composition | Largeur | Utilisé dans |
 | --- | --- | --- | --- | --- |
-| [Présentation](presentation.svg) ([source](presentation.drawio)) | Qu'est-ce qu'OpsDesk, pour qui, et où en est le projet ? | Infographie : point focal, acteurs, garanties, ligne de temps | 1 000 | Accueil Notion |
+| [Présentation](presentation.svg) ([source](presentation.drawio)) | Qu'est-ce qu'OpsDesk, pour qui, et où en est le projet ? | Infographie : point focal, acteurs, garanties, ligne de temps | 1 000 | Affichage en grand |
+| [Présentation pour Notion](presentation-notion.svg) ([source](presentation-notion.drawio)) | La même, dans la largeur d'une page Notion | Même infographie, colonnes resserrées | 760 | Accueil Notion |
 | [Présentation pour téléphone](presentation-mobile.svg) ([source](presentation-mobile.drawio)) | La même, pour un petit écran | Une colonne, ligne de temps verticale | 400 | Petits écrans |
 | [Architecture, vue d'ensemble](architecture-globale.svg) ([source](architecture-globale.drawio)) | Quelles machines, et quels flux principaux ? | Zones : hôte, réseau, trois machines, quatre flux | 760 | [README](../../README.md), [architecture](../architecture.md), Notion (exercices 01, 02, 10, 12) |
 | [Architecture détaillée](architecture.svg) ([source](architecture.drawio)) | Qu'est-ce qui s'exécute où, et par quel flux, avec quel port ? | Zones imbriquées, flux typés | 1 200 | Lien « Voir le schéma détaillé » |
@@ -59,12 +60,13 @@ Sous Windows, l'exécutable est `"C:\Program Files\draw.io\draw.io.exe"`. `--the
 
 | Contrôle | Résultat |
 | --- | --- |
-| Exports produits par Draw.io depuis les sources | Fait le 18 novembre 2026, pour les douze schémas ; refait le 19 novembre 2026 pour les six schémas touchés par le passage à Docker Compose |
+| Exports produits par Draw.io depuis les sources | Fait le 18 novembre 2026, pour les douze schémas ; refait le 19 novembre 2026 pour les six schémas touchés par le passage à Docker Compose, et pour la présentation à 760 px |
 | Structure des sources | Fait le 18 novembre 2026 : aucun identifiant en double, aucun connecteur orphelin, cinq calques nommés |
 | Rendu à la largeur réelle | Refait le 19 novembre 2026 pour la vue d'ensemble, l'architecture détaillée, Ansible et Compose. Fait le 18 novembre 2026 : vues pédagogiques et vue d'ensemble à 700 px, présentation et architecture détaillée à 950 px, présentation pour téléphone à 375 px ; aucun texte coupé, aucune flèche à travers une forme |
 | Thème sombre | Fait le 18 novembre 2026, sur fond `#0d1117` : fond du schéma intégré, palette intacte |
-| Rendu dans GitHub et dans Notion | Non vérifié à cette date |
-| Édition dans l'interface de Draw.io | Non vérifié : les sources ont été ouvertes et exportées par Draw.io en ligne de commande |
+| Rendu dans GitHub | Fait le 19 novembre 2026 dans un navigateur à 1 280 px, thème sombre de GitHub : README, `architecture.md` et `pedagogique-compose.svg` lisibles, fond du schéma conservé |
+| Rendu dans Notion | Fait le 19 novembre 2026 dans l'application Notion pour Windows, thème sombre : la présentation à 760 px de l'accueil et le schéma Compose de l'exercice 06 sont lisibles sans zoom, légendes affichées |
+| Édition dans l'interface de Draw.io | Fait le 19 novembre 2026 sur `architecture.drawio` : ouverture sans erreur, calques nommés visibles, une machine sélectionnée comme conteneur avec son contenu ; fichier refermé sans modification |
 
 ## Historique
 
