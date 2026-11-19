@@ -48,6 +48,10 @@ On archive seulement la sortie réellement obtenue, avec sa date, sa version et 
 
 Les [extraits datés des journaux](../evidence/qualification/2026-11-19-socle.txt) conservent les résultats du [premier essai](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44605747954) et de la [recette finale](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44606981184). Le premier a échoué sur le contrôle d’API arrêtée après une attente d’environ une minute ; le second a prouvé une réponse `504` en 3,003651 s, la reprise et la persistance d’un ticket. Les captures SVG sont accessibles dans les artefacts du run (durée de conservation 7 jours). Aucun exercice personnel n’est validé par cette recette.
 
+## Recette d'une modification documentaire
+
+Pour une évolution significative, constater le problème, expliquer son impact, proposer la correction et vérifier son bénéfice plutôt que refaire un document pour sa seule apparence. Sur les deux supports, examiner quatre situations de lecture : découverte (finalité, statut et accès au parcours), apprentissage (prérequis, exercice, contrôle), recherche ciblée (commande ou preuve accessible), analyse approfondie (contrat, choix, compromis, limites). Vérifier les liens, la terminologie et la correspondance avec le code ; contrôler les rendus et sources lorsque les schémas changent. Indiquer les vérifications non réalisées. Voir également [les sources de vérité](parcours-apprentissage.md#où-se-trouve-quoi).
+
 ## Ce qui reste à prouver
 
 Toute l'infrastructure : machines virtuelles, configuration, déploiement Docker Compose, CI, K3s, supervision, sauvegarde et restauration, maintenance. Ce sont les exercices du [parcours](apprentissage/README.md) ; aucun n'est réalisé à ce jour, et un essai historique ne vaut pas réalisation personnelle.

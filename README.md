@@ -4,7 +4,7 @@
 
 Un collaborateur signale une panne, l'équipe support la prend en charge, la résout, et chacun suit l'avancement en temps réel. OpsDesk sert de support à un projet DevOps complet : conteneuriser, déployer, automatiser, surveiller et sauvegarder un vrai service, avec une preuve datée pour chaque étape.
 
-**Essayer** : [lancer en 2 minutes](#lancer-le-projet-en-local) · **Examiner** : [architecture et choix](#architecture) · **Évaluer** : [compétences](#ce-que-montre-ce-projet) et [état d'avancement](STATUS.md) · **Approfondir** : [référence technique](docs/reference-technique.md)
+**Découvrir** : [architecture et choix](#architecture) · **Essayer** : [démarrage local](#lancer-le-projet-en-local) · **Apprendre** : [parcours](docs/apprentissage/README.md) · **Évaluer** : [état et preuves](STATUS.md) · **Approfondir** : [référence technique](docs/reference-technique.md)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/apercu-sombre.png">
@@ -22,7 +22,7 @@ Un collaborateur signale une panne, l'équipe support la prend en charge, la ré
 
 ## Ce que montre ce projet
 
-| État | Compétence | Où la voir |
+| État technique | Réalisation ou objectif | Où l'examiner |
 | --- | --- | --- |
 | ✅ Réalisé | Conteneurisation | [`backend/Dockerfile`](backend/Dockerfile), [`frontend/Dockerfile`](frontend/Dockerfile) : images multi-étapes, non-root ; [`compose.yaml`](compose.yaml) : sondes, réseaux séparés, rotation des journaux |
 | ✅ Réalisé | Tests automatisés | [`backend/tests/`](backend/tests/) : 19 tests, joués sur SQLite et sur PostgreSQL 17 |
@@ -32,13 +32,13 @@ Un collaborateur signale une panne, l'équipe support la prend en charge, la ré
 | 🔜 Prévu | Livraison continue | GitHub Actions : tests, build, scan Trivy, publication |
 | 🔜 Prévu | Supervision et sauvegarde | Prometheus, Grafana, `pg_dump` avec test de restauration |
 
-Chaque ligne passe à « Réalisé » seulement avec une preuve consultable. Le détail daté, y compris les échecs, est dans [STATUS.md](STATUS.md).
+Les trois premières lignes décrivent le socle fourni et qualifié, pas des compétences personnelles déjà acquises. Les réalisations suivantes seront vérifiées au fil du parcours ; [STATUS.md](STATUS.md) sépare avancement et contrôle. Les preuves personnelles, distinctes, se consignent dans le suivi de formation.
 
 ## Architecture
 
 <a href="docs/diagrams/architecture.svg"><img alt="Vue d'ensemble de l'architecture d'OpsDesk : sur l'hôte Fedora, un réseau privé relie trois machines prévues. Sur srv-app, nginx (port 8080) transmet /api à l'API, qui lit et écrit dans PostgreSQL, non publié. srv-admin pilote srv-app par SSH, Prometheus sur srv-k3s lit /metrics, et pg_dump copie la base hors de la VM." src="docs/diagrams/architecture-globale.svg"></a>
 
-**En résumé :** le navigateur parle uniquement au **frontend** (nginx, port 8080). Celui-ci sert l'interface et transmet les appels `/api` à l'**API** (FastAPI, port 8000), qui lit et écrit dans **PostgreSQL**. En production, les trois tourneront sur `srv-app` sous Docker Engine, décrits par un fichier Compose et déployés par Ansible. En pointillés, ce qui reste à construire.
+**En résumé :** le navigateur parle uniquement au **frontend** (nginx, port 8080). Celui-ci sert l'interface et transmet les appels `/api` à l'**API** (FastAPI, port 8000), qui lit et écrit dans **PostgreSQL**. Dans l'environnement d'exploitation simulée, les trois tourneront sur `srv-app` sous Docker Engine, décrits par un fichier Compose et déployés par Ansible. En pointillés, ce qui reste à construire.
 
 [Voir le schéma détaillé](docs/diagrams/architecture.svg) (ports, flux d'administration, de supervision et de sauvegarde) · [Les choix techniques expliqués](docs/architecture.md)
 
@@ -52,7 +52,7 @@ Chaque ligne passe à « Réalisé » seulement avec une preuve consultable. Le 
 
 ## Lancer le projet en local
 
-Il vous faut Docker Engine avec le plugin Compose (commande `docker compose`) et Git. Comptez deux minutes.
+Il vous faut Docker Engine avec le plugin Compose (commande `docker compose`) et Git. La première construction dépend notamment du téléchargement des images et de votre machine. Le [guide de démarrage](docs/demarrage.md) détaille les prérequis, contrôles, erreurs et arrêt sans perte de données.
 
 **1. Récupérer le projet et préparer la configuration**
 
@@ -92,12 +92,19 @@ Les trois services doivent afficher `healthy`. Ouvrez ensuite **http://localhost
 | Pour… | Lire |
 | --- | --- |
 | Comprendre les choix techniques et leurs compromis | [Architecture](docs/architecture.md) |
-| Exploiter, configurer, déployer, tester | [Référence technique](docs/reference-technique.md) |
+| Examiner ce que l'application exige de l'infrastructure | [Contrat applicatif](docs/contrat-applicatif.md) |
+| Exploiter, configurer, déployer, tester | [Référence technique](docs/reference-technique.md) · [Exploitation](docs/exploitation-day2.md) · [Reprise](docs/reprise.md) |
+| Examiner la sécurité, les résultats et leurs limites | [Sécurité](docs/securite.md) · [Preuves](docs/preuves.md) |
+| Préparer une démonstration technique | [Démonstration](docs/demonstration.md) |
 | Préparer le laboratoire Fedora, KVM et Rocky Linux | [Guide du laboratoire](docs/laboratoire-fedora-kvm-rocky.md) |
 | Suivre l'avancement et les preuves | [STATUS.md](STATUS.md) · [Feuille de route](ROADMAP.md) |
 | Apprendre pas à pas | [Les 13 exercices](docs/apprentissage/README.md), énoncés de référence pour la v2 · cours complet dans le centre de formation Notion (accès sur invitation) |
 | Consulter la version 1 | [`legacy/`](legacy/) |
 
+## Contribuer ou reprendre le projet
+
+Lire d'abord le [contrat applicatif](docs/contrat-applicatif.md) et le [registre des décisions](docs/architecture.md#décisions-retenues). Pour signaler un problème, indiquer la version, la cible, les étapes de reproduction et les résultats attendus/observés, sans secret ni donnée personnelle. Pour proposer une correction, partir de `main` sur une branche dédiée, expliquer le besoin et les conséquences, vérifier le périmètre modifié et joindre les preuves dans une pull request. Si un changement touche la documentation ou un schéma, contrôler les liens, la cohérence avec le code et la source Draw.io ; ne pas transférer un ancien résultat à une nouvelle configuration. Les exercices restent des réalisations personnelles : différencier un exemple, une contribution et un acquis de formation.
+
 ## Licence et provenance
 
-Code sous licence [MIT](LICENSE). L'application a été développée avec l'assistance d'outils d'IA ; l'infrastructure et son exploitation sont mon travail personnel, documenté et daté dans [STATUS.md](STATUS.md). Les composants tiers (FastAPI, React, PostgreSQL, nginx…) conservent leurs propres licences. Détails : [provenance](docs/provenance.md).
+Code sous licence [MIT](LICENSE). L'application a été développée avec l'assistance d'outils d'IA ; l'infrastructure et son exploitation constituent le travail personnel à réaliser et à prouver ; leur état réel est documenté dans [STATUS.md](STATUS.md). Les composants tiers (FastAPI, React, PostgreSQL, nginx…) conservent leurs propres licences. Détails : [provenance](docs/provenance.md).

@@ -4,7 +4,7 @@
 
 **Objectif.** Mener une intervention sur un service en fonctionnement : la préparer, prévoir son retour arrière, mesurer ce que les utilisateurs ont réellement subi, et prouver l'état obtenu.
 
-**Durée estimée** : 3 à 4 heures. **Prérequis** : déploiement par le rôle Ansible (exercices 06 et 08), supervision (exercice 09), une sauvegarde récente. **État** : prévu, non vérifié.
+**Durée estimée** : 3 à 4 heures. **Prérequis** : déploiement par le rôle Ansible (exercices 06 et 08), supervision (exercice 09), une sauvegarde récente vérifiée (exercice 11). **État** : prévu, non vérifié.
 
 ## Pourquoi
 
@@ -13,8 +13,8 @@ Un service vit longtemps après sa mise en service : correctifs, redémarrages, 
 ## L'essentiel à comprendre
 
 - **Avant** : relever l'état de départ, sauvegarder, écrire les étapes et le retour arrière, fixer le critère d'abandon. **Pendant** : une sonde continue, horodatée. **Après** : comparer à l'état de départ, écrire un compte rendu.
-- Redémarrer le service de l'API recrée son conteneur : nginx répond `502` pendant quelques secondes. Mesure réelle sur la pile locale le 18 novembre 2026 : 5 réponses `502` sur 144 requêtes, soit environ 2 secondes.
-- Le retour arrière applicatif (redéployer l'image précédente) ne change ni le schéma ni les données. Ce n'est pas une restauration de la base, qui est l'objet de l'exercice 11.
+- Redémarrer un conteneur et le recréer sont deux opérations distinctes. Pendant l'indisponibilité de l'API, nginx peut répondre `502` ou `504`. Mesure historique du 18 novembre : 5 réponses `502` sur 144 requêtes, environ 2 secondes lors d'une recréation. Le 19 novembre, une API arrêtée a renvoyé `504` en environ 3 secondes sur runner après la correction du délai de connexion. Aucun de ces résultats ne garantit la durée de ta maintenance.
+- Le retour arrière applicatif redéploie l'image précédente mais ne restaure pas les données. Vérifier la compatibilité du schéma avant le changement ; si elle n'est pas établie, prévoir une procédure de migration/reprise spécifique et ne pas improviser une restauration en écrasant les écritures.
 - `dnf needs-restarting -r` dit si un redémarrage est nécessaire après les mises à jour.
 
 ## Ce qu'il faut obtenir

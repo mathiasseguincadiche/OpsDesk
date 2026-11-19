@@ -48,7 +48,7 @@ Marie (collaboratrice) crée le ticket « Mon poste ne se connecte plus au VPN �
 | `403` | Compte connu, rôle insuffisant |
 | `409` | Transition de statut interdite |
 | `503` | L'API tourne mais ne joint pas la base |
-| `502` (nginx) | nginx ne joint pas l'API |
+| `502` / `504` (nginx) | nginx ne joint pas l'API ou dépasse un délai |
 
 ## Ce que tu dois savoir expliquer
 

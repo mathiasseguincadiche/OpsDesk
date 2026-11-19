@@ -66,7 +66,7 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 
 - *Les trois choses comparées.* Le code, le state, et ce qui existe réellement dans libvirt.
 - *`+`, `~`, `-/+`.* Créer ; modifier sur place ; détruire puis recréer (une VM perd alors son disque).
-- *Le state.* Hors de Git car il contient identifiants et parfois secrets ; copié hors de `srv-admin` car, sans lui, Terraform ne reconnaît plus ses machines.
+- *Le state.* Hors de Git car il contient identifiants et parfois secrets ; copie protégée hors de `srv-admin`. En cas de perte, ne pas appliquer un plan de recréation avant d'avoir examiné et retrouvé l'état approprié.
 - *Une modification à la main.* Le plan suivant montre une dérive et propose de revenir à ce que dit le code.
 - *Terraform et Ansible.* Terraform crée les machines (disques, réseau, ressources) ; Ansible configure l'intérieur.
 

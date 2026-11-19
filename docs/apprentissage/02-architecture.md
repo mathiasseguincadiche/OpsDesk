@@ -13,7 +13,7 @@ Un choix qu'on ne sait pas expliquer ne se défend pas en entretien, et ne se co
 ## L'essentiel à comprendre
 
 - L'architecture est déjà décidée : trois serveurs Rocky Linux (`srv-admin`, `srv-app`, `srv-k3s`), Docker Engine et Compose sur `srv-app`, une sauvegarde copiée hors des serveurs, K3s pour une copie d'essai.
-- Une décision se défend avec quatre réponses : **besoin, alternative écartée, point de panne, contrôle**.
+- Une décision se défend avec quatre réponses : **besoin et raison du choix, alternative et compromis, point de panne et condition de réexamen, contrôle**. Pour les décisions structurantes, expliquer quand une autre approche deviendrait préférable.
 - Un schéma est juste quand chaque flux a une origine et une destination, chaque donnée durable un emplacement, chaque port ouvert une raison.
 - Une décision « retenue » n'est pas « vérifiée » : rien n'est encore construit.
 - Une raison manquante s'écrit comme question ouverte ; on ne l'invente pas.
@@ -36,7 +36,7 @@ Un choix qu'on ne sait pas expliquer ne se défend pas en entretien, et ne se co
 
 ## Un exemple de revue, déjà mené
 
-Le flux Prometheus → `srv-app:8000` est cohérent sur le papier (nginx bloque `/metrics`, le port 8000 est ouvert à `srv-k3s` seulement). Il impose de publier le port 8000 dans le fichier Compose de production, et il ouvre toute l'API à `srv-k3s`, pas seulement `/metrics` : une question ouverte à inscrire au registre.
+Le flux Prometheus → `srv-app:8000` est cohérent sur le papier (nginx bloque `/metrics`, le port 8000 est ouvert à `srv-k3s` seulement). Il impose de publier le port 8000 dans le fichier Compose de production, et il ouvre toute l'API à `srv-k3s`, pas seulement `/metrics` : une limite de la cible initiale, à traiter et à vérifier à l'exercice 09 ; les schémas et le registre évolueront après preuve.
 
 ## Pièges fréquents
 

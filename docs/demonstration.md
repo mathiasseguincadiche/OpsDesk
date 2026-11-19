@@ -16,7 +16,7 @@ Ce parcours présente **les observations locales historiques et les résultats p
 
 Ne pas improviser une panne devant le recruteur. Une démonstration d’incident doit avoir été répétée sur la cible isolée, être récupérable et disposer de ses pré-checks. Présenter seulement son scénario tant qu’elle n’est pas exécutée.
 
-Avant une démonstration vivante, vérifier l’existence de sa propre cible locale et sa version ; les anciennes commandes Compose sont [historiques et non exécutables depuis le dépôt courant](demarrage.md). Sans cible personnelle reçue, présenter le contrat, les schémas historiques et les preuves historiques.
+Avant une démonstration vivante, vérifier l’identité, l’accessibilité et la version de la cible locale. Le [guide de démarrage v2](demarrage.md) décrit la pile de référence actuelle. Les commandes spécifiques à la v1 restent dans `legacy/`. Sans cible d’infrastructure personnelle reçue, présenter la pile de référence et ses [preuves du 19 novembre 2026](../STATUS.md), l’architecture cible et les limites ; ne pas revendiquer un déploiement sur Rocky Linux.
 
 ## Questions d’entretien utiles
 
