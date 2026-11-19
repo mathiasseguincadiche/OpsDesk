@@ -105,6 +105,8 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 
 **Une bonne solution contient** des images référencées par digest ; deux réseaux, la base absente de celui de nginx ; l'API joignable sous le nom `backend` ; une sonde et `restart: unless-stopped` par service ; la rotation des journaux ; trois secrets en fichiers ; le port 8080 publié sur l'adresse de `srv-app` et le port 8000 accessible à `srv-k3s` seule, prouvé depuis les autres machines ; `selinux-enabled` dans `daemon.json` et `container_t` constaté ; la décision sur le stockage écrite et justifiée ; un rôle Ansible avec `community.docker.docker_compose_v2`, idempotent, qui ne recrée rien au second passage.
 
+**Complément DNS/TLS.** Le nom doit être résolu par le DNS du laboratoire ; le certificat présenté doit être approuvé, correspondre au nom et permettre une requête vérifiée sans `-k` ; un certificat non approuvé doit être refusé.
+
 **Points à refuser.** Un secret écrit dans le fichier Compose ou un template ; des images en `:latest` ; la base publiée sur un port de l'hôte ; le socket Docker monté dans un conteneur ; SELinux désactivé ou `--privileged` pour « faire marcher » un montage ; un service qui ne revient pas après un reboot ; `docker compose down -v` sur le service réel.
 
 <a id="exercice-07"></a>
@@ -129,13 +131,13 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 
 **Réponses attendues.**
 
-- *Ce que prouve une CI verte.* Les tests écrits passent, les images se construisent, aucune vulnérabilité grave connue ce jour-là, une image identifiée est publiée. Elle ne prouve pas que cette image tourne quelque part.
+- *Ce que prouve une CI verte.* Les tests écrits passent, les images se construisent, la politique de scan est satisfaite pour les vulnérabilités détectées à cette date (exceptions tracées), une image identifiée est publiée. Elle ne prouve pas que cette image tourne quelque part.
 - *Pourquoi la CI ne déploie pas.* Ses machines ne joignent pas le réseau privé, et le déploiement reste une décision humaine, depuis `srv-admin`.
-- *Tag ou digest.* Le tag peut bouger ; on déploie par digest, ou par un tag de commit qui ne bouge jamais.
+- *Tag ou digest.* Le tag peut bouger ; on déploie par digest. Même un tag de commit reste modifiable sauf politique d’immuabilité imposée et vérifiée.
 - *PostgreSQL en CI.* Certains défauts (verrous, types) n'apparaissent pas sur SQLite.
 - *Trivy trouve une vulnérabilité grave.* On corrige (image de base plus récente) ; sinon on accepte par écrit, avec une raison et une date de réexamen.
 
-**Une bonne solution contient** des tests sur pull request sans publication ; `needs:` entre tests et images ; `permissions` minimales, `packages: write` seulement pour publier ; deux tags (version et commit) ; une règle Trivy écrite ; le rôle Ansible paramétré par la version ; le digest comparé.
+**Une bonne solution contient** des tests sur pull request sans publication ; `needs:` entre tests et images ; `permissions` minimales, `packages: write` seulement pour publier ; deux tags (version et commit) ; une règle Trivy écrite ; le rôle Ansible paramétré par la version ; les digests comparés ; l’enchaînement contrôlé et ses tests d’échec.
 
 **Points à refuser.** Un jeton personnel au lieu du `GITHUB_TOKEN` ; un seuil Trivy abaissé sans trace ; un déploiement sur `latest` ; une capture d'un ancien run présentée comme preuve.
 

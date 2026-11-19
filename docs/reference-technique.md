@@ -10,7 +10,7 @@ Ce document rassemble ce qu'il faut savoir pour exploiter, déployer ou faire é
 | `backend` | `backend/Dockerfile` (Python 3.13, UID 10001) | 8000 | API FastAPI : authentification, tickets, statistiques, métriques |
 | `db` | `postgres:17-alpine` | 5432 | Stockage des comptes, tickets, commentaires et historique |
 
-Les noms sont ceux des services de `compose.yaml` ; Compose nomme les conteneurs `opsdesk-<service>-1`. Seul le frontend est destiné aux utilisateurs. L'API n'est pas exposée publiquement : nginx bloque `/metrics`, que Prometheus lit directement sur le port 8000.
+Les noms sont ceux des services de `compose.yaml` ; Compose nomme les conteneurs `opsdesk-<service>-1`. Seul le frontend est destiné aux utilisateurs. L'API n'est pas exposée publiquement : nginx bloque `/metrics` sur l’entrée utilisateur. Dans la cible initiale, Prometheus lira le port 8000 ; l’exercice 09 prévoit ensuite une entrée privée limitée aux métriques, avec contrôle des sources et fermeture du port direct. Aucun Prometheus n’est encore connecté.
 
 ## Points d'accès pour l'exploitation
 

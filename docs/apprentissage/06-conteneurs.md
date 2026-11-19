@@ -41,7 +41,7 @@
 
    Un second passage doit finir à `changed=0`, sans recréer de conteneur.
 
-**Livrable** : le fichier Compose et le rôle (sans secret), `daemon.json`, la décision sur le stockage, les preuves datées ci-dessous.
+**Livrable** : le fichier Compose et le rôle (sans secret), `daemon.json`, la décision sur le stockage, les preuves datées ci-dessous et celles de l’atelier DNS/TLS.
 
 ## Vérifications
 

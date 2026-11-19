@@ -26,7 +26,7 @@ Un chemin manuel finit par laisser passer une version non testée, et personne n
 3. Une règle écrite pour Trivy : quel niveau fait échouer la CI, comment une exception est acceptée et datée.
 4. Le rôle Ansible de l’exercice 06 déploie une version tirée de GHCR, choisie par une variable. Construis un enchaînement local contrôlé sur `srv-admin` : entrée = digests des images qualifiées et cible explicitement choisie ; vérifier la réussite de la livraison et les prérequis, obtenir l’accord avant l’intervention, déployer avec Ansible et vérifier la disponibilité et le parcours métier. En cas d’échec, arrêter la chaîne et appliquer le retour arrière prévu si compatible avec les données. Tester le refus d’une entrée invalide et l’arrêt après un échec sur une cible isolée. Ce n’est pas un déploiement continu entièrement automatique ; expliquer cette différence.
 
-**Livrable** : le workflow, une exécution verte et une rouge provoquée exprès, la règle Trivy, et la preuve que le digest sur `srv-app` est celui publié.
+**Livrable** : le workflow, une exécution verte et une rouge provoquée exprès, la règle Trivy, la comparaison des digests des deux images avec GHCR et les preuves de l’enchaînement contrôlé.
 
 ## Vérifications
 
@@ -35,8 +35,9 @@ Un chemin manuel finit par laisser passer une version non testée, et personne n
 | Une PR qui ne change qu'un commentaire | Coche verte, aucune image publiée |
 | Une PR avec un test volontairement faux | Coche rouge, pas d'image |
 | Après fusion sur `main` | Deux images sur GHCR, avec version et commit |
-| Digest de l'API sur `srv-app` (`sudo docker inspect --format '{{index .RepoDigests 0}}' <image>`) et sur GHCR | Identiques |
+| Images des conteneurs API et frontend : relever leur ID via `docker inspect`, puis les `RepoDigests` avec `docker image inspect` | Le digest de registre attendu pour chaque image publiée est présent ; ne pas confondre avec l’ID local. Comparer le même niveau de manifeste (index ou manifeste de plateforme) |
 | `curl -i http://192.168.150.10:8080/version` | La version déployée |
+| Enchaînement contrôlé, sur cible de test | Déploiement et contrôle métier réussis ; digest invalide refusé ; en cas d’échec, chaîne arrêtée et retour arrière documenté |
 
 ## Pièges fréquents
 
