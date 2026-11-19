@@ -44,4 +44,4 @@ Un volume garde les données quand le conteneur disparaît ; il ne les protège 
 
 Fichier de 0 octet laissé par une commande en échec ; minuteur jamais activé ; `exec` sans `-T`, qui échoue hors d'un terminal ; restauration dans une base qui n'est pas vide ; ticket témoin absent parce que la copie est plus ancienne (c'est le RPO, pas une panne).
 
-Suite : [exercice 12](12-diagnostic.md).
+Suite : [exercice 09](09-supervision.md).

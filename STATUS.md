@@ -1,6 +1,8 @@
 # État d’OpsDesk
 
-Dernière révision : 18 novembre 2026, après la fusion de la v2 ([PR #30](https://github.com/mathiasseguincadiche/OpsDesk/pull/30)). Chaque preuve porte sa date.
+Dernière révision documentaire : 19 novembre 2026, après la fusion de la v2 ([PR #30](https://github.com/mathiasseguincadiche/OpsDesk/pull/30)). Chaque preuve porte sa date.
+
+**Note de recette documentaire (19 novembre 2026)** : la pile locale est désormais configurée pour publier uniquement sur la boucle locale ; ce changement doit être rejoué avant de qualifier le nouveau périmètre. Les essais historiques du 18 novembre restent valables pour leur configuration d’origine. Les ateliers DNS/TLS, livraison contrôlée et restriction de l’accès aux métriques sont prévus, non vérifiés.
 
 **Avancement** : Prévu, En cours, Réalisé, Abandonné. **Contrôle** : Vérifié, Échec constaté, Non vérifié. Les deux informations sont distinctes : un élément réalisé peut rester non vérifié.
 
@@ -19,7 +21,7 @@ Dernière révision : 18 novembre 2026, après la fusion de la v2 ([PR #30](http
 | Élément | Avancement | Contrôle | Preuve et portée |
 | --- | --- | --- | --- |
 | Images API et frontend (multi-étapes, non-root) | Réalisé | Vérifié le 17 novembre 2026, puis le 18 novembre 2026 après le renommage en `Dockerfile` : construites avec Docker 29.8 sous WSL2 Ubuntu | `backend/Dockerfile`, `frontend/Dockerfile` |
-| Pile de référence (PostgreSQL 17, API, frontend) | Réalisé | Vérifié le 18 novembre 2026 avec Docker 29.8 et Compose 5.5.1 sous WSL2 Ubuntu : `docker compose config` valide ; 3 services *healthy* ; `scripts/smoke.py` réussi à travers nginx ; base non joignable depuis nginx ; `no-new-privileges` et rotation des journaux appliqués ; API relancée seule après un SIGTERM ; 17 tickets conservés après `down` puis `up`. **Non testé** : redémarrage du démon Docker ou du serveur | `compose.yaml` : construit les images, ne remplace pas le fichier de production |
+| Pile de référence (PostgreSQL 17, API, frontend) | Réalisé | Vérifié le 18 novembre 2026 avec Docker 29.8 et Compose 5.5.1 sous WSL2 Ubuntu : `docker compose config` valide ; 3 services *healthy* ; `scripts/smoke.py` réussi à travers nginx ; base non joignable depuis nginx ; `no-new-privileges` et rotation des journaux appliqués ; API relancée seule après un SIGTERM ; 17 tickets conservés après `down` puis `up`. **Non testé** : redémarrage du démon Docker ou du serveur ; liaison du frontend à la boucle locale introduite le 19 novembre 2026 (nouveau contrôle requis) | `compose.yaml` : construit les images, ne remplace pas le fichier de production |
 | Résilience nginx face au backend | Réalisé | Vérifié le 18 novembre 2026 : API recréée avec une nouvelle IP puis suivie sans redémarrage ; frontend démarré sans API | `frontend/nginx.conf.template` (résolution DNS dynamique) |
 | Déploiement Docker Engine + Compose sur Rocky Linux | Prévu | Non vérifié | Cible retenue le 18 novembre 2026, à la place de Podman et Quadlet ; contraintes dans la [référence technique](docs/reference-technique.md#déployer-avec-docker-compose-sur-un-serveur) |
 | Analyse de vulnérabilités des images v2 | Prévu | Non vérifié | Aucun scan Trivy des images v2 ; le scan v1 ci-dessous ne s’applique pas |

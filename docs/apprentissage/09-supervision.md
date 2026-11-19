@@ -16,7 +16,7 @@ Sans supervision, on apprend une panne par les utilisateurs, sans savoir depuis 
 - Mesures exposées par l'API : `opsdesk_http_requests_total` (méthode, route, statut), `opsdesk_http_request_duration_seconds` (histogramme), `opsdesk_database_up`, `opsdesk_tickets` (statut, priorité), `opsdesk_users`, `opsdesk_logins_total`, `opsdesk_ticket_transitions_total`.
 - Un compteur se lit avec `rate(…[5m])` ; une jauge se lit telle quelle ; une latence au 95ᵉ centile se calcule avec `histogram_quantile`.
 - Le `for` d'une alerte évite les fausses alertes : la condition doit tenir pendant toute la durée.
-- nginx bloque `/metrics` : Prometheus lit l'API directement sur le port 8000, ouvert à `srv-k3s` seulement.
+- nginx bloque `/metrics` sur l’entrée utilisateur. La cible initiale autorise le port 8000 depuis `srv-k3s` seulement. Dans cet exercice, réduis cette surface : réserve une entrée privée aux seules métriques, sans routes métier, restreins sa source à la supervision, et referme le port direct de l’API. Vérifie un scrape réussi, le refus d’une route métier sur l’entrée de métriques et le refus des sources non autorisées. Justifie les règles réellement appliquées par Docker ; mettre à jour le registre et les schémas après validation.
 - Si `srv-k3s` tombe, la supervision tombe avec.
 
 ## Ce qu'il faut obtenir
@@ -28,7 +28,7 @@ Sans supervision, on apprend une panne par les utilisateurs, sans savoir depuis 
 5. Les deux alertes testées sur la copie d'essai : panne, `pending`, `firing`, retour à la normale, heures notées.
 6. Un essai de charge limité avec k6, depuis `srv-admin`, sur la copie d'essai uniquement.
 
-**Livrable** : configuration, règles, tableau de bord exporté, capture des cibles, et les heures des tests d'alerte.
+**Livrable** : configuration, règles, tableau de bord exporté, capture des cibles, heures des tests d'alerte, tests k6 interprétés et preuves du filtrage des métriques.
 
 ## Vérifications
 
@@ -39,9 +39,10 @@ Sans supervision, on apprend une panne par les utilisateurs, sans savoir depuis 
 | Alerte « base » | Base de la copie arrêtée | `firing` après 1 minute, puis retour à `inactive` |
 | Alerte « 5xx » | Panne provoquant des 5xx sur la copie | `firing`, puis retour |
 | Service réel épargné | Ses panneaux pendant les tests | Aucune erreur |
+| Entrée privée réservée aux métriques | Test depuis la supervision et une source non autorisée ; test d’une route métier | Scrape réussi ; accès non autorisés et routes métier refusés ; API directe non publiée |
 
 ## Pièges fréquents
 
-Cible `DOWN` (port 8000 non publié, pare-feu, ou passage par nginx) ; compteur affiché sans `rate` ; alerte dont le `for` dépasse la durée de la panne ; historique perdu faute de stockage persistant pour Prometheus.
+Cible `DOWN` (adresse de collecte, filtrage des sources, endpoint des métriques ou passage par le proxy utilisateur) ; compteur affiché sans `rate` ; alerte dont le `for` dépasse la durée de la panne ; historique perdu faute de stockage persistant pour Prometheus.
 
 Suite : [exercice 10](10-maintenance.md).

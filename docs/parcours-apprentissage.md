@@ -20,6 +20,8 @@ Chaque exercice part d'un problème réel d'exploitation, explique le mécanisme
 
 L'exercice 13 est transversal : une tâche nouvelle, menée seul, et vérifiée séparément.
 
+Les cinq piliers classent les compétences, non l’ordre des séances. Suivre l’ordre de réalisation du [parcours](apprentissage/README.md#les-13-exercices) : 01 à 06, puis 08, 07, 11, 09, 10, 12 et 13.
+
 ## Où se trouve quoi
 
 - **Les énoncés de référence** : [docs/apprentissage/](apprentissage/README.md), lisibles par tous.

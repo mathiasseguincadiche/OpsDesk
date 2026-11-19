@@ -53,7 +53,7 @@ L'application ne peut pas se protéger seule. Les décisions suivantes sont pris
 - **Aucune analyse de vulnérabilités des images v2** n'a encore été faite.
 - Pas de limitation du nombre de tentatives de connexion.
 - Pas d'authentification à deux facteurs ni de renouvellement automatique du jeton.
-- Pas de HTTPS dans l'application : il se termine devant elle, s'il est mis en place.
+- Pas de HTTPS dans l’application : il se termine devant elle. L’atelier DNS/TLS de l’exercice 06 le met en pratique sur une cible privée, sans exposer le laboratoire. Ce contrôle reste à réaliser.
 - Le port 8000 ouvert à `srv-k3s` donne accès à toute l'API, pas seulement à `/metrics` (question ouverte relevée à l'exercice 02).
 
 Ces limites interdisent une exposition sur Internet en l'état ; elles sont acceptables pour un laboratoire aux données fictives.

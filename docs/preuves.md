@@ -42,7 +42,7 @@ Une preuve vaut pour les fichiers, la version, la cible et la méthode qu'elle i
 
 Les commandes et leurs résultats attendus sont dans le [contrat applicatif, point 20](contrat-applicatif.md#20-commandes-de-vérification) : tests de l'API, typage et construction de l'interface, test de bout en bout `scripts/smoke.py`, sonde de disponibilité. Avant de lancer le test de bout en bout, vérifier la cible avec `/version` : il crée des tickets fictifs et ne les efface pas.
 
-On archive seulement la sortie réellement obtenue, avec sa date, sa version et sa cible.
+On archive seulement la sortie réellement obtenue, avec sa date, sa version et sa cible. Pour la v2, conserver à mesure des essais les rapports bruts expurgés de secrets (tests PostgreSQL, frontend, Compose, smoke, isolation réseau, redémarrage, scans) dans un répertoire de preuves datées ou des artefacts de CI identifiables, et relier chaque pièce depuis `STATUS.md`. Ne pas fabriquer de journaux pour combler les pièces historiques manquantes.
 
 ## Ce qui reste à prouver
 

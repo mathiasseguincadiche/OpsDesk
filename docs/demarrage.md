@@ -61,6 +61,8 @@ Ouvrir enfin **http://localhost:8080** et cliquer sur un compte de démonstratio
 | `backend` | API FastAPI | `http://127.0.0.1:8000`, limité au poste (documentation : `/api/docs`) |
 | `db` | PostgreSQL 17 | Non publié |
 
+Les ports 8080 et 8000 de cette pile sont liés à `127.0.0.1`. Depuis une autre machine, la connexion doit échouer ; vérifier également les adresses de publication avec `docker compose ps`. Ne pas élargir cette exposition pour des comptes et données de démonstration. Le déploiement réseau sur `srv-app` relève de l’exercice 06.
+
 Les données sont dans un volume nommé : elles survivent à l'arrêt et à la recréation des conteneurs.
 
 ## Arrêter
