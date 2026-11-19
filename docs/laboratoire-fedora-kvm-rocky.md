@@ -2,7 +2,7 @@
 
 **Document préparatoire — 4 novembre 2026.** Les procédures ci-dessous sont à réaliser personnellement par l’apprenant, sur son PC identifié. Elles n’ont pas été exécutées sur Fedora ni dans une VM. Le contenu existant des projets reste conservé ; ce guide remplace les anciennes étapes de démarrage basées sur des ZIP, un script de publication ou le laboratoire WSL.
 
-Les noms retenus pour la suite (réseau `opsdesk-lan`, compte d’administration `mathias`, compte de service `opsdesk` pour les conteneurs, serveurs `srv-admin`, `srv-app` et `srv-k3s`) sont dans le [registre des décisions](architecture.md#décisions-retenues).
+Les noms retenus pour la suite (réseau `opsdesk-lan`, compte d’administration `mathias`, administration Docker par `sudo` (aucun compte dans le groupe `docker`), serveurs `srv-admin`, `srv-app` et `srv-k3s`) sont dans le [registre des décisions](architecture.md#décisions-retenues).
 
 L’objectif est une première VM utilisable et comprise, `srv-admin`, puis deux autres VM créées depuis elle, puis les exercices du projet. La lecture du guide n’attribue aucun résultat personnel, niveau L0–L3 ou autonomie. Aucun Terraform, playbook Ansible, fichier Compose de production, manifeste K3s ou pipeline complet n’est fourni ici.
 

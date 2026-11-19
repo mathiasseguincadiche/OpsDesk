@@ -210,7 +210,7 @@ L'API et l'interface sont livrées ensemble, sous le même numéro de version, e
 
 ## 25. Contraintes de mise à jour
 
-L'API attend la base au démarrage (30 tentatives espacées de 2 secondes) : l'ordre de démarrage n'est pas critique. Recréer le conteneur de l'API coûte une courte coupure, pendant laquelle nginx répond `502` : environ 2 secondes, mesurées sur la pile locale le 18 novembre 2026. L'interface suit la nouvelle adresse de l'API sans redémarrage.
+L'API attend la base au démarrage (30 tentatives espacées de 2 secondes) : l'ordre de démarrage n'est pas critique. La recréation du conteneur de l’API interrompt brièvement les requêtes : environ 2 secondes dans l’essai local du 18 novembre 2026, sans garantie pour un autre scénario. Lors d’une API indisponible, nginx peut répondre `502` (connexion impossible) ou `504` (délai dépassé). Le délai de connexion au backend est limité à 3 secondes ; le délai de lecture reste à 30 secondes. L’interface suit la nouvelle adresse de l’API sans redémarrage. Le nouveau réglage doit être qualifié séparément.
 
 ## 26. Conditions de rollback
 

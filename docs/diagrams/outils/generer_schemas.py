@@ -264,7 +264,7 @@ def architecture(dossier):
            "exitX=0;exitY=0.5;entryX=1;entryY=0.5;")
     d.lien("flux-images", "ghcr", "srv-k3s", "images HTTPS", style_flux("administration", prevu=True) +
            "exitX=0.5;exitY=1;entryX=0.75;entryY=0;")
-    d.lien("flux-images-app", "ghcr", "srv-app", "images HTTPS", style_flux("administration", prevu=True) +
+    d.lien("flux-images-app", "ghcr", "srv-app", "", style_flux("administration", prevu=True) +
            "exitX=1;exitY=0.5;entryX=1;entryY=0.5;", points=[(1164, 146), (1164, 650)])
     # Observabilité (prévue)
     # Prometheus (x 952-1112, y 388-440) ; api (x 532-708, haut y 600) ; node_exporter (x 944-1112, haut y 552)
@@ -487,7 +487,7 @@ def pedagogique_ansible(dossier):
            f"exitX=0;exitY={(372 - 96) / 328:.4f};entryX=1;entryY={(372 - 256) / 152:.4f};", decalage=(0, -12))
 
     res = d.forme("resultat", 24, 448, 712, 248, "③ ON REJOUE POUR VÉRIFIER", style_regroupement(), calque="frontieres")
-    p1 = d.forme("passage-1", 16, 44, 320, 76, f'{b("1er passage", 12)}<br>' + html_code(["ok=2  changed=2  failed=0"]) +
+    p1 = d.forme("passage-1", 16, 44, 320, 76, f'{b("1er passage", 12)}<br>' + html_code(["ok=4  changed=2  failed=0"]) +
                  f'<br>{s("deux écarts corrigés")}', style_document(RESILIENCE), res)
     p2 = d.forme("passage-2", 376, 44, 320, 76, f'{b("2e passage, sans rien changer", 12)}<br>' + html_code(["ok=4  changed=0  failed=0"]) +
                  f'<br>{s("<b>idempotent</b> : plus rien à corriger", DONNEES.texte)}', style_document(DONNEES), res)
@@ -510,10 +510,10 @@ def pedagogique_acces_ssh(dossier):
     poste = machine(d, "poste", 24, 96, 300, 560, "Poste Fedora", "le client", icone="poste")
     vm = machine(d, "vm", 436, 96, 300, 560, "VM Rocky", "le serveur, depuis sa console")
     etapes = [("poste", "Le nom donne-t-il la bonne adresse ?", "getent hosts srv-admin", "Name or service not known"),
-              ("poste", "La route mène-t-elle à la VM ?", "ip route get 192.168.150.5", "Connection timed out"),
+              ("poste", "La route mène-t-elle à la VM ?", "ip route get 192.168.150.5", "route ou interface inattendue"),
               ("vm", "Le service écoute-t-il sur le port 22 ?", "ss -lnt", "Connection refused"),
               ("vm", "Le pare-feu laisse-t-il passer ?", "firewall-cmd --list-all", "No route to host"),
-              ("poste", "Le serveur est-il celui attendu ?", "ssh-keygen -lf (console)", "empreinte qui a changé"),
+              ("vm", "Empreinte du serveur attendue ?", "ssh-keygen -lf clé_hôte.pub", "empreinte différente"),
               ("vm", "Le compte est-il accepté ?", "~/.ssh/authorized_keys", "Permission denied (publickey)")]
     prev = None
     for i, (cote, question, commande, echec) in enumerate(etapes):
@@ -526,7 +526,7 @@ def pedagogique_acces_ssh(dossier):
         prev = n
         cadre = poste if cote == "poste" else vm
         cid = carte_simple(d, f"question-{i + 1}", 12, y - 96, 276, 68, INFRA if cote == "poste" else TRAITEMENT,
-                           f'{b(question, 13)}<br>{code(commande)}<br>{s("si échec : " + echec, SECURITE.texte)}', parent=cadre)
+                           f'{b(question, 13)}<br>{code(commande)}<br>{s("indice : " + echec, SECURITE.texte)}', parent=cadre)
         d.lien(f"vers-{i + 1}", n, cid, "", f"edgeStyle=none;endArrow=none;strokeColor={RULE};strokeWidth=1.5;dashed=1;dashPattern=2 3;"
                + ("exitX=0;exitY=0.5;entryX=1;entryY=0.5;" if cote == "poste" else "exitX=1;exitY=0.5;entryX=0;entryY=0.5;"))
     return d.enregistrer(dossier)
@@ -550,7 +550,7 @@ def pedagogique_terraform(dossier):
         d.lien(f"vers-plan-{src}", src, plan, "", style_flux("administration", ortho=False) + f"exitX=0.5;exitY=1;entryX={x};entryY=0;")
     issues = [("creer", DONNEES, "+", "créer", "la ressource manque"),
               ("modifier", TRAITEMENT, "~", "modifier sur place", "l'identifiant reste"),
-              ("remplacer", SECURITE, "-/+", "remplacer", "détruit puis recrée : le disque est perdu")]
+              ("remplacer", SECURITE, "-/+", "remplacer", "recréation : risque pour les données")]
     for i, (ident, f, sym, nom, det) in enumerate(issues):
         x = 24 + i * 244
         carte_simple(d, ident, x, 388, 220, 68, f, f'{b(sym, 18, f.texte)}&nbsp;&nbsp;{b(nom)}<br>{s(det)}', fond=f.fond)
@@ -559,10 +559,10 @@ def pedagogique_terraform(dossier):
                           fond=CARD, centre=True)
     d.lien("lire", "modifier", apply_, "tu relis, puis tu acceptes", style_flux("applicatif", ortho=False) +
            "exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
-    d.lien("cycle-reel", apply_, "reel", "agit sur", style_flux("administration", fort=True) + "exitX=1;exitY=0.5;entryX=1;entryY=0.5;",
+    d.lien("cycle-reel", apply_, "reel", "", style_flux("administration", fort=True) + "exitX=1;exitY=0.5;entryX=1;entryY=0.5;",
            points=[(742, 540), (742, 156)], decalage=(-34, 0))
-    d.forme("sans-state", 24, 588, 712, 40, "<b>Sans state</b>, Terraform ne reconnaît plus ses machines : le plan propose de tout recréer. "
-            "Un second plan à « No changes » prouve que code et réalité concordent.", style_texte("note", INK, valign="top"), calque="annotations")
+    d.forme("sans-state", 24, 588, 712, 40, "<b>Sans state</b>, Terraform risque de proposer des recréations : ne pas appliquer sans examiner le plan. "
+            "Un plan « No changes » indique qu’aucun écart géré n’est détecté.", style_texte("note", INK, valign="top"), calque="annotations")
     return d.enregistrer(dossier)
 
 
@@ -641,7 +641,7 @@ def pedagogique_cicd(dossier):
     d = _fond("pedagogique-cicd", 620, "Du commit au service",
               "La CI prouve et publie ; le déploiement reste une décision humaine.",
               ("prevu", "Prévu · exercice 08"))
-    gh = d.forme("github", 24, 96, 712, 256, "GITHUB ACTIONS · AUTOMATIQUE À CHAQUE PUSH", style_zone(prevu=True, teinte=CARD), calque="frontieres")
+    gh = d.forme("github", 24, 96, 712, 256, "GITHUB ACTIONS · CONTRÔLES AUTOMATISÉS", style_zone(prevu=True, teinte=CARD), calque="frontieres")
     etapes = [("tests", TRAITEMENT, "liste", "Tests", "pytest sur PostgreSQL"),
               ("images", TRAITEMENT, "conteneur", "Images", "sur main seulement"),
               ("trivy", SECURITE, "bouclier", "Trivy", "vulnérabilités graves ?"),
@@ -659,13 +659,13 @@ def pedagogique_cicd(dossier):
     d.lien("ko-trivy", "trivy", "stop-trivy", "oui", style_flux("administration", prevu=True, ortho=False) + "exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
     lab = d.forme("labo", 24, 384, 712, 168, "LABORATOIRE PRIVÉ · DÉCISION HUMAINE", style_zone(prevu=True), calque="frontieres")
     composant(d, "choix", 16, 48, 200, 64, AUTOMATISATION, "administrateur", "srv-admin", "Choisir une version", "dont la CI est verte", prevu=True, parent=lab)
-    composant(d, "deploie", 256, 48, 184, 64, AUTOMATISATION, "liste", "Ansible", "Déployer", "variable : la version", prevu=True, parent=lab)
+    composant(d, "deploie", 256, 48, 184, 64, AUTOMATISATION, "liste", "Ansible", "Déployer", "digests et cible", prevu=True, parent=lab)
     composant(d, "app", 536, 48, 172, 64, ACCES, "serveur", "srv-app", "Tirer par digest", "puis /health/ready", prevu=True, parent=lab)
     d.lien("dec", "choix", "deploie", "", style_flux("administration", prevu=True, ortho=False) + "exitX=1;exitY=0.5;entryX=0;entryY=0.5;")
     d.lien("dep", "deploie", "app", "SSH", style_flux("administration", prevu=True, ortho=False) + "exitX=1;exitY=0.5;entryX=0;entryY=0.5;", decalage=(0, -12))
     d.lien("pull", "ghcr", "app", "image", style_flux("administration", prevu=True, ortho=False) +
            f"exitX=0.5;exitY=1;entryX={(650 - 24 - 536) / 172:.4f};entryY=0;")
-    d.forme("preuve", 24, 568, 712, 40, "<b>La preuve</b> : le digest de l'image qui tourne sur srv-app est identique, au caractère près, à celui publié par la CI.",
+    d.forme("preuve", 24, 568, 712, 40, "<b>La preuve</b> : les digests des deux images déployées correspondent aux artefacts qualifiés et publiés par la CI.",
             style_texte("note", INK, valign="top"), calque="annotations")
     return d.enregistrer(dossier)
 
@@ -708,7 +708,7 @@ def pedagogique_supervision(dossier):
 
 def pedagogique_sauvegarde(dossier):
     d = _fond("pedagogique-sauvegarde", 600, "Ce que l'on peut perdre, et le temps pour revenir",
-              "Une sauvegarde nocturne, une panne l'après-midi : le RPO et le RTO se lisent sur la ligne de temps.",
+              "Les mesures de perte et de reprise se comparent aux objectifs RPO et RTO.",
               ("principe", "Heures d'exemple"))
     y = 176
     x0, x1 = 48, 712
@@ -732,8 +732,8 @@ def pedagogique_sauvegarde(dossier):
         d.trait_libre(f"{ident}-b", xb, yy - 8, xb, yy + 8, st)
         d.forme(f"{ident}-t", xa, yy + 10, xb - xa, 36, texte, style_texte("detail", INK, "center", valign="top"), calque="annotations")
 
-    accolade("rpo", 2, 14, 216, f'{b("RPO : 12 h", 13, SECURITE.texte)}<br>{s("les tickets saisis depuis 02:00 sont perdus")}', SECURITE)
-    accolade("rto", 14, 16, 216, f'{b("RTO : 2 h", 13, DONNEES.texte)}<br>{s("restaurer et vérifier")}', DONNEES)
+    accolade("rpo", 2, 14, 216, f'{b("Perte : 12 h", 13, SECURITE.texte)}<br>{s("fenêtre de perte à comparer au RPO")}', SECURITE)
+    accolade("rto", 14, 16, 216, f'{b("Délai : 2 h", 13, DONNEES.texte)}<br>{s("à comparer au RTO")}', DONNEES)
 
     d.forme("restauration-titre", 24, 296, 712, 20, "LA RESTAURATION, DANS L'ORDRE", style_texte("categorie", MUTED), calque="annotations")
     etapes = [("copie", RESILIENCE, "sauvegarde", "La copie", "sur l'hôte, empreinte vérifiée"),

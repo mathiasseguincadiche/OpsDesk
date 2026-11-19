@@ -42,7 +42,7 @@ L'application ne peut pas se protéger seule. Les décisions suivantes sont pris
 
 - **Réseau** : seul le port 8080 ouvert aux utilisateurs ; 8000 ouvert à la supervision seulement ; 5432 jamais publié ; firewalld actif.
 - **Système** : SELinux en mode `Enforcing` ; SSH par clé, sans mot de passe ni connexion `root`.
-- **Exécution** : Docker Engine, dont le démon tourne en root. Personne n'est dans le groupe `docker` (qui vaut root) : administration par `sudo`, tracée. Le socket Docker n'est monté dans aucun conteneur et l'API Docker n'écoute pas sur le réseau. Les conteneurs tournent sans root, avec `no-new-privileges`.
+- **Exécution** : Docker Engine, dont le démon tourne en root. Personne n'est dans le groupe `docker` (qui vaut root) : administration par `sudo`, tracée. Le socket Docker n'est monté dans aucun conteneur et l'API Docker n'écoute pas sur le réseau. Les images API et frontend s’exécutent sans root ; PostgreSQL utilise son mécanisme de démarrage et de changement d’utilisateur. `no-new-privileges` est activé sur les trois services.
 - **Pare-feu et SELinux face à Docker** : Docker écrit ses propres règles de filtrage (zone firewalld `docker`) ; l'exposition réelle d'un port se prouve depuis une autre machine. SELinux ne s'applique aux conteneurs que si le démon l'active (`selinux-enabled`).
 - **Secrets** : fichiers lisibles par le seul conteneur qui les lit, montés par le bloc `secrets:` de Compose ; jamais dans le fichier Compose, ni dans Git, ni en clair dans les rôles Ansible.
 - **Images** : analyse Trivy dans la CI, avec une règle écrite pour les vulnérabilités graves (exercice 08).

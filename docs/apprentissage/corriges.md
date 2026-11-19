@@ -165,7 +165,7 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 
 - *Avant.* État de départ, sauvegarde, étapes, retour arrière, critère d'abandon. On décide du critère avant, parce qu'en pleine intervention on veut toujours « encore un essai ».
 - *Retour arrière ou restauration.* Le premier redéploie l'image précédente sans toucher aux données ; la seconde remet les données d'une sauvegarde.
-- *Pourquoi des `502`.* Pendant la recréation du conteneur de l'API, nginx ne la joint plus. Mesure locale de référence : environ 2 secondes.
+- *Pourquoi des `502` ou `504`.* Pendant une indisponibilité de l’API, nginx ne la joint plus ou atteint un délai. Mesure historique : environ 2 secondes lors d’une recréation ; ne pas la généraliser.
 - *Ce qui casse le retour arrière.* Une nouvelle version qui modifie le schéma de la base : l'ancienne image ne sait plus le lire.
 - *La sonde ailleurs.* Une sonde sur le serveur qu'on redémarre s'arrête avec lui.
 
@@ -181,7 +181,7 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 
 - *Volume et sauvegarde.* Le volume ne protège ni d'une suppression, ni d'une erreur, ni de la perte du disque ou de la VM.
 - *`pg_dump` plutôt qu'une copie de fichiers.* Il lit la base dans une transaction : copie cohérente, sans arrêt. Une copie à chaud des fichiers peut être incohérente.
-- *RPO et RTO.* Ce qu'on peut perdre (jusqu'à 24 heures avec une sauvegarde nocturne) ; le temps pour revenir, mesuré lors du test.
+- *RPO et RTO.* Objectifs de perte maximale et de délai maximal de reprise. On mesure la fenêtre de perte et le délai de rétablissement, puis on les compare aux objectifs ; une sauvegarde quotidienne réussie vise une perte de 24 h au maximum.
 - *Ce que le dispositif ne couvre pas.* La perte du PC hôte (aucune copie ailleurs), une corruption non détectée avant la rotation des 7 copies, une suppression de données remarquée plus de 7 jours après.
 - *Pourquoi une cible séparée.* Pour ne jamais risquer la base en service, et pour prouver qu'on sait repartir de zéro.
 
