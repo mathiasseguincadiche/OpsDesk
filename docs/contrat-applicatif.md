@@ -210,7 +210,7 @@ L'API et l'interface sont livrées ensemble, sous le même numéro de version, e
 
 ## 25. Contraintes de mise à jour
 
-L'API attend la base au démarrage (30 tentatives espacées de 2 secondes) : l'ordre de démarrage n'est pas critique. La recréation du conteneur de l’API interrompt brièvement les requêtes : environ 2 secondes dans l’essai local du 18 novembre 2026, sans garantie pour un autre scénario. Lors d’une API indisponible, nginx peut répondre `502` (connexion impossible) ou `504` (délai dépassé). Le délai de connexion au backend est limité à 3 secondes ; le délai de lecture reste à 30 secondes. L’interface suit la nouvelle adresse de l’API sans redémarrage. Le nouveau réglage doit être qualifié séparément.
+L'API attend la base au démarrage (30 tentatives espacées de 2 secondes) : l'ordre de démarrage n'est pas critique. La recréation du conteneur de l’API interrompt brièvement les requêtes : environ 2 secondes dans l’essai local du 18 novembre 2026, sans garantie pour un autre scénario. Lors d’une API indisponible, nginx peut répondre `502` (connexion impossible) ou `504` (délai dépassé). Le délai de connexion au backend est limité à 3 secondes ; le délai de lecture reste à 30 secondes. L’interface suit la nouvelle adresse de l’API sans redémarrage. Le réglage a été qualifié le 19 novembre sur un runner jetable : API arrêtée, `504` en 3,003651 s, puis retour à la disponibilité ([preuve](../STATUS.md)).
 
 ## 26. Conditions de rollback
 
@@ -245,4 +245,4 @@ L'application est reçue sur une cible quand, sur cette cible et avec une date :
 6. `/metrics` n'est pas joignable par le port 8080 ;
 7. aucun secret n'apparaît dans les images, le dépôt ou les journaux.
 
-État au 18 novembre 2026 : critères 1, 2, 3, 5 et 6 vérifiés sur la pile locale (le critère 6 fait partie de `scripts/smoke.py`) ; aucune cible d'infrastructure n'a encore été reçue.
+État au 19 novembre 2026 : sur la pile de référence exécutée sur runner jetable, critères 1 à 6 vérifiés (ticket n°18 relu après recréation des conteneurs). Les scans de secrets et vulnérabilités ne sont pas qualifiés par cette recette ; aucune cible d’infrastructure n’a encore été reçue. Voir [STATUS.md](../STATUS.md).

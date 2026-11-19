@@ -18,7 +18,7 @@ Un collaborateur signale une panne, l'équipe support la prend en charge, la ré
 
 **Mon objectif professionnel : devenir ingénieur DevOps spécialisé dans l’automatisation des infrastructures (InfraOps).** L’application est un support, pas un projet de développement full stack. Mon objectif est de transformer un besoin applicatif en une infrastructure Linux reproductible : concevoir le réseau et le stockage, provisionner les machines, sécuriser et configurer les serveurs, déployer des artefacts versionnés, industrialiser la livraison, puis superviser, maintenir, diagnostiquer et restaurer le service. Dans ce parcours, j’apprends à écrire et tester le code d’infrastructure et les automatisations nécessaires ; je lis le code applicatif pour comprendre ses contraintes et collaborer avec le développement. Les exercices et leurs preuves distinguent le travail personnel du socle fourni.
 
-**Où j’en suis :** l’application et la pile de référence ont été testées en local le 18 novembre 2026. La modification de publication locale reste à rejouer ; l’infrastructure du laboratoire est à construire. Les preuves datées et leur portée figurent dans [STATUS.md](STATUS.md).
+**Où j’en suis :** application et pile locale qualifiées le 19 novembre 2026 sur un runner jetable : tests SQLite et PostgreSQL, compilation, smoke HTTP, isolation des ports, reprise de l’API et de la base, persistance. L’infrastructure du laboratoire reste à construire personnellement. Voir les [preuves datées et leurs limites](STATUS.md).
 
 ## Ce que montre ce projet
 
