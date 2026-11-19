@@ -52,9 +52,9 @@ Codes d'erreur : `401` sans jeton valide, `403` rôle insuffisant ou ticket non 
 
 Trois composants, chacun dans son conteneur ([schéma](diagrams/architecture.svg)) :
 
-- **`opsdesk-web`** : nginx non-root qui sert l'interface React et relaie `/api`, `/health` et `/version` vers l'API. Il résout le nom de l'API à chaque requête (cache de 10 secondes) et bloque `/metrics`.
-- **`opsdesk-api`** : FastAPI. Authentification, règles métier, accès à la base, sondes, métriques, journaux. Aucun état en mémoire entre deux requêtes.
-- **`opsdesk-db`** : PostgreSQL. Seule source de vérité des données.
+- **`frontend`** : nginx non-root qui sert l'interface React et relaie `/api`, `/health` et `/version` vers l'API. Il résout le nom de l'API dynamiquement (cache de 10 secondes) et bloque `/metrics`.
+- **`backend`** : FastAPI. Authentification, règles métier, accès à la base, sondes, métriques, journaux. Aucun état en mémoire entre deux requêtes.
+- **`db`** : PostgreSQL. Seule source de vérité des données.
 
 ## 5. Langages et frameworks
 
@@ -95,9 +95,9 @@ Sans conteneur, API sur SQLite et interface avec Vite : voir la section [Dévelo
 
 | Composant | Port | Protocole | Exposition attendue |
 | --- | --- | --- | --- |
-| `opsdesk-web` | 8080 | HTTP | Seule porte destinée aux utilisateurs |
-| `opsdesk-api` | 8000 | HTTP | Interne ; ouvert seulement à la supervision (`/metrics`) |
-| `opsdesk-db` | 5432 | PostgreSQL | Jamais publié |
+| `frontend` | 8080 | HTTP | Seule porte destinée aux utilisateurs |
+| `backend` | 8000 | HTTP | Pile locale : boucle locale uniquement ; cible serveur initiale : supervision autorisée, puis restriction aux métriques (exercice 09) |
+| `db` | 5432 | PostgreSQL | Jamais publié |
 
 Aucun port privilégié ; aucun TLS dans l'application : HTTPS, s'il est voulu, se termine devant elle.
 

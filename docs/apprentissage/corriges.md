@@ -22,7 +22,7 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 - *Si la base est arrêtée.* `/health/ready` (503, `"database":"down"`), l'état du conteneur de la base, puis les journaux de l'API et de la base.
 - *Ce qu'un `200` ne garantit pas.* Ni la persistance, ni une sauvegarde restaurable, ni la sécurité face à Internet, ni la tenue sous charge.
 
-**Une bonne solution contient** un schéma où le navigateur ne parle qu'à `opsdesk-web` ; la prise en charge par `POST /api/tickets/{id}/status` vers `in_progress` ; le `403` de Marie si elle tente la prise en charge ; comme données durables, les comptes, les tickets, les commentaires et l'historique (pas les jetons, qui ne sont pas stockés).
+**Une bonne solution contient** un schéma où dans le parcours utilisateur, le navigateur passe par `frontend` ; la prise en charge par `POST /api/tickets/{id}/status` vers `in_progress` ; le `403` de Marie si elle tente la prise en charge ; comme données durables, les comptes, les tickets, les commentaires et l'historique (pas les jetons, qui ne sont pas stockés).
 
 **Points à refuser.** Une flèche du navigateur vers la base ; « nginx vérifie le mot de passe » ; « le jeton est stocké en base » ; une limite qui n'en est pas une (« l'application est lente ») sans mesure.
 
