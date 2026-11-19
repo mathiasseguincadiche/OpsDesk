@@ -13,14 +13,14 @@ Sous pression, le réflexe est de tout redémarrer : les indices disparaissent e
 ## L'essentiel à comprendre
 
 - Sept temps : **symptôme, faits, hypothèses, test qui tranche, correction, recontrôle, post-mortem**.
-- On descend couche par couche : `/healthz` (nginx), `/health/live` (API vivante), `/health/ready` (API prête, base joignable), puis les journaux (`docker compose logs backend`) et le système (disque, mémoire, SELinux, pare-feu).
+- On descend couche par couche : `/healthz` (nginx), `/health/live` (API vivante), `/health/ready` (API prête, base joignable), puis les journaux et le système (disque, mémoire, SELinux, filtrage réseau). Une première sonde en échec oriente le diagnostic, elle ne prouve pas la cause. Sur une cible Compose, `docker compose logs backend` depuis le dossier du projet ; sur K3s, relever le namespace et les noms réels des pods, puis consulter les événements et journaux Kubernetes. Ne pas mélanger les commandes des deux plateformes.
 - La supervision date le début de la panne ; les sondes du moment ne le savent pas.
 - Une seule action à la fois ; le recontrôle va jusqu'au parcours d'un utilisateur, pas seulement une sonde.
 - Le post-mortem est sans reproche : il cherche ce qui a rendu la panne possible.
 
 ## Ce qu'il faut obtenir
 
-Trois incidents différents, préparés par une autre personne sur la copie d'essai ou sur `srv-app` pendant une fenêtre annoncée. Pour chacun : le journal d'incident (commandes, sorties, heures), le temps jusqu'au diagnostic et jusqu'au rétablissement.
+Trois incidents différents, préparés par une autre personne sur une cible de test explicitement isolée (copie K3s ou instance Compose jetable configurée pour l'exercice). Vérifier le contexte, la sauvegarde restaurable, le moyen de revenir en arrière et l'accord avant toute perturbation. Les cartes Compose ne s'appliquent pas directement à K3s : choisir uniquement les cartes adaptées à la plateforme. Ne pas modifier le serveur principal ni les règles réseau de l'hôte. Pour chacun : le journal d'incident (commandes, sorties, heures), le temps jusqu'au diagnostic et jusqu'au rétablissement.
 
 Pour le plus intéressant, un **post-mortem** d'une page : résumé ; impact ; chronologie ; cause et ce qui l'a rendue possible ; détection par la supervision ou non ; trois actions.
 

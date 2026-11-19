@@ -27,7 +27,7 @@ Les fichiers d'infrastructure de la v1 (Dockerfile, Terraform et Ansible locaux,
 
 | Question | Source de vérité | Quand la mettre à jour |
 | --- | --- | --- |
-| Découvrir le projet | [README](../README.md) | Quand le périmètre ou l'état change |
+| Découvrir le projet | [README](../README.md) et [index documentaire](README.md) | Quand le périmètre ou l'état change |
 | Comprendre un choix | [Registre des décisions](architecture.md#décisions-retenues) | Après une vraie décision ; une raison inconnue n'est pas inventée |
 | Héberger ou exploiter l'application | [Contrat applicatif](contrat-applicatif.md) et [référence technique](reference-technique.md) | À chaque évolution de l'API ou de la configuration |
 | Apprendre | [Parcours](apprentissage/README.md) et centre de formation Notion | Dans le même changement que les notions concernées |

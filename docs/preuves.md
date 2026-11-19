@@ -1,6 +1,6 @@
 # Lire une preuve et ses limites
 
-Une affirmation sur OpsDesk (« les tests passent », « la sauvegarde fonctionne ») ne vaut que par la preuve qui la soutient. Ce document dit comment une preuve est tenue, et comment la lire sans lui faire dire plus qu'elle ne dit. Mise à jour : 18 novembre 2026.
+Une affirmation sur OpsDesk (« les tests passent », « la sauvegarde fonctionne ») ne vaut que par la preuve qui la soutient. Ce document dit comment une preuve est tenue, et comment la lire sans lui faire dire plus qu'elle ne dit. Mise à jour : 19 novembre 2026.
 
 L'état daté de chaque élément est tenu dans [STATUS.md](../STATUS.md) : c'est la seule source à jour.
 
@@ -51,6 +51,10 @@ Les [extraits datés des journaux](../evidence/qualification/2026-11-19-socle.tx
 ## Recette d'une modification documentaire
 
 Pour une évolution significative, constater le problème, expliquer son impact, proposer la correction et vérifier son bénéfice plutôt que refaire un document pour sa seule apparence. Sur les deux supports, examiner quatre situations de lecture : découverte (finalité, statut et accès au parcours), apprentissage (prérequis, exercice, contrôle), recherche ciblée (commande ou preuve accessible), analyse approfondie (contrat, choix, compromis, limites). Vérifier les liens, la terminologie et la correspondance avec le code ; contrôler les rendus et sources lorsque les schémas changent. Indiquer les vérifications non réalisées. Voir également [les sources de vérité](parcours-apprentissage.md#où-se-trouve-quoi).
+
+### Périmètre d'une recette de lecture
+
+Distinguer une relecture simulée des parcours, un rendu navigateur à largeur donnée et une consultation native par un lecteur. Conserver le chemin emprunté, le résultat et les limites. Les cas non évaluables ne sont pas des réussites. [Recette documentaire V25](../evidence/qualification/2026-11-19-documentation-v25.md).
 
 ## Ce qui reste à prouver
 

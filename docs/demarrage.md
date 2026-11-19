@@ -9,7 +9,8 @@ Ce guide lance OpsDesk sur un poste, en conteneurs, pour l'essayer ou le dévelo
 | Git | `git --version` | Pour récupérer le dépôt |
 | Docker Engine avec le plugin Compose | `docker compose version` | Les essais consignés ont été faits avec Docker 29.8 et Compose 5.5.1 sous Ubuntu WSL2. L'ancienne commande `docker-compose` (Compose v1, en Python) n'est plus maintenue |
 | Python 3 | `python3 --version` | Seulement pour le test de bout en bout |
-| Le port 8080 libre | `ss -lnt \| grep ':8080 '` | Aucune ligne attendue |
+| `curl` | `curl --version` | Pour contrôler la disponibilité depuis le poste |
+| Les ports locaux 8080 et 8000 libres (Linux) | `ss -lnt \| grep -E ':(8080\|8000)[[:space:]]'` | Aucune ligne attendue ; adapter le contrôle au système hôte |
 
 ## 1. Récupérer le dépôt et préparer la configuration
 
@@ -37,7 +38,7 @@ La première fois, la construction des images prend quelques minutes. La base d�
 docker compose ps
 ```
 
-Les trois services (`db`, `backend`, `frontend`) doivent afficher `healthy`.
+Les trois services (`db`, `backend`, `frontend`) doivent afficher `healthy` une fois le démarrage terminé. La sonde Docker de l'API vérifie la vie du processus, pas sa disponibilité métier ; la requête suivante complète ce contrôle.
 
 ```bash
 curl -i http://127.0.0.1:8080/health/ready
@@ -77,7 +78,7 @@ Les conteneurs sont supprimés, le volume de la base est conservé. **`docker co
 
 | Ce que tu vois | Cause probable | Que faire |
 | --- | --- | --- |
-| `address already in use` sur 8080 | Un autre service occupe le port | Identifier ce service avant de l'arrêter ; ou changer `HTTP_PORT` dans `.env` |
+| `address already in use` sur 8080 ou 8000 | Un autre service occupe le port | Identifier ce service avant de l'arrêter ; ou adapter `HTTP_PORT` / `API_PORT` dans `.env`, puis les URL de contrôle |
 | `backend` jamais `healthy` | L'API n'arrive pas à démarrer (souvent la base ou un secret) | `docker compose logs backend` |
 | L'API démarre puis s'arrête, message sur `JWT_SECRET` | `ENVIRONMENT=production` exige un `JWT_SECRET` d'au moins 32 caractères | Corriger `.env`, puis `docker compose up -d` |
 | `502` ou `504` sur l’interface | nginx ne joint pas l’API ou n’obtient pas de réponse à temps | `docker compose ps`, puis les journaux de `backend` et `frontend` |
