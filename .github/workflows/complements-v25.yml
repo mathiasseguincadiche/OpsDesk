@@ -1,0 +1,34 @@
+name: Complements graphiques V25 (isole)
+on:
+  push:
+    branches: ["qualification/reference-v25-20261119"]
+permissions:
+  contents: read
+jobs:
+  complement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Export Draw.io
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 2 -o /tmp/drawio.deb https://github.com/jgraph/drawio-desktop/releases/download/v32.7.4/drawio-amd64-32.7.4.deb
+          echo 'ffd8c110f1df8cde26a7fbd801212bd8381d257879f424a2191ec4cc491aa50b  /tmp/drawio.deb' | sha256sum -c -
+          sudo apt-get install -y /tmp/drawio.deb
+          draw="$(command -v drawio || command -v draw.io || true)"
+          if test -z "$draw"; then draw=/opt/draw.io/drawio; fi
+          mkdir -p /tmp/v25-extras
+          PYTHONPATH=docs/diagrams/outils python3 .github/qualification/gabarits_v25.py /tmp/v25-extras
+          cp .github/qualification/gabarits_v25.py /tmp/v25-extras/
+          for f in /tmp/v25-extras/*.drawio; do
+            xvfb-run -a "$draw" --no-sandbox --export --format svg --theme light --embed-svg-fonts false --border 0 --output "${f%.drawio}.svg" "$f"
+            test -s "${f%.drawio}.svg"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: complements-v25
+          path: /tmp/v25-extras
+          retention-days: 7
