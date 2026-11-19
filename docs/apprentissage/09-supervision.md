@@ -18,6 +18,7 @@ Sans supervision, on apprend une panne par les utilisateurs, sans savoir depuis 
 - Le `for` d'une alerte évite les fausses alertes : la condition doit tenir pendant toute la durée.
 - nginx bloque `/metrics` sur l’entrée utilisateur. La cible initiale autorise le port 8000 depuis `srv-k3s` seulement. Dans cet exercice, réduis cette surface : réserve une entrée privée aux seules métriques, sans routes métier, restreins sa source à la supervision, et referme le port direct de l’API. Vérifie un scrape réussi, le refus d’une route métier sur l’entrée de métriques et le refus des sources non autorisées. Justifie les règles réellement appliquées par Docker ; mettre à jour le registre et les schémas après validation.
 - Si `srv-k3s` tombe, la supervision tombe avec.
+- **SLI** : mesure d'un comportement du service (par exemple la proportion de requêtes valides réussies). **SLO** : objectif chiffré pour cet indicateur sur une fenêtre définie. Une sonde verte ou une cible `up` ne constitue pas, seule, un SLI de disponibilité utilisateur ; un SLO de laboratoire n'est pas un SLA contractuel.
 
 ## Ce qu'il faut obtenir
 
@@ -26,7 +27,7 @@ Sans supervision, on apprend une panne par les utilisateurs, sans savoir depuis 
 3. Deux alertes : base indisponible depuis 1 minute ; erreurs 5xx en hausse.
 4. Un tableau de bord Grafana : requêtes par seconde, part des erreurs, latence au 95ᵉ centile, état de la base.
 5. Les deux alertes testées sur la copie d'essai : panne, `pending`, `firing`, retour à la normale, heures notées.
-6. Un essai de charge limité avec k6, depuis `srv-admin`, sur la copie d'essai uniquement.
+6. Un essai de charge limité avec k6, depuis `srv-admin`, sur la copie d'essai uniquement. Avant de lancer, définir un scénario de lecture, sa charge, sa durée et son arrêt de sécurité ; choisir un objectif de taux de succès et de latence p95, justifier les seuils et relever débit, CPU/RAM et saturation. Exclure les requêtes hors périmètre (p. ex. refus d'accès volontaires) selon une règle écrite ; si aucun trafic n'est observé, ne pas inventer de ratio. Comparer les résultats aux objectifs, émettre une hypothèse et expliquer le prochain contrôle. Un essai court ne prouve pas une disponibilité mensuelle.
 
 **Livrable** : configuration, règles, tableau de bord exporté, capture des cibles, heures des tests d'alerte, tests k6 interprétés et preuves du filtrage des métriques.
 
@@ -38,6 +39,7 @@ Sans supervision, on apprend une panne par les utilisateurs, sans savoir depuis 
 | Règles chargées | Prometheus, Alerts | Deux règles, `inactive` en temps normal |
 | Alerte « base » | Base de la copie arrêtée | `firing` après 1 minute, puis retour à `inactive` |
 | Alerte « 5xx » | Panne provoquant des 5xx sur la copie | `firing`, puis retour |
+| Objectifs et charge | Mesures k6 et Grafana | Scénario, fenêtre, seuils, résultats et limites consignés ; pas d'objectif déclaré atteint sans mesure |
 | Service réel épargné | Ses panneaux pendant les tests | Aucune erreur |
 | Entrée privée réservée aux métriques | Test depuis la supervision et une source non autorisée ; test d’une route métier | Scrape réussi ; accès non autorisés et routes métier refusés ; API directe non publiée |
 

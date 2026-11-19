@@ -37,16 +37,16 @@ Les exercices apprennent un outil à la fois. Les évaluations vérifient qu'on 
 
 **Exercices mobilisés** : 04, 05, 06, 11.
 
-**Scénario.** `srv-app` est déclarée perdue. Tu la détruis, puis tu la reconstruis entièrement par ton code : Terraform, puis Ansible, puis ton rôle de déploiement, puis la restauration de la dernière sauvegarde. Aucune action à la main sur la nouvelle VM.
+**Scénario.** Simuler la perte de `srv-app` sur une cible jetable explicitement isolée. Après vérification d’une sauvegarde restaurable, du plan et accord ciblé, reconstruire une VM de test entièrement par Terraform, Ansible, le rôle de déploiement puis la restauration. Ne jamais détruire la VM de service, le state partagé ou l’unique sauvegarde pour cette évaluation. Aucune configuration manuelle sur la cible de reconstruction.
 
 **À démontrer.**
 
 1. Le plan Terraform avant destruction et avant recréation, lu et commenté.
-2. La VM recréée, configurée et servant OpsDesk, sans intervention manuelle.
+2. La VM de test recréée, configurée et servant OpsDesk, sans configuration manuelle.
 3. Les données restaurées : le ticket témoin relu dans l'interface.
 4. La durée totale, de la destruction au ticket relu.
 
-**Critères de réussite.** Aucune commande manuelle sur `srv-app` ; second passage Ansible à `changed=0` ; second plan Terraform à « No changes » ; durée mesurée et RPO de la copie utilisée écrit.
+**Critères de réussite.** Aucune configuration manuelle sur la cible de reconstruction ; second passage Ansible à `changed=0` ; second plan Terraform à « No changes » ; durée et fenêtre de perte observées, comparées aux objectifs RTO/RPO.
 
 <a id="evaluation-3"></a>
 
@@ -89,7 +89,7 @@ Les exercices apprennent un outil à la fois. Les évaluations vérifient qu'on 
 
 **Exercices mobilisés** : 10, 11.
 
-**Scénario.** Il faut appliquer les mises à jour de Rocky Linux à `srv-app`, avec redémarrage, en garantissant moins de 5 minutes d'indisponibilité et zéro perte de données. Le critère d'abandon est fixé avant de commencer.
+**Scénario.** Il faut appliquer les mises à jour de Rocky Linux à `srv-app`, avec redémarrage, avec un objectif de moins de 5 minutes d'indisponibilité et de zéro perte de données, à vérifier et non garanti à l'avance. Le critère d'abandon est fixé avant de commencer.
 
 **À démontrer.**
 

@@ -106,6 +106,10 @@ Les deux ne se voient pas. K3s garde son propre moteur, containerd, et ne pilote
 
 **Pourquoi K3s, alors ?** Une seule application sur un seul serveur n'en a pas besoin : Compose suffit. K3s est là pour pratiquer Kubernetes. Avec un seul nœud, il n'apporte pas de haute disponibilité, et la supervision qui y tourne s'arrête avec lui.
 
+## Conditions de réexamen
+
+Ces conditions ne sont pas des exigences supplémentaires pour le laboratoire : elles aident à défendre une décision et à reconnaître ses limites. Réexaminer Compose si un besoin de disponibilité, de placement sur plusieurs nœuds ou de gestion de flotte est démontré ; le K3s mono-nœud actuel ne résout pas à lui seul ces problèmes. Réexaminer le stockage des sauvegardes si la protection contre la perte du poste devient une exigence. Réexaminer le dimensionnement après mesures de charge, et l'état Terraform distant si plusieurs opérateurs doivent travailler ensemble. Dans chaque cas, comparer le risque, le bénéfice, le coût et une méthode de validation avant de modifier la cible. Aucun changement de stack n'est présumé.
+
 ## Décisions retenues
 
 « Retenu » est l'état d'une décision, pas la preuve de son exécution. Une décision remplacée reste présente, avec son état et la décision qui la remplace. Les décisions du 12 et du 13 novembre 2026 ont été prises avant toute réalisation : l'exercice 02 sert à les relire, les justifier et les vérifier.

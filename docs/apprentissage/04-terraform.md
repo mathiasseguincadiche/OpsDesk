@@ -13,9 +13,9 @@ Des machines créées à la main ne se refont pas à l'identique. Terraform remp
 ## L'essentiel à comprendre
 
 - Terraform compare trois choses : **ce que tu veux** (le code), **ce qu'il croit gérer** (le state) et **ce qui existe vraiment**. Le plan est la différence.
-- On lit toujours le plan avant `apply` : `+` crée, `~` modifie sur place, `-/+` détruit puis recrée (une VM remplacée perd son disque).
-- Un second `plan` à `No changes` prouve que le code et la réalité concordent.
-- Le state ne va jamais dans Git et doit être copié hors de `srv-admin` : sans lui, Terraform ne reconnaît plus ses machines et propose de les recréer.
+- On lit toujours le plan avant `apply` : `+` crée, `~` modifie sur place, `-/+` détruit puis recrée (risque de perte de données selon le cycle de vie et le stockage du disque ; vérifier le plan).
+- Un second `plan` à `No changes` indique qu'aucun écart géré n'est détecté ; il ne prouve pas la disponibilité du service ni l'absence d'écarts non suivis.
+- Le state ne va jamais dans Git et doit être copié hors de `srv-admin` : sans lui, Terraform peut proposer de recréer des ressources existantes. Ne pas appliquer un tel plan ; rechercher et vérifier l'état approprié.
 - Le fournisseur `dmacvicar/libvirt` change beaucoup entre 0.8 et 0.9 : on fixe une version et on lit la documentation de cette version.
 - Décision à prendre et à inscrire au registre avant de coder : image cloud et cloud-init, ou ISO et Kickstart.
 

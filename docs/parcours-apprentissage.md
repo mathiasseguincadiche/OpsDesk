@@ -22,6 +22,19 @@ L'exercice 13 est transversal : une tâche nouvelle, menée seul, et vérifiée 
 
 Les cinq piliers classent les compétences, non l’ordre des séances. Suivre l’ordre de réalisation du [parcours](apprentissage/README.md#les-13-exercices) : 01 à 06, puis 08, 07, 11, 09, 10, 12 et 13.
 
+## Les quatre axes de compétences
+
+Les axes du projet relient les cinq piliers aux responsabilités du métier. Ils ne créent ni nouveau module ni second suivi : la liste ci-dessous renvoie aux exercices et le journal personnel reste dans Notion.
+
+| Axe | Exercices de référence | Résultat observable (à réaliser personnellement) |
+| --- | --- | --- |
+| Construire et déployer | [01 à 06](apprentissage/README.md#les-13-exercices) | Exigences analysées, infrastructure provisionnée et service reçu sur Rocky Linux |
+| Industrialiser et faire évoluer | [08](apprentissage/08-cicd.md), [07](apprentissage/07-k3s.md), [10](apprentissage/10-maintenance.md) | Artefact qualifié promu sans reconstruction inutile, déploiement et retour arrière démontrés |
+| Exploiter et rétablir | [11](apprentissage/11-sauvegarde-reprise.md), [09](apprentissage/09-supervision.md), [12](apprentissage/12-diagnostic.md) | Restauration vérifiée, signaux interprétés, incident diagnostiqué puis rétabli |
+| Qualifier et démontrer | Tous, notamment [13](apprentissage/13-autonomie.md) | Critères définis avant action, preuves datées, limites et aide déclarées ; adaptation à un cas nouveau |
+
+Les six étapes d'apprentissage (découvrir, comprendre, pratiquer, approfondir, maîtriser, devenir autonome) décrivent la progression. Les niveaux L0 à L3 évaluent des acquis observables : ils ne sont pas automatiquement attribués après une lecture ou un test du socle.
+
 ## Où se trouve quoi
 
 - **Les énoncés de référence** : [docs/apprentissage/](apprentissage/README.md), lisibles par tous.

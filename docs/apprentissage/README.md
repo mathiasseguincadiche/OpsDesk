@@ -4,12 +4,12 @@ L'application et ses tests sont fournis ; l'infrastructure est à construire soi
 
 Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk (FastAPI, React, PostgreSQL ; Docker Engine et Compose en production, décision du 18 novembre 2026).
 
-## Deux niveaux de lecture
+## Deux supports, plusieurs niveaux de lecture
 
 | Où | Ce qu'on y trouve | Pour qui |
 | --- | --- | --- |
 | **Ici, dans le dépôt** | L'énoncé de référence de chaque exercice : objectif, notions clés, état voulu, livrable, vérifications, pièges | Tout lecteur, sans compte |
-| **Centre de formation Notion** (accès sur invitation) | Le cours complet : explications pas à pas, exemple travaillé sur un autre cas, indices progressifs, suivi personnel | La personne qui fait le parcours |
+| **Centre de formation Notion** (accès sur invitation) | Le cours complet : explications pas à pas, exemple travaillé sur un autre cas, indices progressifs, suivi personnel et approfondissements | Apprenants et lecteurs souhaitant approfondir |
 
 Les deux décrivent les mêmes exercices, avec les mêmes livrables et les mêmes vérifications. En cas d'écart, les décisions du [registre](../architecture.md#décisions-retenues) et la [référence technique](../reference-technique.md) font foi.
 
@@ -39,7 +39,7 @@ Hôte **Fedora 45** avec KVM, QEMU et libvirt ; trois VM **Rocky Linux 10.2** su
 
 ## Règles communes
 
-- **Lire avant de lancer.** Avant une commande : sur quelle machine, sous quel compte, avec quel effet attendu, et comment revenir en arrière.
+- **Lire avant de lancer.** Avant une commande importante : comprendre le besoin, la cible, le compte, le dossier, les paramètres, les droits, l'effet attendu et le contrôle ; prévoir le diagnostic et, si nécessaire, le retour arrière. Une sortie type n'est pas un résultat constaté.
 - **Ne pas affaiblir les protections.** SELinux reste `Enforcing`, firewalld reste actif ; on cherche la règle précise.
 - **Ne jamais exposer de secret.** Ni dans le dépôt, ni dans les preuves, ni dans les captures.
 - **Tester sur la copie, pas sur le service réel**, sauf intervention préparée (exercice 10).

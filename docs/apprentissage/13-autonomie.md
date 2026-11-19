@@ -25,9 +25,9 @@ Toute aide est déclarée : A0 (documentation officielle seulement), A1 (ressour
 
 Une tâche jamais faite, parmi celles-ci ou de taille comparable :
 
-1. Réserver `/metrics` à l'adresse de `srv-k3s` dans nginx et refermer le port 8000 (question ouverte de l'exercice 02).
+1. Sur la copie d'essai, diagnostiquer et corriger un accès aux métriques depuis une source interdite (variante nouvelle préparée par une autre personne), sans réexposer l'API ni interrompre la collecte autorisée. Ne pas simplement rejouer l'exercice 09.
 2. HTTPS sur l'Ingress de la copie d'essai, avec redirection.
-3. Reconstruire de zéro une VM de test avec Terraform et Ansible, y restaurer la dernière sauvegarde, et mesurer le temps total.
+3. Adapter Terraform et Ansible à une nouvelle cible de test isolée avec une contrainte différente de stockage ou de ressources, puis restaurer une sauvegarde et mesurer le temps total. Ne pas reproduire à l'identique l'évaluation 2.
 4. Changer `JWT_SECRET` sur le service réel, avec annonce et preuve.
 5. Une alerte « aucune sauvegarde depuis 26 heures », testée.
 6. Une analyse Trivy hebdomadaire et le traitement complet d'une vulnérabilité.
