@@ -6,12 +6,6 @@ Un collaborateur signale une panne, l'équipe support la prend en charge, la ré
 
 **Découvrir** : [architecture et choix](#architecture) · **Essayer** : [démarrage local](#lancer-le-projet-en-local) · **Apprendre** : [parcours](docs/apprentissage/README.md) · **Évaluer** : [état et preuves](STATUS.md) · **Approfondir** : [référence technique](docs/reference-technique.md)
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/apercu-sombre.png">
-  <img alt="Tableau de bord d'OpsDesk : tickets actifs, activité des 14 derniers jours, répartition par statut et tickets à traiter en priorité" src="docs/images/apercu-clair.png">
-</picture>
-<sub>Capture réelle de la version 2.0.0, prise le 18 novembre 2026 sur l'environnement local, avec les données de démonstration.</sub>
-
 ## Mon rôle dans ce projet
 
 **L'application** a été développée avec l'aide d'outils d'IA, puis relue, testée et conteneurisée. Elle me sert de service réaliste à exploiter.
@@ -19,6 +13,12 @@ Un collaborateur signale une panne, l'équipe support la prend en charge, la ré
 **Mon objectif professionnel : devenir ingénieur DevOps spécialisé dans l’automatisation des infrastructures (InfraOps).** L’application est un support, pas un projet de développement full stack. Mon objectif est de transformer un besoin applicatif en une infrastructure Linux reproductible : concevoir le réseau et le stockage, provisionner les machines, sécuriser et configurer les serveurs, déployer des artefacts versionnés, industrialiser la livraison, puis superviser, maintenir, diagnostiquer et restaurer le service. Dans ce parcours, j’apprends à écrire et tester le code d’infrastructure et les automatisations nécessaires ; je lis le code applicatif pour comprendre ses contraintes et collaborer avec le développement. Les exercices et leurs preuves distinguent le travail personnel du socle fourni.
 
 **Où j’en suis :** application et pile locale qualifiées le 19 novembre 2026 sur un runner jetable : tests SQLite et PostgreSQL, compilation, smoke HTTP, isolation des ports, reprise de l’API et de la base, persistance. L’infrastructure du laboratoire reste à construire personnellement. Voir les [preuves datées et leurs limites](STATUS.md).
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/apercu-sombre.png">
+  <img alt="Tableau de bord d'OpsDesk : tickets actifs, activité des 14 derniers jours, répartition par statut et tickets à traiter en priorité" src="docs/images/apercu-clair.png">
+</picture>
+<sub>Capture réelle de la version 2.0.0, prise le 18 novembre 2026 sur l'environnement local, avec les données de démonstration.</sub>
 
 ## Ce que montre ce projet
 
