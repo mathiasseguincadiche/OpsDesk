@@ -21,6 +21,9 @@ jobs:
           --health-interval 5s --health-timeout 3s --health-retries 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: a1a2bb65b6455c4ec7d38b738e53ee6f0e41235d
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
@@ -38,6 +41,9 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: a1a2bb65b6455c4ec7d38b738e53ee6f0e41235d
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
@@ -51,6 +57,9 @@ jobs:
     timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: a1a2bb65b6455c4ec7d38b738e53ee6f0e41235d
+          persist-credentials: false
       - name: Recette Compose sur runner jetable
         shell: bash
         run: |
@@ -81,29 +90,136 @@ jobs:
           PY
           curl --fail --silent --show-error http://127.0.0.1:8080/health/ready
           python3 scripts/smoke.py http://127.0.0.1:8080
-          # Depuis un autre espace réseau : accéder à la passerelle, et pas à sa propre boucle locale.
-          docker run --rm --add-host=host.docker.internal:host-gateway curlimages/curl:8.12.1 --connect-timeout 3 --max-time 5 --fail http://host.docker.internal:8080/health/ready && { echo 'ECHEC: frontend accessible hors boucle locale'; exit 1; } || test "$?" -eq 7 -o "$?" -eq 28
-          echo 'Test hors boucle locale terminé'
+          # Une requête réseau non autorisée doit échouer, sans masquer une autre erreur.
+          for port in 8080 8000; do
+            set +e
+            docker run --rm --add-host=host.docker.internal:host-gateway curlimages/curl:8.12.1 --silent --show-error --connect-timeout 3 --max-time 5 "http://host.docker.internal:$port/health/ready"
+            rc=$?
+            set -e
+            test "$rc" -eq 7 -o "$rc" -eq 28
+            echo "Port $port refusé depuis un autre espace réseau (code curl $rc)"
+          done
+          # Créer une donnée témoin, sans consigner le jeton de session.
+          cat > /tmp/witness.py <<'PY'
+          import json, sys, urllib.request
+          base = 'http://127.0.0.1:8080'
+          def http(path, payload=None, token=None):
+              headers={'Content-Type':'application/json'}
+              if token: headers['Authorization']='Bearer '+token
+              req=urllib.request.Request(base+path, headers=headers, data=None if payload is None else json.dumps(payload).encode())
+              with urllib.request.urlopen(req, timeout=10) as r: return json.load(r)
+          token=http('/api/auth/login',{'email':'julie.durand@opsdesk.local','password':'Demo1234!'})['access_token']
+          title='Qualification de persistance — ticket témoin'
+          if sys.argv[1]=='create':
+              t=http('/api/tickets', {'title':title,'priority':'high','category':'network'},token)
+              with open('/tmp/witness-id','w') as f: f.write(str(t['id']))
+              print('Ticket témoin créé:',t['id'])
+          else:
+              id=open('/tmp/witness-id').read().strip()
+              t=http('/api/tickets/'+id,token=token)
+              assert t['title']==title,(t['id'],t['title'])
+              print('Ticket témoin relu:',id)
+          PY
+          python3 /tmp/witness.py create
+          # API arrêtée : réponse bornée, mais l'interface reste vivante.
           docker compose stop backend
-          code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/health/ready)
-          test "$code" = 502
+          result=$(curl -sS --max-time 8 -o /dev/null -w '%{http_code} %{time_total}' http://127.0.0.1:8080/health/ready)
+          echo "API arrêtée : $result"
+          python3 -c 'import sys; s,t=sys.argv[1].split(); assert s in ("502","504") and float(t)<8' "$result"
+          curl --fail --silent --show-error http://127.0.0.1:8080/healthz
           docker compose up -d --wait --wait-timeout 180
-          curl --fail --silent --show-error http://127.0.0.1:8080/health/ready
-          echo 'Reprise API vérifiée sur runner'
+          for i in $(seq 1 30); do
+            if curl --fail --silent --max-time 4 http://127.0.0.1:8080/health/ready >/dev/null; then break; fi
+            sleep 1
+          done
+          curl --fail --silent --show-error --max-time 8 http://127.0.0.1:8080/health/ready
+          echo 'Reprise API vérifiée'
+          # Base arrêtée : le processus API vit, mais le service n'est pas prêt.
+          docker compose stop db
+          code=$(curl -sS --max-time 15 -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/health/ready)
+          echo "Base arrêtée : readiness=$code"
+          test "$code" = 503
+          curl --fail --silent --show-error --max-time 8 http://127.0.0.1:8000/health/live
+          docker compose up -d --wait --wait-timeout 180
+          for i in $(seq 1 30); do
+            if curl --fail --silent --max-time 4 http://127.0.0.1:8080/health/ready >/dev/null; then break; fi
+            sleep 1
+          done
+          curl --fail --silent --show-error --max-time 8 http://127.0.0.1:8080/health/ready
+          echo 'Reprise PostgreSQL vérifiée'
+          docker compose down
+          docker compose up -d --wait --wait-timeout 180
+          python3 /tmp/witness.py check
+          echo 'PERSISTANCE OK après recréation des trois conteneurs'
   schemas:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Contrôle structurel et rendus des 13 exports
+        with:
+          ref: a1a2bb65b6455c4ec7d38b738e53ee6f0e41235d
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: _qualification
+          persist-credentials: false
+      - name: Régénérer les six sources modifiées et leurs exports Draw.io
         shell: bash
         run: |
-          python3 .github/qualification/recette_schemas.py
-        env:
-          PYTHONUNBUFFERED: "1"
+          set -euo pipefail
+          curl --fail --location --retry 2 -o /tmp/drawio.deb https://github.com/jgraph/drawio-desktop/releases/download/v32.7.4/drawio-amd64-32.7.4.deb
+          echo 'ffd8c110f1df8cde26a7fbd801212bd8381d257879f424a2191ec4cc491aa50b  /tmp/drawio.deb' | sha256sum -c -
+          sudo apt-get install -y /tmp/drawio.deb
+          draw="$(command -v drawio || command -v draw.io || true)"
+          if test -z "$draw"; then draw=/opt/draw.io/drawio; fi
+          test -x "$draw"
+          python3 docs/diagrams/outils/generer_schemas.py /tmp/opsdesk-regen
+          mkdir -p /tmp/exports
+          for name in architecture pedagogique-acces-ssh pedagogique-ansible pedagogique-terraform pedagogique-cicd pedagogique-sauvegarde; do
+            cp "/tmp/opsdesk-regen/$name.drawio" "docs/diagrams/$name.drawio"
+            xvfb-run -a "$draw" --no-sandbox --export --format svg --theme light --embed-svg-fonts false --border 0 --output "$PWD/docs/diagrams/$name.svg" "$PWD/docs/diagrams/$name.drawio"
+            test -s "docs/diagrams/$name.svg"
+            cp "docs/diagrams/$name.drawio" "docs/diagrams/$name.svg" /tmp/exports/
+          done
+          python3 _qualification/.github/qualification/recette_schemas.py
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: recette-visuelle-svg
+          name: exports-corriges
+          path: /tmp/exports/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        with:
+          name: recette-visuelle-svg-corriges
           path: /tmp/recette-schemas/
           retention-days: 7
+  integrer_exports:
+    needs: schemas
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/qualification-finale-20261119
+      - uses: actions/download-artifact@v4
+        with:
+          name: exports-corriges
+          path: /tmp/exports
+      - name: Intégrer strictement les exports régénérés sur la branche de correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "a1a2bb65b6455c4ec7d38b738e53ee6f0e41235d"
+          for name in architecture pedagogique-acces-ssh pedagogique-ansible pedagogique-terraform pedagogique-cicd pedagogique-sauvegarde; do
+            for ext in drawio svg; do
+              test -s "/tmp/exports/$name.$ext"
+              cp "/tmp/exports/$name.$ext" "docs/diagrams/$name.$ext"
+              git add "docs/diagrams/$name.$ext"
+            done
+          done
+          git diff --cached --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Régénérer les six schémas corrigés avec Draw.io 32.7.4"
+          git push origin HEAD:refs/heads/audit/qualification-finale-20261119
