@@ -1,0 +1,30 @@
+name: Catalogue et bibliotheque V25 (isole)
+on:
+  push:
+    branches: ["qualification/reference-v25-20261119"]
+permissions:
+  contents: read
+jobs:
+  catalogue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerer la planche et les composants
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 2 -o /tmp/drawio.deb https://github.com/jgraph/drawio-desktop/releases/download/v32.7.4/drawio-amd64-32.7.4.deb
+          echo 'ffd8c110f1df8cde26a7fbd801212bd8381d257879f424a2191ec4cc491aa50b  /tmp/drawio.deb' | sha256sum -c -
+          sudo apt-get install -y /tmp/drawio.deb
+          draw="$(command -v drawio || command -v draw.io || true)"
+          if test -z "$draw"; then draw=/opt/draw.io/drawio; fi
+          mkdir -p /tmp/catalogue-v25
+          PYTHONPATH=docs/diagrams/outils python3 .github/qualification/generer_catalogue.py /tmp/catalogue-v25
+          cp .github/qualification/generer_catalogue.py /tmp/catalogue-v25/
+          xvfb-run -a "$draw" --no-sandbox --export --format svg --theme light --embed-svg-fonts false --border 0 --output /tmp/catalogue-v25/catalogue.svg /tmp/catalogue-v25/catalogue.drawio
+          test -s /tmp/catalogue-v25/catalogue.svg
+      - uses: actions/upload-artifact@v4
+        with:
+          name: catalogue-v25
+          path: /tmp/catalogue-v25
+          retention-days: 7
