@@ -73,19 +73,7 @@ Le frontend n'a qu'une variable : `BACKEND_URL`.
 
 ## Lancer les essais locaux
 
-Avec Docker Engine et le plugin Compose :
-
-```bash
-if [ ! -f .env.example ]; then
-  printf 'Fichier .env.example absent : vérifiez le dossier du dépôt.\n' >&2
-elif [ -e .env ] || [ -L .env ]; then
-  printf 'Configuration existante conservée. Vérifiez-la avant de continuer.\n'
-else
-  (umask 077; set -C; cat .env.example > .env)
-fi
-```
-
-Remplacer les valeurs `change-me` dans `.env`, puis :
+Avec Docker Engine et le plugin Compose, depuis la racine du dépôt. Aucun `.env` nécessaire pour la démonstration locale :
 
 ```bash
 docker compose up -d --build

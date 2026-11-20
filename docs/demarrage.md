@@ -12,23 +12,11 @@ Ce guide lance OpsDesk sur un poste, en conteneurs, pour l'essayer ou le dévelo
 | `curl` | `curl --version` | Pour contrôler la disponibilité depuis le poste |
 | Les ports locaux 8080 et 8000 libres (Linux) | `ss -lnt \| grep -E ':(8080\|8000)[[:space:]]'` | Aucune ligne attendue ; adapter le contrôle au système hôte |
 
-## 1. Récupérer le dépôt et préparer la configuration
+## 1. Récupérer le dépôt
 
 ```bash
 git clone https://github.com/mathiasseguincadiche/OpsDesk.git && cd OpsDesk
 ```
-
-```bash
-if [ ! -f .env.example ]; then
-  printf 'Fichier .env.example absent : vérifiez le dossier du dépôt.\n' >&2
-elif [ -e .env ] || [ -L .env ]; then
-  printf 'Configuration existante conservée. Vérifiez-la avant de continuer.\n'
-else
-  (umask 077; set -C; cat .env.example > .env)
-fi
-```
-
-Ouvrir `.env` et remplacer les trois valeurs `change-me` : mot de passe de la base, `JWT_SECRET` (32 caractères au moins, par exemple généré par `openssl rand -base64 48`), mot de passe du premier administrateur. Le fichier `.env` n'est jamais versionné.
 
 ## 2. Démarrer
 
@@ -36,7 +24,7 @@ Ouvrir `.env` et remplacer les trois valeurs `change-me` : mot de passe de la ba
 docker compose up -d --build
 ```
 
-La première fois, la construction des images prend quelques minutes. La base démarre d'abord ; l'API attend qu'elle soit saine, puis l'interface attend l'API.
+Sur un dépôt fraîchement cloné, aucun fichier `.env` n'est nécessaire. La première construction peut prendre quelques minutes. La base démarre d'abord ; l'API attend qu'elle soit saine, puis l'interface attend l'API.
 
 ## 3. Vérifier
 
@@ -80,13 +68,17 @@ docker compose down
 
 Les conteneurs sont supprimés, le volume de la base est conservé. **`docker compose down -v` supprime aussi le volume, donc tous les tickets** : à réserver à une remise à zéro voulue.
 
+## Configuration facultative
+
+Pour modifier un port ou une option, créer `.env` à partir de `.env.example` uniquement si aucun `.env` n'existe déjà. Les valeurs existantes sont conservées ; ne pas recréer le volume pour changer un mot de passe. Le Compose de référence utilise des valeurs publiques de démonstration et le mode `development`. Sur un serveur, utiliser une configuration de déploiement dédiée avec `ENVIRONMENT=production` et des secrets distincts (voir [référence technique](reference-technique.md#déployer-avec-docker-compose-sur-un-serveur)).
+
 ## En cas de problème
 
 | Ce que tu vois | Cause probable | Que faire |
 | --- | --- | --- |
 | `address already in use` sur 8080 ou 8000 | Un autre service occupe le port | Identifier ce service avant de l'arrêter ; ou adapter `HTTP_PORT` / `API_PORT` dans `.env`, puis les URL de contrôle |
 | `backend` jamais `healthy` | L'API n'arrive pas à démarrer (souvent la base ou un secret) | `docker compose logs backend` |
-| L'API démarre puis s'arrête, message sur `JWT_SECRET` | `ENVIRONMENT=production` exige un `JWT_SECRET` d'au moins 32 caractères | Corriger `.env`, puis `docker compose up -d` |
+| L'API refuse les secrets | Un `.env` ou des variables existantes activent le mode `production` sans secrets valides | Pour la démonstration locale, utiliser `development` ; pour un serveur, corriger les secrets. Ne pas modifier ni supprimer les données existantes. |
 | `502` ou `504` sur l’interface | nginx ne joint pas l’API ou n’obtient pas de réponse à temps | `docker compose ps`, puis les journaux de `backend` et `frontend` |
 | Connexion refusée avec le mot de passe administrateur modifié | Le premier administrateur n'est créé qu'une fois, sur une base vide | Le mot de passe de `.env` ne s'applique qu'au premier démarrage |
 | Pas de données de démonstration | Elles ne sont créées que si la base est vide, et si `SEED_DEMO_DATA=true` | Normal sur une base déjà utilisée |

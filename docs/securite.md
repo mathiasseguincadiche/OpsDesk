@@ -34,7 +34,7 @@ Les refus (`401`, `403`, compte désactivé, visibilité par rôle) sont couvert
 | `JWT_SECRET` | Signature des jetons | 32 caractères au moins ; **obligatoire** quand `ENVIRONMENT=production` ; le changer déconnecte tout le monde |
 | `ADMIN_PASSWORD` | Premier administrateur | Utilisé une seule fois, à la création du compte |
 
-En mode `production`, les valeurs prédéfinies de démonstration, les secrets manquants et la réutilisation d'un secret sont refusés pour les variables JWT, admin et DB (hors `DATABASE_URL`, dont les identifiants restent à contrôler séparément). Le mode de démonstration locale utilise encore les comptes fictifs ; ne jamais l'exposer sur le réseau. Désactiver `SEED_DEMO_DATA` et `ALLOW_REGISTRATION` pour une cible non démonstrative.
+En mode `production`, les valeurs prédéfinies de démonstration, les secrets manquants et la réutilisation d'un secret sont refusés pour les variables JWT, admin et DB (hors `DATABASE_URL`, dont les identifiants restent à contrôler séparément). La pile locale de référence démarre sans `.env` en mode `development`, avec des valeurs publiques et des comptes fictifs. Ses ports sont liés à la boucle locale ; ne pas l'exposer sur le réseau. Désactiver `SEED_DEMO_DATA` et `ALLOW_REGISTRATION` pour une cible non démonstrative.
 
 Chaque secret accepte une forme `*_FILE` qui lit sa valeur dans un fichier : c'est la forme attendue des secrets de Compose et de Kubernetes. La règle est de ne placer aucun secret réel dans les images ni dans le dépôt (un scan ponctuel limité à la v2 a été exécuté ; il ne couvre pas l'historique Git ni les futurs secrets d'infrastructure) : `.env` et les dossiers `secrets/` sont exclus par `.gitignore`, seul `.env.example` (sans valeur réelle) est versionné.
 
