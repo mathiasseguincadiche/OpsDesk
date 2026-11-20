@@ -4,10 +4,11 @@
 FROM docker.io/library/python:3.13-slim AS build
 ENV PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1
 WORKDIR /build
-COPY requirements.txt .
+COPY requirements.txt constraints.txt ./
 RUN python -m venv /opt/venv \
  && /opt/venv/bin/pip install --upgrade pip \
- && /opt/venv/bin/pip install -r requirements.txt
+ && /opt/venv/bin/pip install -r requirements.txt -c constraints.txt \
+ && /opt/venv/bin/pip check
 
 FROM docker.io/library/python:3.13-slim AS runtime
 ARG APP_VERSION=2.0.0
