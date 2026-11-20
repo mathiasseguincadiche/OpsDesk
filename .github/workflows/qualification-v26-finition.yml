@@ -1,0 +1,314 @@
+name: Qualification ponctuelle V26 — finition des images et graphismes
+on:
+  push:
+    branches: ["qualification/v26-finition-20261119"]
+permissions:
+  contents: read
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: opsdesk_test
+          POSTGRES_PASSWORD: qualification-only
+          POSTGRES_DB: opsdesk_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U opsdesk_test -d opsdesk_test"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a2d89673980c39abe906e96d78fd88a78b75e7a7
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Tests et lint de l'API (SQLite puis PostgreSQL jetable)
+        working-directory: backend
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -r requirements-dev.txt
+          python -m ruff check app tests
+          python -m pytest -q
+          TEST_DATABASE_URL=postgresql+psycopg://opsdesk_test:qualification-only@127.0.0.1:5432/opsdesk_test python -m pytest -q
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a2d89673980c39abe906e96d78fd88a78b75e7a7
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - working-directory: frontend
+        run: |
+          npm ci
+          npm run typecheck
+          npm run build
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a2d89673980c39abe906e96d78fd88a78b75e7a7
+          persist-credentials: false
+      - name: Recette Compose sur runner jetable
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DB_PASSWORD="$(openssl rand -hex 20)"
+          export JWT_SECRET="$(openssl rand -hex 32)"
+          export ADMIN_PASSWORD="$(openssl rand -hex 20)"
+          printf '::add-mask::%s\n' "$DB_PASSWORD" "$JWT_SECRET" "$ADMIN_PASSWORD"
+          export APP_REVISION="$(git rev-parse HEAD)"
+          export SEED_DEMO_DATA=true ALLOW_REGISTRATION=true
+          docker version --format '{{.Server.Version}}'
+          docker compose version
+          trap 'docker compose down -v --remove-orphans' EXIT
+          docker compose config --quiet
+          docker compose up -d --build --wait --wait-timeout 180
+          docker compose ps
+          python3 - <<'PY'
+          import json, subprocess
+          for service, host_port, port in [('frontend','8080','8080/tcp'),('backend','8000','8000/tcp')]:
+              cid=subprocess.check_output(['docker','compose','ps','-q',service],text=True).strip()
+              obj=json.loads(subprocess.check_output(['docker','inspect',cid],text=True))[0]
+              assert obj['NetworkSettings']['Ports'][port]==[{'HostIp':'127.0.0.1','HostPort':host_port}]
+              print(service, 'publication 127.0.0.1:'+host_port, 'OK')
+          cid=subprocess.check_output(['docker','compose','ps','-q','db'],text=True).strip()
+          obj=json.loads(subprocess.check_output(['docker','inspect',cid],text=True))[0]
+          assert all(v is None for v in obj['NetworkSettings']['Ports'].values())
+          print('PostgreSQL non publié: OK')
+          PY
+          curl --fail --silent --show-error http://127.0.0.1:8080/health/ready
+          python3 scripts/smoke.py http://127.0.0.1:8080
+          # Une requête réseau non autorisée doit échouer, sans masquer une autre erreur.
+          for port in 8080 8000; do
+            set +e
+            docker run --rm --add-host=host.docker.internal:host-gateway curlimages/curl:8.12.1 --silent --show-error --connect-timeout 3 --max-time 5 "http://host.docker.internal:$port/health/ready"
+            rc=$?
+            set -e
+            test "$rc" -eq 7 -o "$rc" -eq 28
+            echo "Port $port refusé depuis un autre espace réseau (code curl $rc)"
+          done
+          # Créer une donnée témoin, sans consigner le jeton de session.
+          cat > /tmp/witness.py <<'PY'
+          import json, sys, urllib.request
+          base = 'http://127.0.0.1:8080'
+          def http(path, payload=None, token=None):
+              headers={'Content-Type':'application/json'}
+              if token: headers['Authorization']='Bearer '+token
+              req=urllib.request.Request(base+path, headers=headers, data=None if payload is None else json.dumps(payload).encode())
+              with urllib.request.urlopen(req, timeout=10) as r: return json.load(r)
+          token=http('/api/auth/login',{'email':'julie.durand@opsdesk.local','password':'Demo1234!'})['access_token']
+          title='Qualification de persistance — ticket témoin'
+          if sys.argv[1]=='create':
+              t=http('/api/tickets', {'title':title,'priority':'high','category':'network'},token)
+              with open('/tmp/witness-id','w') as f: f.write(str(t['id']))
+              print('Ticket témoin créé:',t['id'])
+          else:
+              id=open('/tmp/witness-id').read().strip()
+              t=http('/api/tickets/'+id,token=token)
+              assert t['title']==title,(t['id'],t['title'])
+              print('Ticket témoin relu:',id)
+          PY
+          python3 /tmp/witness.py create
+          # API arrêtée : réponse bornée, mais l'interface reste vivante.
+          docker compose stop backend
+          result=$(curl -sS --max-time 8 -o /dev/null -w '%{http_code} %{time_total}' http://127.0.0.1:8080/health/ready)
+          echo "API arrêtée : $result"
+          python3 -c 'import sys; s,t=sys.argv[1].split(); assert s in ("502","504") and float(t)<8' "$result"
+          curl --fail --silent --show-error http://127.0.0.1:8080/healthz
+          docker compose up -d --wait --wait-timeout 180
+          for i in $(seq 1 30); do
+            if curl --fail --silent --max-time 4 http://127.0.0.1:8080/health/ready >/dev/null; then break; fi
+            sleep 1
+          done
+          curl --fail --silent --show-error --max-time 8 http://127.0.0.1:8080/health/ready
+          echo 'Reprise API vérifiée'
+          # Base arrêtée : le processus API vit, mais le service n'est pas prêt.
+          docker compose stop db
+          code=$(curl -sS --max-time 15 -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/health/ready)
+          echo "Base arrêtée : readiness=$code"
+          test "$code" = 503
+          curl --fail --silent --show-error --max-time 8 http://127.0.0.1:8000/health/live
+          docker compose up -d --wait --wait-timeout 180
+          for i in $(seq 1 30); do
+            if curl --fail --silent --max-time 4 http://127.0.0.1:8080/health/ready >/dev/null; then break; fi
+            sleep 1
+          done
+          curl --fail --silent --show-error --max-time 8 http://127.0.0.1:8080/health/ready
+          echo 'Reprise PostgreSQL vérifiée'
+          docker compose down
+          docker compose up -d --wait --wait-timeout 180
+          python3 /tmp/witness.py check
+          echo 'PERSISTANCE OK après recréation des trois conteneurs'
+
+  schemas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a2d89673980c39abe906e96d78fd88a78b75e7a7
+          persist-credentials: false
+      - name: Régénérer deux compositions et exporter avec Draw.io natif
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 2 -o /tmp/drawio.deb https://github.com/jgraph/drawio-desktop/releases/download/v32.7.4/drawio-amd64-32.7.4.deb
+          echo 'ffd8c110f1df8cde26a7fbd801212bd8381d257879f424a2191ec4cc491aa50b  /tmp/drawio.deb' | sha256sum -c -
+          sudo apt-get install -y /tmp/drawio.deb
+          draw="$(command -v drawio || command -v draw.io || true)"
+          if test -z "$draw"; then draw=/opt/draw.io/drawio; fi
+          test -x "$draw"
+          python3 docs/diagrams/outils/generer_schemas.py /tmp/opsdesk-regen
+          mkdir -p /tmp/exports /tmp/recette-schemas
+          for name in sequence-consultation diagnostic-service; do
+            cp "/tmp/opsdesk-regen/$name.drawio" "docs/diagrams/$name.drawio"
+            xvfb-run -a "$draw" --no-sandbox --export --format svg --theme light --embed-svg-fonts false --border 0 --output "$PWD/docs/diagrams/$name.svg" "$PWD/docs/diagrams/$name.drawio"
+            test -s "docs/diagrams/$name.svg"
+            cp "docs/diagrams/$name.drawio" "docs/diagrams/$name.svg" /tmp/exports/
+          done
+          python3 - <<'PY'
+          import pathlib, xml.etree.ElementTree as ET, subprocess, shutil, re
+          p=pathlib.Path("docs/diagrams")
+          out=pathlib.Path("/tmp/recette-schemas")
+          chrome=shutil.which("google-chrome") or shutil.which("chromium") or shutil.which("chromium-browser")
+          assert chrome
+          sources=sorted(p.glob("*.drawio"))
+          assert len(sources)==15 and len(list(p.glob("*.svg")))==15
+          for src in sources:
+              root=ET.parse(src).getroot()
+              cells=list(root.iter("mxCell"))
+              ids=[c.attrib["id"] for c in cells if "id" in c.attrib]
+              assert len(ids)==len(set(ids)), src
+              for c in cells:
+                  for k in ("parent","source","target"):
+                      assert k not in c.attrib or c.attrib[k] in ids,(src,k,c.attrib.get(k))
+              svg=src.with_suffix(".svg")
+              r=ET.parse(svg).getroot()
+              _,_,w,h=map(float,r.attrib["viewBox"].split())
+              assert w>0 and h>0
+              width=375 if "mobile" in src.stem else (int(w) if src.stem in ("architecture","sequence-consultation") else (950 if src.stem=="presentation" else 700))
+              height=int(h*width/w+0.9999)
+              font_sizes=[]
+              for node in r.iter():
+                  tag=node.tag.rsplit("}",1)[-1]
+                  if tag in ("span","div","text") and "".join(node.itertext()).strip() and "cannot display" not in "".join(node.itertext()):
+                      sizes=re.findall(r"font-size:\s*([0-9.]+)px",node.get("style",""))
+                      attr=node.get("font-size","")
+                      if attr.endswith("px"):
+                          sizes.append(attr[:-2])
+                      font_sizes.extend(float(v) for v in sizes if float(v)>0)
+              minimum=min(font_sizes)*min(1,width/w) if font_sizes else None
+              print(src.stem,len(cells),"cellules",width,"x",height,"px, police minimale estimée",minimum)
+              for mode,color in (("clair","#ffffff"),("sombre","#0d1117")):
+                  page=out/(src.stem+"-"+mode+".html")
+                  dst=page.with_suffix(".png")
+                  page.write_text('<!doctype html><meta charset="utf-8"><style>html,body{margin:0;background:'+color+'}img{display:block;width:'+str(width)+'px;height:auto}</style><img src="'+svg.resolve().as_uri()+'">',encoding="utf-8")
+                  subprocess.run([chrome,"--headless","--no-sandbox","--disable-dev-shm-usage","--disable-gpu","--hide-scrollbars","--window-size="+str(width)+","+str(height),"--screenshot="+str(dst),page.as_uri()],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+                  page.unlink()
+              if src.stem in ("sequence-consultation","diagnostic-service"):
+                  assert minimum is not None and minimum >= 11, (src,minimum)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nouveaux-exports-v26
+          path: /tmp/exports
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: recette-visuelle-v26
+          path: /tmp/recette-schemas
+          retention-days: 14
+  securite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a2d89673980c39abe906e96d78fd88a78b75e7a7
+          persist-credentials: false
+      - name: Scanner les images v2 et les secrets (rapport expurgé)
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DB_PASSWORD="$(openssl rand -hex 20)"
+          export JWT_SECRET="$(openssl rand -hex 32)"
+          export ADMIN_PASSWORD="$(openssl rand -hex 20)"
+          printf '::add-mask::%s\n' "$DB_PASSWORD" "$JWT_SECRET" "$ADMIN_PASSWORD"
+          docker compose build --pull backend frontend
+          docker pull docker.io/library/postgres:17-alpine
+          mkdir -p /tmp/opsdesk-scan /tmp/opsdesk-scan-public
+          docker save localhost/opsdesk-api:2.0.0 -o /tmp/opsdesk-scan/api.tar
+          docker save localhost/opsdesk-frontend:2.0.0 -o /tmp/opsdesk-scan/frontend.tar
+          docker save docker.io/library/postgres:17-alpine -o /tmp/opsdesk-scan/postgres.tar
+          docker image inspect localhost/opsdesk-api:2.0.0 localhost/opsdesk-frontend:2.0.0 docker.io/library/postgres:17-alpine --format '{{.RepoTags}} {{.Id}} {{.RepoDigests}}'
+          docker pull aquasec/trivy:0.74.0
+          for image in api frontend postgres; do
+            docker run --rm -v /tmp/opsdesk-scan:/scan aquasec/trivy:0.74.0 image --input "/scan/$image.tar" --scanners vuln,secret --format json --output "/scan/$image.json" --timeout 10m
+          done
+          docker run --rm -v "$PWD:/src:ro" -v /tmp/opsdesk-scan:/scan aquasec/trivy:0.74.0 fs --scanners secret --format json --output /scan/repo.json --skip-dirs /src/.git --skip-dirs /src/legacy /src
+          python3 - <<'PY'
+          import json, pathlib, collections
+          dst=pathlib.Path("/tmp/opsdesk-scan-public")
+          for name in ("api","frontend","postgres","repo"):
+              doc=json.loads(pathlib.Path("/tmp/opsdesk-scan/"+name+".json").read_text())
+              counts=collections.Counter()
+              findings=[]
+              for result in doc.get("Results",[]):
+                  for v in result.get("Vulnerabilities") or []:
+                      counts[v.get("Severity","UNKNOWN")]+=1
+                      findings.append({k:v.get(k) for k in ("VulnerabilityID","PkgName","InstalledVersion","FixedVersion","Severity")})
+                  for v in result.get("Secrets") or []:
+                      counts["SECRET"]+=1
+                      findings.append({"type":"secret","target":result.get("Target"),"rule":v.get("RuleID"),"start":v.get("StartLine")})
+              safe={"target":name,"counts":dict(counts),"findings":findings}
+              (dst/(name+".json")).write_text(json.dumps(safe,ensure_ascii=False,indent=2))
+              print(name,dict(counts))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rapport-trivy-expurge-v26
+          path: /tmp/opsdesk-scan-public
+          retention-days: 14
+  integrer_exports:
+    needs: [schemas, backend, frontend, compose]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: docs/v26-conformite
+      - uses: actions/download-artifact@v4
+        with:
+          name: nouveaux-exports-v26
+          path: /tmp/exports
+      - name: Intégrer uniquement les deux nouveaux dessins et liens dans la PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "a2d89673980c39abe906e96d78fd88a78b75e7a7"
+          for name in sequence-consultation diagnostic-service; do
+            for ext in drawio svg; do
+              test -s "/tmp/exports/$name.$ext"
+              cp "/tmp/exports/$name.$ext" "docs/diagrams/$name.$ext"
+            done
+          done
+          git add docs/diagrams/sequence-consultation.drawio docs/diagrams/sequence-consultation.svg docs/diagrams/diagnostic-service.drawio docs/diagrams/diagnostic-service.svg
+          git diff --cached --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "V26 : régénérer les deux exports après finition visuelle"
+          git push origin HEAD:refs/heads/docs/v26-conformite
