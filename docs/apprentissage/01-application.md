@@ -21,6 +21,8 @@ Faire tourner un service sans perdre ses données suppose de savoir ce qui se pa
 
 Le schéma de référence est [l'architecture](../diagrams/architecture.svg) ; les détails sont dans la [référence technique](../reference-technique.md).
 
+Pour approfondir sans résoudre ton exercice de création et prise en charge : [diagramme de séquence d'une simple consultation](../diagrams/sequence-consultation.svg), à ouvrir en grand.
+
 ## Ce qu'il faut obtenir
 
 Marie (collaboratrice) crée le ticket « Mon poste ne se connecte plus au VPN » ; Karim (support) le prend en charge.

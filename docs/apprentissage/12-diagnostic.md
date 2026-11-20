@@ -18,6 +18,10 @@ Sous pression, le réflexe est de tout redémarrer : les indices disparaissent e
 - Une seule action à la fois ; le recontrôle va jusqu'au parcours d'un utilisateur, pas seulement une sonde.
 - Le post-mortem est sans reproche : il cherche ce qui a rendu la panne possible.
 
+[![Arbre de diagnostic : quatre sondes et les hypothèses à examiner](../diagrams/diagnostic-service.svg)](../diagrams/diagnostic-service.svg)
+
+La première sonde en échec donne une piste, non une cause certaine.
+
 ## Ce qu'il faut obtenir
 
 Trois incidents différents, préparés par une autre personne sur une cible de test explicitement isolée (copie K3s ou instance Compose jetable configurée pour l'exercice). Vérifier le contexte, la sauvegarde restaurable, le moyen de revenir en arrière et l'accord avant toute perturbation. Les cartes Compose ne s'appliquent pas directement à K3s : choisir uniquement les cartes adaptées à la plateforme. Ne pas modifier le serveur principal ni les règles réseau de l'hôte. Pour chacun : le journal d'incident (commandes, sorties, heures), le temps jusqu'au diagnostic et jusqu'au rétablissement.

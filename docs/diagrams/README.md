@@ -1,6 +1,6 @@
 # Schémas d'OpsDesk
 
-Chaque schéma existe en deux fichiers côte à côte : la source **Draw.io** (`.drawio`), que l'on modifie, et son export **SVG**, que l'on affiche. Le SVG est toujours exporté depuis la source, jamais retouché à la main. Tous suivent le système graphique initial V24, consolidé dans la collection V25 : mêmes couleurs, icônes, formes et conventions de flux, mais une composition propre à chaque sujet.
+Chaque schéma existe en deux fichiers côte à côte : la source **Draw.io** (`.drawio`), que l'on modifie, et son export **SVG**, que l'on affiche. Le SVG est toujours exporté depuis la source, jamais retouché à la main. Tous suivent le système graphique initial V24, consolidé avec les acquis V26 (V24 préservée) : mêmes couleurs, icônes, formes et conventions de flux, mais une composition propre à chaque sujet.
 
 ## Les schémas
 
@@ -19,6 +19,9 @@ Chaque schéma existe en deux fichiers côte à côte : la source **Draw.io** (`
 | [CI/CD](pedagogique-cicd.svg) ([source](pedagogique-cicd.drawio)) | Du commit au service : qui fait quoi ? | Deux couloirs (automatique, humain), points d'arrêt | 760 | Notion, exercice 08 |
 | [Supervision](pedagogique-supervision.svg) ([source](pedagogique-supervision.drawio)) | De la mesure à l'alerte ? | Collecte, puis machine à états | 760 | Notion, exercice 09 |
 | [Sauvegarde](pedagogique-sauvegarde.svg) ([source](pedagogique-sauvegarde.drawio)) | Que peut-on perdre, et combien de temps pour revenir ? | Ligne de temps (RPO, RTO), étapes de restauration | 760 | Notion, exercice 11 |
+
+| [Séquence de consultation](sequence-consultation.svg) ([source](sequence-consultation.drawio)) | Quel trajet suit une consultation authentifiée ? | Lignes de vie, activations, requêtes et réponses | 920 | Exercice 01, consultation en grand |
+| [Diagnostic par couches](diagnostic-service.svg) ([source](diagnostic-service.drawio)) | Quelle hypothèse tester quand une sonde échoue ? | Arbre de décision et pistes | 760 | Exercice 12 |
 
 Les vues pédagogiques font 760 px de large : affichées dans une fiche Notion (environ 700 px), leurs textes restent au-dessus de 11 px.
 
@@ -74,8 +77,12 @@ Sur le [runner de qualification](https://github.com/mathiasseguincadiche/OpsDesk
 
 ### Maintenir la référence graphique
 
-Ne pas ajouter une illustration uniquement parce qu'un gabarit V25 existe. Pour une évolution réelle : définir la question à laquelle répond le schéma, mettre à jour ses sources et son générateur, exporter le SVG, contrôler le rendu et les liens, puis réattacher le fichier exact dans Notion avec sa légende. Les conventions de statut et le texte alternatif restent obligatoires. Les rendus navigateur historiques ne prouvent ni l'affichage des nouvelles pièces jointes dans Notion ni leur lisibilité sur un appareil réel. La vue globale reste l'illustration de lecture courante ; la vue détaillée est accessible en grand.
+Ne pas ajouter une illustration uniquement parce qu'un gabarit V26 existe. Pour une évolution réelle : définir la question à laquelle répond le schéma, mettre à jour ses sources et son générateur, exporter le SVG, contrôler le rendu et les liens, puis réattacher le fichier exact dans Notion avec sa légende. Les conventions de statut et le texte alternatif restent obligatoires. Les rendus navigateur historiques ne prouvent ni l'affichage des nouvelles pièces jointes dans Notion ni leur lisibilité sur un appareil réel. La vue globale reste l'illustration de lecture courante ; la vue détaillée est accessible en grand.
 
 ## Historique
 
 Les schémas de la version 1 (application Flask, deux conteneurs), leur fiche de contrôle et la provenance de leurs logos sont conservés dans [`legacy/diagrams/`](../../legacy/diagrams/).
+
+## Revue V26
+
+Deux compositions complémentaires et leurs exports natifs ont été générés sur un runner Ubuntu avec Draw.io 32.7.4 ; voir la recette V26 (onglet Actions). Les treize compositions précédentes ne sont pas modifiées. La séquence de consultation et la vue détaillée sont à ouvrir en grand ; la recette interactive GitHub et Notion et l'examen visuel des captures restent distincts.
