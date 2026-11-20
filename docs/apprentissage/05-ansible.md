@@ -29,6 +29,8 @@ L'état voulu sur `srv-app`, préparé pour l'exercice 06 :
 5. le dossier `/opt/opsdesk` existe, propriété de root, droits `0750` ;
 6. le port `8080/tcp` est ouvert de façon permanente dans firewalld. Tu verras à l'exercice 06 que cette règle ne suffit pas à décrire l'exposition réelle d'un port publié par Docker.
 
+Pour `srv-k3s`, préparer séparément le socle commun : accès SSH depuis `srv-admin`, Python compatible, résolution réseau, horloge, SELinux Enforcing et firewalld actif. Vérifier les prérequis K3s de la [section 7 du guide du laboratoire](../laboratoire-fedora-kvm-rocky.md) avant l’exercice 07. Ne pas appliquer le rôle Docker à cette VM. Avant de retirer un paquet sur `srv-app`, identifier la cible, vérifier ses dépendances et confirmer qu’aucun service existant n’en dépend.
+
 **Livrable** : `inventory.ini`, le playbook, la sortie de deux passages successifs, et les vérifications ci-dessous.
 
 ## Vérifications

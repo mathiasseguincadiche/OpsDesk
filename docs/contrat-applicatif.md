@@ -82,7 +82,11 @@ API en Python 3.13 avec FastAPI, SQLAlchemy 2 et psycopg 3. Interface en TypeScr
 Pile complète, en conteneurs :
 
 ```bash
-cp .env.example .env
+if [ -e .env ] || [ -L .env ]; then
+  printf 'Configuration existante conservée. Vérifiez-la avant de continuer.\n'
+else
+  (umask 077; set -C; cat .env.example > .env)
+fi
 ```
 
 ```bash
@@ -117,7 +121,7 @@ Toute la configuration passe par des variables d'environnement ; aucun fichier d
 | `ADMIN_EMAIL`, `ADMIN_PASSWORD` (`_FILE`) | `admin@opsdesk.local`, — | Premier administrateur, créé s'il n'en existe aucun |
 | `ALLOW_REGISTRATION` | `true` | Inscription libre |
 | `SEED_DEMO_DATA` | `true` | Données de démonstration si la base est vide |
-| `ENVIRONMENT` | `development` | `production` rend `JWT_SECRET` obligatoire |
+| `ENVIRONMENT` | `development` | `production` exige JWT (32 caractères au moins), admin et DB (sauf `DATABASE_URL` explicite), distincts et non factices |
 | `LOG_LEVEL`, `LOG_FORMAT` | `INFO`, `json` | Journaux |
 | `CORS_ORIGINS` | vide | Origines autorisées si l'interface est servie ailleurs |
 | `APP_VERSION`, `APP_REVISION` | `2.0.0`, `dev` | Identité affichée par `/version` et les sondes |

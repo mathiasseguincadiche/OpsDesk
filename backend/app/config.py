@@ -88,12 +88,32 @@ class Settings(BaseSettings):
 _JWT_SECRET = _read_secret("JWT_SECRET") or secrets.token_urlsafe(48)
 
 
+def _require_production_secret(name: str, minimum: int = 1) -> str:
+    value = _read_secret(name)
+    if not value or len(value.strip()) < minimum:
+        raise RuntimeError(f"{name} (ou {name}_FILE) est obligatoire et doit être suffisamment long en production.")
+    normalized = value.strip().casefold()
+    if normalized.startswith(("change-me", "changeme")) or normalized == "demo1234!":
+        raise RuntimeError(f"{name} ne doit pas utiliser une valeur de démonstration.")
+    return value
+
+
+def _validate_production_settings(settings: Settings) -> None:
+    jwt = _require_production_secret("JWT_SECRET", minimum=32)
+    admin = _require_production_secret("ADMIN_PASSWORD")
+    if jwt == admin:
+        raise RuntimeError("JWT_SECRET et ADMIN_PASSWORD doivent être distincts.")
+    if not settings.database_url:
+        db = _require_production_secret("DB_PASSWORD")
+        if db in (jwt, admin):
+            raise RuntimeError("Les trois secrets doivent être distincts.")
+    # A complete DATABASE_URL is an alternative to DB_*; its credentials are
+    # managed independently and must be checked by the deployment operator.
+
+
 @lru_cache
 def get_settings() -> Settings:
     settings = Settings()
     if settings.environment == "production":
-        if not _read_secret("JWT_SECRET"):
-            raise RuntimeError("JWT_SECRET (ou JWT_SECRET_FILE) est obligatoire en production.")
-        if len(_JWT_SECRET) < 32:
-            raise RuntimeError("JWT_SECRET doit contenir au moins 32 caractères.")
+        _validate_production_settings(settings)
     return settings

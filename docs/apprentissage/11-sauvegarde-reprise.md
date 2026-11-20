@@ -14,7 +14,7 @@ Un volume garde les données quand le conteneur disparaît ; il ne les protège 
 
 - Dispositif retenu au [registre](../architecture.md#décisions-retenues) : `pg_dump` au format custom chaque nuit à 02:00 sur `srv-app`, par un minuteur systemd ; 7 copies gardées ; copie par `rsync` sur SSH dans `~/sauvegardes` sur l'hôte ; restauration testée avec un ticket témoin.
 - `pg_dump` lit la base dans une seule transaction : une copie cohérente, sans arrêt. Copier le dossier de données à chaud ne l'est pas.
-- `pg_restore --list` vérifie qu'un fichier est lisible ; `--no-owner` évite les erreurs de rôle absent ; `pg_restore` doit être d'une version au moins égale à `pg_dump`.
+- `pg_restore --list` contrôle la lisibilité de la table des matières (pas l’intégrité de toutes les données) ; `--no-owner` évite les erreurs de rôle absent ; `pg_restore` doit être d'une version au moins égale à `pg_dump`.
 - Une empreinte `sha256` vérifiée après chaque copie détecte un fichier abîmé.
 - **RPO** : objectif de perte de données maximale acceptable, exprimé en durée. La copie nocturne vise une fenêtre de 24 heures si les sauvegardes réussissent. **RTO** : objectif de durée maximale de rétablissement. Fixe ces objectifs avant l’essai, puis compare-les à la fenêtre de perte observée et au délai réellement mesuré ; ne confonds pas cible et résultat.
 - La copie sur l'hôte survit à la perte de la VM, pas à celle du PC.
@@ -22,7 +22,7 @@ Un volume garde les données quand le conteneur disparaît ; il ne les protège 
 ## Ce qu'il faut obtenir
 
 1. Un minuteur systemd du système lance chaque nuit à 02:00 un `pg_dump` au format custom, exécuté dans le conteneur de la base (`docker compose exec -T db pg_dump …`). C'est une vraie responsabilité de systemd : planifier, journaliser, rattraper une nuit manquée.
-2. Seules les 7 dernières copies restent sur `srv-app`.
+2. Seules les 7 dernières copies complètes et vérifiées restent sur `srv-app`. Une rétention de sept jours n’équivaut pas à sept copies. Ne supprimer les plus anciennes qu’après vérification et transfert réussi de la nouvelle copie ; simuler la liste des suppressions avant de l’appliquer.
 3. Chaque copie part sur l'hôte avec une clé SSH dédiée ; son empreinte est vérifiée à l'arrivée.
 4. Une restauration complète dans la base de la copie d'essai ; le ticket témoin est relu dans l'interface de la copie.
 5. Objectifs RPO/RTO définis avant l’essai ; fenêtre de perte et durée de reprise mesurées, comparées aux objectifs.

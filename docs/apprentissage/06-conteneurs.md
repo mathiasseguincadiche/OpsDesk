@@ -30,7 +30,7 @@
    - un volume pour PostgreSQL ;
    - une sonde de santé et une politique de redémarrage par service ;
    - la rotation des journaux ;
-   - trois secrets en fichiers ;
+   - trois secrets distincts en fichiers, avec `SEED_DEMO_DATA=false` et `ALLOW_REGISTRATION=false` sur la cible non démonstrative ; le smoke fourni utilise des comptes de démonstration et doit être exécuté sur une cible jetable dédiée, ou adapté avec des comptes de test autorisés ;
    - un seul port publié vers les utilisateurs (8080), sur l'adresse de `srv-app`, et le port 8000 pour la seule supervision.
 3. **Une décision écrite** sur l'emplacement des données de PostgreSQL : volume nommé dans le dossier de Docker, dossier de Docker déplacé sur le disque de 10 Go, ou montage d'un dossier de ce disque (droits de l'utilisateur `postgres` de l'image et contexte SELinux). C'est le point « à revoir » du registre.
 4. **La configuration du démon** (`/etc/docker/daemon.json`) : SELinux activé, rotation des journaux par défaut. Note ce qui change si le fichier est faux : le démon ne démarre plus.
@@ -54,8 +54,8 @@
 | Ports limités | Depuis `srv-admin` : port 8000, puis 5432 | Refusés ; 8000 accepté depuis `srv-k3s` seulement |
 | Parcours complet | `python3 scripts/smoke.py http://192.168.150.10:8080` | `ALL GOOD` |
 | Persistance | Ticket témoin relu après `docker compose down` puis `up` | Identique |
-| Reboot | `sudo systemctl reboot`, sans aucune commande ensuite | Tout revient seul, ticket témoin intact |
-| Aucun secret en clair | `grep -ri password /opt/opsdesk/compose.yaml` | Seulement des `*_FILE` |
+| Reboot | Après sauvegarde, identification de la VM et accord ciblé, `sudo systemctl reboot` ; observer depuis une autre machine | Tout revient seul, ticket témoin intact |
+| Secret accessible par l’API | `sudo docker compose --project-directory /opt/opsdesk exec -T backend sh -c 'test -n "$DB_PASSWORD_FILE" && test -r "$DB_PASSWORD_FILE" && test -s "$DB_PASSWORD_FILE"'` | Code 0, aucune valeur affichée ; répéter pour JWT et admin |
 | Personne dans le groupe `docker` | `getent group docker` | Aucun membre |
 | Idempotence du rôle | 2ᵉ passage | `changed=0`, conteneurs non recréés (même `Created` dans `docker inspect`) |
 
