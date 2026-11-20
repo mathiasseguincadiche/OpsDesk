@@ -52,39 +52,19 @@ Les trois premières lignes décrivent le socle fourni et qualifié, pas des com
 
 ## Lancer le projet en local
 
-Il vous faut Docker Engine avec le plugin Compose (commande `docker compose`) et Git. Vérifiez les ports locaux 8080 et 8000 avant le démarrage. La première construction dépend notamment du téléchargement des images et de votre machine. Le [guide de démarrage](docs/demarrage.md) détaille les prérequis, contrôles, erreurs et arrêt sans perte de données.
-
-**1. Récupérer le projet et préparer la configuration**
+Prérequis : Git et Docker avec le plugin Compose.
 
 ```bash
-git clone https://github.com/mathiasseguincadiche/OpsDesk.git && cd OpsDesk
-if [ ! -f .env.example ]; then
-  printf 'Fichier .env.example absent : vérifiez le dossier du dépôt.\n' >&2
-elif [ -e .env ] || [ -L .env ]; then
-  printf 'Configuration existante conservée. Vérifiez-la avant de continuer.\n'
-else
-  (umask 077; set -C; cat .env.example > .env)
-fi
-```
-
-Ouvrez `.env` et remplacez `DB_PASSWORD`, `JWT_SECRET` (secret aléatoire d'au moins 32 caractères) et `ADMIN_PASSWORD` par des valeurs distinctes. Ne versionnez pas `.env`.
-
-**2. Démarrer les trois conteneurs**
-
-```bash
+git clone https://github.com/mathiasseguincadiche/OpsDesk.git
+cd OpsDesk
 docker compose up -d --build
 ```
 
-**3. Vérifier que tout fonctionne**
+Ouvrez [http://localhost:8080](http://localhost:8080) une fois les conteneurs démarrés, puis choisissez un compte de démonstration. Aucune configuration préalable n'est nécessaire sur un dépôt fraîchement cloné.
 
-```bash
-docker compose ps
-```
+Pour arrêter le projet sans perdre les tickets : `docker compose down`.
 
-Les trois services doivent afficher `healthy` (attendez la fin du démarrage). Cela ne prouve pas, à lui seul, la disponibilité métier : `curl -i http://127.0.0.1:8080/health/ready` doit renvoyer `200` et `"database":"up"`. Ouvrez ensuite **http://localhost:8080** et cliquez sur un compte de démonstration pour vous connecter. Les ports de la pile de référence sont liés à la boucle locale par défaut : données fictives et essai local uniquement. Ne publiez pas cette pile de démonstration sur Internet.
-
-> [!NOTE]
-> `compose.yaml` construit les images et prouve qu'une version démarre. Sur le serveur, un fichier Compose de production tire les images publiées par digest : ce qu'il doit respecter est dans la [référence technique](docs/reference-technique.md#déployer-avec-docker-compose-sur-un-serveur).
+La démonstration utilise des données fictives et des ports accessibles uniquement depuis votre poste. Pour les contrôles, les options de configuration ou un problème de démarrage, consultez le [guide de démarrage](docs/demarrage.md). Le déploiement sur serveur est traité séparément dans la [référence technique](docs/reference-technique.md#déployer-avec-docker-compose-sur-un-serveur).
 
 ## Ce que fait l'application
 

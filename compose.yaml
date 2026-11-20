@@ -1,7 +1,7 @@
 # OpsDesk — pile de référence : PostgreSQL + API FastAPI + interface React/nginx.
 # Docker Engine avec le plugin Compose (commande `docker compose`).
 #
-#   Première installation : voir docs/demarrage.md (ne pas écraser .env).
+#   Aucune configuration préalable requise pour la démonstration locale.
 #   docker compose up -d --build
 #   → http://localhost:8080
 #
@@ -24,7 +24,7 @@ services:
     environment:
       POSTGRES_DB: ${DB_NAME:-opsdesk}
       POSTGRES_USER: ${DB_USER:-opsdesk}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD manquant dans .env}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change-me-db-password}
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
@@ -49,15 +49,16 @@ services:
       db:
         condition: service_healthy
     environment:
-      ENVIRONMENT: ${ENVIRONMENT:-production}
+      # Démonstration locale ; le déploiement serveur définit production et ses propres secrets.
+      ENVIRONMENT: ${ENVIRONMENT:-development}
       DB_HOST: db
       DB_PORT: 5432
       DB_NAME: ${DB_NAME:-opsdesk}
       DB_USER: ${DB_USER:-opsdesk}
-      DB_PASSWORD: ${DB_PASSWORD}
-      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET manquant dans .env}
+      DB_PASSWORD: ${DB_PASSWORD:-change-me-db-password}
+      JWT_SECRET: ${JWT_SECRET:-change-me-with-a-long-random-secret-of-48-chars}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@opsdesk.local}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD manquant dans .env}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-change-me-admin}
       SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
       ALLOW_REGISTRATION: ${ALLOW_REGISTRATION:-true}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
