@@ -1,0 +1,38 @@
+name: Vérification ponctuelle du démarrage local
+on:
+  push:
+    branches: ["qualification/demarrage-simple"]
+permissions:
+  contents: read
+jobs:
+  demonstration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: efa58c19a8ba44604bc1eaad46b12878210745f3
+          persist-credentials: false
+      - name: Démarrage sans fichier .env
+        run: |
+          test ! -e .env
+          docker compose up -d --build
+          for i in $(seq 1 90); do
+            if curl -fsS http://127.0.0.1:8080/health/ready >/dev/null; then break; fi
+            sleep 2
+          done
+          curl -fsS http://127.0.0.1:8080/health/ready
+          curl -fsS http://127.0.0.1:8080/version | python3 -c 'import json,sys; assert json.load(sys.stdin)["environment"] == "development"'
+          python3 scripts/smoke.py
+          test ! -e .env
+          docker compose ps
+      - name: Le mode production refuse les valeurs de démonstration
+        run: |
+          if docker compose run --rm --no-deps -e ENVIRONMENT=production backend python -c 'from app.config import get_settings; get_settings()' >/tmp/guard.log 2>&1; then
+            echo "La configuration de démonstration a été acceptée en production"
+            exit 1
+          fi
+          grep -F "ne doit pas utiliser une valeur de démonstration" /tmp/guard.log
+      - name: Arrêt
+        if: always()
+        run: docker compose down
