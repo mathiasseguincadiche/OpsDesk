@@ -33,7 +33,7 @@
    - trois secrets distincts en fichiers, avec `SEED_DEMO_DATA=false` et `ALLOW_REGISTRATION=false` sur la cible non démonstrative ; le smoke fourni utilise des comptes de démonstration et doit être exécuté sur une cible jetable dédiée, ou adapté avec des comptes de test autorisés ;
    - un seul port publié vers les utilisateurs (8080), sur l'adresse de `srv-app`, et le port 8000 pour la seule supervision.
 3. **Une décision écrite** sur l'emplacement des données de PostgreSQL : volume nommé dans le dossier de Docker, dossier de Docker déplacé sur le disque de 10 Go, ou montage d'un dossier de ce disque (droits de l'utilisateur `postgres` de l'image et contexte SELinux). C'est le point « à revoir » du registre.
-4. **La configuration du démon** (`/etc/docker/daemon.json`) : SELinux activé, rotation des journaux par défaut. Note ce qui change si le fichier est faux : le démon ne démarre plus.
+4. **La configuration du démon** (`/etc/docker/daemon.json`) : SELinux activé, rotation des journaux par défaut. Valide d'abord le fichier avec `sudo dockerd --validate --config-file=/etc/docker/daemon.json` ; sauvegarde la configuration et prévois le retour arrière. N'expérimente un fichier invalide que sur une VM jetable.
 5. **Un rôle Ansible**, lancé depuis `srv-admin`, qui :
    - dépose le fichier Compose et les secrets avec les bons droits ;
    - lance le déploiement avec un module maintenu (`community.docker.docker_compose_v2`) ;
@@ -52,7 +52,7 @@
 | SELinux appliqué | `sudo docker info --format '{{.SecurityOptions}}'` ; `ps -eZ \| grep container_t` | `selinux` présent ; les processus des conteneurs en `container_t` |
 | Service joignable | `curl -i http://192.168.150.10:8080/health/ready` depuis `srv-admin` | `200`, `"database":"up"` |
 | Ports limités | Depuis `srv-admin` : port 8000, puis 5432 | Refusés ; 8000 accepté depuis `srv-k3s` seulement |
-| Parcours complet | `python3 scripts/smoke.py http://192.168.150.10:8080` | `ALL GOOD` |
+| Parcours complet | Sur une instance jetable avec données fictives : `python3 scripts/smoke.py http://URL-DE-TEST` ; sur srv-app non démonstrative, parcours avec comptes de test autorisés | `ALL GOOD` sur la pile de démonstration ; création et lecture d'un ticket de test sur la cible |
 | Persistance | Ticket témoin relu après `docker compose down` puis `up` | Identique |
 | Reboot | Après sauvegarde, identification de la VM et accord ciblé, `sudo systemctl reboot` ; observer depuis une autre machine | Tout revient seul, ticket témoin intact |
 | Secret accessible par l’API | `sudo docker compose --project-directory /opt/opsdesk exec -T backend sh -c 'test -n "$DB_PASSWORD_FILE" && test -r "$DB_PASSWORD_FILE" && test -s "$DB_PASSWORD_FILE"'` | Code 0, aucune valeur affichée ; répéter pour JWT et admin |

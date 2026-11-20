@@ -6,6 +6,8 @@ Dernière révision documentaire : 19 novembre 2026, après la fusion de la v2 (
 
 **Avancement** : Prévu, En cours, Réalisé, Abandonné. **Contrôle** : Vérifié, Échec constaté, Non vérifié. Les deux informations sont distinctes : un élément réalisé peut rester non vérifié.
 
+La [revue V26 et ses contrôles restant à réaliser](evidence/qualification/2026-11-19-v26-mise-en-conformite.md) distingue les corrections proposées des preuves historiques. Les résultats antérieurs restent datés et ne sont pas transférés au nouveau code de configuration.
+
 ## Application v2 (FastAPI, React, PostgreSQL)
 
 | Élément | Avancement | Contrôle | Preuve et portée |

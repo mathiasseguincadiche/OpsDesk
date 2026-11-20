@@ -753,9 +753,101 @@ def pedagogique_sauvegarde(dossier):
     return d.enregistrer(dossier)
 
 
+
+# --------------------------------------------------------------------------- #
+# V26 — Deux vues complémentaires, sans résoudre les exercices personnels.   #
+# --------------------------------------------------------------------------- #
+
+def sequence_consultation(dossier):
+    """Consultation d'un ticket existant, pas la solution à la création/prise en charge."""
+    W, H = 920, 888
+    d = Diagramme("sequence-consultation", W, H)
+    d.forme("canevas", 0, 0, W, H, "", style_canevas(), calque="fond")
+    titre(d, "Consulter un ticket : la requête de bout en bout",
+          "Schéma de principe · pile locale de référence · utilisateur déjà connecté", l=W-64)
+    x = [112, 344, 576, 808]
+    acteurs = [("client", ACCES, "navigateur", "Navigateur", "interface React"),
+               ("proxy", ACCES, "service", "nginx", "frontend · :8080"),
+               ("api", TRAITEMENT, "api", "FastAPI", "backend · :8000"),
+               ("db", DONNEES, "base", "PostgreSQL", "db · :5432")]
+    for i, (ident, f, ic, nom, det) in enumerate(acteurs):
+        composant(d, ident, x[i]-88, 92, 176, 64, f, ic, "", nom, det)
+        d.trait_libre("vie-"+ident, x[i], 156, x[i], 732,
+                    f"endArrow=none;dashed=1;dashPattern=3 5;strokeColor={RULE};strokeWidth=1.5;", calque="frontieres")
+    zones = [("req", 176, 116, "01 · ACHEMINER LA REQUÊTE"),
+             ("auth", 308, 160, "02 · AUTHENTIFIER LE COMPTE"),
+             ("lecture", 484, 130, "03 · VÉRIFIER LA VISIBILITÉ ET LIRE"),
+             ("retour", 630, 108, "04 · RETOURNER LA RÉPONSE")]
+    for ident, y, h, label in zones:
+        d.forme("zone-"+ident, 16, y, 888, h, "", style_regroupement(), calque="fond")
+        d.forme("label-"+ident, 28, y+4, 420, 20, label, style_texte("categorie", MUTED), calque="annotations")
+    for ident, i, y1, y2, f in [("p",1,228,704,ACCES),("a",2,270,660,TRAITEMENT),("d1",3,370,410,DONNEES),("d2",3,540,584,DONNEES)]:
+        d.forme("act-"+ident, x[i]-5, y1, 10, y2-y1, "",
+               f"rounded=0;fillColor={f.fond};strokeColor={f.trait};strokeWidth=1.25;", calque="composants")
+    def message(ident, a, z, y, label, retour=False):
+        xa, xb = x[a], x[z]
+        sens = 1 if xb>xa else -1
+        st = style_flux("applicatif", ortho=False)
+        if retour:
+            st += "dashed=1;dashPattern=4 4;endArrow=open;endFill=0;"
+        d.trait_libre("flux-"+ident, xa+6*sens, y, xb-6*sens, y, st, calque="flux")
+        d.forme("txt-"+ident, min(xa,xb)+10, y-29, abs(xb-xa)-20, 26,
+                label, style_texte("detail", INK, "center"), calque="annotations")
+    message("01",0,1,228,"1 · GET /api/tickets/{id}<br>Authorization: Bearer …")
+    message("02",1,2,274,"2 · Relais HTTP vers backend")
+    d.forme("jwt", 430, 332, 292, 24, "3 · Vérifie signature, expiration et identifiant JWT",
+            style_texte("detail", TRAITEMENT.texte, "center"), calque="annotations")
+    message("04",2,3,374,"4 · Charge le compte actif")
+    message("05",3,2,418,"5 · Compte renvoyé",True)
+    d.forme("visibilite", 420, 502, 312, 24, "6 · Filtre : demandeur ou membre du support",
+            style_texte("detail", TRAITEMENT.texte, "center"), calque="annotations")
+    message("07",2,3,548,"7 · SELECT du ticket visible")
+    message("08",3,2,590,"8 · Données + relations",True)
+    message("09",2,1,668,"9 · HTTP 200 + JSON",True)
+    message("10",1,0,710,"10 · Relais de la réponse",True)
+    carte_simple(d,"ok",24,754,280,102,ACCES,
+                 b("Résultat")+ "<br>"+s("React affiche le ticket ; nginx ne décide pas des droits."))
+    carte_simple(d,"err1",320,754,280,102,SECURITE,
+                 b("401 · Authentification")+ "<br>"+s("Jeton absent, invalide ou compte désactivé. Aucun ticket livré."))
+    carte_simple(d,"err2",616,754,280,102,SECURITE,
+                 b("404 · Visibilité")+ "<br>"+s("Ticket inexistant ou non visible pour ce compte."))
+    return d.enregistrer(dossier)
+
+
+def diagnostic_service(dossier):
+    """Arbre de diagnostic : indices et vérifications, pas les cartes de panne."""
+    d = _fond("diagnostic-service", 920, "Diagnostiquer OpsDesk par couches",
+              "Observer avant de modifier · la première sonde en échec oriente, sans prouver la cause.")
+    carte_simple(d,"depart",32,92,696,64,INFRA,
+                 b("Un utilisateur ne peut plus accéder à ses tickets", 15)+"<br>"+s("Confirmer cible, version, heure, impact et périmètre ; reproduire sans changer le service."),fond=HEADER)
+    tests = [
+        ("nginx", "1 · /healthz", "HTTP 200 ?", "Accès ou nginx", "URL/DNS, route, port 8080, processus et journaux nginx.", ACCES),
+        ("live", "2 · /health/live", "HTTP 200 ?", "API ou trajet proxy", "État du backend, DNS interne, journaux, délai 502/504.", TRAITEMENT),
+        ("ready", "3 · /health/ready", "200 et database up ?", "Dépendance base", "Connexion DB, réseau, stockage, secret lisible sans affichage.", DONNEES),
+        ("metier", "4 · Parcours métier", "Ticket accessible ?", "Règles ou droits", "401/403/404/409/422, compte, requête et request_id.", SECURITE),
+    ]
+    for i,(ident,nom,q,diag,detail,f) in enumerate(tests):
+        y=184+i*132
+        d.forme(ident,44,y,308,88,b(nom,15)+"<br>"+s(q,INK,13),style_losange(f),calque="composants")
+        carte_simple(d,"cause-"+ident,428,y-2,300,92,f,b(diag)+"<br>"+s(detail),fond=f.fond)
+        d.lien("non-"+ident,ident,"cause-"+ident,"Non",style_flux("applicatif",ortho=False)+"exitX=1;exitY=0.5;entryX=0;entryY=0.5;",decalage=(0,-12))
+        prev="depart" if i==0 else tests[i-1][0]
+        if i==0:
+            d.lien("suite-"+ident,prev,ident,"",style_flux()+"exitX=0.24;exitY=1;entryX=0.5;entryY=0;")
+        else:
+            d.lien("suite-"+ident,prev,ident,"Oui",style_flux("applicatif",ortho=False)+"exitX=0.5;exitY=1;entryX=0.5;entryY=0;",decalage=(26,0))
+    carte_simple(d,"vert",44,712,308,70,ACCES,b("Oui · vérifier l'intermittence")+"<br>"+s("Comparer métriques, journaux et heure du signal."),fond=ACCES.fond)
+    d.lien("suite-vert","metier","vert","Oui",style_flux("applicatif",ortho=False)+"exitX=0.5;exitY=1;entryX=0.5;entryY=0;",decalage=(26,0))
+    carte_simple(d,"regle",428,704,300,86,RESILIENCE,b("Avant toute correction")+"<br>"+s("Tester une hypothèse ; confirmer la cible et le retour arrière."),fond=RESILIENCE.fond)
+    carte_simple(d,"fin",32,816,696,76,INFRA,b("Corriger une seule cause confirmée, puis recontrôler",15)+"<br>"+s("Sondes + parcours utilisateur + ticket témoin ; noter chronologie, impact et limites."),fond=HEADER)
+    d.lien("fin-dessus","vert","fin","",style_flux("applicatif",ortho=False)+"exitX=0.5;exitY=1;entryX=0.24;entryY=0;")
+    d.lien("fin-correction","regle","fin","",style_flux("applicatif",ortho=False)+"exitX=0.5;exitY=1;entryX=0.78;entryY=0;")
+    return d.enregistrer(dossier)
+
+
 CONSTRUCTIONS = (presentation, presentation_mobile, presentation_notion, architecture, architecture_globale, pedagogique_ansible,
                  pedagogique_acces_ssh, pedagogique_terraform, pedagogique_compose, pedagogique_k3s,
-                 pedagogique_cicd, pedagogique_supervision, pedagogique_sauvegarde)
+                 pedagogique_cicd, pedagogique_supervision, pedagogique_sauvegarde, sequence_consultation, diagnostic_service)
 
 if __name__ == "__main__":
     sortie = Path(sys.argv[1] if len(sys.argv) > 1 else ".")
