@@ -2,7 +2,7 @@
 
 Révision : 19 novembre 2026, heure Martinique. Sont distingués **avancement** (prévu, en cours, réalisé, abandonné) et **contrôle** (vérifié, échec constaté, non vérifié). Le socle fourni n'est pas la réalisation personnelle.
 
-**En bref :** le socle FastAPI/React/PostgreSQL fonctionne sur runner Ubuntu ; l'infrastructure Rocky, la livraison et l'exploitation restent à construire. La sécurité des images n'est pas qualifiée. Laboratoire privé uniquement.
+**En bref :** le socle FastAPI/React/PostgreSQL fonctionne sur runner Ubuntu ; l'infrastructure Rocky, la livraison et l'exploitation restent à construire. La recette locale est réussie ; les alertes résiduelles des images officielles restent suivies. Laboratoire privé uniquement.
 
 ## Application v2 (FastAPI, React, PostgreSQL)
 
@@ -17,10 +17,12 @@ Révision : 19 novembre 2026, heure Martinique. Sont distingués **avancement** 
 | Élément | Avancement | Contrôle et preuve |
 | --- | --- | --- |
 | Images non-root, Compose local | Réalisé | Vérifié : construction, smoke, isolation des ports, reprise API/base, persistance après recréation |
-| Scan Trivy v2 | Réalisé | Échec constaté : frontend 0 occurrence ; API 52 HIGH ; PostgreSQL tierce 1 CRITICAL + 26 HIGH. [Suivi #51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) |
+| Scan Trivy v2 | Réalisé | Alertes résiduelles : API 47 HIGH (11 CVE Debian sans correctif indiqué) ; frontend 0 ; PostgreSQL 1 CRITICAL + 26 HIGH dans `gosu` (aucun symbole vulnérable détecté par govulncheck). Pas de qualification de sécurité pour une exposition publique. [Suivi #51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) |
 | Déploiement Rocky | Prévu | Non vérifié |
 
 [Recette de finition V26](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44646629874) — six jobs réussis sur runner Ubuntu ; code testé `a2d89673980c39abe906e96d78fd88a78b75e7a7`. Les détails, digests et limites sont consignés dans les [preuves V26](evidence/qualification/2026-11-19-v26-mise-en-conformite.md). Le succès du scan ne signifie pas conformité sécurité.
+
+[Recette de stabilisation](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44649917348) — quatre jobs réussis, commit `dbb4939a381c504371cd39ff4ee9f618d549ff80` : démarrage sans `.env`, tests, reprise et persistance, scan des images effectivement exécutées, 308 liens relatifs sur 35 fichiers, 15 paires graphiques. Voir les [preuves V26](evidence/qualification/2026-11-19-v26-mise-en-conformite.md#stabilisation-finale). Le retrait de pip ne modifie pas le code métier ni les dépendances applicatives.
 
 ## Infrastructure
 
