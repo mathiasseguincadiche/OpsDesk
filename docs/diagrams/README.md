@@ -85,4 +85,4 @@ Les schémas de la version 1 (application Flask, deux conteneurs), leur fiche de
 
 ## Revue V26
 
-Deux compositions complémentaires et leurs exports natifs ont été générés sur un runner Ubuntu avec Draw.io 32.7.4 ; voir la recette V26 (onglet Actions). Les treize compositions précédentes ne sont pas modifiées. La séquence de consultation et la vue détaillée sont à ouvrir en grand ; la recette interactive GitHub et Notion et l'examen visuel des captures restent distincts.
+Deux compositions complémentaires et leurs exports natifs ont été générés sur un runner Ubuntu avec Draw.io 32.7.4 ([recette de finition](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44646629874)). Les 15 paires ont été contrôlées structurellement et rendues en clair/sombre (30 captures) ; les deux nouvelles vues ont été examinées visuellement. Les treize compositions précédentes ne sont pas modifiées. La séquence de consultation et la vue détaillée sont à ouvrir en grand. La consultation interactive sur les appareils réels, dans GitHub et Notion, reste à vérifier.

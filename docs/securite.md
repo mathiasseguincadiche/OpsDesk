@@ -52,7 +52,7 @@ L'application ne peut pas se protéger seule. Les décisions suivantes sont pris
 
 ## Limites connues
 
-- Le [premier scan Trivy de la v2](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44645955660/job/135988455140) a identifié 1 CRITICAL et 109 HIGH sur les deux images applicatives. Le résultat du scan n'est pas une validation de sécurité. La mise à jour des paquets de base est engagée ; les risques résiduels et les preuves sont suivis dans [STATUS](../STATUS.md).
+- Le premier scan Trivy v2 a identifié 1 CRITICAL et 109 HIGH sur les deux images applicatives. Après mise à jour des paquets, le [nouveau scan](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44646629874/job/135990756585) ne signale aucune occurrence sur le frontend, 52 HIGH sur l'API et 1 CRITICAL + 26 HIGH sur l'image tierce PostgreSQL, ajoutée au périmètre. Aucun secret détecté dans le périmètre actif scanné ; l'historique Git n'est pas couvert. Le succès du job signifie que le scan s'est exécuté, non que la sécurité est validée. [Suivi des risques et correctifs](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) ; [preuves](../STATUS.md).
 - Pas de limitation du nombre de tentatives de connexion.
 - Pas d'authentification à deux facteurs ni de renouvellement automatique du jeton.
 - Pas de HTTPS dans l’application : il se termine devant elle. L’atelier DNS/TLS de l’exercice 06 le met en pratique sur une cible privée, sans exposer le laboratoire. Ce contrôle reste à réaliser.

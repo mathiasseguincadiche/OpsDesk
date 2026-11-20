@@ -168,7 +168,7 @@ Une ligne JSON par événement sur la sortie standard, avec l'heure, le niveau e
 
 ## 18. Tests unitaires
 
-Les tests de l'API sont dans `backend/tests/` : authentification, rôles et visibilité, cycle de vie, commentaires, statistiques, sondes. Ils tournent sur SQLite par défaut et sur PostgreSQL si `TEST_DATABASE_URL` est défini. Dernier contrôle consigné : 19 tests réussis sur SQLite et sur PostgreSQL 17, le 17 novembre 2026.
+Les tests de l'API sont dans `backend/tests/` : authentification, rôles et visibilité, cycle de vie, commentaires, statistiques, sondes. Ils tournent sur SQLite par défaut et sur PostgreSQL si `TEST_DATABASE_URL` est défini. Dernier contrôle consigné : 28 tests réussis sur SQLite et 28 sur PostgreSQL 17, le 19 novembre 2026 ([recette V26](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44646629874)).
 
 ## 19. Tests fonctionnels
 
@@ -251,4 +251,4 @@ L'application est reçue sur une cible quand, sur cette cible et avec une date :
 6. `/metrics` n'est pas joignable par le port 8080 ;
 7. aucun secret n'apparaît dans les images, le dépôt ou les journaux.
 
-État au 19 novembre 2026 : sur la pile de référence exécutée sur runner jetable, critères 1 à 6 vérifiés (ticket n°18 relu après recréation des conteneurs). Les scans de secrets et vulnérabilités ne sont pas qualifiés par cette recette ; aucune cible d’infrastructure n’a encore été reçue. Voir [STATUS.md](../STATUS.md).
+État au 19 novembre 2026 : sur la pile de référence exécutée sur runner jetable, critères 1 à 6 vérifiés (ticket n°18 relu après recréation des conteneurs). Les scans distincts de la revue V26 ont été exécutés ; des vulnérabilités résiduelles interdisent une qualification de sécurité ([suivi](https://github.com/mathiasseguincadiche/OpsDesk/issues/51)). Aucune cible d’infrastructure n’a encore été reçue. Voir [STATUS.md](../STATUS.md).
