@@ -25,7 +25,7 @@ Un collaborateur signale une panne, l'équipe support la prend en charge, la ré
 | État technique | Réalisation ou objectif | Où l'examiner |
 | --- | --- | --- |
 | ✅ Réalisé | Conteneurisation | [`backend/Dockerfile`](backend/Dockerfile), [`frontend/Dockerfile`](frontend/Dockerfile) : images multi-étapes, non-root ; [`compose.yaml`](compose.yaml) : sondes, réseaux séparés, rotation des journaux |
-| ✅ Réalisé | Tests automatisés | [`backend/tests/`](backend/tests/) : 19 tests, joués sur SQLite et sur PostgreSQL 17 |
+| ✅ Réalisé | Tests automatisés | [`backend/tests/`](backend/tests/) : 28 tests, joués sur SQLite et sur PostgreSQL 17 |
 | ✅ Réalisé | Sondes, métriques, journaux | `/health/live`, `/health/ready`, `/metrics` (Prometheus), journaux JSON : voir la [référence technique](docs/reference-technique.md#points-daccès-pour-lexploitation) |
 | 🔜 Prévu | Déploiement Docker Compose | Docker Engine sur Rocky Linux, SELinux et firewalld actifs, déployé par Ansible |
 | 🔜 Prévu | Infrastructure as Code | Terraform (libvirt) et Ansible depuis `srv-admin` |
@@ -58,7 +58,9 @@ Il vous faut Docker Engine avec le plugin Compose (commande `docker compose`) et
 
 ```bash
 git clone https://github.com/mathiasseguincadiche/OpsDesk.git && cd OpsDesk
-if [ -e .env ] || [ -L .env ]; then
+if [ ! -f .env.example ]; then
+  printf 'Fichier .env.example absent : vérifiez le dossier du dépôt.\n' >&2
+elif [ -e .env ] || [ -L .env ]; then
   printf 'Configuration existante conservée. Vérifiez-la avant de continuer.\n'
 else
   (umask 077; set -C; cat .env.example > .env)

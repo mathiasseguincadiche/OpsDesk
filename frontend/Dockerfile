@@ -26,6 +26,8 @@ COPY --from=build /build/dist /usr/share/nginx/html
 COPY --from=build /build/inline-script.sha256 /tmp/inline-script.sha256
 # Expose the CSP hash of the inline theme script to envsubst.
 USER root
+# Apply available Alpine security fixes before returning to the non-root runtime.
+RUN apk upgrade --no-cache
 RUN printf '#!/bin/sh\nexport INLINE_SCRIPT_HASH="$(cat /tmp/inline-script.sha256)"\n' > /docker-entrypoint.d/05-csp-hash.envsh \
  && chmod +x /docker-entrypoint.d/05-csp-hash.envsh
 USER 101

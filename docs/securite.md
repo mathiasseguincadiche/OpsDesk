@@ -36,7 +36,7 @@ Les refus (`401`, `403`, compte désactivé, visibilité par rôle) sont couvert
 
 En mode `production`, les valeurs prédéfinies de démonstration, les secrets manquants et la réutilisation d'un secret sont refusés pour les variables JWT, admin et DB (hors `DATABASE_URL`, dont les identifiants restent à contrôler séparément). Le mode de démonstration locale utilise encore les comptes fictifs ; ne jamais l'exposer sur le réseau. Désactiver `SEED_DEMO_DATA` et `ALLOW_REGISTRATION` pour une cible non démonstrative.
 
-Chaque secret accepte une forme `*_FILE` qui lit sa valeur dans un fichier : c'est la forme attendue des secrets de Compose et de Kubernetes. La règle est de ne placer aucun secret réel dans les images ni dans le dépôt (le scan exhaustif de la v2 reste à réaliser) : `.env` et les dossiers `secrets/` sont exclus par `.gitignore`, seul `.env.example` (sans valeur réelle) est versionné.
+Chaque secret accepte une forme `*_FILE` qui lit sa valeur dans un fichier : c'est la forme attendue des secrets de Compose et de Kubernetes. La règle est de ne placer aucun secret réel dans les images ni dans le dépôt (un scan ponctuel limité à la v2 a été exécuté ; il ne couvre pas l'historique Git ni les futurs secrets d'infrastructure) : `.env` et les dossiers `secrets/` sont exclus par `.gitignore`, seul `.env.example` (sans valeur réelle) est versionné.
 
 ## Ce qui revient à l'infrastructure
 
@@ -52,7 +52,7 @@ L'application ne peut pas se protéger seule. Les décisions suivantes sont pris
 
 ## Limites connues
 
-- **Aucune analyse de vulnérabilités des images v2** n'a encore été faite.
+- Le premier scan Trivy v2 a identifié 1 CRITICAL et 109 HIGH sur les deux images applicatives. Après mise à jour des paquets, le [nouveau scan](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44646629874/job/135990756585) ne signale aucune occurrence sur le frontend, 52 HIGH sur l'API et 1 CRITICAL + 26 HIGH sur l'image tierce PostgreSQL, ajoutée au périmètre. Aucun secret détecté dans le périmètre actif scanné ; l'historique Git n'est pas couvert. Le succès du job signifie que le scan s'est exécuté, non que la sécurité est validée. [Suivi des risques et correctifs](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) ; [preuves](../STATUS.md).
 - Pas de limitation du nombre de tentatives de connexion.
 - Pas d'authentification à deux facteurs ni de renouvellement automatique du jeton.
 - Pas de HTTPS dans l’application : il se termine devant elle. L’atelier DNS/TLS de l’exercice 06 le met en pratique sur une cible privée, sans exposer le laboratoire. Ce contrôle reste à réaliser.

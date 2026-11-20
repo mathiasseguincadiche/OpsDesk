@@ -19,7 +19,9 @@ git clone https://github.com/mathiasseguincadiche/OpsDesk.git && cd OpsDesk
 ```
 
 ```bash
-if [ -e .env ] || [ -L .env ]; then
+if [ ! -f .env.example ]; then
+  printf 'Fichier .env.example absent : vérifiez le dossier du dépôt.\n' >&2
+elif [ -e .env ] || [ -L .env ]; then
   printf 'Configuration existante conservée. Vérifiez-la avant de continuer.\n'
 else
   (umask 077; set -C; cat .env.example > .env)
