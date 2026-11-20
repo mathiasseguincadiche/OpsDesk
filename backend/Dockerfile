@@ -7,7 +7,7 @@ WORKDIR /build
 COPY requirements.txt constraints.txt ./
 RUN python -m venv /opt/venv \
  && /opt/venv/bin/pip install --upgrade pip \
- && /opt/venv/bin/pip install -r requirements.txt -c constraints.txt \
+ && /opt/venv/bin/pip install -r requirements.txt \
  && /opt/venv/bin/pip check
 
 FROM docker.io/library/python:3.13-slim AS runtime
