@@ -1,0 +1,181 @@
+name: Qualification ponctuelle V26 — graphismes et sécurité
+on:
+  push:
+    branches: ["qualification/v26-visuel-securite-20261119"]
+permissions:
+  contents: read
+jobs:
+  schemas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 5cd4562ac4740dd8d9df62dbaf457d9b66be974a
+          persist-credentials: false
+      - name: Régénérer deux compositions et exporter avec Draw.io natif
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 2 -o /tmp/drawio.deb https://github.com/jgraph/drawio-desktop/releases/download/v32.7.4/drawio-amd64-32.7.4.deb
+          echo 'ffd8c110f1df8cde26a7fbd801212bd8381d257879f424a2191ec4cc491aa50b  /tmp/drawio.deb' | sha256sum -c -
+          sudo apt-get install -y /tmp/drawio.deb
+          draw="$(command -v drawio || command -v draw.io || true)"
+          if test -z "$draw"; then draw=/opt/draw.io/drawio; fi
+          test -x "$draw"
+          python3 docs/diagrams/outils/generer_schemas.py /tmp/opsdesk-regen
+          mkdir -p /tmp/exports /tmp/recette-schemas
+          for name in sequence-consultation diagnostic-service; do
+            cp "/tmp/opsdesk-regen/$name.drawio" "docs/diagrams/$name.drawio"
+            xvfb-run -a "$draw" --no-sandbox --export --format svg --theme light --embed-svg-fonts false --border 0 --output "$PWD/docs/diagrams/$name.svg" "$PWD/docs/diagrams/$name.drawio"
+            test -s "docs/diagrams/$name.svg"
+            cp "docs/diagrams/$name.drawio" "docs/diagrams/$name.svg" /tmp/exports/
+          done
+          python3 - <<'PY'
+          import pathlib, xml.etree.ElementTree as ET, subprocess, shutil, re
+          p=pathlib.Path("docs/diagrams")
+          out=pathlib.Path("/tmp/recette-schemas")
+          chrome=shutil.which("google-chrome") or shutil.which("chromium") or shutil.which("chromium-browser")
+          assert chrome
+          sources=sorted(p.glob("*.drawio"))
+          assert len(sources)==15 and len(list(p.glob("*.svg")))==15
+          for src in sources:
+              root=ET.parse(src).getroot()
+              cells=list(root.iter("mxCell"))
+              ids=[c.attrib["id"] for c in cells if "id" in c.attrib]
+              assert len(ids)==len(set(ids)), src
+              for c in cells:
+                  for k in ("parent","source","target"):
+                      assert k not in c.attrib or c.attrib[k] in ids,(src,k,c.attrib.get(k))
+              svg=src.with_suffix(".svg")
+              r=ET.parse(svg).getroot()
+              _,_,w,h=map(float,r.attrib["viewBox"].split())
+              assert w>0 and h>0
+              width=375 if "mobile" in src.stem else (int(w) if src.stem in ("architecture","sequence-consultation") else (950 if src.stem=="presentation" else 700))
+              height=int(h*width/w+0.9999)
+              font_sizes=[]
+              for node in r.iter():
+                  tag=node.tag.rsplit("}",1)[-1]
+                  if tag in ("span","div","text") and "".join(node.itertext()).strip() and "cannot display" not in "".join(node.itertext()):
+                      sizes=re.findall(r"font-size:\s*([0-9.]+)px",node.get("style",""))
+                      attr=node.get("font-size","")
+                      if attr.endswith("px"):
+                          sizes.append(attr[:-2])
+                      font_sizes.extend(float(v) for v in sizes if float(v)>0)
+              minimum=min(font_sizes)*min(1,width/w) if font_sizes else None
+              print(src.stem,len(cells),"cellules",width,"x",height,"px, police minimale estimée",minimum)
+              for mode,color in (("clair","#ffffff"),("sombre","#0d1117")):
+                  page=out/(src.stem+"-"+mode+".html")
+                  dst=page.with_suffix(".png")
+                  page.write_text('<!doctype html><meta charset="utf-8"><style>html,body{margin:0;background:'+color+'}img{display:block;width:'+str(width)+'px;height:auto}</style><img src="'+svg.resolve().as_uri()+'">',encoding="utf-8")
+                  subprocess.run([chrome,"--headless","--no-sandbox","--disable-dev-shm-usage","--disable-gpu","--hide-scrollbars","--window-size="+str(width)+","+str(height),"--screenshot="+str(dst),page.as_uri()],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+                  page.unlink()
+              if src.stem in ("sequence-consultation","diagnostic-service"):
+                  assert minimum is not None and minimum >= 11, (src,minimum)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nouveaux-exports-v26
+          path: /tmp/exports
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: recette-visuelle-v26
+          path: /tmp/recette-schemas
+          retention-days: 14
+  securite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 5cd4562ac4740dd8d9df62dbaf457d9b66be974a
+          persist-credentials: false
+      - name: Scanner les images v2 et les secrets (rapport expurgé)
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DB_PASSWORD="$(openssl rand -hex 20)"
+          export JWT_SECRET="$(openssl rand -hex 32)"
+          export ADMIN_PASSWORD="$(openssl rand -hex 20)"
+          printf '::add-mask::%s\n' "$DB_PASSWORD" "$JWT_SECRET" "$ADMIN_PASSWORD"
+          docker compose build backend frontend
+          mkdir -p /tmp/opsdesk-scan /tmp/opsdesk-scan-public
+          docker save localhost/opsdesk-api:2.0.0 -o /tmp/opsdesk-scan/api.tar
+          docker save localhost/opsdesk-frontend:2.0.0 -o /tmp/opsdesk-scan/frontend.tar
+          docker pull aquasec/trivy:0.74.0
+          for image in api frontend; do
+            docker run --rm -v /tmp/opsdesk-scan:/scan aquasec/trivy:0.74.0 image --input "/scan/$image.tar" --scanners vuln,secret --format json --output "/scan/$image.json" --timeout 10m
+          done
+          docker run --rm -v "$PWD:/src:ro" -v /tmp/opsdesk-scan:/scan aquasec/trivy:0.74.0 fs --scanners secret --format json --output /scan/repo.json --skip-dirs /src/.git --skip-dirs /src/legacy /src
+          python3 - <<'PY'
+          import json, pathlib, collections
+          dst=pathlib.Path("/tmp/opsdesk-scan-public")
+          for name in ("api","frontend","repo"):
+              doc=json.loads(pathlib.Path("/tmp/opsdesk-scan/"+name+".json").read_text())
+              counts=collections.Counter()
+              findings=[]
+              for result in doc.get("Results",[]):
+                  for v in result.get("Vulnerabilities") or []:
+                      counts[v.get("Severity","UNKNOWN")]+=1
+                      findings.append({k:v.get(k) for k in ("VulnerabilityID","PkgName","InstalledVersion","FixedVersion","Severity")})
+                  for v in result.get("Secrets") or []:
+                      counts["SECRET"]+=1
+                      findings.append({"type":"secret","target":result.get("Target"),"rule":v.get("RuleID"),"start":v.get("StartLine")})
+              safe={"target":name,"counts":dict(counts),"findings":findings}
+              (dst/(name+".json")).write_text(json.dumps(safe,ensure_ascii=False,indent=2))
+              print(name,dict(counts))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rapport-trivy-expurge-v26
+          path: /tmp/opsdesk-scan-public
+          retention-days: 14
+  integrer_exports:
+    needs: schemas
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: docs/v26-conformite
+      - uses: actions/download-artifact@v4
+        with:
+          name: nouveaux-exports-v26
+          path: /tmp/exports
+      - name: Intégrer uniquement les deux nouveaux dessins et liens dans la PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "5cd4562ac4740dd8d9df62dbaf457d9b66be974a"
+          for name in sequence-consultation diagnostic-service; do
+            for ext in drawio svg; do
+              test -s "/tmp/exports/$name.$ext"
+              cp "/tmp/exports/$name.$ext" "docs/diagrams/$name.$ext"
+            done
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("docs/apprentissage/01-application.md")
+          s=p.read_text()
+          s=s.replace("## Ce qu'il faut obtenir", "Pour approfondir sans résoudre ton exercice de création et prise en charge : [diagramme de séquence d'une simple consultation](../diagrams/sequence-consultation.svg), à ouvrir en grand.\n\n## Ce qu'il faut obtenir", 1)
+          p.write_text(s)
+          p=Path("docs/apprentissage/12-diagnostic.md")
+          s=p.read_text().replace("## Ce qu'il faut obtenir", "[![Arbre de diagnostic : quatre sondes et les hypothèses à examiner](../diagrams/diagnostic-service.svg)](../diagrams/diagnostic-service.svg)\n\nLa première sonde en échec donne une piste, non une cause certaine.\n\n## Ce qu'il faut obtenir",1)
+          p.write_text(s)
+          p=Path("docs/diagrams/README.md")
+          s=p.read_text().replace("consolidé dans la collection V25","consolidé avec les acquis V26 (V24 préservée)")
+          marker="Les vues pédagogiques font 760 px de large"
+          rows="| [Séquence de consultation](sequence-consultation.svg) ([source](sequence-consultation.drawio)) | Quel trajet suit une consultation authentifiée ? | Lignes de vie, activations, requêtes et réponses | 920 | Exercice 01, consultation en grand |\n| [Diagnostic par couches](diagnostic-service.svg) ([source](diagnostic-service.drawio)) | Quelle hypothèse tester quand une sonde échoue ? | Arbre de décision et pistes | 760 | Exercice 12 |\n\n"
+          s=s.replace(marker,rows+marker,1).replace("un gabarit V25","un gabarit V26")
+          s += "\n## Revue V26\n\nDeux compositions complémentaires et leurs exports natifs ont été générés sur un runner Ubuntu avec Draw.io 32.7.4 ; voir la recette V26 (onglet Actions). Les treize compositions précédentes ne sont pas modifiées. La séquence de consultation et la vue détaillée sont à ouvrir en grand ; la recette interactive GitHub et Notion et l'examen visuel des captures restent distincts.\n"
+          p.write_text(s)
+          PY
+          git add docs/diagrams/ docs/apprentissage/01-application.md docs/apprentissage/12-diagnostic.md
+          git diff --cached --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "V26 : intégrer les deux exports natifs Draw.io et leurs liens"
+          git push origin HEAD:refs/heads/docs/v26-conformite
