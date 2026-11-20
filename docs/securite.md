@@ -1,6 +1,6 @@
 # Sécurité d'OpsDesk
 
-Ce document dit ce que l'application protège, comment, et ce qu'elle laisse à l'infrastructure. Mise à jour : 18 novembre 2026, pour la version 2.0.0, par relecture du code.
+Ce document dit ce que l'application protège, comment, et ce qu'elle laisse à l'infrastructure. Mise à jour : 19 novembre 2026 (Martinique), version 2.0.0, recette de stabilisation sur runner.
 
 ## Le cadre
 
@@ -24,7 +24,7 @@ OpsDesk est un service de laboratoire : **données fictives, aucune exposition s
 | Exposition des mesures internes | `/metrics` bloqué par nginx | `frontend/nginx.conf.template` |
 | Conteneur compromis | Images non-root (UID 10001 pour l'API, 101 pour nginx), ports non privilégiés | `backend/Dockerfile`, `frontend/Dockerfile` ; `no-new-privileges` dans `compose.yaml` |
 
-Les refus (`401`, `403`, compte désactivé, visibilité par rôle) sont couverts par les tests de l'API ; dernier contrôle consigné le 17 novembre 2026 dans [STATUS.md](../STATUS.md).
+Les refus (`401`, `403`, compte désactivé, visibilité par rôle) sont couverts par les tests de l'API ; dernier contrôle consigné le 19 novembre 2026 dans [STATUS.md](../STATUS.md).
 
 ## Les secrets
 
@@ -36,7 +36,7 @@ Les refus (`401`, `403`, compte désactivé, visibilité par rôle) sont couvert
 
 En mode `production`, les valeurs prédéfinies de démonstration, les secrets manquants et la réutilisation d'un secret sont refusés pour les variables JWT, admin et DB (hors `DATABASE_URL`, dont les identifiants restent à contrôler séparément). La pile locale de référence démarre sans `.env` en mode `development`, avec des valeurs publiques et des comptes fictifs. Ses ports sont liés à la boucle locale ; ne pas l'exposer sur le réseau. Désactiver `SEED_DEMO_DATA` et `ALLOW_REGISTRATION` pour une cible non démonstrative.
 
-Chaque secret accepte une forme `*_FILE` qui lit sa valeur dans un fichier : c'est la forme attendue des secrets de Compose et de Kubernetes. La règle est de ne placer aucun secret réel dans les images ni dans le dépôt (un scan ponctuel limité à la v2 a été exécuté ; il ne couvre pas l'historique Git ni les futurs secrets d'infrastructure) : `.env` et les dossiers `secrets/` sont exclus par `.gitignore`, seul `.env.example` (sans valeur réelle) est versionné.
+Chaque secret accepte une forme `*_FILE` qui lit sa valeur dans un fichier : c'est la forme attendue des secrets de Compose et de Kubernetes. La règle est de ne placer aucun secret réel dans les images ni dans le dépôt (un scan ponctuel limité à la v2 a été exécuté ; il ne couvre pas l'historique Git ni les futurs secrets d'infrastructure) : `.env` et les dossiers `secrets/` sont exclus par `.gitignore`, seul `.env.example` est versionné ; la configuration Compose de référence utilise des valeurs publiques de démonstration, jamais des secrets réels.
 
 ## Ce qui revient à l'infrastructure
 
@@ -52,7 +52,7 @@ L'application ne peut pas se protéger seule. Les décisions suivantes sont pris
 
 ## Limites connues
 
-- Le premier scan Trivy v2 a identifié 1 CRITICAL et 109 HIGH sur les deux images applicatives. Après mise à jour des paquets, le [nouveau scan](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44646629874/job/135990756585) ne signale aucune occurrence sur le frontend, 52 HIGH sur l'API et 1 CRITICAL + 26 HIGH sur l'image tierce PostgreSQL, ajoutée au périmètre. Aucun secret détecté dans le périmètre actif scanné ; l'historique Git n'est pas couvert. Le succès du job signifie que le scan s'est exécuté, non que la sécurité est validée. [Suivi des risques et correctifs](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) ; [preuves](../STATUS.md).
+- Le [scan final](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44649917348) des images exécutées indique 47 HIGH sur l'API (11 CVE Debian distinctes, aucune version corrigée indiquée), zéro occurrence sur le frontend, et 1 CRITICAL + 26 HIGH sur PostgreSQL dans le binaire `gosu`. Le retrait de pip de l'image d'exécution a supprimé les cinq HIGH Python observées précédemment. L'analyse complémentaire de `gosu` par govulncheck ne détecte aucun symbole vulnérable utilisé ; ce constat ne constitue ni une garantie d'innocuité ni une suppression des alertes Trivy. PostgreSQL officiel est conservé. Aucun secret détecté dans le périmètre scanné (hors historique Git). [Suivi #51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) ; [preuves](../STATUS.md). Les correctifs amont devront être intégrés lorsqu'ils seront disponibles.
 - Pas de limitation du nombre de tentatives de connexion.
 - Pas d'authentification à deux facteurs ni de renouvellement automatique du jeton.
 - Pas de HTTPS dans l’application : il se termine devant elle. L’atelier DNS/TLS de l’exercice 06 le met en pratique sur une cible privée, sans exposer le laboratoire. Ce contrôle reste à réaliser.

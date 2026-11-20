@@ -45,3 +45,23 @@ Le job sécurité a construit ses propres images ; ne pas confondre ces digests 
 Digests du job sécurité : API `sha256:92e7cc9ee918ad172be1f4593cd2b618dace6d33e3d22bbd69dd1f3a906567cb`, frontend `sha256:88f55860ba3854dbbe27e1eab0f3798a3c1578fa91fb38108f93e36eff51b423`, PostgreSQL `sha256:526f86d93c6ea08fd3f1fe5605650cacc781b2c6013169a0ad8f42c7d3d84f32`.
 
 L'occurrence critique brotli du frontend n'est plus signalée. PostgreSQL : occurrence critique CVE-2025-68121 (bibliothèque standard Go 1.24.6) ; identifier le binaire réel et la version officielle corrigée. Aucun secret détecté dans le périmètre actif. La qualification sécurité est en échec sur le critère d'absence de vulnérabilités graves non traitées ; [suivi #51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51). Ne pas exposer le laboratoire.
+
+## Stabilisation finale
+
+[Run 44649322547](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44649322547) — première tentative de correction Python via contraintes : aucun changement des alertes, quatre jobs réussis. Les versions relevées correspondent aux bibliothèques embarquées dans pip (cf. [vendor.txt de pip 26.2.2](https://github.com/pypa/pip/blob/26.2.2/src/pip/_vendor/vendor.txt)). Les contraintes inutiles ont été retirées. Le Dockerfile conserve pip pour la construction, vérifie les dépendances, puis désinstalle pip du venv et du Python système de l'image finale.
+
+[Run final 44649917348](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44649917348) — quatre jobs réussis, commit testé `dbb4939a381c504371cd39ff4ee9f618d549ff80`, runner Ubuntu jetable. Ruff ; 28 tests SQLite et 28 PostgreSQL (un avertissement par suite) ; typage/build frontend ; smoke ALL GOOD ; isolation des ports ; reprise API et PostgreSQL ; ticket témoin conservé après recréation ; démarrage sans .env ; absence de pip vérifiée dans le venv et le Python système. Scan Trivy 0.74.0 sur les mêmes images que celles exécutées. Contrôle de 308 liens relatifs dans 35 fichiers, aucun manquant ; 15 paires XML graphiques valides. Le rendu natif interactif GitHub/Notion sur appareils réels n'est pas vérifié.
+
+| Image | CRITICAL | HIGH | MEDIUM | LOW | UNKNOWN |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| API | 0 | 47 | 109 | 67 | 7 |
+| Frontend | 0 | 0 | 0 | 0 | 0 |
+| PostgreSQL | 1 | 26 | 40 | 3 | 1 |
+
+Digests enregistrés dans les logs : API `sha256:e847113882a2052ed8db06e85ab384b557979b011515e44208c74dfd1c4d11aa`, frontend `sha256:a2670a2e97d7445492c03e64befbbf4424ffce80fbe73387304c866124c269ef`, PostgreSQL `sha256:526f86d93c6ea08fd3f1fe5605650cacc781b2c6013169a0ad8f42c7d3d84f32`.
+
+- API : cinq HIGH Python éliminées. Les 47 HIGH restantes correspondent à 11 CVE Debian distinctes, sans correctif indiqué par Trivy ; ne pas les masquer ni supprimer arbitrairement des bibliothèques système. Actualiser lorsque les mises à jour amont sont disponibles.
+- PostgreSQL : les alertes Go ciblent `/usr/local/bin/gosu` (v1.20.0 construit avec Go 1.24.6), pas le serveur PostgreSQL lui-même. Le scan binaire govulncheck retourne 0 (aucun symbole vulnérable utilisé détecté ; 3 alertes dans les paquets importés et 56 dans les modules requis). La critique [CVE-2025-68121](https://pkg.go.dev/vuln/GO-2026-4337) porte sur crypto/tls ; conserver l'image officielle et suivre sa mise à jour amont. Aucune alerte n'est ignorée dans Trivy, et l'analyse ne prouve pas l'absence de risque.
+- Secrets : aucun signal dans le périmètre actif scanné, hors historique Git. Les valeurs publiques de démonstration ne sont pas des secrets de production.
+
+Bilan : correctifs disponibles dans le périmètre traités à ce stade, risque résiduel maintenu dans [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51). Ne pas exposer sur Internet. Cette réserve n'empêche pas de commencer le parcours local. Aucune compétence personnelle ni infrastructure Rocky/K3s validée par cette recette.
