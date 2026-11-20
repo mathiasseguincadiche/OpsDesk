@@ -26,7 +26,12 @@ ENV PATH="/opt/venv/bin:$PATH" \
     ENVIRONMENT=production \
     PORT=8000
 
-RUN useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin opsdesk
+# Apply available security fixes in the existing Debian release at build time.
+# The periodic scan is still necessary: unavailable fixes remain documented risks.
+RUN apt-get update \
+ && apt-get upgrade -y --no-install-recommends \
+ && rm -rf /var/lib/apt/lists/* \
+ && useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin opsdesk
 COPY --from=build /opt/venv /opt/venv
 WORKDIR /app
 COPY --chown=10001:10001 app ./app

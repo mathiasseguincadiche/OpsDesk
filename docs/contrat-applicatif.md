@@ -82,7 +82,9 @@ API en Python 3.13 avec FastAPI, SQLAlchemy 2 et psycopg 3. Interface en TypeScr
 Pile complète, en conteneurs :
 
 ```bash
-if [ -e .env ] || [ -L .env ]; then
+if [ ! -f .env.example ]; then
+  printf 'Fichier .env.example absent : vérifiez le dossier du dépôt.\n' >&2
+elif [ -e .env ] || [ -L .env ]; then
   printf 'Configuration existante conservée. Vérifiez-la avant de continuer.\n'
 else
   (umask 077; set -C; cat .env.example > .env)

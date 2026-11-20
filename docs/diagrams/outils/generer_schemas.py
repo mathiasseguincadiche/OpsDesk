@@ -781,7 +781,7 @@ def sequence_consultation(dossier):
     for ident, y, h, label in zones:
         d.forme("zone-"+ident, 16, y, 888, h, "", style_regroupement(), calque="fond")
         d.forme("label-"+ident, 28, y+4, 420, 20, label, style_texte("categorie", MUTED), calque="annotations")
-    for ident, i, y1, y2, f in [("p",1,228,704,ACCES),("a",2,270,660,TRAITEMENT),("d1",3,370,410,DONNEES),("d2",3,540,584,DONNEES)]:
+    for ident, i, y1, y2, f in [("p",1,228,710,ACCES),("a",2,270,668,TRAITEMENT),("d1",3,370,418,DONNEES),("d2",3,540,590,DONNEES)]:
         d.forme("act-"+ident, x[i]-5, y1, 10, y2-y1, "",
                f"rounded=0;fillColor={f.fond};strokeColor={f.trait};strokeWidth=1.25;", calque="composants")
     def message(ident, a, z, y, label, retour=False):
@@ -795,11 +795,11 @@ def sequence_consultation(dossier):
                 label, style_texte("detail", INK, "center"), calque="annotations")
     message("01",0,1,228,"1 · GET /api/tickets/{id}<br>Authorization: Bearer …")
     message("02",1,2,274,"2 · Relais HTTP vers backend")
-    d.forme("jwt", 430, 332, 292, 24, "3 · Vérifie signature, expiration et identifiant JWT",
+    d.forme("jwt", 358, 330, 204, 42, "3 · Vérifie le JWT<br>signature, expiration, identifiant",
             style_texte("detail", TRAITEMENT.texte, "center"), calque="annotations")
     message("04",2,3,374,"4 · Charge le compte actif")
     message("05",3,2,418,"5 · Compte renvoyé",True)
-    d.forme("visibilite", 420, 502, 312, 24, "6 · Filtre : demandeur ou membre du support",
+    d.forme("visibilite", 358, 500, 204, 42, "6 · Filtre la visibilité<br>demandeur ou membre du support",
             style_texte("detail", TRAITEMENT.texte, "center"), calque="annotations")
     message("07",2,3,548,"7 · SELECT du ticket visible")
     message("08",3,2,590,"8 · Données + relations",True)
@@ -839,6 +839,13 @@ def diagnostic_service(dossier):
     carte_simple(d,"vert",44,712,308,70,ACCES,b("Oui · vérifier l'intermittence")+"<br>"+s("Comparer métriques, journaux et heure du signal."),fond=ACCES.fond)
     d.lien("suite-vert","metier","vert","Oui",style_flux("applicatif",ortho=False)+"exitX=0.5;exitY=1;entryX=0.5;entryY=0;",decalage=(26,0))
     carte_simple(d,"regle",428,704,300,86,RESILIENCE,b("Avant toute correction")+"<br>"+s("Tester une hypothèse ; confirmer la cible et le retour arrière."),fond=RESILIENCE.fond)
+    # Bus à droite des cartes : chaque piste rejoint le même contrôle avant action.
+    bus_style = f"endArrow=none;strokeColor={SLATE};strokeWidth=1.5;"
+    for i in range(4):
+        yy=228+i*132
+        d.trait_libre("bus-branche-"+str(i),728,yy,744,yy,bus_style,calque="flux")
+    d.trait_libre("bus-vertical",744,228,744,747,bus_style,calque="flux")
+    d.trait_libre("bus-regle",744,747,728,747,style_flux("applicatif",ortho=False),calque="flux")
     carte_simple(d,"fin",32,816,696,76,INFRA,b("Corriger une seule cause confirmée, puis recontrôler",15)+"<br>"+s("Sondes + parcours utilisateur + ticket témoin ; noter chronologie, impact et limites."),fond=HEADER)
     d.lien("fin-dessus","vert","fin","",style_flux("applicatif",ortho=False)+"exitX=0.5;exitY=1;entryX=0.24;entryY=0;")
     d.lien("fin-correction","regle","fin","",style_flux("applicatif",ortho=False)+"exitX=0.5;exitY=1;entryX=0.78;entryY=0;")

@@ -6,7 +6,7 @@ Dernière révision documentaire : 19 novembre 2026, après la fusion de la v2 (
 
 **Avancement** : Prévu, En cours, Réalisé, Abandonné. **Contrôle** : Vérifié, Échec constaté, Non vérifié. Les deux informations sont distinctes : un élément réalisé peut rester non vérifié.
 
-La [revue V26 et ses contrôles restant à réaliser](evidence/qualification/2026-11-19-v26-mise-en-conformite.md) distingue les corrections proposées des preuves historiques. Les résultats antérieurs restent datés et ne sont pas transférés au nouveau code de configuration.
+La [revue V26](evidence/qualification/2026-11-19-v26-mise-en-conformite.md) consigne les résultats du nouveau socle et les réserves. Les contrôles ne valent que pour le commit et l'environnement indiqués.
 
 ## Application v2 (FastAPI, React, PostgreSQL)
 
@@ -26,7 +26,7 @@ La [revue V26 et ses contrôles restant à réaliser](evidence/qualification/202
 | Pile de référence (PostgreSQL 17, API, frontend) | Réalisé | Vérifié le 18 novembre 2026 avec Docker 29.8 et Compose 5.5.1 sous WSL2 Ubuntu : `docker compose config` valide ; 3 services *healthy* ; `scripts/smoke.py` réussi à travers nginx ; base non joignable depuis nginx ; `no-new-privileges` et rotation des journaux appliqués ; API relancée seule après un SIGTERM ; 17 tickets conservés après `down` puis `up`. Rejoué le 19 novembre sur runner : configuration valide, 3 services sains, smoke `ALL GOOD`, ports 8000/8080 liés à `127.0.0.1` et refusés depuis un autre espace réseau, PostgreSQL non publié, ticket témoin n°18 relu après `down`/`up` sans suppression du volume. **Non testé** : redémarrage du démon Docker ou du serveur Rocky | `compose.yaml` : construit les images, ne remplace pas le fichier de production |
 | Résilience nginx face au backend | Réalisé | Vérifié le 18 novembre : résolution dynamique et démarrage sans API. Le 19 novembre, après correction du délai de connexion : API arrêtée, réponse `504` en 3,003651 s, frontend vivant, puis disponibilité rétablie | `frontend/nginx.conf.template` (résolution DNS dynamique) |
 | Déploiement Docker Engine + Compose sur Rocky Linux | Prévu | Non vérifié | Cible retenue le 18 novembre 2026, à la place de Podman et Quadlet ; contraintes dans la [référence technique](docs/reference-technique.md#déployer-avec-docker-compose-sur-un-serveur) |
-| Analyse de vulnérabilités des images v2 | Prévu | Non vérifié | Aucun scan Trivy des images v2 ; le scan v1 ci-dessous ne s’applique pas |
+| Analyse de vulnérabilités des images v2 | Réalisé | Échec constaté sur les images du 19/11 : 1 CRITICAL et 109 HIGH ; mise à jour des paquets engagée, à requalifier | [Scan V26](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44645955660/job/135988455140) ; pas une qualification de la CI personnelle |
 
 ## Infrastructure
 
