@@ -44,7 +44,7 @@ Si la base ne répond pas, l'API renvoie une erreur 503 explicite, et sa sonde `
 - **Pourquoi** : validation automatique des données, documentation OpenAPI générée (`/api/docs`), code court et lisible ; SQLAlchemy permet de tester sur SQLite comme sur PostgreSQL.
 - **Compromis** : un seul processus par conteneur ; on augmente la capacité en ajoutant des instances, pas des processus.
 - **Quand choisir autrement** : fortes contraintes de performance, ou équipe déjà experte d'un autre écosystème.
-- **Vérifier** : 19 tests (`backend/tests/`), joués sur PostgreSQL 17.
+- **Vérifier** : 28 tests (`backend/tests/`), joués sur PostgreSQL 17.
 
 </details>
 

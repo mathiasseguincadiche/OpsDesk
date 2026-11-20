@@ -1,5 +1,0 @@
-# Correctifs des dépendances transitives relevées par Trivy (19 novembre 2026).
-# Les contraintes n'ajoutent pas de dépendance si elle n'est pas nécessaire.
-msgpack>=1.2.3
-urllib3>=2.8.0
-setuptools>=78.1.1

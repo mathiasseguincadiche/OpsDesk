@@ -4,11 +4,12 @@
 FROM docker.io/library/python:3.13-slim AS build
 ENV PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1
 WORKDIR /build
-COPY requirements.txt constraints.txt ./
+COPY requirements.txt .
 RUN python -m venv /opt/venv \
  && /opt/venv/bin/pip install --upgrade pip \
  && /opt/venv/bin/pip install -r requirements.txt \
- && /opt/venv/bin/pip check
+ && /opt/venv/bin/pip check \
+ && /opt/venv/bin/python -m pip uninstall -y pip
 
 FROM docker.io/library/python:3.13-slim AS runtime
 ARG APP_VERSION=2.0.0
@@ -33,6 +34,8 @@ RUN apt-get update \
  && apt-get upgrade -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/* \
  && useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin opsdesk
+# pip is a build tool, not an application dependency. Remove it from the runtime base too.
+RUN /usr/local/bin/python -m pip uninstall -y pip
 COPY --from=build /opt/venv /opt/venv
 WORKDIR /app
 COPY --chown=10001:10001 app ./app
