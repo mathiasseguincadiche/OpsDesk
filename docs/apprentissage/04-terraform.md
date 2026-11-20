@@ -28,6 +28,8 @@ Des machines créées à la main ne se refont pas à l'identique. Terraform remp
 
 Les deux sur `opsdesk-lan`, joignables en SSH depuis `srv-admin` par clé, compte `mathias`. `srv-admin` n'est pas gérée par Terraform.
 
+Avant toute application : identifier dossier, backend/state, workspace et cible libvirt ; protéger une copie du state. Enregistrer avec `terraform plan -out=tfplan`, relire avec `terraform show tfplan`, puis appliquer le plan approuvé avec `terraform apply tfplan` seulement s'il reste valide. Le plan peut contenir des secrets : ne pas le versionner.
+
 **Livrable** : le code (sans state), le plan commenté ligne par ligne, la sortie de l'`apply`, un second `plan` à « No changes », la preuve SSH des deux VM, et l'emplacement de la copie du state.
 
 ## Vérifications

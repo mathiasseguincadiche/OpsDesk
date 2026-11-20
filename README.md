@@ -58,7 +58,11 @@ Il vous faut Docker Engine avec le plugin Compose (commande `docker compose`) et
 
 ```bash
 git clone https://github.com/mathiasseguincadiche/OpsDesk.git && cd OpsDesk
-cp .env.example .env
+if [ -e .env ] || [ -L .env ]; then
+  printf 'Configuration existante conservée. Vérifiez-la avant de continuer.\n'
+else
+  (umask 077; set -C; cat .env.example > .env)
+fi
 ```
 
 Ouvrez `.env` et remplacez `DB_PASSWORD`, `JWT_SECRET` (secret aléatoire d'au moins 32 caractères) et `ADMIN_PASSWORD` par des valeurs distinctes. Ne versionnez pas `.env`.

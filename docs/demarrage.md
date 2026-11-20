@@ -19,7 +19,11 @@ git clone https://github.com/mathiasseguincadiche/OpsDesk.git && cd OpsDesk
 ```
 
 ```bash
-cp .env.example .env
+if [ -e .env ] || [ -L .env ]; then
+  printf 'Configuration existante conservée. Vérifiez-la avant de continuer.\n'
+else
+  (umask 077; set -C; cat .env.example > .env)
+fi
 ```
 
 Ouvrir `.env` et remplacer les trois valeurs `change-me` : mot de passe de la base, `JWT_SECRET` (32 caractères au moins, par exemple généré par `openssl rand -base64 48`), mot de passe du premier administrateur. Le fichier `.env` n'est jamais versionné.

@@ -4,7 +4,7 @@
 
 **Objectif.** Mener seul une tâche jamais faite, de la décision à la preuve, et la défendre devant quelqu'un qui pose des questions.
 
-**Durée estimée** : une journée, bornée à l'avance. **Prérequis** : exercices 01 à 12, une personne disponible 20 minutes. **État** : prévu, non vérifié.
+**Durée estimée** : une journée, bornée à l'avance. **Prérequis** : exercices 01 à 12 ; une personne disponible 20 minutes si défense orale, sinon une cible neuve pour le rejeu différé. **État** : prévu, non vérifié.
 
 ## Pourquoi
 
@@ -36,7 +36,7 @@ Une tâche jamais faite, parmi celles-ci ou de taille comparable :
 
 ## Vérification séparée
 
-Le niveau L3 n'est noté qu'après l'une de ces deux vérifications, avec sa date et le nom de la personne :
+Le niveau L3 n'est noté qu'après l'une de ces deux vérifications, avec sa date, sa modalité, ses preuves et, en cas de défense orale, le nom de la personne :
 
 - **rejouer** la tâche de zéro, au moins une semaine plus tard, sans notes, sur une cible neuve ;
 - **défense orale** de 20 minutes : questions, puis une modification demandée en direct, réalisée et prouvée.

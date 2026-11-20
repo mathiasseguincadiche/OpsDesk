@@ -43,7 +43,7 @@ Les noms sont ceux des services de `compose.yaml` ; Compose nomme les conteneurs
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | `admin@opsdesk.local` / — | Premier administrateur, créé si aucun n'existe |
 | `SEED_DEMO_DATA` | `true` | Données de démonstration si la base est vide |
 | `ALLOW_REGISTRATION` | `true` | Inscription libre depuis la page de connexion |
-| `ENVIRONMENT` | `development` | `production` rend `JWT_SECRET` obligatoire |
+| `ENVIRONMENT` | `development` | `production` exige JWT (32 caractères au moins), admin et DB (sauf `DATABASE_URL` explicite), distincts et non factices |
 | `LOG_LEVEL` / `LOG_FORMAT` | `INFO` / `json` | Journaux (`json` ou `text`) |
 | `DB_POOL_SIZE` | `5` | Taille du pool de connexions |
 | `CORS_ORIGINS` | vide | Origines autorisées si le frontend est servi sur un autre domaine |
@@ -76,7 +76,11 @@ Le frontend n'a qu'une variable : `BACKEND_URL`.
 Avec Docker Engine et le plugin Compose :
 
 ```bash
-cp .env.example .env
+if [ -e .env ] || [ -L .env ]; then
+  printf 'Configuration existante conservée. Vérifiez-la avant de continuer.\n'
+else
+  (umask 077; set -C; cat .env.example > .env)
+fi
 ```
 
 Remplacer les valeurs `change-me` dans `.env`, puis :

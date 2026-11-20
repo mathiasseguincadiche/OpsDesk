@@ -1,7 +1,7 @@
 # OpsDesk — pile de référence : PostgreSQL + API FastAPI + interface React/nginx.
 # Docker Engine avec le plugin Compose (commande `docker compose`).
 #
-#   cp .env.example .env      # puis changer les mots de passe
+#   Première installation : voir docs/demarrage.md (ne pas écraser .env).
 #   docker compose up -d --build
 #   → http://localhost:8080
 #
