@@ -106,7 +106,7 @@ DATABASE_URL=sqlite:///./dev.db .venv/bin/uvicorn app.main:app --reload --port 8
 Interface (le serveur Vite relaie `/api` vers le port 8000) :
 
 ```bash
-cd frontend && npm install && npm run dev
+cd frontend && npm ci && npm run dev
 ```
 
 ## Tester
@@ -118,6 +118,13 @@ cd backend && .venv/bin/pytest -q && .venv/bin/ruff check app tests
 ```bash
 cd frontend && npm run typecheck && npm run build
 ```
+
+L'outil Ruff de développement est fixé à **0.17.6** dans
+`backend/requirements-dev.txt` : cette version a été observée lors de
+la [qualification du socle sur runner Ubuntu](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44645263160).
+Cela stabilise l'outil de lint mais **ne constitue pas un verrou complet
+des dépendances transitive Python**. Le frontend utilise `npm ci` pour
+respecter son `package-lock.json`.
 
 Les tests de l'API tournent sur SQLite par défaut, et sur un vrai PostgreSQL si `TEST_DATABASE_URL` est défini (par exemple `postgresql://utilisateur:motdepasse@hôte:5432/base_de_test`). C'est le mode à utiliser en CI : certains défauts n'apparaissent que sur PostgreSQL.
 
