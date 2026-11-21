@@ -1,0 +1,50 @@
+name: "Signaler un dysfonctionnement"
+description: "Décrire un bug reproductible sans publier de secret ni donnée sensible."
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Pour une vulnérabilité, lire SECURITY.md et privilégier le signalement privé si disponible."
+  - type: textarea
+    id: context
+    attributes:
+      label: "Contexte et versions"
+      description: "Commit, version applicative, OS, environnement (runner, poste, VM, conteneur)."
+      placeholder: "Version / SHA / plateforme / composants concernés"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: "Étapes de reproduction"
+      description: "Procédure minimale, commandes non sensibles et données fictives."
+      placeholder: "1. …\n2. …\n3. …"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Comportement attendu"
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: "Comportement observé"
+      description: "Inclure seulement des sorties expurgées ; distinguer faits et hypothèses."
+    validations:
+      required: true
+  - type: textarea
+    id: diagnosis
+    attributes:
+      label: "Vérifications effectuées et preuves"
+      description: "Logs, statut, capture, lien vers CI ou test ; indiquer clairement ce qui n'a pas été testé."
+    validations:
+      required: false
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: "Confidentialité"
+      options:
+        - label: "Aucun secret, donnée personnelle ou détail d'exploitation sensible n'est publié."
+          required: true
