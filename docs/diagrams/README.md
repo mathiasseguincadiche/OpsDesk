@@ -2,6 +2,12 @@
 
 Chaque schéma existe en deux fichiers côte à côte : la source **Draw.io** (`.drawio`), que l'on modifie, et son export **SVG**, que l'on affiche. Le SVG est toujours exporté depuis la source, jamais retouché à la main. Tous suivent le système graphique initial V24, consolidé avec les acquis V26 (V24 préservée) : mêmes couleurs, icônes, formes et conventions de flux, mais une composition propre à chaque sujet.
 
+L'illustration `docs/images/opsdesk-hero.svg` du README est une **bannière
+éditoriale**, pas un schéma de topologie ni une preuve d'exécution.
+Elle est maintenue comme SVG vectoriel autonome ; la règle des paires
+Draw.io/SVG continue de s'appliquer sans exception aux schémas techniques
+et pédagogiques de ce dossier.
+
 ## Les schémas
 
 | Schéma | Question à laquelle il répond | Composition | Largeur | Utilisé dans |
