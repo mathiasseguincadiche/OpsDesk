@@ -20,6 +20,15 @@ PAGES = (
     "ROADMAP.md",
     "docs/README.md",
     "docs/diagrams/README.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CHANGELOG.md",
+    "docs/CHARTE_GITHUB.md",
+    "docs/templates/README-PROJET.md",
+    "docs/templates/ARCHITECTURE-ADR.md",
+    "docs/templates/RUNBOOK.md",
+    "docs/templates/PREUVE.md",
+    "docs/templates/RELEASE-NOTES.md",
 )
 MARKDOWN_LINK = re.compile(r"(?<!!)\[[^\]\n]*\]\(([^)\n]+)\)")
 MARKDOWN_IMAGE = re.compile(r"!\[([^\]\n]*)\]\(([^)\n]+)\)")

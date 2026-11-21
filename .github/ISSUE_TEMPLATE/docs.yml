@@ -1,0 +1,32 @@
+name: "Documentation et schémas"
+description: "Améliorer la compréhension, la navigation ou une procédure."
+title: "[Docs] "
+body:
+  - type: textarea
+    id: location
+    attributes:
+      label: "Page, schéma ou section"
+      placeholder: "Chemin exact ou lien vers la section"
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: "Ce qui manque ou pose problème"
+      description: "Expliquer l'effet sur la lecture, l'installation ou le diagnostic."
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: "Amélioration proposée"
+      description: "Préciser public, contexte, explications, vérifications et éventuel schéma."
+    validations:
+      required: true
+  - type: checkboxes
+    id: safe
+    attributes:
+      label: "Préservation"
+      options:
+        - label: "La proposition conserve les prérequis, l'installation des outils, les preuves et les liens utiles."
+          required: true

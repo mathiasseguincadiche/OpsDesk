@@ -26,6 +26,14 @@ Le socle applicatif est fourni et qualifié sur un runner jetable. L'infrastruct
 - [Sécurité](securite.md) — risques, protections et contrôles attendus.
 - [Ressources InfraOps](references-infraops.md) — références utiles pour approfondir.
 
+## Qualité du dépôt et modèles
+
+- [Charte universelle GitHub InfraOps](CHARTE_GITHUB.md) — identité, sept modèles, architecture documentaire et critères de recette.
+- [Bibliothèque de modèles](templates/README-PROJET.md) — point d'entrée vers les gabarits versionnés.
+- [Contribuer](../CONTRIBUTING.md) — branches, tests, PR et preuves.
+- [Politique de sécurité](../SECURITY.md) — périmètre du laboratoire et signalement.
+- [Journal des changements](../CHANGELOG.md) — historique publiable distinct de la qualification.
+
 ## Évaluer et contribuer
 
 - [État et preuves](../STATUS.md) — résultats datés et périmètre de qualification.
