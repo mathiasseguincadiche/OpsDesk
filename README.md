@@ -8,7 +8,7 @@
 
 OpsDesk est un projet fil rouge : une application de gestion de tickets sert de support pour apprendre à préparer Linux, automatiser l'infrastructure, livrer des services, les surveiller et tester leur reprise.
 
-**[Découvrir](#le-projet-en-30-secondes)** · **[Essayer](#demarrage-rapide)** · **[Comprendre l'architecture](#architecture)** · **[Examiner les preuves](STATUS.md)** · **[Parcourir la documentation](docs/README.md)**
+**[Découvrir](#le-projet-en-30-secondes)** · **[Essayer](#démarrage-rapide)** · **[Comprendre l'architecture](#architecture)** · **[Examiner les preuves](STATUS.md)** · **[Parcourir la documentation](docs/README.md)**
 
 ## Le projet en 30 secondes
 
