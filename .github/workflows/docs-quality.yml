@@ -1,0 +1,36 @@
+name: Documentation quality (no deployment)
+
+on:
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'STATUS.md'
+      - 'ROADMAP.md'
+      - 'docs/**'
+      - 'scripts/check_docs.py'
+      - '.github/workflows/docs-quality.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'README.md'
+      - 'STATUS.md'
+      - 'ROADMAP.md'
+      - 'docs/**'
+      - 'scripts/check_docs.py'
+      - '.github/workflows/docs-quality.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docs-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout revision under review
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check documentation, graphics and paths offline
+        run: python3 scripts/check_docs.py
