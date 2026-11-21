@@ -1,38 +1,47 @@
-# OpsDesk - Application de Gestion de ticket IT
+<p align="center">
+  <img src="docs/images/opsdesk-hero.svg" alt="OpsDesk : concevoir, automatiser et exploiter une infrastructure Linux — identité graphique du laboratoire, non une preuve de déploiement." width="100%">
+</p>
 
-**Un projet fil rouge InfraOps : concevoir, automatiser et exploiter l’infrastructure d’une application de tickets IT.**
+# OpsDesk
 
-Un collaborateur signale une panne, l'équipe support la prend en charge, la résout, et chacun suit l'avancement en temps réel. OpsDesk sert de support à un projet DevOps complet : conteneuriser, déployer, automatiser, surveiller et sauvegarder un vrai service, avec une preuve datée pour chaque étape.
+**Ingénierie DevOps / InfraOps — construire et exploiter l'infrastructure d'une application de tickets IT.**
 
-**Découvrir** : [architecture et choix](#architecture) · **Essayer** : [démarrage local](#lancer-le-projet-en-local) · **Apprendre** : [parcours](docs/apprentissage/README.md) · **Évaluer** : [état et preuves](STATUS.md) · **Approfondir** : [documentation par besoin](docs/README.md)
+OpsDesk est un projet fil rouge : une application de gestion de tickets sert de support pour apprendre à préparer Linux, automatiser l'infrastructure, livrer des services, les surveiller et tester leur reprise.
 
-## Mon rôle dans ce projet
+**[Découvrir](#le-projet-en-30-secondes)** · **[Essayer](#démarrage-rapide)** · **[Comprendre l'architecture](#architecture)** · **[Examiner les preuves](STATUS.md)** · **[Parcourir la documentation](docs/README.md)**
 
-**L'application** a été développée avec l'aide d'outils d'IA, puis relue, testée et conteneurisée. Elle me sert de service réaliste à exploiter.
+## Le projet en 30 secondes
 
-**Mon objectif professionnel : devenir ingénieur DevOps spécialisé dans l’automatisation des infrastructures (InfraOps).** L’application est un support, pas un projet de développement full stack. Mon objectif est de transformer un besoin applicatif en une infrastructure Linux reproductible : concevoir le réseau et le stockage, provisionner les machines, sécuriser et configurer les serveurs, déployer des artefacts versionnés, industrialiser la livraison, puis superviser, maintenir, diagnostiquer et restaurer le service. Dans ce parcours, j’apprends à écrire et tester le code d’infrastructure et les automatisations nécessaires ; je lis le code applicatif pour comprendre ses contraintes et collaborer avec le développement. Les exercices et leurs preuves distinguent le travail personnel du socle fourni.
+- **L'application est fournie :** backend FastAPI, frontend React/nginx et PostgreSQL ; son rôle est d'offrir un service réel à exploiter, pas de présenter le développement full stack comme une réalisation personnelle.
+- **L'infrastructure est le sujet de mon apprentissage :** Fedora, KVM/libvirt, Rocky Linux, Terraform, Ansible, Docker Compose, GitHub Actions, K3s, observabilité et restauration. Les réalisations personnelles seront datées et vérifiées progressivement.
+- **L'état actuel est explicite :** le socle a été qualifié le 19 novembre 2026 sur un runner jetable ; les déploiements et exercices sur mes VM Rocky restent à réaliser. Voir [STATUS.md](STATUS.md) et la [provenance des travaux](docs/provenance.md).
 
-**Où j’en suis :** application et pile locale qualifiées le 19 novembre 2026 sur un runner jetable : tests SQLite et PostgreSQL, compilation, smoke HTTP, isolation des ports, reprise de l’API et de la base, persistance. L’infrastructure du laboratoire reste à construire personnellement. Voir les [preuves datées et leurs limites](STATUS.md).
+## Aperçu de l'application
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/apercu-sombre.png">
   <img alt="Tableau de bord d'OpsDesk : tickets actifs, activité des 14 derniers jours, répartition par statut et tickets à traiter en priorité" src="docs/images/apercu-clair.png">
 </picture>
+
 <sub>Capture réelle de la version 2.0.0, prise le 18 novembre 2026 sur l'environnement local, avec les données de démonstration.</sub>
 
-## Ce que montre ce projet
+La capture représente l'application fournie, avec des données fictives. Elle ne démontre pas le déploiement de mon infrastructure InfraOps.
 
-| État technique | Réalisation ou objectif | Où l'examiner |
-| --- | --- | --- |
-| ✅ Réalisé | Conteneurisation | [`backend/Dockerfile`](backend/Dockerfile), [`frontend/Dockerfile`](frontend/Dockerfile) : images multi-étapes, non-root ; [`compose.yaml`](compose.yaml) : sondes, réseaux séparés, rotation des journaux |
-| ✅ Réalisé | Tests automatisés | [`backend/tests/`](backend/tests/) : 28 tests, joués sur SQLite et sur PostgreSQL 17 |
-| ✅ Réalisé | Sondes, métriques, journaux | `/health/live`, `/health/ready`, `/metrics` (Prometheus), journaux JSON : voir la [référence technique](docs/reference-technique.md#points-daccès-pour-lexploitation) |
-| 🔜 Prévu | Déploiement Docker Compose | Docker Engine sur Rocky Linux, SELinux et firewalld actifs, déployé par Ansible |
-| 🔜 Prévu | Infrastructure as Code | Terraform (libvirt) et Ansible depuis `srv-admin` |
-| 🔜 Prévu | Livraison continue | GitHub Actions : tests, build, scan Trivy, publication |
-| 🔜 Prévu | Supervision et sauvegarde | Prometheus, Grafana, `pg_dump` avec test de restauration |
+## Démarrage rapide
 
-Les trois premières lignes décrivent le socle fourni et qualifié, pas des compétences personnelles déjà acquises. Les réalisations suivantes seront vérifiées au fil du parcours ; [STATUS.md](STATUS.md) sépare avancement et contrôle. Les preuves personnelles, distinctes, se consignent dans le suivi de formation.
+Prérequis : Git et Docker avec le plugin Compose.
+
+```bash
+git clone https://github.com/mathiasseguincadiche/OpsDesk.git
+cd OpsDesk
+docker compose up -d --build
+```
+
+Ouvrez [http://localhost:8080](http://localhost:8080) une fois les conteneurs démarrés, puis choisissez un compte de démonstration. Aucune configuration préalable n'est nécessaire sur un dépôt fraîchement cloné.
+
+Pour arrêter le projet sans perdre les tickets : `docker compose down`.
+
+La démonstration utilise des données fictives et des ports accessibles uniquement depuis votre poste. Pour les contrôles, les options de configuration ou un problème de démarrage, consultez le [guide de démarrage](docs/demarrage.md). Le déploiement sur serveur est traité séparément dans la [référence technique](docs/reference-technique.md#déployer-avec-docker-compose-sur-un-serveur).
 
 ## Architecture
 
@@ -50,21 +59,27 @@ Les trois premières lignes décrivent le socle fourni et qualifié, pas des com
 | **Trois conteneurs séparés** | Chaque partie se met à jour, se surveille et se redémarre indépendamment | Plus d'éléments à configurer qu'un seul conteneur |
 | **K3s sur une copie d'essai** | Apprendre Kubernetes sans risquer le service principal | La copie n'est pas le service réel |
 
-## Lancer le projet en local
+## Ce que montre ce projet
 
-Prérequis : Git et Docker avec le plugin Compose.
+| État technique | Réalisation ou objectif | Où l'examiner |
+| --- | --- | --- |
+| ✅ Réalisé | Conteneurisation | [`backend/Dockerfile`](backend/Dockerfile), [`frontend/Dockerfile`](frontend/Dockerfile) : images multi-étapes, non-root ; [`compose.yaml`](compose.yaml) : sondes, réseaux séparés, rotation des journaux |
+| ✅ Réalisé | Tests automatisés | [`backend/tests/`](backend/tests/) : 28 tests, joués sur SQLite et sur PostgreSQL 17 |
+| ✅ Réalisé | Sondes, métriques, journaux | `/health/live`, `/health/ready`, `/metrics` (Prometheus), journaux JSON : voir la [référence technique](docs/reference-technique.md#points-daccès-pour-lexploitation) |
+| 🔜 Prévu | Déploiement Docker Compose | Docker Engine sur Rocky Linux, SELinux et firewalld actifs, déployé par Ansible |
+| 🔜 Prévu | Infrastructure as Code | Terraform (libvirt) et Ansible depuis `srv-admin` |
+| 🔜 Prévu | Livraison continue | GitHub Actions : tests, build, scan Trivy, publication |
+| 🔜 Prévu | Supervision et sauvegarde | Prometheus, Grafana, `pg_dump` avec test de restauration |
 
-```bash
-git clone https://github.com/mathiasseguincadiche/OpsDesk.git
-cd OpsDesk
-docker compose up -d --build
-```
+Les trois premières lignes décrivent le socle fourni et qualifié, pas des compétences personnelles déjà acquises. Les réalisations suivantes seront vérifiées au fil du parcours ; [STATUS.md](STATUS.md) sépare avancement et contrôle. Les preuves personnelles, distinctes, se consignent dans le suivi de formation.
 
-Ouvrez [http://localhost:8080](http://localhost:8080) une fois les conteneurs démarrés, puis choisissez un compte de démonstration. Aucune configuration préalable n'est nécessaire sur un dépôt fraîchement cloné.
+## Mon rôle dans ce projet
 
-Pour arrêter le projet sans perdre les tickets : `docker compose down`.
+**L'application** a été développée avec l'aide d'outils d'IA, puis relue, testée et conteneurisée. Elle me sert de service réaliste à exploiter.
 
-La démonstration utilise des données fictives et des ports accessibles uniquement depuis votre poste. Pour les contrôles, les options de configuration ou un problème de démarrage, consultez le [guide de démarrage](docs/demarrage.md). Le déploiement sur serveur est traité séparément dans la [référence technique](docs/reference-technique.md#déployer-avec-docker-compose-sur-un-serveur).
+**Mon objectif professionnel : devenir ingénieur DevOps spécialisé dans l’automatisation des infrastructures (InfraOps).** L’application est un support, pas un projet de développement full stack. Mon objectif est de transformer un besoin applicatif en une infrastructure Linux reproductible : concevoir le réseau et le stockage, provisionner les machines, sécuriser et configurer les serveurs, déployer des artefacts versionnés, industrialiser la livraison, puis superviser, maintenir, diagnostiquer et restaurer le service. Dans ce parcours, j’apprends à écrire et tester le code d’infrastructure et les automatisations nécessaires ; je lis le code applicatif pour comprendre ses contraintes et collaborer avec le développement. Les exercices et leurs preuves distinguent le travail personnel du socle fourni.
+
+**Où j’en suis :** application et pile locale qualifiées le 19 novembre 2026 sur un runner jetable : tests SQLite et PostgreSQL, compilation, smoke HTTP, isolation des ports, reprise de l’API et de la base, persistance. L’infrastructure du laboratoire reste à construire personnellement. Voir les [preuves datées et leurs limites](STATUS.md).
 
 ## Ce que fait l'application
 
