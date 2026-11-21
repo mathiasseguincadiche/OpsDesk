@@ -13,6 +13,14 @@ Ce document dit d'où vient chaque partie du dépôt, et ce qui revient à la r�
 | Infrastructure : laboratoire, Terraform, Ansible, fichier Compose de production, CI, K3s, supervision, sauvegarde | **À concevoir, écrire, exécuter et expliquer soi-même** | Réalisation personnelle, à prouver exercice par exercice ; rien n'est réalisé à ce jour |
 | Données de démonstration | Fictives : noms, adresses et tickets inventés | Aucune donnée réelle |
 
+### Illustration de couverture GitHub
+
+La bannière `docs/images/opsdesk-hero.svg` est une identité graphique
+éditoriale créée avec assistance IA pour faciliter la lecture. Elle ne
+représente ni une VM réellement créée ni le fonctionnement vérifié
+de l'architecture. Les diagrammes techniques conservent leurs
+sources `.drawio` et leurs exports SVG.
+
 ## La version 1
 
 La version 1 (application Flask, sans authentification), ses tests, ses preuves datées, ses schémas et ses documents d'infrastructure sont conservés dans [`legacy/`](../legacy/) :
