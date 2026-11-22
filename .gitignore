@@ -58,3 +58,7 @@ frontend/dist/
 # Plans Terraform enregistrés : peuvent contenir des données sensibles.
 tfplan
 *.tfplan
+
+# Vue détaillée privée : conserver uniquement dans Notion, jamais dans GitHub
+/docs/diagrams/architecture.drawio
+/docs/diagrams/architecture.svg
