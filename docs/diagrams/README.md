@@ -22,6 +22,16 @@ Ce dossier rassemble les schémas **du produit et de son architecture**, pas les
 - Un schéma décrit une intention et une structure ; il ne prouve ni le déploiement ni la sécurité. Le [statut vérifié](../../STATUS.md) fait foi.
 - Le fichier `.drawio` est la source éditable. Modifier un SVG seul ne suffit pas à maintenir la paire cohérente.
 
+## Conventions de lecture des deux vues Architecture V2
+
+- La **disposition visuelle V1** est conservée, mais toutes les responsabilités techniques relèvent des **sept ADR V2**.
+- Les cadres et les flux sont en **traits continus**. Bleu : applicatif ; turquoise : administration et pulls de conteneurs ; magenta : observabilité ; orange : sauvegarde ; vert : données.
+- Les flèches **VM → GHCR** indiquent des **pulls HTTPS sortants initiés par les VM**. GitHub Actions ne se connecte pas aux VM par SSH entrant.
+- Dans `srv-k3s`, le repère `ns: essai (copie)` concerne l'application et sa base de test ; **Traefik est identifié comme ingress K3s**, sans présumer de son namespace d'installation. `ns: monitoring` regroupe Prometheus et Grafana.
+- La collecte `:9180` correspond à une **passerelle de métriques filtrée envisagée**, et `:9100` à node_exporter restreint à `srv-k3s`. Ce ne sont pas des publications libres de l'API ou de PostgreSQL.
+- La chaîne de reprise sépare `pg_dump -Fc`, **réception SSH restreinte sur Fedora** et **Borg chiffré sur disque externe**. Les valeurs RPO/RTO restent des objectifs non mesurés.
+- L'image Gemini utilisée pour la finition est une **référence graphique**, jamais un fichier source ni une autorité technique. Les fichiers `.drawio` sont les sources éditables et les `.svg` sont les vues correspondantes ; leur **réexport natif dans diagrams.net reste à vérifier**.
+
 ## Modifier et vérifier un schéma
 
 1. Ouvrir le fichier `.drawio` correspondant dans diagrams.net / Draw.io.
