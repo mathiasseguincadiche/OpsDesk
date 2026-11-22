@@ -48,12 +48,12 @@ function SystemStatus() {
   });
   const ok = !isError && data?.status === "ready";
   return (
-    <div className="flex items-center gap-2 px-2 text-xs text-muted" title={ok ? "API et base de données opérationnelles" : "Service dégradé"}>
+    <div className="flex items-center gap-2 px-2 text-xs text-muted" title={ok ? "La sonde confirme que l'API peut joindre la base, sans tester le parcours métier" : "Service dégradé"}>
       <span className="relative flex size-2">
         {ok && <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />}
         <span className={clsx("relative inline-flex size-2 rounded-full", ok ? "bg-emerald-500" : data || isError ? "bg-rose-500" : "bg-faint")} />
       </span>
-      <span>{ok ? "Systèmes opérationnels" : data || isError ? "Service dégradé" : "Vérification…"}</span>
+      <span>{ok ? "API et base accessibles" : data || isError ? "Service dégradé" : "Vérification…"}</span>
       {data?.version && <span className="ml-auto font-mono text-[10px] text-faint">v{data.version}</span>}
     </div>
   );
