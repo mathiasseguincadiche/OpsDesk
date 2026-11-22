@@ -6,11 +6,11 @@ OpsDesk est une application web en trois parties : une interface, une API et une
 
 ## Vue d'ensemble
 
-[![Architecture V2 d'OpsDesk : Terraform et sauvegardes Borg sur Fedora, Ansible et k6 dans srv-admin, service principal HTTPS et conteneurs internes sur srv-app, copie K3s et Grafana/Prometheus sur srv-k3s. Cible non déployée.](diagrams/architecture-globale.svg)](diagrams/architecture.svg)
+[![Architecture V2 d'OpsDesk : Terraform et sauvegardes Borg sur Fedora, Ansible et k6 dans srv-admin, service principal HTTPS et conteneurs internes sur srv-app, copie K3s et Grafana/Prometheus sur srv-k3s. Cible non déployée.](diagrams/architecture-globale.svg)
 
-[Voir le schéma détaillé](diagrams/architecture.svg) : les trois machines, Docker Engine et Compose sur `srv-app`, chaque flux typé avec son port, et ce qui est réalisé ou prévu.
+**Publication :** seule la vue globale est publique. Les paramètres détaillés du laboratoire sont réservés à une page personnelle privée, hors GitHub.
 
-Le navigateur ne parle qu'au **frontend**. Dans le **laboratoire local**, l'entrée est `127.0.0.1:8080`; dans l'**Architecture V2 serveur**, elle devient HTTPS :443, tandis que :8000 et :5432 restent internes. Nginx sert React et relaie les appels à FastAPI, qui seule accède à PostgreSQL. Les frontières des VM en pointillés sont **des éléments à construire**, tandis que les contrôles applicatifs actuels ont été exécutés sur des runners de CI, pas sur Rocky.
+Le navigateur ne parle qu'au **frontend**. Dans le **laboratoire local**, l'entrée est `127.0.0.1:8080`; dans l'**Architecture V2 serveur**, elle devient HTTPS :443, tandis que :8000 et :5432 restent internes. Nginx sert React et relaie les appels à FastAPI, qui seule accède à PostgreSQL. Les cadres continus décrivent la cible d'infrastructure validée ; les contrôles applicatifs actuels ont été exécutés sur des runners de CI, pas sur Rocky.
 
 ## Le trajet d'une requête
 

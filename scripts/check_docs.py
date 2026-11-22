@@ -180,69 +180,52 @@ def check_repository() -> list[str]:
         except ET.ParseError as exc:
             errors.append(f"{source.relative_to(ROOT)}: invalid Draw.io XML: {exc}")
             continue
-        if diagram.stem in {"architecture", "architecture-globale"}:
-            ns = "{http://www.w3.org/2000/svg}"
-            source_cells = {cell.get("id"): cell for cell in editable.iter("mxCell")}
-            rendered_cells = {
-                group.get("data-cell-id"): group
-                for group in exported.iter()
-                if group.get("data-cell-id")
-            }
-
-            # Draw.io native SVG exports place fallback text inside nested <g>
-            # elements and may encode formatting as HTML. The newer minimal
-            # SVG format uses direct <text> children. Support both without
-            # prescribing or changing the graphic layout.
-            if rendered_cells:
-                def plain(value: str) -> str:
-                    decoded = unescape(unescape(value))
-                    decoded = re.sub(r"<br\\s*/?>", " ", decoded, flags=re.I)
-                    decoded = re.sub(r"<[^>]+>", " ", decoded)
-                    return " ".join(decoded.split()).casefold()
-
-                key_ids = (
-                    "titre", "hote", "srv-admin", "srv-app", "srv-k3s",
-                    "flux-http", "web",
-                    "statut-schema" if diagram.stem == "architecture-globale" else "etat-cible",
-                )
-                for cell_id in key_ids:
-                    cell = source_cells.get(cell_id)
-                    rendered = rendered_cells.get(cell_id)
-                    if cell is None or rendered is None:
-                        errors.append(f"{diagram.relative_to(ROOT)}: missing V1-layout cell {cell_id}")
-                        continue
-                    expected_label = plain(cell.get("value", ""))
-                    svg_label = " ".join(
-                        " ".join(node.itertext())
-                        for node in rendered.iter()
-                        if node.tag == f"{ns}text"
+        if diagram.stem == "architecture-globale":
+            # The chosen official SVG is vector artwork with outlined fonts,
+            # while the matching Draw.io is independently reconstructed as native
+            # editable shapes. Validate each without false SVG text comparison.
+            cells = {cell.get("id"): cell for cell in editable.iter("mxCell")}
+            for cell_id in (
+                "titre", "hote", "reseau", "srv-admin", "srv-app",
+                "srv-k3s", "terraform", "navigateur", "compose",
+                "web", "api", "postgres", "backup", "ghcr",
+            ):
+                cell = cells.get(cell_id)
+                if cell is None or cell.find("mxGeometry") is None:
+                    errors.append(
+                        f"{source.relative_to(ROOT)}: missing editable node {cell_id}"
                     )
-                    if not expected_label or expected_label not in plain(svg_label):
-                        errors.append(
-                            f"{diagram.relative_to(ROOT)}: Draw.io/SVG text mismatch in cell {cell_id}"
-                        )
-                text = " ".join(
-                    " ".join(node.itertext())
-                    for node in exported.iter()
-                    if node.tag == f"{ns}text"
-                ).casefold()
-            else:
-                # Lightweight, cell-free SVGs introduced by architecture V2.
-                svg_labels = [node.text or "" for node in exported.findall(f"{ns}text")]
-                source_labels = [
-                    cell.get("value", "")
-                    for cell in editable.iter("mxCell")
-                    if cell.get("style", "").startswith("text;")
-                ]
-                if svg_labels != source_labels or not source_labels:
-                    errors.append(f"{diagram.relative_to(ROOT)}: Draw.io/SVG labels differ")
-                text = " ".join(svg_labels).casefold()
+            source_labels = " ".join(
+                unescape(cell.get("value", ""))
+                for cell in editable.iter("mxCell")
+            ).casefold()
+            for expected in (
+                "terraform", "https", "srv-admin", "srv-app",
+                "srv-k3s", "postgresql", "borg", "ghcr",
+            ):
+                if expected not in source_labels:
+                    errors.append(
+                        f"{source.relative_to(ROOT)}: missing public content {expected}"
+                    )
+            if any(bad in source_labels for bad in ("http :8080", "qemu+ssh")):
+                errors.append(f"{source.relative_to(ROOT)}: obsolete public label")
 
-            for expected in ("v2", "non déployée", "terraform", "https", "srv-admin", "srv-app", "srv-k3s"):
-                if expected not in text:
-                    errors.append(f"{diagram.relative_to(ROOT)}: missing V2 content {expected}")
-            if any(stale in text for stale in ("http :8080", "qemu+ssh", "/metrics :8000")):
-                errors.append(f"{diagram.relative_to(ROOT)}: obsolete V1 infrastructure label")
+            paths = list(exported.iter("{http://www.w3.org/2000/svg}path"))
+            if len(paths) < 50 or exported.get("viewBox") != "0 0 760.000000 660.000000":
+                errors.append(
+                    f"{diagram.relative_to(ROOT)}: unexpected global reference rendering"
+                )
+            if list(exported.iter("{http://www.w3.org/2000/svg}image")):
+                errors.append(
+                    f"{diagram.relative_to(ROOT)}: raster image embedded in SVG"
+                )
+
+    for private_file in ("architecture.drawio", "architecture.svg"):
+        if (diagram_folder / private_file).exists():
+            errors.append(
+                f"docs/diagrams/{private_file}: private detailed view must not be published"
+            )
+
     return errors
 
 

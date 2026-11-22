@@ -55,11 +55,11 @@ La démonstration utilise des données fictives et des ports accessibles uniquem
 
 **Architecture V2 acceptée en conception le 22 novembre 2026** : [sept ADR](docs/adr/README.md), [matrice de flux](docs/architecture-v2-flux.md) et [plan de déploiement, phases 0 à 6](docs/architecture-v2-deploiement.md). Les VM et les flux de cette cible ne sont pas encore déployés. Les deux schémas d'architecture ci-dessous ont été révisés pour **Architecture V2** (sources éditables Draw.io + SVG) ; ils restent des **schémas de conception, pas des captures d'un déploiement**.
 
-<a href="docs/diagrams/architecture.svg"><img alt="Architecture OpsDesk V2 encore à construire : Terraform et Borg sur l'hôte Fedora ; trois VM Rocky srv-admin, srv-app et srv-k3s sur un réseau NAT privé ; serveur principal accessible en HTTPS 443, API et PostgreSQL internes, supervision, copie d'essai et GHCR privé." src="docs/diagrams/architecture-globale.svg"></a>
+<a href="docs/diagrams/architecture-globale.svg"><img alt="Architecture OpsDesk V2 encore à construire : Terraform et Borg sur l'hôte Fedora ; trois VM Rocky srv-admin, srv-app et srv-k3s sur un réseau NAT privé ; serveur principal accessible en HTTPS 443, API et PostgreSQL internes, supervision, copie d'essai et GHCR privé." src="docs/diagrams/architecture-globale.svg"></a>
 
 **En résumé :** la démonstration locale fonctionne sur `127.0.0.1:8080` ; dans la **cible Architecture V2**, le navigateur entrera uniquement en **HTTPS :443** sur Nginx. Celui-ci transmettra `/api` à FastAPI (:8000 interne), qui accédera à PostgreSQL (:5432 interne). Terraform sur Fedora provisionnera les VM, Ansible depuis `srv-admin` administrera `srv-app` et `srv-k3s`. Les contours et flux pointillés expriment une **cible non déployée**, et non un résultat observé.
 
-[Voir le schéma détaillé](docs/diagrams/architecture.svg) (ports, flux d'administration, de supervision et de sauvegarde) · [Les choix techniques expliqués](docs/architecture.md)
+[Voir la vue globale officielle](docs/diagrams/architecture-globale.svg) · [Les choix techniques expliqués](docs/architecture.md)
 
 ### Pourquoi ces choix
 

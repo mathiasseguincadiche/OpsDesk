@@ -50,7 +50,7 @@ Codes d'erreur : `401` sans jeton valide, `403` rôle insuffisant ou ticket non 
 
 ## 4. Architecture interne
 
-Trois composants, chacun dans son conteneur ([schéma](diagrams/architecture.svg)) :
+Trois composants, chacun dans son conteneur ([schéma](diagrams/architecture-globale.svg)) :
 
 - **`frontend`** : nginx non-root qui sert l'interface React et relaie `/api`, `/health` et `/version` vers l'API. Il résout le nom de l'API dynamiquement (cache de 10 secondes) et bloque `/metrics`.
 - **`backend`** : FastAPI. Authentification, règles métier, accès à la base, sondes, métriques, journaux. Aucun état en mémoire entre deux requêtes.
