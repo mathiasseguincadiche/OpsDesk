@@ -33,34 +33,24 @@ class DocumentationContracts(unittest.TestCase):
             ),
         )
 
-    def test_active_pages_include_all_exercises_and_exclude_legacy(self) -> None:
+    def test_active_pages_cover_product_docs_and_exclude_legacy(self) -> None:
         files = {str(path.relative_to(ROOT)) for path in check_docs.active_pages()}
-        self.assertIn("docs/apprentissage/13-autonomie.md", files)
+        self.assertIn("docs/architecture.md", files)
         self.assertIn("docs/exploitation-day2.md", files)
         self.assertNotIn("legacy/docs/README.md", files)
 
     def test_headings_and_explicit_anchors(self) -> None:
         self.assertEqual("points-daccès-pour-lexploitation", check_docs.heading_slug("Points d'accès pour l'exploitation"))
-        anchors = check_docs.document_anchors(ROOT / "docs/apprentissage/README.md")
-        self.assertIn("preuve-et-progression-personnelles", anchors)
-        self.assertIn("les-13-exercices", anchors)
+        anchors = check_docs.document_anchors(ROOT / "docs/architecture.md")
+        self.assertIn("décisions-retenues", anchors)
 
     def test_no_known_misleading_claims(self) -> None:
         self.assertEqual([], check_docs.check_editorial_contract())
 
-    def test_templates_never_prevalidate_exercises(self) -> None:
-        templates = sorted((ROOT / "docs/templates").glob("*.md"))
-        self.assertEqual(5, len(templates))
-        for path in templates:
-            self.assertTrue(path.read_text(encoding="utf-8").strip())
-        evidence = (ROOT / "docs/templates/PREUVE.md").read_text(encoding="utf-8")
-        self.assertIn("Non vérifié", evidence)
-        self.assertIn("Non exécuté", evidence)
-        design = (ROOT / "docs/CHARTE_GITHUB.md").read_text(encoding="utf-8")
-        self.assertIn("Notion", design)
-        self.assertIn("d'installation", design)
-        self.assertIn("l'autonomie", design)
-        self.assertIn("rendu", design.lower())
+    def test_no_personal_training_documents_in_product_tree(self) -> None:
+        self.assertFalse((ROOT / "docs/apprentissage").exists())
+        self.assertFalse((ROOT / "docs/templates").exists())
+        self.assertFalse((ROOT / "docs/CHARTE_GITHUB.md").exists())
 
     def test_security_and_contribution_policies_explicit(self) -> None:
         security = (ROOT / "SECURITY.md").read_text(encoding="utf-8")
