@@ -28,13 +28,13 @@ ENV PATH="/opt/venv/bin:$PATH" \
     ENVIRONMENT=production \
     PORT=8000
 
-# Apply available security fixes in the existing Debian release at build time.
-# The periodic scan is still necessary: unavailable fixes remain documented risks.
+# Appliquer les correctifs Debian disponibles lors de la construction.
+# Une analyse régulière reste nécessaire : certains correctifs peuvent manquer.
 RUN apt-get update \
  && apt-get upgrade -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/* \
  && useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin opsdesk
-# pip is a build tool, not an application dependency. Remove it from the runtime base too.
+# Supprimer pip de l'image d'exécution : les dépendances sont déjà installées.
 RUN /usr/local/bin/python -m pip uninstall -y pip
 COPY --from=build /opt/venv /opt/venv
 WORKDIR /app
