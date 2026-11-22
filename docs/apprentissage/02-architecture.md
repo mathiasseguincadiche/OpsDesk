@@ -18,6 +18,10 @@ Un choix qu'on ne sait pas expliquer ne se défend pas en entretien, et ne se co
 - Une décision « retenue » n'est pas « vérifiée » : rien n'est encore construit.
 - Une raison manquante s'écrit comme question ouverte ; on ne l'invente pas.
 
+## Comprendre le mécanisme et ses limites
+
+**Pour défendre une décision.** Dire « trois VM pour séparer les rôles » ne suffit pas. Il faut également expliquer ce que cette séparation facilite (maintenance, isolation des essais), ce qu'elle coûte (mémoire, administration) et ce qui se produit si l'hôte physique tombe. Un schéma de trois VM sur un seul PC n'est pas une architecture hautement disponible. **Question de revue :** quel besoin concret justifierait de changer ce découpage ?
+
 ## Ce qu'il faut obtenir
 
 1. **Un tableau de cinq décisions**, avec les quatre réponses : trois serveurs Rocky Linux ; Docker Compose sur le serveur plutôt que Kubernetes ou Podman ; l'administration de Docker par `sudo` plutôt que par le groupe `docker` ; la sauvegarde `pg_dump` copiée hors des serveurs ; K3s pour une copie d'essai seulement.
