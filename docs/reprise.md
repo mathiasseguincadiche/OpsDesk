@@ -2,7 +2,7 @@
 
 Ce document dit comment décider d'une reprise, et comment la mener sans aggraver la situation. Mise à jour : 18 novembre 2026, pour la version 2.0.0.
 
-**État** : le dispositif de sauvegarde et la restauration de la base d'OpsDesk sont **prévus, non réalisés** ([exercice 11](apprentissage/11-sauvegarde-reprise.md)). La méthode ci-dessous a été démontrée sur une base de démonstration le 18 novembre 2026, pas encore sur OpsDesk.
+**État** : le dispositif de sauvegarde et la restauration de la base d'OpsDesk sont **prévus, non réalisés**. La méthode ci-dessous a été démontrée sur une base de démonstration le 18 novembre 2026, pas encore sur OpsDesk.
 
 ## Réparer le service ou restaurer les données ?
 
@@ -10,7 +10,7 @@ Ce sont deux réponses à des problèmes différents. Un `503` peut venir d'un s
 
 Avant une restauration, établir **pourquoi les données sont présumées perdues**, la date et la provenance de l'archive, l'identité de la cible isolée, la compatibilité des versions et la possibilité d'abandonner sans écraser la source. Après restauration, la preuve recherchée est **un ticket témoin relu avec son statut** ; le code de sortie de `pg_restore` ne suffit pas.
 
-Cette démarche précise le raisonnement. La mise en œuvre sur l'infrastructure OpsDesk reste à réaliser dans l'[exercice 11](apprentissage/11-sauvegarde-reprise.md).
+Cette démarche décrit la méthode cible ; son exécution sur l'infrastructure OpsDesk reste à prouver.
 
 ## Triage court avant une reprise personnelle
 
@@ -26,7 +26,7 @@ Symptômes d'entrée : tickets inaccessibles, lecture ou écriture refusée, `/h
 
 ## Restaurer la base
 
-Principe retenu au [registre](architecture.md#décisions-retenues), détaillé dans l'[exercice 11](apprentissage/11-sauvegarde-reprise.md) :
+Principe retenu au [registre](architecture.md#décisions-retenues), à appliquer sur une cible explicitement identifiée :
 
 1. Prendre la copie `pg_dump` la plus récente sur l'hôte, et vérifier son empreinte `sha256`.
 2. Vérifier qu'elle est lisible : `pg_restore --list`.
