@@ -7,7 +7,7 @@ Le workflow [Application quality (no deployment)](../.github/workflows/applicati
 | Job | Contrôle | Limites |
 | --- | --- | --- |
 | API | Ruff et tests avec SQLite **puis** PostgreSQL 17 sur runner Ubuntu | Aucun essai de déploiement Rocky |
-| Interface | Installation depuis `package-lock.json`, contrôle TypeScript et build Vite | Pas de recette ergonomique native ou E2E navigateur |
+| Interface | Installation depuis `package-lock.json`, contrôle TypeScript et build Vite | Recette E2E Chromium séparée dans le job conteneurs ; pas de test sur appareil physique |
 | Conteneurs | `docker compose config`, construction, sondes, parcours HTTP fictif, sauvegarde `pg_dump`, restauration isolée, redémarrage API, limitation de connexions et navigation réelle sous Chromium | Exécution sur runner jetable, pas sur `srv-app` ni sur les données réelles |
 
 Le [workflow documentaire](../.github/workflows/docs-quality.yml) reste indépendant : il vérifie les liens, les ancres, les sources Draw.io/SVG et les contrats documentaires.
@@ -20,8 +20,8 @@ Le [workflow documentaire](../.github/workflows/docs-quality.yml) reste indépen
 - Le contrôle `scripts/check_auth_throttle.py` provoque volontairement des HTTP 429 : ne pas le lancer sur une instance partagée.
 - La pile Compose utilisée en CI est la configuration de **démonstration locale**. Ses mots de passe et données fictives ne sont jamais destinés à la production.
 - La limitation Nginx porte sur l'adresse IP du pair réseau. En présence d'un proxy ou d'un répartiteur frontal, ses adresses de confiance et la politique de limitation doivent être revues.
-- Aucun artefact GHCR ni déploiement n'est créé par ces jobs. Le [workflow de sécurité des images](../.github/workflows/image-security.yml) construit les images et lance Trivy chaque semaine et après les changements concernés (PostgreSQL dérivé et image officielle d'origine, pour comparaison). Les rapports JSON, comptes par gravité et identifiants d'images sont disponibles en artefacts ; les alertes restent suivies dans [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51). Un scan réussi ne signifie pas zéro vulnérabilité.
-- Cette CI ne teste pas encore les migrations de schéma, les temps de réponse sous charge ou une campagne de sécurité complète.
+- Aucun artefact GHCR ni déploiement n'est créé par ces jobs. Le [workflow de sécurité des images](../.github/workflows/image-security.yml) construit les images et lance Trivy chaque semaine et après les changements concernés (PostgreSQL dérivé et image officielle d'origine, pour comparaison). Les rapports JSON, comptes par gravité et identifiants d'images sont disponibles en artefacts ; la politique CI échoue si une image retenue présente HIGH ou CRITICAL ; [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) est clôturée pour les images exécutées qualifiées. Un scan réussi ne garantit pas l'absence de toute vulnérabilité.
+- La CI exécute Alembic sur une base vierge distincte et vérifie **dans l'image Docker** le refus d'un démarrage de production sans migration, les deux révisions, le contrôle de schéma et le démarrage après migration (`scripts/check_production_migrations.sh`). Elle ne teste ni les migrations de données réelles préexistantes, ni la charge, ni une campagne de sécurité complète.
 - Les risques résiduels avant un déploiement serveur sont suivis dans [l'issue #68](https://github.com/mathiasseguincadiche/OpsDesk/issues/68).
 
 ## Interpréter les résultats

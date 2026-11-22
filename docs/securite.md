@@ -26,7 +26,7 @@ OpsDesk est un service de laboratoire : **données fictives, aucune exposition s
 | Exposition des mesures internes | `/metrics` bloqué par nginx | `frontend/nginx.conf.template` |
 | Conteneur compromis | Images non-root (UID 10001 pour l'API, 101 pour nginx), ports non privilégiés | `backend/Dockerfile`, `frontend/Dockerfile` ; `no-new-privileges` dans `compose.yaml` |
 
-Les refus (`401`, `403`, compte désactivé, visibilité par rôle) sont couverts par les tests de l'API ; dernier contrôle consigné le 19 novembre 2026 dans [STATUS.md](../STATUS.md).
+Les refus (`401`, `403`, compte désactivé, visibilité par rôle) sont couverts par les tests de l'API ; contrôles applicatifs, PostgreSQL et Chromium vérifiés le 22 novembre 2026 dans [STATUS.md](../STATUS.md).
 
 ## Les secrets
 
@@ -61,7 +61,7 @@ L'application ne peut pas se protéger seule. Les décisions suivantes sont pris
 - Pas de HTTPS dans l’application : il se termine devant elle. Un frontal TLS privé et des règles de filtrage doivent être définis et vérifiés avant déploiement. Ce contrôle reste à réaliser.
 - Le port 8000 ouvert à `srv-k3s` donne accès à toute l'API, pas seulement à `/metrics` (risque ouvert à traiter avant le déploiement).
 - Uvicorn accepte par défaut les en-têtes de proxy uniquement de `127.0.0.1` ; `FORWARDED_ALLOW_IPS` doit désigner les proxys effectivement contrôlés. Ne jamais définir `*` sur une cible ouverte.
-- Les images API, frontend et PostgreSQL sont visées par un [scan Trivy automatisé](../.github/workflows/image-security.yml). Les alertes HIGH/CRITICAL restent affichées et suivies dans [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) : la réussite technique du scan ne constitue pas une homologation.
+- Les images API, frontend et PostgreSQL sont visées par un [scan Trivy automatisé](../.github/workflows/image-security.yml). Les alertes HIGH/CRITICAL sur les images **utilisées** font maintenant échouer la CI ; le comparatif d'image amont reste visible. [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) est clôturée après résultats 0/0 sur les images exécutées, sans que cela constitue une homologation.
 
 Ces limites interdisent une exposition sur Internet en l'état ; elles sont acceptables pour un laboratoire isolé aux données fictives. L'image PostgreSQL de démonstration est dérivée de `postgres:17-alpine` dans [`db/Dockerfile`](../db/Dockerfile) : l'outil `gosu` livré par l'amont est remplacé par le paquet Alpine `su-exec`, avec vérification de l'identité utilisateur et du démarrage. Cette modification n'est validée qu'après réussite des scans et du parcours de restauration. Le traitement de la chaîne de production est suivi dans [#68](https://github.com/mathiasseguincadiche/OpsDesk/issues/68).
 

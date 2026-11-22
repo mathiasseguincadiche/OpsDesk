@@ -2,14 +2,14 @@
 
 Révision : 22 novembre 2026, heure Martinique. Sont distingués **avancement** (prévu, en cours, réalisé, abandonné) et **contrôle** (vérifié, échec constaté, non vérifié). Le socle fourni n'est pas la réalisation personnelle.
 
-**En bref :** le socle FastAPI/React/PostgreSQL fonctionne sur runner Ubuntu ; l'infrastructure Rocky, la livraison et l'exploitation restent à construire. La recette locale est réussie ; les alertes résiduelles des images officielles restent suivies. Laboratoire privé uniquement.
+**En bref :** le socle FastAPI/React/PostgreSQL fonctionne sur runner Ubuntu ; l'infrastructure Rocky, la livraison et l'exploitation restent à construire. La recette du socle est réussie ; le scan des images **exécutées** indique zéro HIGH/CRITICAL au 22 novembre. La qualification de production réelle demeure à réaliser. Laboratoire privé uniquement.
 
 ## Application v2 (FastAPI, React, PostgreSQL)
 
 | Élément | Avancement | Contrôle et preuve |
 | --- | --- | --- |
 | API, authentification, rôles | Réalisé | Vérifié sur runner : 30 tests SQLite + 30 PostgreSQL 17, Ruff (22/11/2026) |
-| Frontend | Réalisé | Vérifié : typage/build TypeScript 7 ; navigation manuelle historique, pas de test d'interface automatisé |
+| Frontend | Réalisé | Vérifié : typage/build TypeScript 7 et navigation Chromium automatisée (connexion, ticket, session, déconnexion, viewport mobile) ; appareils physiques non vérifiés |
 | Sondes, métriques et journaux | Réalisé | Vérifié sur runner pour les sondes ; supervision à installer |
 
 ## Conteneurs
@@ -17,7 +17,7 @@ Révision : 22 novembre 2026, heure Martinique. Sont distingués **avancement** 
 | Élément | Avancement | Contrôle et preuve |
 | --- | --- | --- |
 | Images non-root, Compose local | Réalisé | Vérifié : construction, smoke, isolation des ports, reprise API/base, persistance après recréation |
-| Scan Trivy v2 | Réalisé | Alertes résiduelles : API 47 HIGH (11 CVE Debian sans correctif indiqué) ; frontend 0 ; PostgreSQL 1 CRITICAL + 26 HIGH dans `gosu` (aucun symbole vulnérable détecté par govulncheck). Pas de qualification de sécurité pour une exposition publique. [Suivi #51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) |
+| Scan Trivy v2 | Réalisé | Vérifié le 22/11 : **0 HIGH / 0 CRITICAL sur les trois images utilisées** (API Python Alpine, frontend, PostgreSQL dérivé). CI bloquante en cas de régression HIGH/CRITICAL ; l'image PostgreSQL officielle d'origine reste scannée séparément et affiche 1 CRITICAL + 26 HIGH. [Issue #51 clôturée dans ce périmètre](https://github.com/mathiasseguincadiche/OpsDesk/issues/51). Cela n'homologue pas une exposition publique. |
 | Déploiement Rocky | Prévu | Non vérifié |
 
 [Recette de finition V26](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44646629874) — six jobs réussis sur runner Ubuntu ; code testé `a2d89673980c39abe906e96d78fd88a78b75e7a7`. Les détails, digests et limites sont consignés dans les [preuves V26](evidence/qualification/2026-11-19-v26-mise-en-conformite.md). Le succès du scan ne signifie pas conformité sécurité.
@@ -28,15 +28,15 @@ Révision : 22 novembre 2026, heure Martinique. Sont distingués **avancement** 
 
 Le [workflow CI applicative](docs/ci-applicative.md) a réussi ses trois jobs sur [le run 45005031412](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/45005031412), pour le commit de code `babd1768f8c59c59468774c83a7b21b1628d1f07` : 30 tests SQLite et 30 PostgreSQL 17, Ruff, compilation React/TypeScript 7, construction et démarrage des trois conteneurs, parcours HTTP de démonstration et contrôle d'une limitation de connexions par Nginx. Le job supprime ses volumes de test à la fin. Les détails et limites sont dans la [fiche de qualification](evidence/qualification/2026-11-22-audit-cicd.md).
 
-Ce contrôle **ne constitue pas** une recette de sécurité complète, un scan Trivy actualisé, un déploiement sur Rocky ni une CI/CD de livraison GHCR. Les vulnérabilités historiques restent ouvertes dans [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) ; les chantiers de durcissement avant déploiement sont suivis dans [#68](https://github.com/mathiasseguincadiche/OpsDesk/issues/68).
+Les contrôles initiaux du run 45005031412 sont historiques. Depuis, les [scans Trivy actualisés](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/45008435034), la [recette Chromium](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/45008787169) et le [test d'image de production Alembic](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/45009128461) ont réussi. La [preuve consolidée](evidence/qualification/2026-11-22-durcissement-final.md) précise leurs cibles et leurs limites. Le [durcissement de l'infrastructure réelle #68](https://github.com/mathiasseguincadiche/OpsDesk/issues/68) reste ouvert.
 
 ## Durcissement ciblé PostgreSQL
 
-Le dépôt contient une image dérivée dans [`db/Dockerfile`](db/Dockerfile), qui conserve le serveur PostgreSQL officiel 17 et remplace l'outil de lancement `gosu` par `su-exec` d'Alpine. **Statut : correction proposée, à qualifier par la CI de la PR**, sans garantie d'exposition publique. Le scan compare cette image utilisée par Compose à l'image officielle d'origine, en conservant les résultats et digests.
+Le dépôt contient une image dérivée dans [`db/Dockerfile`](db/Dockerfile), qui conserve le serveur PostgreSQL officiel 17 et remplace l'outil de lancement `gosu` par `su-exec` d'Alpine. **Statut : correctif fusionné et qualifié sur runner (PR #71, scan 0 HIGH/CRITICAL)**, sans garantie d'exposition publique. Le scan compare cette image utilisée par Compose à l'image officielle d'origine, en conservant les résultats et digests.
 
 ## Réanalyse des images — automatisation
 
-Le workflow [Image security audit](.github/workflows/image-security.yml) reconstruit les images API/frontend et scanne également PostgreSQL 17 avec Trivy sur chaque changement concerné ou chaque semaine. Il enregistre les rapports JSON et les identifiants dans des artefacts datés. **Les CVE HIGH/CRITICAL ne sont pas occultées, mais elles ne font pas échouer le job à elles seules** : les erreurs d'exécution du scanner, elles, sont bloquantes. Les alertes et leur acceptabilité demeurent ouvertes dans [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51). Une validation CI ne prouve pas la sécurité de la future infrastructure.
+Le workflow [Image security audit](.github/workflows/image-security.yml) reconstruit les images API/frontend et scanne également PostgreSQL 17 avec Trivy sur chaque changement concerné ou chaque semaine. Il enregistre les rapports JSON et les identifiants dans des artefacts datés. **Toute occurrence HIGH/CRITICAL dans les trois images retenues échoue le job**, tout comme une erreur de scan ; l'image officielle PostgreSQL non exécutée reste analysée pour comparaison. L'[issue #51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) est clôturée pour les images retenues à cette date. Réévaluer tout résultat ultérieur. Une validation CI ne prouve pas la sécurité de la future infrastructure.
 
 ## Restauration fonctionnelle du socle — 22 novembre 2026
 
@@ -57,7 +57,7 @@ La CI actuelle est un pipeline de **qualification du socle applicatif** ; elle n
 
 ## Documentation technique
 
-Le dépôt contient les contrats, procédures, schémas techniques et résultats de qualification du produit. Les résultats historiques des 15 paires Draw.io/SVG contrôlées le 19 novembre 2026 demeurent datés : les schémas exclusivement pédagogiques ont été transférés dans Notion avec leurs sources. L'affichage sur les appareils réels n'est pas certifié par les tests automatisés. Voir [schémas techniques](docs/diagrams/README.md) et [contrat applicatif](docs/contrat-applicatif.md).
+Le dépôt contient les contrats, procédures, schémas techniques et résultats de qualification du produit. Les résultats historiques des 15 paires Draw.io/SVG contrôlées le 19 novembre 2026 demeurent datés : les schémas exclusivement pédagogiques ont été transférés dans Notion avec leurs sources. Une recette Chromium sur runner a vérifié un viewport mobile simulé, avec captures réelles ; l'affichage sur de véritables appareils mobiles reste non vérifié. Voir [schémas techniques](docs/diagrams/README.md) et [contrat applicatif](docs/contrat-applicatif.md).
 
 ## Historique : application v1 (Flask)
 
