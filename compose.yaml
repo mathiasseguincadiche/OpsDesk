@@ -19,7 +19,10 @@ x-journaux: &journaux
 
 services:
   db:
-    image: docker.io/library/postgres:17-alpine
+    # Base officielle conservée ; seul l'outil gosu vulnérable est remplacé.
+    build:
+      context: ./db
+    image: ${REGISTRY:-localhost}/opsdesk-db:${DB_IMAGE_TAG:-17-alpine-secure}
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME:-opsdesk}

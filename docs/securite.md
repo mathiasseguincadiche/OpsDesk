@@ -62,7 +62,7 @@ L'application ne peut pas se protéger seule. Les décisions suivantes sont pris
 - Uvicorn accepte par défaut les en-têtes de proxy uniquement de `127.0.0.1` ; `FORWARDED_ALLOW_IPS` doit désigner les proxys effectivement contrôlés. Ne jamais définir `*` sur une cible ouverte.
 - Les images API, frontend et PostgreSQL sont visées par un [scan Trivy automatisé](../.github/workflows/image-security.yml). Les alertes HIGH/CRITICAL restent affichées et suivies dans [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) : la réussite technique du scan ne constitue pas une homologation.
 
-Ces limites interdisent une exposition sur Internet en l'état ; elles sont acceptables pour un laboratoire isolé aux données fictives. Le traitement de la chaîne de production est suivi dans [#68](https://github.com/mathiasseguincadiche/OpsDesk/issues/68).
+Ces limites interdisent une exposition sur Internet en l'état ; elles sont acceptables pour un laboratoire isolé aux données fictives. L'image PostgreSQL de démonstration est dérivée de `postgres:17-alpine` dans [`db/Dockerfile`](../db/Dockerfile) : l'outil `gosu` livré par l'amont est remplacé par le paquet Alpine `su-exec`, avec vérification de l'identité utilisateur et du démarrage. Cette modification n'est validée qu'après réussite des scans et du parcours de restauration. Le traitement de la chaîne de production est suivi dans [#68](https://github.com/mathiasseguincadiche/OpsDesk/issues/68).
 
 ## Historique
 

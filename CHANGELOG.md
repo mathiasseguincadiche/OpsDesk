@@ -4,6 +4,8 @@ Ce registre retrace les changements documentaires, structurels et techniques **v
 
 ## Non publié
 
+- Image de démonstration PostgreSQL : dérivé minimal de `postgres:17-alpine`, substitution de `gosu` (Go vulnérable) par `su-exec` (outil C d'Alpine), avec scan comparatif et tests de restauration sur runner.
+
 - Qualité fonctionnelle : contrôle automatisé de `pg_dump` / `pg_restore` en base séparée, puis reconnexion de l'API après redémarrage sur runner jetable.
 
 - Audit sécurité des images : workflow Trivy API/frontend/PostgreSQL, rapports JSON et suivi de la gravité ; réglage de confiance des en-têtes de proxy Uvicorn limité à `127.0.0.1` par défaut.
