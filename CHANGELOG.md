@@ -4,6 +4,8 @@ Ce registre retrace les changements documentaires, structurels et techniques **v
 
 ## Non publié
 
+- Audit sécurité des images : workflow Trivy API/frontend/PostgreSQL, rapports JSON et suivi de la gravité ; réglage de confiance des en-têtes de proxy Uvicorn limité à `127.0.0.1` par défaut.
+
 - Séparation GitHub/Notion : cours et ressources personnelles transférés dans Notion, documentation publique recentrée sur le produit.
 - Audit du 22 novembre : blocage des comptes de démonstration en production, révocation des anciens JWT après changement de mot de passe, limitation des rafales d'authentification Nginx, migration de l'alias TypeScript 7.
 - Nouvelle CI applicative sur runner (API SQLite/PostgreSQL, build React, Compose, smoke) ; voir [les preuves](evidence/qualification/2026-11-22-audit-cicd.md). Aucune release ni aucun déploiement Rocky.

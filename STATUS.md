@@ -30,6 +30,10 @@ Le [workflow CI applicative](docs/ci-applicative.md) a réussi ses trois jobs su
 
 Ce contrôle **ne constitue pas** une recette de sécurité complète, un scan Trivy actualisé, un déploiement sur Rocky ni une CI/CD de livraison GHCR. Les vulnérabilités historiques restent ouvertes dans [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) ; les chantiers de durcissement avant déploiement sont suivis dans [#68](https://github.com/mathiasseguincadiche/OpsDesk/issues/68).
 
+## Réanalyse des images — automatisation
+
+Le workflow [Image security audit](.github/workflows/image-security.yml) reconstruit les images API/frontend et scanne également PostgreSQL 17 avec Trivy sur chaque changement concerné ou chaque semaine. Il enregistre les rapports JSON et les identifiants dans des artefacts datés. **Les CVE HIGH/CRITICAL ne sont pas occultées, mais elles ne font pas échouer le job à elles seules** : les erreurs d'exécution du scanner, elles, sont bloquantes. Les alertes et leur acceptabilité demeurent ouvertes dans [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51). Une validation CI ne prouve pas la sécurité de la future infrastructure.
+
 ## Infrastructure
 
 | Élément | Avancement | Contrôle |
