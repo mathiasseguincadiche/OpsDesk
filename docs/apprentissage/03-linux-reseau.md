@@ -18,6 +18,10 @@ Tout le reste du projet passe par SSH : Terraform et Ansible partent de `srv-adm
 - On vérifie l'empreinte de la clé d'hôte à la première connexion, depuis la console de la VM.
 - SELinux reste en mode `Enforcing`, firewalld reste actif : on cherche la règle précise.
 
+## Comprendre le mécanisme et ses limites
+
+**Interpréter un échec SSH.** Une connexion refusée peut signifier que la machine répond mais qu'aucun service n'écoute sur le port demandé ; un délai dépassé indique seulement qu'aucune réponse exploitable n'est arrivée. Dans les deux cas, conclure immédiatement « le pare-feu bloque » serait prématuré. Sépare identification de la VM, route, écoute du service, filtrage puis authentification. **Limite :** les messages varient selon le réseau et la politique de rejet.
+
 ## Ce qu'il faut obtenir
 
 1. Un réseau virtuel NAT `opsdesk-lan` en 192.168.150.0/24 sur l'hôte.
