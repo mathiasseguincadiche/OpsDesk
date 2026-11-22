@@ -34,6 +34,14 @@ Les tableaux servent à **comparer**, pas à remplir les blancs. Les badges de C
 - Éviter les animations gênantes, les emojis systématiques, les titres en majuscules, les graphiques décoratifs et les dépendances à un CDN tiers pour les visuels importants.
 - Vérifier les rendus **GitHub Web clair/sombre et mobile** : le lint du SVG ne les démontre pas.
 
+## Contrat de lecture avant publication
+
+Une correction rédactionnelle doit résoudre une difficulté observée, pas allonger un fichier pour elle-même. Suivant le besoin, adopter l'ordre **question du lecteur → mécanisme → exemple distinct → limites → preuve ou vérification**. Une procédure conserve explicitement cible, prérequis, droits, risques, interprétation du résultat et retour arrière.
+
+Tester au moins quatre parcours : **découverte** (finalité et périmètre), **apprentissage** (comprendre avant d'agir), **exploitation** (trouver rapidement un diagnostic) et **revue technique** (retrouver les choix et leurs compromis). Les fichiers GitHub doivent rester intelligibles sans accès au centre Notion ; les énoncés ne fournissent pas les solutions de l'infrastructure personnelle.
+
+Une CI verte vérifie les contrats qu'elle exécute ; elle ne certifie ni la qualité pédagogique, ni un rendu GitHub mobile, ni une VM réellement déployée.
+
 ## 3. Architecture documentaire
 
 | Besoin | Source de référence |

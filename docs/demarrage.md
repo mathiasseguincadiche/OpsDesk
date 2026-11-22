@@ -12,6 +12,10 @@ Ce guide lance OpsDesk sur un poste, en conteneurs, pour l'essayer ou le dévelo
 | `curl` | `curl --version` | Pour contrôler la disponibilité depuis le poste |
 | Les ports locaux 8080 et 8000 libres (Linux) | `ss -lnt \| grep -E ':(8080\|8000)[[:space:]]'` | Aucune ligne attendue ; adapter le contrôle au système hôte |
 
+## Comprendre les trois niveaux de contrôle
+
+Le démarrage Compose ci-dessous concerne la **démonstration locale**, pas la réception du laboratoire Rocky. Vérifier successivement : **(1)** que les conteneurs démarrent, **(2)** que `/health/ready` voit PostgreSQL, **(3)** que le parcours de ticket fonctionne avec le smoke. Le dernier test crée un ticket fictif persistant : ne pas l'exécuter sur une base réelle ou partagée. Si un niveau échoue, consulter [le diagnostic](#en-cas-de-problème) avant de redémarrer ou supprimer quoi que ce soit.
+
 ## 1. Récupérer le dépôt
 
 ```bash

@@ -152,7 +152,7 @@ function CreateUserModal({ onClose }: { onClose: () => void }) {
   });
   const submit = (e: FormEvent) => { e.preventDefault(); create.mutate(); };
   return (
-    <Modal open onClose={onClose} title="Inviter un utilisateur" description="Le compte est actif immédiatement avec le mot de passe initial.">
+    <Modal open onClose={onClose} title="Créer un compte utilisateur" description="Le compte est actif immédiatement avec le mot de passe initial.">
       <form onSubmit={submit} className="space-y-4">
         <Field label="Nom complet" htmlFor="cu-name"><input id="cu-name" className="input" required minLength={2} value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} autoFocus /></Field>
         <Field label="E-mail" htmlFor="cu-email"><input id="cu-email" type="email" className="input" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></Field>

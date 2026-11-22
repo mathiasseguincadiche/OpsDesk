@@ -13,6 +13,16 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk (FastAPI, React, Po
 
 Les deux décrivent les mêmes exercices, avec les mêmes livrables et les mêmes vérifications. En cas d'écart, les décisions du [registre](../architecture.md#décisions-retenues) et la [référence technique](../reference-technique.md) font foi.
 
+## Méthode de lecture et de réalisation
+
+1. **Comprendre** le besoin, le mécanisme et le vocabulaire avant de chercher une commande.
+2. **Raisonner** avec le cas voisin de la fiche. Il montre une méthode de diagnostic ou de décision, pas la solution de ton infrastructure.
+3. **Pratiquer** sur la cible nommée, en identifiant les droits, les effets, le risque et le retour arrière ; les instructions d'installation restent dans le [guide du laboratoire](../laboratoire-fedora-kvm-rocky.md).
+4. **Interpréter** l'attendu et l'observé : une sortie `ok`, un test HTTP ou un plan sans changements ont des portées différentes. Consigner l'écart et la limite.
+5. **Comparer après une tentative** avec les [repères de correction](corriges.md) et, si disponible, le cours Notion. Déclarer l'aide reçue.
+
+Les cas voisins sont **illustratifs et non exécutés** sauf mention explicite d'une preuve datée ; aucune ligne de cette méthode n'attribue un niveau personnel.
+
 ## Les 13 exercices
 
 | N° | Exercice | Pilier | Schéma |

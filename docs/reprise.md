@@ -4,6 +4,14 @@ Ce document dit comment décider d'une reprise, et comment la mener sans aggrave
 
 **État** : le dispositif de sauvegarde et la restauration de la base d'OpsDesk sont **prévus, non réalisés** ([exercice 11](apprentissage/11-sauvegarde-reprise.md)). La méthode ci-dessous a été démontrée sur une base de démonstration le 18 novembre 2026, pas encore sur OpsDesk.
 
+## Réparer le service ou restaurer les données ?
+
+Ce sont deux réponses à des problèmes différents. Un `503` peut venir d'un secret erroné, d'un serveur de base arrêté ou d'un défaut réseau alors que les tickets sont encore intacts. Restaurer dans ce cas ajoute du risque. À l'inverse, une base perdue ou corrompue peut exiger un point de reprise connu, même si les conteneurs redémarrent correctement.
+
+Avant une restauration, établir **pourquoi les données sont présumées perdues**, la date et la provenance de l'archive, l'identité de la cible isolée, la compatibilité des versions et la possibilité d'abandonner sans écraser la source. Après restauration, la preuve recherchée est **un ticket témoin relu avec son statut** ; le code de sortie de `pg_restore` ne suffit pas.
+
+Cette démarche précise le raisonnement. La mise en œuvre sur l'infrastructure OpsDesk reste à réaliser dans l'[exercice 11](apprentissage/11-sauvegarde-reprise.md).
+
 ## Triage court avant une reprise personnelle
 
 Symptômes d'entrée : tickets inaccessibles, lecture ou écriture refusée, `/health/ready` en `503`, ou données attendues absentes.

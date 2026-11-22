@@ -8,6 +8,12 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk.
 
 Chaque exercice part d'un problème réel d'exploitation, explique le mécanisme, montre un exemple sur un cas voisin, puis demande de construire et de **prouver** le résultat. Une configuration écrite ou une coche verte ne suffit pas : on vérifie l'effet réel, et on sait l'expliquer.
 
+## Trois niveaux de profondeur, un seul parcours
+
+**Vue rapide** : le README présente le besoin et l'état réel. **Explication technique** : les énoncés montrent les mécanismes, des cas voisins et les vérifications sans livrer les solutions. **Approfondissement** : les décisions, le contrat, les procédures et les preuves permettent à un ingénieur de refaire le raisonnement ; les cours Notion ajoutent des indices et une pratique accompagnée, mais ne conditionnent pas le fonctionnement du dépôt.
+
+Le lecteur n'a pas à choisir entre plusieurs parcours concurrents : les mêmes exercices servent de fil conducteur, quel que soit son niveau.
+
 ## Les cinq piliers
 
 | Pilier | Exercices | La preuve directrice |
