@@ -112,6 +112,10 @@ Ces conditions ne sont pas des exigences supplémentaires pour le laboratoire : 
 
 ## Décisions retenues
 
+**Lire ce registre par besoin.** Pour la cible actuelle, repérer d'abord les choix **trois VM Rocky**, **Docker Engine + Compose**, **administration avec `sudo`**, **sauvegarde hors VM** et **K3s pour une copie d'essai**. Chaque ligne précise la décision et ses conséquences. Les entrées « remplacée » documentent une évolution historique, pas une recommandation encore applicable. Le [schéma détaillé](diagrams/architecture.svg) indique les flux ; [STATUS.md](../STATUS.md) indique ce qui a réellement été exécuté.
+
+**Questions à vérifier avant de concrétiser un choix :** quel problème résout-il, quelle alternative est écartée et pourquoi, quel point de panne reste présent, et quelle observation prouvera son efficacité ? Une décision retenue peut rester non vérifiée.
+
 « Retenu » est l'état d'une décision, pas la preuve de son exécution. Une décision remplacée reste présente, avec son état et la décision qui la remplace. Les décisions du 12 et du 13 novembre 2026 ont été prises avant toute réalisation : l'exercice 02 sert à les relire, les justifier et les vérifier.
 
 | Décision et état | Contexte, choix et alternatives | Conséquence et source |
