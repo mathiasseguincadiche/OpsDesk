@@ -28,7 +28,7 @@ export function NewTicketModal({ open, onClose }: { open: boolean; onClose: () =
     onSuccess: (ticket) => {
       queryClient.invalidateQueries({ queryKey: ["tickets"] });
       queryClient.invalidateQueries({ queryKey: ["stats"] });
-      toast.success(`Ticket #${ticket.id} créé`, { description: "L'équipe support a été notifiée." });
+      toast.success(`Ticket #${ticket.id} créé`, { description: "La demande est enregistrée et visible par le support." });
       setTitle(""); setDescription(""); setPriority("normal"); setCategory("other");
       mutation.reset();
       onClose();
@@ -42,7 +42,7 @@ export function NewTicketModal({ open, onClose }: { open: boolean; onClose: () =
   };
 
   return (
-    <Modal open={open} onClose={onClose} title="Nouveau ticket" description="Décrivez votre besoin : le support vous répond au plus vite." wide>
+    <Modal open={open} onClose={onClose} title="Nouveau ticket" description="Décrivez le problème, son impact et les actions déjà tentées." wide>
       <form onSubmit={submit} className="space-y-4">
         <Field label="Sujet" htmlFor="nt-title">
           <input id="nt-title" className="input" required minLength={3} maxLength={120} autoFocus value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex. Impossible de me connecter au VPN" />
