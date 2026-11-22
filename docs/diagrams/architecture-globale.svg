@@ -14,11 +14,11 @@
 <rect x="72" y="159" width="342" height="118" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="87" y="176" width="5" height="84" rx="3" ry="3" fill="#356CE5" stroke="none" stroke-width="1.25"/>
 <text x="103" y="193.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">Navigateur</text>
-<text x="103" y="241.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Utilisateurs  ·  accès HTTPS :443</text>
+<text x="103" y="223.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Utilisateurs  ·  accès HTTPS :443</text>
 <rect x="993" y="159" width="337" height="118" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="1008" y="176" width="5" height="84" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="1024" y="193.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">GitHub Actions + GHCR</text>
-<text x="1024" y="241.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">3 images privées, promotion par digest</text>
+<text x="1024" y="223.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">3 images privées, promotion par digest</text>
 <polyline points="414,220 845,220 845,366" fill="none" stroke="#356CE5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arr-0)"/>
 <rect x="563" y="185" width="180" height="25" rx="8" ry="8" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="0.7"/>
 <text x="653" y="201.6" fill="#356CE5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">HTTPS / CA locale</text>
@@ -31,7 +31,7 @@
 <rect x="72" y="386" width="290" height="357" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
 <rect x="87" y="403" width="5" height="323" rx="3" ry="3" fill="#356CE5" stroke="none" stroke-width="1.25"/>
 <text x="103" y="420.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">FEDORA  ·  192.168.150.1</text>
-<text x="103" y="588.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Hôte de provisionnement et de reprise</text>
+<text x="103" y="450.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Hôte de provisionnement et de reprise</text>
 <rect x="91" y="478" width="248" height="29" rx="10" ry="10" fill="#E8F0FF" stroke="none" stroke-width="1.25"/>
 <text x="215" y="496.6" fill="#356CE5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">Terraform + libvirt local</text>
 <text x="94" y="547.3" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" font-weight="600" text-anchor="start">State protégé / chiffré</text>
@@ -41,7 +41,7 @@
 <rect x="387" y="386" width="283" height="357" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
 <rect x="402" y="403" width="5" height="323" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="418" y="420.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">srv-admin  ·  .5</text>
-<text x="418" y="588.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Pilotage des systèmes Rocky</text>
+<text x="418" y="450.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Pilotage des systèmes Rocky</text>
 <rect x="406" y="478" width="240" height="29" rx="10" ry="10" fill="#F0ECFF" stroke="none" stroke-width="1.25"/>
 <text x="526" y="496.6" fill="#7557D8" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">Ansible  /  Git  /  SSH</text>
 <text x="412" y="549.3" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" font-weight="600" text-anchor="start">Configuration des VM</text>
@@ -50,7 +50,7 @@
 <rect x="695" y="386" width="365" height="357" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
 <rect x="710" y="403" width="5" height="323" rx="3" ry="3" fill="#108B81" stroke="none" stroke-width="1.25"/>
 <text x="726" y="420.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">srv-app  ·  .10</text>
-<text x="726" y="588.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Service principal · Docker Compose</text>
+<text x="726" y="450.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Service principal · Docker Compose</text>
 <rect x="714" y="478" width="318" height="29" rx="10" ry="10" fill="#E6F8F3" stroke="none" stroke-width="1.25"/>
 <text x="873" y="496.6" fill="#108B81" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">NGINX HTTPS :443</text>
 <text x="725" y="545.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="15" font-weight="700" text-anchor="start">React  →  FastAPI  →  PostgreSQL</text>
@@ -60,7 +60,7 @@
 <rect x="1085" y="386" width="245" height="357" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
 <rect x="1100" y="403" width="5" height="323" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="1116" y="420.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">srv-k3s  ·  .20</text>
-<text x="1116" y="588.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Copie et supervision</text>
+<text x="1116" y="450.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Copie et supervision</text>
 <rect x="1104" y="478" width="204" height="29" rx="10" ry="10" fill="#F0ECFF" stroke="none" stroke-width="1.25"/>
 <text x="1206" y="496.6" fill="#7557D8" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">K3s  /  Traefik</text>
 <text x="1105" y="543.0" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="600" text-anchor="start">Prometheus / Grafana</text>

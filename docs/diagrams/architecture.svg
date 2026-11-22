@@ -14,11 +14,11 @@
 <rect x="67" y="146" width="362" height="112" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="82" y="163" width="5" height="78" rx="3" ry="3" fill="#356CE5" stroke="none" stroke-width="1.25"/>
 <text x="98" y="180.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">CLIENT / NAVIGATEUR</text>
-<text x="98" y="225.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">HTTPS :443  ·  session cookie Secure</text>
+<text x="98" y="210.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">HTTPS :443  ·  session cookie Secure</text>
 <rect x="1214" y="146" width="456" height="112" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="1229" y="163" width="5" height="78" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="1245" y="180.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">GITHUB ACTIONS / GHCR PRIVÉ</text>
-<text x="1245" y="225.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">3 images : frontend + API + PostgreSQL  ·  SHA / digests</text>
+<text x="1245" y="210.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">3 images : frontend + API + PostgreSQL  ·  SHA / digests</text>
 <polyline points="429,203 592,203 592,360" fill="none" stroke="#356CE5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arr-0)"/>
 <rect x="491" y="165" width="190" height="25" rx="8" ry="8" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="0.7"/>
 <text x="586" y="181.6" fill="#356CE5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">TLS + CA interne</text>
@@ -31,48 +31,48 @@
 <rect x="64" y="377" width="380" height="301" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
 <rect x="79" y="394" width="5" height="267" rx="3" ry="3" fill="#356CE5" stroke="none" stroke-width="1.25"/>
 <text x="95" y="411.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">FEDORA HOST  ·  192.168.150.1</text>
-<text x="95" y="551.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">KVM / libvirt · frontière de l&apos;hyperviseur</text>
+<text x="95" y="441.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">KVM / libvirt · frontière de l&apos;hyperviseur</text>
 <rect x="87" y="467" width="157" height="116" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="102" y="484" width="5" height="82" rx="3" ry="3" fill="#356CE5" stroke="none" stroke-width="1.25"/>
 <text x="118" y="500.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">Terraform</text>
-<text x="118" y="548.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">qemu:///system</text>
+<text x="118" y="531.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">qemu:///system</text>
 <rect x="263" y="467" width="158" height="116" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="278" y="484" width="5" height="82" rx="3" ry="3" fill="#108B81" stroke="none" stroke-width="1.25"/>
 <text x="294" y="500.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">Borg externe</text>
-<text x="294" y="548.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">state + backups</text>
+<text x="294" y="531.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">state + backups</text>
 <text x="87" y="623.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="500" text-anchor="start">Accès libvirt exclusivement sur l&apos;hôte</text>
 <text x="87" y="650.6" fill="#B46B17" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="600" text-anchor="start">SSH réception : compte sans shell libre</text>
 <rect x="64" y="711" width="380" height="335" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
 <rect x="79" y="728" width="5" height="301" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="95" y="745.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">srv-admin  ·  192.168.150.5</text>
-<text x="95" y="902.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Administration · Ansible · accès SSH limité</text>
+<text x="95" y="775.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Administration · Ansible · accès SSH limité</text>
 <rect x="87" y="814" width="159" height="120" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="102" y="831" width="5" height="86" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="118" y="847.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">Ansible / Git</text>
-<text x="118" y="897.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Playbooks, Vault</text>
+<text x="118" y="878.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Playbooks, Vault</text>
 <rect x="264" y="814" width="157" height="120" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="279" y="831" width="5" height="86" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="295" y="847.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">k6 / SSH</text>
-<text x="295" y="897.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Essai uniquement</text>
+<text x="295" y="878.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Essai uniquement</text>
 <text x="86" y="982.0" fill="#7557D8" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="600" text-anchor="start">Sans accès privilégié à libvirt</text>
 <rect x="472" y="377" width="738" height="669" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
 <rect x="487" y="394" width="5" height="635" rx="3" ry="3" fill="#108B81" stroke="none" stroke-width="1.25"/>
 <text x="503" y="411.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">srv-app  ·  192.168.150.10</text>
-<text x="503" y="735.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Service principal  ·  Docker Engine / Compose</text>
+<text x="503" y="441.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Service principal  ·  Docker Engine / Compose</text>
 <rect x="495" y="463" width="681" height="29" rx="10" ry="10" fill="#E6F8F3" stroke="none" stroke-width="1.25"/>
 <text x="835.5" y="481.6" fill="#108B81" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">Images privées vérifiées  ·  digests OCI  ·  secrets Vault  ·  Alembic</text>
 <rect x="494" y="526" width="208" height="147" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="509" y="543" width="5" height="113" rx="3" ry="3" fill="#356CE5" stroke="none" stroke-width="1.25"/>
 <text x="525" y="559.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">NGINX / REACT</text>
-<text x="525" y="623.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">HTTPS :443  ·  seul accès navigateur</text>
+<text x="525" y="590.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">HTTPS :443  ·  seul accès navigateur</text>
 <rect x="742" y="526" width="205" height="147" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="757" y="543" width="5" height="113" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="773" y="559.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">FastAPI</text>
-<text x="773" y="623.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">API :8000  ·  réseau Compose uniquement</text>
+<text x="773" y="590.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">API :8000  ·  réseau Compose uniquement</text>
 <rect x="986" y="526" width="198" height="147" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="1001" y="543" width="5" height="113" rx="3" ry="3" fill="#108B81" stroke="none" stroke-width="1.25"/>
 <text x="1017" y="559.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">PostgreSQL 17</text>
-<text x="1017" y="623.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">DB :5432  ·  aucune publication hôte</text>
+<text x="1017" y="590.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">DB :5432  ·  aucune publication hôte</text>
 <polyline points="702,600 742,600" fill="none" stroke="#356CE5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arr-0)"/>
 <rect x="694" y="569" width="84" height="25" rx="8" ry="8" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="0.7"/>
 <text x="736" y="585.6" fill="#356CE5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">/api</text>
@@ -82,44 +82,44 @@
 <rect x="494" y="714" width="208" height="130" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="509" y="731" width="5" height="96" rx="3" ry="3" fill="#B46B17" stroke="none" stroke-width="1.25"/>
 <text x="525" y="747.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">Sauvegarde</text>
-<text x="525" y="802.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">pg_dump -Fc  ·  02:00</text>
+<text x="525" y="778.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">pg_dump -Fc  ·  02:00</text>
 <rect x="742" y="714" width="205" height="130" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="757" y="731" width="5" height="96" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="773" y="747.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">Configuration</text>
-<text x="773" y="802.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Secrets *_FILE / droits</text>
+<text x="773" y="778.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Secrets *_FILE / droits</text>
 <rect x="986" y="714" width="198" height="130" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="1001" y="731" width="5" height="96" rx="3" ry="3" fill="#108B81" stroke="none" stroke-width="1.25"/>
 <text x="1017" y="747.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">Stockage</text>
-<text x="1017" y="802.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Volume PostgreSQL persistant</text>
+<text x="1017" y="778.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Volume PostgreSQL persistant</text>
 <rect x="494" y="879" width="690" height="106" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="509" y="896" width="5" height="72" rx="3" ry="3" fill="#356CE5" stroke="none" stroke-width="1.25"/>
 <text x="525" y="912.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">MÉTRIQUES PRIVÉES</text>
-<text x="525" y="955.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Passerelle :9180 limitée à /metrics  ·  node_exporter :9100  ·  source .20 uniquement</text>
+<text x="525" y="943.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Passerelle :9180 limitée à /metrics  ·  node_exporter :9100  ·  source .20 uniquement</text>
 <rect x="1235" y="377" width="439" height="669" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
 <rect x="1250" y="394" width="5" height="635" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="1266" y="411.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">srv-k3s  ·  192.168.150.20</text>
-<text x="1266" y="735.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">K3s mono-nœud  ·  Traefik HTTPS :443</text>
+<text x="1266" y="441.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">K3s mono-nœud  ·  Traefik HTTPS :443</text>
 <rect x="1257" y="476" width="394" height="245" rx="13" ry="13" fill="#F0ECFF" stroke="#C5B9F4" stroke-width="1.25"/>
 <text x="1275" y="509.9" fill="#7557D8" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">NAMESPACE : monitoring</text>
 <rect x="1275" y="550" width="172" height="123" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="1290" y="567" width="5" height="89" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="1306" y="583.5" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" font-weight="700" text-anchor="start">Prometheus</text>
-<text x="1306" y="635.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Scrape :15s · 15j</text>
+<text x="1306" y="614.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Scrape :15s · 15j</text>
 <rect x="1461" y="550" width="172" height="123" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="1476" y="567" width="5" height="89" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="1492" y="583.5" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" font-weight="700" text-anchor="start">Grafana</text>
-<text x="1492" y="635.0" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">2 alertes SMTP</text>
+<text x="1492" y="614.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">2 alertes SMTP</text>
 <text x="1275" y="704.0" fill="#7557D8" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="600" text-anchor="start">Accès Grafana : tunnel SSH seulement</text>
 <rect x="1257" y="748" width="394" height="245" rx="13" ry="13" fill="#E8F0FF" stroke="#BBCFF6" stroke-width="1.25"/>
 <text x="1275" y="781.9" fill="#356CE5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">NAMESPACE : essai</text>
 <rect x="1275" y="823" width="172" height="120" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="1290" y="840" width="5" height="86" rx="3" ry="3" fill="#356CE5" stroke="none" stroke-width="1.25"/>
 <text x="1306" y="856.5" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" font-weight="700" text-anchor="start">App en copie</text>
-<text x="1306" y="906.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Même digest  ·  k6</text>
+<text x="1306" y="887.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Même digest  ·  k6</text>
 <rect x="1461" y="823" width="172" height="120" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="1476" y="840" width="5" height="86" rx="3" ry="3" fill="#108B81" stroke="none" stroke-width="1.25"/>
 <text x="1492" y="856.5" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" font-weight="700" text-anchor="start">PostgreSQL test</text>
-<text x="1492" y="906.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Base indépendante</text>
+<text x="1492" y="887.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Base indépendante</text>
 <polyline points="444,525 472,525" fill="none" stroke="#356CE5" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 7" marker-end="url(#arr-0)"/>
 <polyline points="444,856 472,856" fill="none" stroke="#7557D8" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 7" marker-end="url(#arr-2)"/>
 <polyline points="1210,932 1224,932 1224,623 1235,623" fill="none" stroke="#356CE5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 7" marker-end="url(#arr-0)"/>
