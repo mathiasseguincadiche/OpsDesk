@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 # OpsDesk frontend — build React/Vite puis service statique par nginx non-root.
 
+# Construire le frontend avec les versions verrouillées dans package-lock.json.
 FROM docker.io/library/node:22-alpine AS build
 WORKDIR /build
 COPY package.json package-lock.json ./
@@ -9,6 +10,7 @@ COPY . .
 RUN npm run build \
  && node -e "const s=require('fs').readFileSync('dist/index.html','utf8').match(/<script>([\s\S]*?)<\/script>/)[1];process.stdout.write(require('crypto').createHash('sha256').update(s).digest('base64'))" > /build/inline-script.sha256
 
+# Servir les fichiers générés sans Node.js ni droits administrateur.
 FROM docker.io/nginxinc/nginx-unprivileged:1.29-alpine AS runtime
 ARG APP_VERSION=2.0.0
 ARG APP_REVISION=dev
@@ -24,9 +26,9 @@ ENV BACKEND_URL=http://backend:8000 \
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /build/dist /usr/share/nginx/html
 COPY --from=build /build/inline-script.sha256 /tmp/inline-script.sha256
-# Expose the CSP hash of the inline theme script to envsubst.
+# Rendre disponible l'empreinte CSP du script de thème injecté dans la page HTML.
 USER root
-# Apply available Alpine security fixes before returning to the non-root runtime.
+# Appliquer les correctifs Alpine disponibles, puis revenir à l'utilisateur non privilégié.
 RUN apk upgrade --no-cache
 RUN printf '#!/bin/sh\nexport INLINE_SCRIPT_HASH="$(cat /tmp/inline-script.sha256)"\n' > /docker-entrypoint.d/05-csp-hash.envsh \
  && chmod +x /docker-entrypoint.d/05-csp-hash.envsh
