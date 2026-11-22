@@ -23,6 +23,10 @@ Le schéma de référence est [l'architecture](../diagrams/architecture.svg) ; l
 
 Pour approfondir sans résoudre ton exercice de création et prise en charge : [diagramme de séquence d'une simple consultation](../diagrams/sequence-consultation.svg), à ouvrir en grand.
 
+## Comprendre le mécanisme et ses limites
+
+**Exemple de raisonnement (sans solution de l'exercice).** Si la page d'accueil s'affiche mais qu'une demande ne peut pas être enregistrée, l'interface n'est pas forcément en cause : nginx peut servir les fichiers statiques alors que l'API ou PostgreSQL sont indisponibles. Commence par identifier précisément l'action qui échoue et la réponse HTTP, puis compare la sonde de vie et la sonde de disponibilité. **Limite :** une sonde positive ne prouve pas qu'un ticket peut être créé ; seule une vérification métier contrôlée le confirme.
+
 ## Ce qu'il faut obtenir
 
 Marie (collaboratrice) crée le ticket « Mon poste ne se connecte plus au VPN » ; Karim (support) le prend en charge.
