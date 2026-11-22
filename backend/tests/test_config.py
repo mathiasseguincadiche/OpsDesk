@@ -57,3 +57,13 @@ def test_demo_data_forbidden_in_production(production_settings):
 def test_demo_data_disabled_allows_other_production_checks(production_settings):
     assert production_settings.seed_demo_data is False
     _validate_production_settings(production_settings)
+
+
+def test_unversioned_schema_refused_by_production():
+    from app.bootstrap import _require_migrated_schema
+    from app.db import Base, engine
+
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
+    with pytest.raises(RuntimeError, match="Alembic"):
+        _require_migrated_schema()

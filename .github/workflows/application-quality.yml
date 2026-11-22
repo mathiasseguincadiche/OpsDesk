@@ -73,6 +73,20 @@ jobs:
         env:
           TEST_DATABASE_URL: 'postgresql+psycopg://opsdesk:ci-only-password@127.0.0.1:5432/opsdesk_test'
         run: python -m pytest -q tests
+      - name: Tester la migration Alembic sur une base PostgreSQL distincte
+        env:
+          DATABASE_URL: 'postgresql+psycopg://opsdesk:ci-only-password@127.0.0.1:5432/opsdesk_migrations'
+          SEED_DEMO_DATA: 'false'
+        run: |
+          python - <<'PY'
+          import psycopg
+          with psycopg.connect("host=127.0.0.1 port=5432 user=opsdesk password=ci-only-password dbname=postgres", autocommit=True) as con:
+              con.execute("CREATE DATABASE opsdesk_migrations")
+          PY
+          python -m alembic upgrade head
+          python -m alembic check
+          python -m alembic current
+
 
   frontend:
     name: Interface — typecheck et build
