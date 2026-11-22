@@ -4,7 +4,7 @@ Ces documents décrivaient l'infrastructure, la livraison et la sécurité de la
 
 | Document | Ce qu'il décrivait | Équivalent pour la version 2 |
 | --- | --- | --- |
-| [CI](cicd.md) | Commandes et résultats de la CI d'essai | Exercice 08 du [parcours](../../docs/apprentissage/08-cicd.md) ; contrôle documentaire existant, mais pas encore de pipeline personnel de livraison |
+| [CI](cicd.md) | Commandes et résultats de la CI d'essai | [Feuille de route](../../ROADMAP.md) ; contrôle documentaire existant, mais pas encore de pipeline applicatif de livraison |
 | [Infrastructure](infrastructure.md) | Contrat Terraform et Ansible local, candidat K3s | Exercices 04 à 07 ; [registre des décisions](../../docs/architecture.md#décisions-retenues) |
 | [Livraison](livraison.md) | Chaîne de livraison et rollback de la v1 | Exercices 08 et 10 ; [contrat applicatif](../../docs/contrat-applicatif.md), points 24 à 26 |
 | [Triage de sécurité](triage-securite.md) | Lecture du scan Trivy de l'image v1 | [Sécurité](../../docs/securite.md) ; des scans v2 ont été exécutés depuis l'archivage, voir [STATUS](../../STATUS.md) |
