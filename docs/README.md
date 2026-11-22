@@ -24,7 +24,7 @@ Le socle applicatif est fourni et qualifié sur un runner jetable. L'infrastruct
 - [Exploitation courante](exploitation-day2.md) — opérations, contrôles et limites.
 - [Sauvegarde et reprise](reprise.md) — diagnostic, protection des données et restauration.
 - [Sécurité](securite.md) — risques, protections et contrôles attendus.
-- [Ressources InfraOps](references-infraops.md) — références utiles pour approfondir.
+- [Références techniques](architecture.md#références) — documentations officielles utilisées pour justifier l'architecture.
 
 ## Qualité du dépôt et modèles
 
@@ -33,6 +33,7 @@ Le socle applicatif est fourni et qualifié sur un runner jetable. L'infrastruct
 - [Contribuer](../CONTRIBUTING.md) — branches, tests, PR et preuves.
 - [Politique de sécurité](../SECURITY.md) — périmètre du laboratoire et signalement.
 - [Journal des changements](../CHANGELOG.md) — historique publiable distinct de la qualification.
+- [Inventaire historique InfraOps](references-infraops.md) — ancien catalogue de fichiers et essais non présents dans la version active ; ce n'est pas un guide d'apprentissage.
 
 ## Évaluer et contribuer
 
