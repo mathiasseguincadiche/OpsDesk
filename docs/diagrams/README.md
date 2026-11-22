@@ -4,6 +4,8 @@ Ce dossier rassemble les schémas **du produit et de son architecture**, pas les
 
 ## Vues disponibles
 
+**Attention :** les schémas d'infrastructure existants reflètent une **cible antérieure**. Les nouvelles décisions **Architecture V2** sont définies par les [sept ADR](../adr/README.md), la [matrice de flux](../architecture-v2-flux.md) et le [plan de déploiement](../architecture-v2-deploiement.md). Les paires `.drawio` / `.svg` devront être mises à jour et inspectées graphiquement dans un lot séparé **avant** de présenter les vues comme Architecture V2. Les schémas existants ne sont pas des preuves de déploiement.
+
 | Schéma | Utilité |
 | --- | --- |
 | [Présentation](presentation.svg) ([source](presentation.drawio)) | Finalité du produit, acteurs et principaux composants |

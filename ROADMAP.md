@@ -1,31 +1,31 @@
-# Feuille de route technique — OpsDesk
+# Feuille de route technique — OpsDesk Architecture V2
 
-**Périmètre :** application de tickets et infrastructure Linux nécessaire à son exploitation. Cette feuille de route décrit des livrables techniques, **pas** un programme de formation ni des exercices. Les objectifs futurs sont indiqués **prévus / non vérifiés** ; voir [STATUS.md](STATUS.md).
+**Statut : conception Architecture V2 validée le 22 novembre 2026 ; implémentation infrastructure non vérifiée.** Le socle **Application OpsDesk V2** existe et a été testé ; aucun résultat des runners ne vaut déploiement Fedora/KVM/Rocky.
 
-La version 2 fournit FastAPI, React/nginx et PostgreSQL, avec des images non-root, des sondes et une pile Compose locale. La cible serveur retenue est Docker Engine et Compose sur Rocky Linux, administrée depuis `srv-admin` et configurée par Ansible ; K3s est réservé à une copie d'essai, sans remplacement silencieux de cette cible. Voir [architecture](docs/architecture.md).
+Le plan de référence détaillé est [Architecture V2 — phases 0 à 6](docs/architecture-v2-deploiement.md), avec [sept ADR](docs/adr/README.md), [matrice réseau](docs/architecture-v2-flux.md) et [STATUS](STATUS.md) pour les preuves réellement disponibles.
 
-## Livrables par phase
+## Jalons d'implémentation
 
-| Phase | Livrable technique | Vérification attendue | État |
+| Phase | Livraison technique attendue | Contrôle de passage | Statut |
 | --- | --- | --- | --- |
-| Socle applicatif | API, interface, base, conteneurs et tests | Tests, smoke, persistance, version, ports | Réalisé ; [preuves datées](STATUS.md) |
-| 1 — Infrastructure | Trois VM Rocky sur Fedora/KVM, réseau privé, stockage et comptes | Identité des cibles, réseau, accès et protection vérifiés | Prévu, non vérifié |
-| 1 — Provisionnement | Déclaration Terraform des VM et de leur réseau | Plan expliqué, application contrôlée, seconde passe sans dérive | Prévu, non vérifié |
-| 1 — Configuration | Rôles Ansible et service Docker Compose sur `srv-app` | Idempotence, droits, SELinux, pare-feu, santé et ticket témoin | Prévu, non vérifié |
-| 2 — Livraison | Tests CI, scan Trivy et deux images immuables publiées dans GHCR | Provenance des digests, contrôle avant installation | Prévu, non vérifié |
-| 2 — Continuité | Sauvegardes hors VM, restauration isolée et retour arrière | Données relues, RPO/RTO observés sur cible connue | Prévu, non vérifié |
-| 3 — Observabilité | Métriques Prometheus, vues Grafana et alertes justifiées | Collecte, déclenchement et réception des alertes | Prévu, non vérifié |
-| 3 — Orchestration | Copie d'essai OpsDesk sur K3s | Déploiement, disponibilité, stockage et diagnostic | Prévu, non vérifié |
-| 3 — Exploitation | Maintenance, mise à jour, diagnostic et reprise | Procédure reproductible, indisponibilité mesurée, preuve métier | Prévu, non vérifié |
+| Application V2 (socle) | API, frontend, PostgreSQL, images, Alembic et CI | Voir les preuves existantes | Réalisé et testé en CI dans les limites de STATUS |
+| 0 — Fedora | Réseau NAT libvirt, image cloud, Terraform, state et stockage protégés | Réseau, droits et capacité hôte vérifiés | Prévu, non vérifié |
+| 1 — Administration | `srv-admin`, Ansible, Git, SSH, k6 depuis Terraform sur Fedora | Idempotence, accès SSH et sécurité du pilote | Prévu, non vérifié |
+| 2 — Serveurs | `srv-app` et `srv-k3s` Rocky, Ansible, SELinux/firewalld, disque séparé | Second passage Ansible, ports autorisés/refusés | Prévu, non vérifié |
+| 3 — Service | GHCR **privé**, trois images **par digest**, Compose serveur, TLS, Vault, Alembic | HTTPS réel, tickets, isolation DB/API et persistance | Prévu, non vérifié |
+| 4 — Reprise | Dumps 02:00, réception SSH limitée, Borg externe chiffré, state, 7 copies | Restauration isolée, ticket témoin et RPO/RTO mesurés | Prévu, non vérifié |
+| 5 — Supervision | K3s mono-nœud, copie d'essai, Prometheus, Grafana SMTP, k6 | Deux e-mails reçus, mesures/quotas et charge isolée | Prévu, non vérifié |
+| 6 — Qualification | Idempotence, reconstruction jetable, reprise externe, charge/alertes | Quatre épreuves étayées par preuves datées | Prévu, non vérifié |
 
-## Décisions et contraintes
+## Garanties de réalisation
 
-- **Laboratoire cible :** Fedora 45 / KVM / libvirt avec `srv-admin`, `srv-app`, `srv-k3s` sous Rocky Linux 10.2 ; sans haute disponibilité.
-- **Exposition :** laboratoire privé et données fictives ; aucune mise en ligne publique sans nouvelle étude de sécurité.
-- **Déploiement :** le serveur principal utilise Compose ; K3s reste une copie d'essai.
-- **Changements à risque :** toute destruction, exposition réseau, utilisation d'une ressource payante ou restauration de données exige une analyse et une autorisation explicites.
-- **Sources de vérité :** le [registre des décisions](docs/architecture.md#décisions-retenues) décrit les choix ; [STATUS.md](STATUS.md) décrit les observations ; [evidence/](evidence/) conserve les preuves réelles.
+- **Une seule cible principale :** Docker Engine + Compose sur `srv-app`. K3s héberge uniquement une copie d'essai séparée et la supervision.
+- **Pas de double travail :** conserver les CI et les images applicatives déjà en place ; développer seulement les livraisons et déploiements non réalisés.
+- **Sécurité dès la première mise en service serveur :** TLS navigateur, secrets Vault, GHCR privé, digests, port API/DB non exposé, sauvegarde chiffrée externe.
+- **Reproductibilité :** Terraform depuis Fedora, Ansible depuis `srv-admin`, changements par PR et essais réels à chaque phase.
+- **Aucune preuve inventée :** un plan ou une PR verte n'équivalent pas à la qualification sur Rocky.
+- **Précaution :** aucune création/destruction de VM, migration de données existantes, modification réseau ou opération payante sans autorisation spécifique.
 
-Les cours, préparations personnelles et évaluations sont maintenus **hors du dépôt produit**, dans le centre de formation Notion.
+Les cours, corrections, évaluations et l'installation des outils demeurent dans **Notion**, distincts des livrables GitHub.
 
-[Contrat applicatif](docs/contrat-applicatif.md) · [Architecture](docs/architecture.md) · [État](STATUS.md)
+[Architecture V2](docs/adr/README.md) · [Flux](docs/architecture-v2-flux.md) · [Plan phases 0 à 6](docs/architecture-v2-deploiement.md) · [État](STATUS.md)

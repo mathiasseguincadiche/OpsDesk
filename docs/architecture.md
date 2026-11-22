@@ -1,4 +1,6 @@
-# Architecture d'OpsDesk
+# Architecture d'OpsDesk — produit et historique
+
+**Architecture d'infrastructure V2 validée en conception :** consulter en priorité le [registre des sept ADR](adr/README.md), la [matrice des flux V2](architecture-v2-flux.md) et le [plan phases 0 à 6](architecture-v2-deploiement.md). Les décisions de déploiement plus anciennes conservées dans ce document sont **historiques et remplacées** lorsqu'elles contredisent ces ADR (par exemple Terraform dans `srv-admin`, HTTP :8080 pour la cible serveur, sauvegardes dans `~/sauvegardes`). Les schémas actuels représentent encore l'ancienne cible et seront remplacés en paire Draw.io/SVG ; voir [STATUS](../STATUS.md).
 
 OpsDesk est une application web en trois parties : une interface, une API et une base de données, chacune dans son conteneur. L'application (version 2) est construite et testée ; l'infrastructure qui doit la faire tourner sur trois machines Rocky Linux est décidée mais pas encore construite. Ce document explique le fonctionnement, puis justifie chaque choix, du plus visible au plus détaillé. L'état de chaque élément est tenu dans [STATUS.md](../STATUS.md) ; les détails d'exploitation sont dans la [référence technique](reference-technique.md).
 

@@ -10,7 +10,7 @@ OpsDesk est un projet fil rouge : une application de gestion de tickets sert de 
 
 - **L'application est fournie :** backend FastAPI, frontend React/nginx et PostgreSQL ; son rôle est d'offrir un service réel à exploiter, pas de présenter le développement full stack comme une réalisation personnelle.
 - **L'infrastructure est le périmètre technique à réaliser :** Fedora, KVM/libvirt, Rocky Linux, Terraform, Ansible, Docker Compose, GitHub Actions, K3s, observabilité et restauration. Les réalisations personnelles seront datées et vérifiées progressivement.
-- **L'état actuel est explicite :** le socle a été qualifié le 19 novembre 2026 sur un runner jetable ; les déploiements et exercices sur mes VM Rocky restent à réaliser. Voir [STATUS.md](STATUS.md) et la [provenance des travaux](docs/provenance.md).
+- **L'état actuel est explicite :** le socle applicatif a fait l'objet de validations GitHub Actions jusqu'au 22 novembre 2026 ; les déploiements et les essais sur mes VM Rocky restent à réaliser. Voir [STATUS.md](STATUS.md) et la [provenance des travaux](docs/provenance.md).
 
 ### Le défi d'infrastructure
 
@@ -53,6 +53,8 @@ La démonstration utilise des données fictives et des ports accessibles uniquem
 
 ## Architecture
 
+**Architecture V2 acceptée en conception le 22 novembre 2026** : [sept ADR](docs/adr/README.md), [matrice de flux](docs/architecture-v2-flux.md) et [plan de déploiement, phases 0 à 6](docs/architecture-v2-deploiement.md). Les VM et les flux de cette cible ne sont pas encore déployés. Les schémas ci-dessous représentent encore la **cible antérieure** ; leur mise à jour Draw.io/SVG reste à effectuer.
+
 <a href="docs/diagrams/architecture.svg"><img alt="Vue d'ensemble de l'architecture d'OpsDesk : sur l'hôte Fedora, un réseau privé relie trois machines prévues. Sur srv-app, nginx (port 8080) transmet /api à l'API, qui lit et écrit dans PostgreSQL, non publié. srv-admin pilote srv-app par SSH, Prometheus sur srv-k3s lit /metrics, et pg_dump copie la base hors de la VM." src="docs/diagrams/architecture-globale.svg"></a>
 
 **En résumé :** le navigateur parle uniquement au **frontend** (nginx, port 8080). Celui-ci sert l'interface et transmet les appels `/api` à l'**API** (FastAPI, port 8000), qui lit et écrit dans **PostgreSQL**. Dans l'environnement d'exploitation simulée, les trois tourneront sur `srv-app` sous Docker Engine, décrits par un fichier Compose et déployés par Ansible. En pointillés, ce qui reste à construire.
@@ -94,7 +96,8 @@ L'[index technique](docs/README.md) regroupe les références nécessaires pour 
 
 | Pour… | Lire |
 | --- | --- |
-| Comprendre les choix techniques et leurs compromis | [Architecture](docs/architecture.md) |
+| Comprendre le socle applicatif | [Architecture de l'application](docs/architecture.md) |
+| Examiner la nouvelle **Architecture V2** | [7 ADR](docs/adr/README.md) · [Flux](docs/architecture-v2-flux.md) · [Déploiement](docs/architecture-v2-deploiement.md) |
 | Examiner ce que l'application exige de l'infrastructure | [Contrat applicatif](docs/contrat-applicatif.md) |
 | Exploiter, configurer, déployer, tester | [Référence technique](docs/reference-technique.md) · [Exploitation](docs/exploitation-day2.md) · [Reprise](docs/reprise.md) |
 | Examiner la sécurité, les résultats et leurs limites | [Sécurité](docs/securite.md) · [Preuves](docs/preuves.md) |
@@ -105,7 +108,7 @@ L'[index technique](docs/README.md) regroupe les références nécessaires pour 
 
 Pour signaler un bug ou proposer une modification, lire le [guide de contribution](CONTRIBUTING.md), la [politique de sécurité](SECURITY.md). Pour comprendre les versions, consulter le [journal des changements](CHANGELOG.md).
 
-Lire d'abord le [contrat applicatif](docs/contrat-applicatif.md) et le [registre des décisions](docs/architecture.md#décisions-retenues). Pour signaler un problème, indiquer la version, la cible, les étapes de reproduction et les résultats attendus/observés, sans secret ni donnée personnelle. Pour proposer une correction, partir de `main` sur une branche dédiée, expliquer le besoin et les conséquences, vérifier le périmètre modifié et joindre les preuves dans une pull request. Si un changement touche la documentation ou un schéma, contrôler les liens, la cohérence avec le code et la source Draw.io ; ne pas transférer un ancien résultat à une nouvelle configuration. Le suivi d'apprentissage personnel reste distinct du dépôt public ; une procédure proposée n'est pas une opération exécutée.
+Lire d'abord le [contrat applicatif](docs/contrat-applicatif.md) et le [registre des décisions de l'Architecture V2](docs/adr/README.md). Pour signaler un problème, indiquer la version, la cible, les étapes de reproduction et les résultats attendus/observés, sans secret ni donnée personnelle. Pour proposer une correction, partir de `main` sur une branche dédiée, expliquer le besoin et les conséquences, vérifier le périmètre modifié et joindre les preuves dans une pull request. Si un changement touche la documentation ou un schéma, contrôler les liens, la cohérence avec le code et la source Draw.io ; ne pas transférer un ancien résultat à une nouvelle configuration. Le suivi d'apprentissage personnel reste distinct du dépôt public ; une procédure proposée n'est pas une opération exécutée.
 
 ## Licence et provenance
 
