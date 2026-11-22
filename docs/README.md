@@ -6,6 +6,7 @@ Le présent dossier documente le **produit** : son contrat, son architecture, sa
 
 - [Contrat applicatif](contrat-applicatif.md) — besoins métier, utilisateurs, API, stockage et critères de réception.
 - [Architecture applicative](architecture.md) — composants, architecture antérieure et fonctionnement du produit.
+- [Présentation du projet InfraOps — six étapes V2](presentation-projet-infraops-v2.md) — synthèse publique des objectifs de construction, livraison et exploitation.
 - [Architecture V2 : sept ADR](adr/README.md) — décisions validées de la nouvelle cible Fedora/KVM/Rocky.
 - [Architecture V2 : matrice des flux](architecture-v2-flux.md) — réseaux, ports, origines permises et refus attendus.
 - [Architecture V2 : déploiement 0 à 6](architecture-v2-deploiement.md) — prérequis, étapes et quatre épreuves de validation.

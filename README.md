@@ -53,6 +53,8 @@ La démonstration utilise des données fictives et des ports accessibles uniquem
 
 ## Architecture
 
+**[Présentation publique de l'Architecture V2 : les six étapes InfraOps](docs/presentation-projet-infraops-v2.md)** — de la construction du laboratoire à sa supervision et à sa reprise, sans divulguer les paramètres d'exploitation personnels.
+
 **Architecture V2 acceptée en conception le 22 novembre 2026** : [sept ADR](docs/adr/README.md), [matrice de flux](docs/architecture-v2-flux.md) et [plan de déploiement, phases 0 à 6](docs/architecture-v2-deploiement.md). Les VM et les flux de cette cible ne sont pas encore déployés. Les deux schémas d'architecture ci-dessous ont été révisés pour **Architecture V2** (sources éditables Draw.io + SVG) ; ils restent des **schémas de conception, pas des captures d'un déploiement**.
 
 <a href="docs/diagrams/architecture-globale.svg"><img alt="Architecture OpsDesk V2 encore à construire : Terraform et Borg sur l'hôte Fedora ; trois VM Rocky srv-admin, srv-app et srv-k3s sur un réseau NAT privé ; serveur principal accessible en HTTPS 443, API et PostgreSQL internes, supervision, copie d'essai et GHCR privé." src="docs/diagrams/architecture-globale.svg"></a>
