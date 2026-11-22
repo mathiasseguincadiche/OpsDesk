@@ -31,7 +31,7 @@ Pour chacune, une **fiche d'intervention** d'une page écrite avant de commencer
 | Ce que tu vérifies | Résultat attendu |
 | --- | --- |
 | Sonde depuis `srv-admin` pendant le redémarrage de `srv-app` | Retour à `200` sans intervention |
-| `dnf check-update` sur `srv-app` | Code de retour 0 |
+| `dnf check-update` sur `srv-app` | `0` : aucune mise à jour proposée ; `100` : mises à jour disponibles ; autre code : investiguer l'erreur. Après intervention, vérifier à nouveau selon les paquets et dépôts concernés. |
 | `/version` et digest après déploiement | Ceux publiés par la CI |
 | `/version` et digest après retour arrière | Exactement ceux de départ |
 | Ticket témoin | Relu à l'identique après chaque maintenance |
