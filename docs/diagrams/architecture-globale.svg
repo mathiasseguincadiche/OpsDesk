@@ -28,7 +28,7 @@
 <text x="1222" y="313.6" fill="#7557D8" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">Pull HTTPS sortant</text>
 
 <text x="72" y="359.7" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">HÔTE FEDORA 45  ·  KVM / LIBVIRT</text>
-<text x="821" y="356.2" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="15" font-weight="600" text-anchor="start">Réseau NAT opsdesk-lan  ·  192.168.150.0/24</text>
+<text x="950" y="356.2" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="15" font-weight="600" text-anchor="start">NAT  ·  192.168.150.0/24</text>
 <rect x="72" y="386" width="290" height="357" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
 <rect x="87" y="403" width="5" height="323" rx="3" ry="3" fill="#356CE5" stroke="none" stroke-width="1.25"/>
 <text x="103" y="420.2" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">FEDORA  ·  192.168.150.1</text>
