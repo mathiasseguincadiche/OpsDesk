@@ -1,0 +1,65 @@
+name: One-time safe history rewrite impact assessment
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/privacy-history-rewrite-dry-run.yml
+permissions:
+  contents: read
+
+jobs:
+  audit-only:
+    if: github.repository == 'mathiasseguincadiche/OpsDesk' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Rewrite a disposable local mirror only and quantify impacted refs
+        env:
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$REPO" != "mathiasseguincadiche/OpsDesk" ]]; then exit 2; fi
+          git clone --mirror --quiet "https://github.com/${REPO}.git" "${RUNNER_TEMP}/opsdesk-test.git"
+          mirror="${RUNNER_TEMP}/opsdesk-test.git"
+          before="$(git --git-dir="$mirror" rev-parse refs/heads/main)"
+          branch_before="$(git --git-dir="$mirror" for-each-ref --format='%(refname)' refs/heads | wc -l)"
+          pr_before="$(git --git-dir="$mirror" for-each-ref --format='%(refname)' refs/pull | wc -l)"
+          echo "Dry-run mirror branches before: $branch_before"
+          echo "Dry-run mirror PR refs before: $pr_before"
+          python3 -m pip install --user --disable-pip-version-check --quiet 'git-filter-repo>=2.47'
+          export PATH="$HOME/.local/bin:$PATH"
+          # Deliberately isolated; NO REMOTE PUSH OR GITHUB WRITE TOKEN.
+          git -C "$mirror" filter-repo --force --sensitive-data-removal --invert-paths \
+            --path docs/diagrams/architecture.drawio \
+            --path docs/diagrams/architecture.svg \
+            --path legacy/diagrams/architecture-technique.drawio \
+            --path legacy/diagrams/architecture-technique.svg > "$RUNNER_TEMP/filter-output.txt" 2>&1
+          after="$(git --git-dir="$mirror" rev-parse refs/heads/main)"
+          changed="$mirror/filter-repo/changed-refs"
+          if [[ ! -s "$changed" ]]; then
+            echo "No changed-refs report found"; exit 2
+          fi
+          total_changed="$(wc -l < "$changed")"
+          pr_changed="$(grep -E -c '^refs/pull/[0-9]+/head$' "$changed" || true)"
+          branch_changed="$(grep -E -c '^refs/heads/' "$changed" || true)"
+          echo "Changed refs overall: $total_changed"
+          echo "Affected pull request heads: $pr_changed"
+          echo "Changed local branch heads: $branch_changed"
+          if [[ "$after" == "$before" ]]; then
+            echo "Main HEAD unchanged by diagram-only history rewrite"
+          else
+            echo "Main HEAD would CHANGE if the rewrite was applied"
+          fi
+          for removed in docs/diagrams/architecture.drawio docs/diagrams/architecture.svg legacy/diagrams/architecture-technique.drawio legacy/diagrams/architecture-technique.svg; do
+            if [[ -n "$(git --git-dir="$mirror" log --all --format='%H' -- "$removed" | head -n 1)" ]]; then
+              echo "One historical diagram path remains after simulated rewrite"
+              exit 1
+            fi
+          done
+          for retained in docs/diagrams/architecture-globale.svg docs/diagrams/architecture-globale.drawio docs/adr/README.md; do
+            git --git-dir="$mirror" ls-tree -r --name-only refs/heads/main | grep -Fx "$retained" >/dev/null
+          done
+          echo "Verified: four detailed diagram paths absent from rewritten mirror history"
+          echo "Verified: public global diagram and sanitized ADR index preserved"
+          echo "Read-only audit complete: no remote refs, branches or commits were modified"
