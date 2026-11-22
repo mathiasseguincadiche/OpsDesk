@@ -21,6 +21,12 @@ Suivre une fiche guidée prouve qu'on sait exécuter. En poste, personne ne donn
 
 Toute aide est déclarée : A0 (documentation officielle seulement), A1 (ressources générales), A2 (indice ciblé), A3 (solution partielle comprise et adaptée). Une aide déclarée ne disqualifie pas ; une aide cachée retire sa valeur à la preuve.
 
+## Cas voisin : décider sans fiche de recette
+
+**Situation illustrative.** Un responsable demande d'ajouter une observation utile à un petit service fictif. Avant de choisir l'outil, l'ingénieur reformule le symptôme à détecter, relève la situation existante, définit le critère de réussite et prévoit une manière de revenir en arrière. La solution retenue n'est crédible que si un contrôle indépendant la distingue d'une démonstration préparée.
+
+**Ce qui est évalué.** La capacité à expliquer les contraintes, rechercher une source fiable, comparer deux solutions, annoncer les limites et produire des preuves exactes. Recevoir une aide n'invalide pas le travail, mais son niveau doit être déclaré. Ne pas attribuer L3 à une tâche répétée ou uniquement relue : la vérification séparée prévue plus bas reste obligatoire.
+
 ## Ce qu'il faut obtenir
 
 Une tâche jamais faite, parmi celles-ci ou de taille comparable :

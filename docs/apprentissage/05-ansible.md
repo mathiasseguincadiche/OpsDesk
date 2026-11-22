@@ -18,6 +18,12 @@ Une vingtaine de commandes tapées à la main ne se rejouent pas de mémoire tro
 - Les modules `command` et `shell` répondent `changed` à chaque fois, sauf condition (`creates`, `changed_when`).
 - Terraform crée les machines, Ansible les configure, Docker Engine et Compose y font tourner l'application.
 
+## Cas voisin : installer un service de temps sur une autre machine
+
+**Exemple fictif, sans playbook à recopier.** Une machine de test doit disposer d'un service de synchronisation horaire installé, actif et activé au démarrage. La première exécution Ansible peut signaler `changed` parce qu'un paquet ou un service a été modifié ; la deuxième devrait rester à `ok` si l'état voulu est déjà présent.
+
+**Interprétation.** `changed=0` lors de la seconde passe démontre seulement qu'Ansible n'a pas déclaré de nouvelle modification. Il faut ensuite contrôler le statut du service et la synchronisation effective : une tâche idempotente peut être mal spécifiée. Pour l'exercice OpsDesk, sépare donc **idempotence**, **conformité système** et **disponibilité métier**, sans emprunter un playbook prêt à l'emploi.
+
 ## Ce qu'il faut obtenir
 
 L'état voulu sur `srv-app`, préparé pour l'exercice 06 :

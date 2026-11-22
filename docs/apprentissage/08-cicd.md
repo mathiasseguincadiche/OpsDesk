@@ -19,6 +19,12 @@ Un chemin manuel finit par laisser passer une version non testée, et personne n
 - Le `GITHUB_TOKEN` reçoit le minimum de droits, job par job (`packages: write` seulement pour publier).
 - Une vulnérabilité trouvée par Trivy se corrige, ou s'accepte par écrit avec une date de réexamen.
 
+## Cas voisin : distinguer un tag d'un contenu déployé
+
+**Exemple pédagogique fictif.** L'image `exemple/service:stable` peut pointer vers un contenu différent après une nouvelle publication ; un digest `sha256:…` fige l'identité d'un manifeste donné. Comparer seulement les chaînes de tags du registre et du serveur ne prouve donc pas que la même image s'exécute.
+
+**Raisonnement.** Identifier le commit testé, les artefacts construits, le résultat du scan, le digest publié et le digest réellement tiré puis exécuté. Séparer la réussite des tests, l'autorisation de publier et la décision de déployer. Une CI documentaire verte démontre la qualité de certains fichiers contrôlés, **pas une livraison applicative** ; aucune exécution GHCR personnelle ne doit être déduite de cet exemple.
+
 ## Ce qu'il faut obtenir
 
 1. À chaque pull request : tests de l'API sur PostgreSQL 17, `ruff`, typage et construction du frontend.

@@ -19,6 +19,12 @@ Des machines créées à la main ne se refont pas à l'identique. Terraform remp
 - Le fournisseur `dmacvicar/libvirt` change beaucoup entre 0.8 et 0.9 : on fixe une version et on lit la documentation de cette version.
 - Décision à prendre et à inscrire au registre avant de coder : image cloud et cloud-init, ou ISO et Kickstart.
 
+## Cas voisin : un plan annonce un remplacement inattendu
+
+**Exemple illustratif, non appliqué.** Sur une infrastructure de test sans données, un simple changement de paramètre produit `-/+` au lieu de `~`. Le symbole indique que Terraform prévoit **détruire puis recréer** la ressource ; il ne dit pas si un disque associé ou des données survivront.
+
+**Démarche.** Avant `apply`, identifier la ressource, le champ déclencheur et le fournisseur/version concernés ; lire les conséquences sur les dépendances et le stockage ; comparer avec le besoin initial ; décider de corriger le code ou de préparer une migration séparée. Un second `plan` sans changement vérifie la convergence des ressources suivies, pas la disponibilité de l'application. Ce cas enseigne la lecture du plan sans fournir les fichiers des VM OpsDesk.
+
 ## Ce qu'il faut obtenir
 
 | VM | vCPU | Mémoire | Disques | Adresse |
