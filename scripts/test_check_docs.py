@@ -54,6 +54,12 @@ class DocumentationContracts(unittest.TestCase):
             self.assertTrue((folder / f"architecture-globale{suffix}").is_file())
             self.assertFalse((folder / f"architecture{suffix}").exists())
 
+    def test_legacy_architecture_details_not_republished(self) -> None:
+        folder = ROOT / "legacy" / "diagrams"
+        for suffix in (".drawio", ".svg"):
+            self.assertFalse((folder / f"architecture-technique{suffix}").exists())
+        self.assertEqual([], check_docs.check_repository())
+
     def test_no_known_misleading_claims(self) -> None:
         self.assertEqual([], check_docs.check_editorial_contract())
 

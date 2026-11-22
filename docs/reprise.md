@@ -34,7 +34,7 @@ Principe retenu au [registre](architecture.md#décisions-retenues), à appliquer
 4. Faire pointer l'API vers cette base, puis contrôler `/health/ready` et relire le ticket témoin dans l'interface.
 5. Seulement ensuite, décider du sort de l'ancienne base.
 
-Une restauration remet les données au point de la dernière sauvegarde exploitable. L'objectif RPO de 24 heures n'est atteint que si une sauvegarde récente a réussi et est exploitable ; une copie manquée ou corrompue peut accroître la perte. Mesurer l'âge du point de restauration au moment de la panne et les données manquantes, puis comparer au RPO. Avant de modifier la cible, confirmer explicitement l'identité de la base, son caractère isolé, la version des outils, l'intégrité de l'archive et le retour arrière. Redéployer une image ne restaure jamais un ticket.
+Une restauration remet les données au point de la dernière sauvegarde exploitable. L'objectif de perte de données n'est atteint que si une sauvegarde assez récente a réussi et est exploitable ; une copie manquée ou corrompue peut accroître la perte. Mesurer l'âge du point de restauration au moment de la panne et les données manquantes, puis comparer au RPO. Avant de modifier la cible, confirmer explicitement l'identité de la base, son caractère isolé, la version des outils, l'intégrité de l'archive et le retour arrière. Redéployer une image ne restaure jamais un ticket.
 
 ## Ce qui a été démontré
 
