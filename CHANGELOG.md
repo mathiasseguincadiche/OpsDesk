@@ -4,7 +4,9 @@ Ce registre retrace les changements documentaires, structurels et techniques **v
 
 ## Non publié
 
-- Refonte éditoriale V26 : corrections des affirmations trompeuses, progression pédagogique, navigation et contrôles documentaires, sans qualifier l'infrastructure prévue.
+- Séparation GitHub/Notion : cours et ressources personnelles transférés dans Notion, documentation publique recentrée sur le produit.
+- Audit du 22 novembre : blocage des comptes de démonstration en production, révocation des anciens JWT après changement de mot de passe, limitation des rafales d'authentification Nginx, migration de l'alias TypeScript 7.
+- Nouvelle CI applicative sur runner (API SQLite/PostgreSQL, build React, Compose, smoke) ; voir [les preuves](evidence/qualification/2026-11-22-audit-cicd.md). Aucune release ni aucun déploiement Rocky.
 
 - Nouvelle présentation GitHub du README et illustration vectorielle de couverture.
 - Contrôle automatique de la documentation, des liens et des paires Draw.io/SVG (sans exécution de l'infrastructure).

@@ -1,6 +1,6 @@
 # État d’OpsDesk
 
-Révision : 19 novembre 2026, heure Martinique. Sont distingués **avancement** (prévu, en cours, réalisé, abandonné) et **contrôle** (vérifié, échec constaté, non vérifié). Le socle fourni n'est pas la réalisation personnelle.
+Révision : 22 novembre 2026, heure Martinique. Sont distingués **avancement** (prévu, en cours, réalisé, abandonné) et **contrôle** (vérifié, échec constaté, non vérifié). Le socle fourni n'est pas la réalisation personnelle.
 
 **En bref :** le socle FastAPI/React/PostgreSQL fonctionne sur runner Ubuntu ; l'infrastructure Rocky, la livraison et l'exploitation restent à construire. La recette locale est réussie ; les alertes résiduelles des images officielles restent suivies. Laboratoire privé uniquement.
 
@@ -8,8 +8,8 @@ Révision : 19 novembre 2026, heure Martinique. Sont distingués **avancement** 
 
 | Élément | Avancement | Contrôle et preuve |
 | --- | --- | --- |
-| API, authentification, rôles | Réalisé | Vérifié : 28 tests SQLite + 28 PostgreSQL 17, Ruff |
-| Frontend | Réalisé | Vérifié : typage/build ; navigation manuelle historique, pas de test d'interface automatisé |
+| API, authentification, rôles | Réalisé | Vérifié sur runner : 30 tests SQLite + 30 PostgreSQL 17, Ruff (22/11/2026) |
+| Frontend | Réalisé | Vérifié : typage/build TypeScript 7 ; navigation manuelle historique, pas de test d'interface automatisé |
 | Sondes, métriques et journaux | Réalisé | Vérifié sur runner pour les sondes ; supervision à installer |
 
 ## Conteneurs
@@ -24,6 +24,12 @@ Révision : 19 novembre 2026, heure Martinique. Sont distingués **avancement** 
 
 [Recette de stabilisation](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44649917348) — quatre jobs réussis, commit `dbb4939a381c504371cd39ff4ee9f618d549ff80` : démarrage sans `.env`, tests, reprise et persistance, scan des images effectivement exécutées, 308 liens relatifs sur 35 fichiers, 15 paires graphiques. Voir les [preuves V26](evidence/qualification/2026-11-19-v26-mise-en-conformite.md#stabilisation-finale). Le retrait de pip ne modifie pas le code métier ni les dépendances applicatives.
 
+## Qualification continue du socle (22 novembre 2026)
+
+Le [workflow CI applicative](docs/ci-applicative.md) a réussi ses trois jobs sur [le run 45005031412](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/45005031412), pour le commit de code `babd1768f8c59c59468774c83a7b21b1628d1f07` : 30 tests SQLite et 30 PostgreSQL 17, Ruff, compilation React/TypeScript 7, construction et démarrage des trois conteneurs, parcours HTTP de démonstration et contrôle d'une limitation de connexions par Nginx. Le job supprime ses volumes de test à la fin. Les détails et limites sont dans la [fiche de qualification](evidence/qualification/2026-11-22-audit-cicd.md).
+
+Ce contrôle **ne constitue pas** une recette de sécurité complète, un scan Trivy actualisé, un déploiement sur Rocky ni une CI/CD de livraison GHCR. Les vulnérabilités historiques restent ouvertes dans [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) ; les chantiers de durcissement avant déploiement sont suivis dans [#68](https://github.com/mathiasseguincadiche/OpsDesk/issues/68).
+
 ## Infrastructure
 
 | Élément | Avancement | Contrôle |
@@ -33,7 +39,7 @@ Révision : 19 novembre 2026, heure Martinique. Sont distingués **avancement** 
 | CI/CD personnelle, K3s | Prévu | Non vérifié |
 | Supervision, sauvegarde/restauration, maintenance | Prévu | Non vérifié |
 
-La recette ponctuelle sur runner ne constitue pas un pipeline de livraison de l'application. Aucun pipeline GHCR de livraison personnelle n'est validé.
+La CI actuelle est un pipeline de **qualification du socle applicatif** ; elle n'enregistre aucune image dans GHCR et n'effectue aucun déploiement. La chaîne personnelle de livraison reste prévue, non vérifiée.
 
 ## Documentation technique
 

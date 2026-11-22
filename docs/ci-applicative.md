@@ -20,6 +20,7 @@ Le [workflow documentaire](../.github/workflows/docs-quality.yml) reste indépen
 - La limitation Nginx porte sur l'adresse IP du pair réseau. En présence d'un proxy ou d'un répartiteur frontal, ses adresses de confiance et la politique de limitation doivent être revues.
 - Aucun artefact GHCR ni déploiement n'est créé par ces jobs. Les scans de vulnérabilité des images restent suivis dans [l'issue #51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51).
 - Cette CI ne teste pas encore les migrations de schéma, les temps de réponse sous charge ou une campagne de sécurité complète.
+- Les risques résiduels avant un déploiement serveur sont suivis dans [l'issue #68](https://github.com/mathiasseguincadiche/OpsDesk/issues/68).
 
 ## Interpréter les résultats
 

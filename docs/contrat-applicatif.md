@@ -112,7 +112,7 @@ Toute la configuration passe par des variables d'environnement ; aucun fichier d
 | `JWT_EXPIRE_MINUTES` | `720` | Durée d'une session |
 | `ADMIN_EMAIL`, `ADMIN_PASSWORD` (`_FILE`) | `admin@opsdesk.local`, — | Premier administrateur, créé s'il n'en existe aucun |
 | `ALLOW_REGISTRATION` | `true` | Inscription libre |
-| `SEED_DEMO_DATA` | `true` | Données de démonstration si la base est vide |
+| `SEED_DEMO_DATA` | `true` | Données fictives si la base est vide ; **doit être `false` en production, sinon démarrage refusé** |
 | `ENVIRONMENT` | `development` | `production` exige JWT (32 caractères au moins), admin et DB (sauf `DATABASE_URL` explicite), distincts et non factices |
 | `LOG_LEVEL`, `LOG_FORMAT` | `INFO`, `json` | Journaux |
 | `CORS_ORIGINS` | vide | Origines autorisées si l'interface est servie ailleurs |
@@ -136,11 +136,11 @@ PostgreSQL 17, une base, quatre tables :
 
 ## 14. Migrations
 
-Il n'y a pas d'outil de migration. Au démarrage, l'API crée les tables absentes (`create_all`) et ne modifie jamais une table existante. Conséquence : une version qui changerait le schéma devra fournir sa propre migration, et son retour arrière demandera une restauration de la base. La version 2.0.0 n'a qu'un seul schéma.
+Il n'y a pas encore d'outil de migration (à concevoir avant toute évolution de schéma, [suivi #68](https://github.com/mathiasseguincadiche/OpsDesk/issues/68)). Au démarrage, l'API crée les tables absentes (`create_all`) et ne modifie jamais une table existante. Conséquence : une version qui changerait le schéma devra fournir sa propre migration, et son retour arrière demandera une restauration de la base. La version 2.0.0 n'a qu'un seul schéma.
 
 ## 15. Données persistantes et démonstration
 
-Au premier démarrage sur une base vide, l'API crée le premier administrateur, puis, si `SEED_DEMO_DATA=true`, cinq comptes de démonstration (deux agents, trois collaborateurs, mot de passe commun défini dans `backend/app/bootstrap.py`) et des tickets fictifs. L'opération est rejouable sans effet ; un verrou consultatif PostgreSQL évite les conflits quand plusieurs instances démarrent ensemble. En service réel, les données de démonstration se désactivent par `SEED_DEMO_DATA=false`.
+Au premier démarrage sur une base vide, l'API crée le premier administrateur, puis, si `SEED_DEMO_DATA=true`, cinq comptes de démonstration (deux agents, trois collaborateurs, mot de passe commun défini dans `backend/app/bootstrap.py`) et des tickets fictifs. L'opération est rejouable sans effet ; un verrou consultatif PostgreSQL évite les conflits quand plusieurs instances démarrent ensemble. En service réel, définir explicitement `SEED_DEMO_DATA=false` : en mode `production`, toute autre configuration est refusée au démarrage.
 
 ## 16. Endpoints de santé
 
@@ -158,7 +158,7 @@ Une ligne JSON par événement sur la sortie standard, avec l'heure, le niveau e
 
 ## 18. Tests unitaires
 
-Les tests de l'API sont dans `backend/tests/` : authentification, rôles et visibilité, cycle de vie, commentaires, statistiques, sondes. Ils tournent sur SQLite par défaut et sur PostgreSQL si `TEST_DATABASE_URL` est défini. Dernier contrôle consigné : 28 tests réussis sur SQLite et 28 sur PostgreSQL 17, le 19 novembre 2026 ([recette V26](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44646629874)).
+Les tests de l'API sont dans `backend/tests/` : authentification, rôles et visibilité, cycle de vie, commentaires, statistiques, sondes. Ils tournent sur SQLite par défaut et sur PostgreSQL si `TEST_DATABASE_URL` est défini. Dernier contrôle : 30 tests SQLite et 30 PostgreSQL 17 réussis sur runner le 22 novembre 2026 ([CI applicative](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/45005031412)).
 
 ## 19. Tests fonctionnels
 
@@ -198,7 +198,7 @@ Non mesurées sous charge. Dimensionnement prévu pour la machine qui porte le s
 
 ## 23. Sessions et authentification
 
-Connexion par e-mail et mot de passe. Les mots de passe sont stockés sous forme d'empreinte PBKDF2-SHA256 (390 000 itérations par défaut, sel aléatoire). La session est un jeton JWT signé en HS256 avec `JWT_SECRET`, valable 12 heures par défaut, sans état côté serveur : plusieurs instances de l'API peuvent tourner si elles partagent le même secret. Changer `JWT_SECRET` invalide toutes les sessions en cours. Pas de renouvellement automatique du jeton, pas d'authentification à deux facteurs. Un compte désactivé ne peut plus se connecter.
+Connexion par e-mail et mot de passe. Les mots de passe sont stockés sous forme d'empreinte PBKDF2-SHA256 (390 000 itérations par défaut, sel aléatoire). La session est un jeton JWT signé en HS256 avec `JWT_SECRET`, valable 12 heures par défaut, sans état côté serveur : plusieurs instances de l'API peuvent tourner si elles partagent le même secret. Changer `JWT_SECRET` invalide toutes les sessions en cours ; changer le mot de passe invalide les anciens jetons du compte via une empreinte HMAC. Pas de renouvellement automatique du jeton, pas d'authentification à deux facteurs. Un compte désactivé ne peut plus se connecter.
 
 ## 24. Compatibilité des versions
 
