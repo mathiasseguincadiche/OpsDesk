@@ -7,7 +7,7 @@ Mise à jour : 18 novembre 2026, pour la version 2 d'OpsDesk. Les énoncés sont
 - **Après ta tentative, jamais avant.** Compare ta réponse, puis corrige-la toi-même et refais le contrôle.
 - **Ce ne sont pas des solutions à recopier.** Aucun fichier Terraform, Ansible, Compose de production, Kubernetes ou CI complet n'est fourni : ton infrastructure reste ton travail.
 - **Une autre réponse peut être juste** si elle respecte le registre des décisions, protège les données et passe les vérifications de la fiche.
-- **Pour chaque exercice** : les réponses attendues aux questions de la partie 8 de la fiche, ce que contient une bonne solution, et les points à refuser dans un rendu.
+- **Pour chaque exercice** : les réponses associées aux vérifications et explications attendues dans l'énoncé GitHub, les éléments d'une solution acceptable et les points à refuser. Les fiches Notion peuvent proposer des questions graduées supplémentaires.
 
 <a id="exercice-01"></a>
 

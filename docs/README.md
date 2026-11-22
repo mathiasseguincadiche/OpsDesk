@@ -2,6 +2,14 @@
 
 Le socle applicatif est fourni et qualifié sur un runner jetable. L'infrastructure personnelle reste à construire. Pour distinguer une cible prévue d'une réalisation vérifiée, consulter [STATUS.md](../STATUS.md).
 
+## Choisir son parcours de lecture
+
+- **Découvrir** : lire le [README](../README.md), puis le [statut vérifié](../STATUS.md) pour distinguer le socle fourni, les réalisations personnelles et les objectifs.
+- **Apprendre** : suivre le [parcours de 13 exercices](apprentissage/README.md) et préparer les outils avec le [guide du laboratoire](laboratoire-fedora-kvm-rocky.md).
+- **Exploiter ou auditer** : confronter le [contrat applicatif](contrat-applicatif.md), les [décisions](architecture.md) et la [référence technique](reference-technique.md), puis lire [l'exploitation](exploitation-day2.md) et la [reprise](reprise.md).
+
+Ces chemins guident la lecture : ils ne valident pas l'infrastructure prévue.
+
 ## Découvrir et comprendre
 
 - [Présentation du projet](../README.md) — finalité, contribution personnelle, aperçu et architecture.
@@ -24,7 +32,6 @@ Le socle applicatif est fourni et qualifié sur un runner jetable. L'infrastruct
 - [Exploitation courante](exploitation-day2.md) — opérations, contrôles et limites.
 - [Sauvegarde et reprise](reprise.md) — diagnostic, protection des données et restauration.
 - [Sécurité](securite.md) — risques, protections et contrôles attendus.
-- [Ressources InfraOps](references-infraops.md) — références utiles pour approfondir.
 
 ## Qualité du dépôt et modèles
 
@@ -33,6 +40,7 @@ Le socle applicatif est fourni et qualifié sur un runner jetable. L'infrastruct
 - [Contribuer](../CONTRIBUTING.md) — branches, tests, PR et preuves.
 - [Politique de sécurité](../SECURITY.md) — périmètre du laboratoire et signalement.
 - [Journal des changements](../CHANGELOG.md) — historique publiable distinct de la qualification.
+- [Inventaire de références historiques](references-infraops.md) — anciennes sources absentes de la branche active ; pas un guide de cours.
 
 ## Évaluer et contribuer
 

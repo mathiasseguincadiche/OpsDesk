@@ -4,7 +4,7 @@
 
 **Objectif.** Tester, construire, analyser et publier automatiquement chaque modification, et prouver que l'image qui tourne sur `srv-app` est exactement celle que la CI a vérifiée.
 
-**Durée estimée** : 4 à 6 heures. **Prérequis** : exercice 06 (images construites et déployées à la main). **État** : prévu, non vérifié ; aucun workflow dans le dépôt à ce jour.
+**Durée estimée** : 4 à 6 heures. **Prérequis** : exercice 06 (images construites et déployées à la main). **État** : chaîne personnelle de livraison prévue, non vérifiée. Un workflow de **qualité documentaire** existe déjà (`.github/workflows/docs-quality.yml`) ; il ne construit ni ne publie les images applicatives.
 
 ## Pourquoi
 
