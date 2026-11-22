@@ -20,6 +20,10 @@ Sans supervision, on apprend une panne par les utilisateurs, sans savoir depuis 
 - Si `srv-k3s` tombe, la supervision tombe avec.
 - **SLI** : mesure d'un comportement du service (par exemple la proportion de requêtes valides réussies). **SLO** : objectif chiffré pour cet indicateur sur une fenêtre définie. Une sonde verte ou une cible `up` ne constitue pas, seule, un SLI de disponibilité utilisateur ; un SLO de laboratoire n'est pas un SLA contractuel.
 
+## Comprendre le mécanisme et ses limites
+
+**Lire une alerte sans surinterpréter.** Si `up=1`, Prometheus arrive à lire une cible ; le service utilisateur peut néanmoins échouer pendant la création de tickets. Si une alerte de latence se déclenche, vérifie la fenêtre d'observation, le volume de requêtes et les routes incluses avant de chercher une cause. **Limite :** un tableau de bord illustre des mesures ; sans scénario métier ni seuils justifiés, il ne certifie pas un niveau de service.
+
 ## Ce qu'il faut obtenir
 
 1. `node_exporter` sur `srv-app` et `srv-k3s`, port 9100 ouvert à `srv-k3s` seulement.
