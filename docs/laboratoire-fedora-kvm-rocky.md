@@ -6,6 +6,21 @@ Les noms retenus pour la suite (réseau `opsdesk-lan`, compte d’administration
 
 L’objectif est une première VM utilisable et comprise, `srv-admin`, puis deux autres VM créées depuis elle, puis les exercices du projet. La lecture du guide n’attribue aucun résultat personnel, niveau L0–L3 ou autonomie. Aucun Terraform, playbook Ansible, fichier Compose de production, manifeste K3s ou pipeline complet n’est fourni ici.
 
+## Comment utiliser ce guide
+
+Ce document s'utilise en deux passes : **préparer** (identifier l'hôte, vérifier les outils présents et dimensionner les VM) puis **recevoir** (observer le fonctionnement de `srv-admin` et dater les preuves). Il ne faut pas lancer toutes les commandes d'un seul bloc : elles ne s'appliquent pas toutes à la même machine.
+
+| Si tu cherches à… | Va à… | Résultat attendu |
+| --- | --- | --- |
+| Savoir où exécuter une commande | [1. Rôles](#1-identifier-les-rôles-avant-de-lancer-une-commande) | Hôte Fedora et invité Rocky clairement distingués |
+| Préparer sans remplacer les outils existants | [2. Pré-check](#2-pré-check-de-lhôte-fedora--observation-avant-installation) | Inventaire des composants et installations conditionnelles |
+| Comprendre les ressources disponibles | [3. Dimensionnement](#3-proportionner-le-laboratoire-et-comprendre-ses-limites) | Allocation des VM justifiée |
+| Obtenir la première VM | [4. Média Rocky](#4-choisir-et-vérifier-le-média-rocky-linux-102) puis [5. `srv-admin`](#5-préparer-personnellement-srv-admin-la-première-vm-dans-virt-manager) | VM créée et identifiée, sans prétendre valider Terraform |
+| Comprendre un accès SSH en échec | [6. Accès invité](#6-contrôler-linvité-et-préparer-laccès-sans-contourner-les-protections) | Cause investiguée par couche, protections conservées |
+| Consigner les résultats | [8. Réception](#8-recevoir-le-laboratoire-avec-des-preuves-interprétées) | Cible, sortie observée et limites datées |
+
+**Interpréter avant de corriger.** Une commande de détection qui ne retourne aucune ligne ne signifie pas automatiquement « outil absent » : cela peut dépendre de la variante de distribution, du service actif ou du privilège utilisé. Noter le contexte exact, consulter la section correspondante, puis installer uniquement ce qui manque. Les commandes d'installation des outils sont conservées dans leurs sections d'origine.
+
 ## 1. Identifier les rôles avant de lancer une commande
 
 - **Fedora 45 / GNOME 51 est l’hôte physique.** Il porte le bureau, KVM, QEMU, libvirt et virt-manager. Terraform et Ansible ne sont pas installés sur Fedora : ils sont sur `srv-admin`.
