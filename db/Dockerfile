@@ -9,7 +9,7 @@ RUN set -eux; \
     apk upgrade --no-cache; \
     apk add --no-cache su-exec; \
     rm /usr/local/bin/gosu; \
-    ln -s /usr/bin/su-exec /usr/local/bin/gosu; \
+    ln -s "$(command -v su-exec)" /usr/local/bin/gosu; \
     gosu postgres true; \
     test "$(gosu postgres id -u)" = "$(id -u postgres)"
 
