@@ -54,7 +54,7 @@ export function UsersPage() {
       <PageHeader
         title="Utilisateurs"
         subtitle="Gérez les comptes, les rôles et les accès à OpsDesk."
-        actions={<Button onClick={() => setCreating(true)}><UserPlus className="size-4" /> Inviter un utilisateur</Button>}
+        actions={<Button onClick={() => setCreating(true)}><UserPlus className="size-4" /> Créer un compte utilisateur</Button>}
       />
 
       <div className="mb-4 grid gap-4 sm:grid-cols-3">
