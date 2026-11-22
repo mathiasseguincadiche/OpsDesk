@@ -4,6 +4,8 @@ Ce registre retrace les changements documentaires, structurels et techniques **v
 
 ## Non publié
 
+- Qualité fonctionnelle : contrôle automatisé de `pg_dump` / `pg_restore` en base séparée, puis reconnexion de l'API après redémarrage sur runner jetable.
+
 - Audit sécurité des images : workflow Trivy API/frontend/PostgreSQL, rapports JSON et suivi de la gravité ; réglage de confiance des en-têtes de proxy Uvicorn limité à `127.0.0.1` par défaut.
 
 - Séparation GitHub/Notion : cours et ressources personnelles transférés dans Notion, documentation publique recentrée sur le produit.

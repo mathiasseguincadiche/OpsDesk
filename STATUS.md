@@ -34,6 +34,12 @@ Ce contrôle **ne constitue pas** une recette de sécurité complète, un scan T
 
 Le workflow [Image security audit](.github/workflows/image-security.yml) reconstruit les images API/frontend et scanne également PostgreSQL 17 avec Trivy sur chaque changement concerné ou chaque semaine. Il enregistre les rapports JSON et les identifiants dans des artefacts datés. **Les CVE HIGH/CRITICAL ne sont pas occultées, mais elles ne font pas échouer le job à elles seules** : les erreurs d'exécution du scanner, elles, sont bloquantes. Les alertes et leur acceptabilité demeurent ouvertes dans [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51). Une validation CI ne prouve pas la sécurité de la future infrastructure.
 
+## Restauration fonctionnelle du socle — 22 novembre 2026
+
+Le [run de CI 45006326819](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/45006326819) a validé, sur une base de démonstration jetable, un `pg_dump` en format custom, un `pg_restore` dans une **base distincte** et le contrôle des tickets restaurés. **17 tickets** ont été retrouvés, dont le ticket témoin ; l'API a ensuite redémarré et répondu `ready` sans perte des données observées. Voir [preuve datée](evidence/qualification/2026-11-22-restauration-ci.md).
+
+Il s'agit d'un test sur runner, non d'une sauvegarde hors serveur ou d'un plan de reprise personnel testé sur les VM Rocky ; les RPO et RTO ne sont pas qualifiés.
+
 ## Infrastructure
 
 | Élément | Avancement | Contrôle |
