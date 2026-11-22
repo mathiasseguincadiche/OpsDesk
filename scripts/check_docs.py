@@ -8,6 +8,7 @@ No third-party dependencies, network requests, subprocesses or secrets are neede
 from __future__ import annotations
 
 import re
+from html import unescape
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -180,18 +181,68 @@ def check_repository() -> list[str]:
             errors.append(f"{source.relative_to(ROOT)}: invalid Draw.io XML: {exc}")
             continue
         if diagram.stem in {"architecture", "architecture-globale"}:
-            svg_labels = [t.text or "" for t in exported.findall("{http://www.w3.org/2000/svg}text")]
-            source_labels = [
-                cell.get("value", "")
-                for cell in editable.iter("mxCell")
-                if cell.get("style", "").startswith("text;")
-            ]
-            if svg_labels != source_labels or not source_labels:
-                errors.append(f"{diagram.relative_to(ROOT)}: V2 labels differ between Draw.io and SVG")
-            text = " ".join(svg_labels)
-            for expected in ("ARCHITECTURE V2", "NON DÉPLOYÉE", "Terraform", "HTTPS", "srv-admin", "srv-app", "srv-k3s"):
+            ns = "{http://www.w3.org/2000/svg}"
+            source_cells = {cell.get("id"): cell for cell in editable.iter("mxCell")}
+            rendered_cells = {
+                group.get("data-cell-id"): group
+                for group in exported.iter()
+                if group.get("data-cell-id")
+            }
+
+            # Draw.io native SVG exports place fallback text inside nested <g>
+            # elements and may encode formatting as HTML. The newer minimal
+            # SVG format uses direct <text> children. Support both without
+            # prescribing or changing the graphic layout.
+            if rendered_cells:
+                def plain(value: str) -> str:
+                    decoded = unescape(unescape(value))
+                    decoded = re.sub(r"<br\\s*/?>", " ", decoded, flags=re.I)
+                    decoded = re.sub(r"<[^>]+>", " ", decoded)
+                    return " ".join(decoded.split()).casefold()
+
+                key_ids = (
+                    "titre", "hote", "srv-admin", "srv-app", "srv-k3s",
+                    "flux-http", "web",
+                    "statut-schema" if diagram.stem == "architecture-globale" else "etat-cible",
+                )
+                for cell_id in key_ids:
+                    cell = source_cells.get(cell_id)
+                    rendered = rendered_cells.get(cell_id)
+                    if cell is None or rendered is None:
+                        errors.append(f"{diagram.relative_to(ROOT)}: missing V1-layout cell {cell_id}")
+                        continue
+                    expected_label = plain(cell.get("value", ""))
+                    svg_label = " ".join(
+                        " ".join(node.itertext())
+                        for node in rendered.iter()
+                        if node.tag == f"{ns}text"
+                    )
+                    if not expected_label or expected_label != plain(svg_label):
+                        errors.append(
+                            f"{diagram.relative_to(ROOT)}: Draw.io/SVG text mismatch in cell {cell_id}"
+                        )
+                text = " ".join(
+                    " ".join(node.itertext())
+                    for node in exported.iter()
+                    if node.tag == f"{ns}text"
+                ).casefold()
+            else:
+                # Lightweight, cell-free SVGs introduced by architecture V2.
+                svg_labels = [node.text or "" for node in exported.findall(f"{ns}text")]
+                source_labels = [
+                    cell.get("value", "")
+                    for cell in editable.iter("mxCell")
+                    if cell.get("style", "").startswith("text;")
+                ]
+                if svg_labels != source_labels or not source_labels:
+                    errors.append(f"{diagram.relative_to(ROOT)}: Draw.io/SVG labels differ")
+                text = " ".join(svg_labels).casefold()
+
+            for expected in ("v2", "non déployée", "terraform", "https", "srv-admin", "srv-app", "srv-k3s"):
                 if expected not in text:
                     errors.append(f"{diagram.relative_to(ROOT)}: missing V2 content {expected}")
+            if any(stale in text for stale in ("http :8080", "qemu+ssh", "/metrics :8000")):
+                errors.append(f"{diagram.relative_to(ROOT)}: obsolete V1 infrastructure label")
     return errors
 
 
