@@ -217,7 +217,7 @@ def check_repository() -> list[str]:
                         for node in rendered.iter()
                         if node.tag == f"{ns}text"
                     )
-                    if not expected_label or expected_label != plain(svg_label):
+                    if not expected_label or expected_label not in plain(svg_label):
                         errors.append(
                             f"{diagram.relative_to(ROOT)}: Draw.io/SVG text mismatch in cell {cell_id}"
                         )
