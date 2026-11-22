@@ -161,8 +161,37 @@ def check_repository() -> list[str]:
             errors.append(f"{asset}: invalid XML: {exc}")
     diagram_folder = ROOT / "docs/diagrams"
     for diagram in diagram_folder.glob("*.svg"):
-        if not diagram.with_suffix(".drawio").is_file():
+        source = diagram.with_suffix(".drawio")
+        if not source.is_file():
             errors.append(f"{diagram.relative_to(ROOT)}: missing draw.io source")
+            continue
+        try:
+            exported = ET.parse(diagram).getroot()
+            if exported.tag != "{http://www.w3.org/2000/svg}svg":
+                errors.append(f"{diagram.relative_to(ROOT)}: invalid SVG root")
+        except ET.ParseError as exc:
+            errors.append(f"{diagram.relative_to(ROOT)}: invalid SVG XML: {exc}")
+            continue
+        try:
+            editable = ET.parse(source).getroot()
+            if editable.tag != "mxfile":
+                errors.append(f"{source.relative_to(ROOT)}: invalid Draw.io root")
+        except ET.ParseError as exc:
+            errors.append(f"{source.relative_to(ROOT)}: invalid Draw.io XML: {exc}")
+            continue
+        if diagram.stem in {"architecture", "architecture-globale"}:
+            svg_labels = [t.text or "" for t in exported.findall("{http://www.w3.org/2000/svg}text")]
+            source_labels = [
+                cell.get("value", "")
+                for cell in editable.iter("mxCell")
+                if cell.get("style", "").startswith("text;")
+            ]
+            if svg_labels != source_labels or not source_labels:
+                errors.append(f"{diagram.relative_to(ROOT)}: V2 labels differ between Draw.io and SVG")
+            text = " ".join(svg_labels)
+            for expected in ("ARCHITECTURE V2", "NON DÉPLOYÉE", "Terraform", "HTTPS", "srv-admin", "srv-app", "srv-k3s"):
+                if expected not in text:
+                    errors.append(f"{diagram.relative_to(ROOT)}: missing V2 content {expected}")
     return errors
 
 
