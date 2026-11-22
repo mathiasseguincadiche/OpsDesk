@@ -239,9 +239,9 @@ def check_repository() -> list[str]:
     protected_markdown += list((ROOT / "legacy" / "docs").rglob("*.md"))
     protected_markdown += list((ROOT / "legacy" / "diagrams").rglob("*.md"))
     private_patterns = (
-        re.compile(r"192\\.168\\.150(?:\\.\\d+|\\.0/24)?"),
-        re.compile(r"/var/backups/opsdesk(?:/|\\b)"),
-        re.compile(r"qemu\\+ssh"),
+        re.compile(r"(?:192[.]168[.][0-9]{1,3}[.][0-9]{1,3}|10[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}|172[.](?:1[6-9]|2[0-9]|3[0-1])[.][0-9]{1,3}[.][0-9]{1,3})"),
+        re.compile(r"/var/backups/"),
+        re.compile(r"qemu[+]ssh"),
     )
     for document in protected_markdown:
         if not document.is_file():
