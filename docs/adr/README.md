@@ -18,7 +18,7 @@
 - [Plan de déploiement V2](../architecture-v2-deploiement.md) : phases 0 à 6 et quatre épreuves finales.
 - [Architecture applicative](../architecture.md) : fonctionnement du service déjà testé et distinction entre application et infrastructure.
 - [État vérifié](../../STATUS.md) : seul document qui précise ce qui a été exécuté réellement.
-- [Schémas Draw.io/SVG](../diagrams/README.md) : les exports actuels décrivent l'ancienne cible ; une **mise à jour graphique en paire source/export** est nécessaire avant de les présenter comme Architecture V2.
+- [Schémas Draw.io/SVG](../diagrams/README.md) : deux vues V2 construites à partir de l'implantation graphique V1, avec sources éditables et exports SVG correspondants ; le contrôle graphique natif final reste une étape de recette, distincte de la validation des ADR.
 
 ## Frontières de responsabilité
 
