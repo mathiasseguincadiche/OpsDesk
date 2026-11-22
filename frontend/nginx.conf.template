@@ -1,5 +1,5 @@
 # OpsDesk frontend — nginx (non-root, port 8080).
-# ${BACKEND_URL} is substituted at container start (envsubst, official image feature).
+# Au démarrage, envsubst remplace ${BACKEND_URL} par l'adresse réelle de l'API.
 server {
     listen 8080;
     listen [::]:8080;
@@ -17,14 +17,12 @@ server {
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-${INLINE_SCRIPT_HASH}'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" always;
 
-    # The backend name is re-resolved at request time (resolver + variable) instead of
-    # once at startup: nginx starts even if the backend is not up yet, and follows the
-    # new IP when Docker recreates the backend container or Kubernetes restarts its pod.
-    # NGINX_LOCAL_RESOLVERS comes from the container's /etc/resolv.conf (Docker embedded DNS 127.0.0.11, CoreDNS…).
+    # Résoudre à nouveau l'adresse du backend après un changement d'IP.
+    # Le résolveur provient du conteneur (DNS Docker ou CoreDNS).
     resolver ${NGINX_LOCAL_RESOLVERS} valid=10s ipv6=off;
     resolver_timeout 3s;
 
-    # API, health and version are proxied to the backend service.
+    # Transmettre à l'API les routes métier, les sondes et la version.
     location ~ ^/(api|health|version)(/|$) {
         set $backend "${BACKEND_URL}";
         proxy_pass $backend;
@@ -34,25 +32,25 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Request-ID $request_id;
-        # Fail promptly if a cached backend address is no longer reachable.
+        # Échouer rapidement si l'adresse de l'API ne répond plus.
         proxy_connect_timeout 3s;
         proxy_read_timeout 30s;
     }
 
-    # Backend metrics are NOT exposed publicly: scrape the backend service directly.
+    # Ne pas exposer /metrics via nginx : Prometheus doit interroger l'API directement.
     location = /metrics { return 404; }
 
-    # Front-end liveness for Docker healthchecks and Kubernetes probes.
+    # Sonde locale du frontend, utilisable par Docker et Kubernetes.
     location = /healthz { access_log off; default_type text/plain; return 200 "ok\n"; }
 
-    # Fingerprinted assets: cache for a year.
-    # (no add_header here: it would drop the security headers inherited from server{})
+    # Les fichiers nommés par empreinte peuvent être conservés un an dans le cache.
+    # Ne pas ajouter add_header ici : cela masquerait les en-têtes de sécurité hérités.
     location /assets/ {
         expires 1y;
         try_files $uri =404;
     }
 
-    # SPA: every other route serves index.html.
+    # Pour l'application React, renvoyer index.html sur les routes internes.
     location / {
         expires -1;
         try_files $uri $uri/ /index.html;
