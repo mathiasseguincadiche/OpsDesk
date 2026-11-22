@@ -12,6 +12,7 @@ on:
       - 'scripts/smoke.py'
       - 'scripts/check_persistence_restore.sh'
       - 'scripts/check_auth_throttle.py'
+      - 'scripts/check_browser_e2e.py'
       - '.github/workflows/application-quality.yml'
   push:
     branches: [main]
@@ -125,6 +126,21 @@ jobs:
         run: python3 scripts/smoke.py
       - name: Restaurer une sauvegarde isolée et vérifier la persistance
         run: bash scripts/check_persistence_restore.sh
+      - name: Installer un navigateur Chromium jetable pour la recette E2E
+        run: |
+          python3 -m venv /tmp/opsdesk-e2e
+          /tmp/opsdesk-e2e/bin/python -m pip install playwright==1.65.2
+          /tmp/opsdesk-e2e/bin/python -m playwright install --with-deps chromium
+      - name: Vérifier la vraie interface : cookies, CSRF, tickets et déconnexion
+        run: /tmp/opsdesk-e2e/bin/python scripts/check_browser_e2e.py
+      - name: Joindre les captures navigateur
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: opsdesk-browser-e2e-${{ github.sha }}
+          path: e2e-artifacts/
+          if-no-files-found: ignore
+          retention-days: 30
       - name: Vérifier la limitation des tentatives de connexion
         run: python3 scripts/check_auth_throttle.py
       - name: Afficher les journaux si une étape a échoué

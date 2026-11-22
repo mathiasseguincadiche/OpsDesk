@@ -4,6 +4,9 @@ Ce registre retrace les changements documentaires, structurels et techniques **v
 
 ## Non publié
 
+- API Python 3.13 Alpine (construction et exécution) : tests conservés, scan Trivy à 0 HIGH/CRITICAL sur les images utilisées et politique CI de refus.
+- Recette Chromium sur runner : connexion par cookie HttpOnly, contrôle CSRF, création de ticket, reconnexion après rechargement, déconnexion et affichage mobile.
+
 - Authentification : compteur de tentatives HMAC partagé via PostgreSQL, refus HTTP 429 également en accès direct à l'API, inscriptions publiques interdites en production.
 
 - Sécurité navigateur : session JWT en cookie HttpOnly, protection CSRF liée au jeton, mode Secure en production, suppression de l'ancien stockage local, conservation du Bearer pour les scripts.
