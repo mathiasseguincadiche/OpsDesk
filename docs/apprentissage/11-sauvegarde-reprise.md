@@ -19,6 +19,10 @@ Un volume garde les données quand le conteneur disparaît ; il ne les protège 
 - **RPO** : objectif de perte de données maximale acceptable, exprimé en durée. La copie nocturne vise une fenêtre de 24 heures si les sauvegardes réussissent. **RTO** : objectif de durée maximale de rétablissement. Fixe ces objectifs avant l’essai, puis compare-les à la fenêtre de perte observée et au délai réellement mesuré ; ne confonds pas cible et résultat.
 - La copie sur l'hôte survit à la perte de la VM, pas à celle du PC.
 
+## Comprendre le mécanisme et ses limites
+
+**Séparer les preuves.** Une archive qui existe prouve sa création, pas sa restauration ; une somme SHA-256 identique après transfert prouve l'identité des fichiers comparés, pas leur exploitabilité métier. Seule une restauration isolée suivie d'une lecture de ticket teste le chemin de reprise. **Question de décision :** que se passe-t-il si la dernière archive exploitable date de plus de 24 heures, alors que le RPO visé est de 24 heures ?
+
 ## Ce qu'il faut obtenir
 
 1. Un minuteur systemd du système lance chaque nuit à 02:00 un `pg_dump` au format custom, exécuté dans le conteneur de la base (`docker compose exec -T db pg_dump …`). C'est une vraie responsabilité de systemd : planifier, journaliser, rattraper une nuit manquée.
