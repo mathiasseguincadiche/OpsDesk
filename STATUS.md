@@ -33,16 +33,13 @@ Révision : 19 novembre 2026, heure Martinique. Sont distingués **avancement** 
 | CI/CD personnelle, K3s | Prévu | Non vérifié |
 | Supervision, sauvegarde/restauration, maintenance | Prévu | Non vérifié |
 
-La recette ponctuelle ne constitue pas le pipeline de livraison de l'exercice 08. Aucun workflow personnel de livraison n'est validé.
+La recette ponctuelle sur runner ne constitue pas un pipeline de livraison de l'application. Aucun pipeline GHCR de livraison personnelle n'est validé.
 
-## Documentation
+## Documentation technique
 
-Les 13 exercices et les cinq évaluations sont disponibles. Les 15 paires Draw.io/SVG ont été contrôlées structurellement et rendues (30 captures) ; deux nouveaux exports natifs Draw.io sont intégrés. Consultation interactive GitHub/Notion sur les appareils réels : non vérifiée. Voir [schémas](docs/diagrams/README.md), [parcours](docs/apprentissage/README.md) et [contrat applicatif](docs/contrat-applicatif.md).
+Le dépôt contient les contrats, procédures, schémas techniques et résultats de qualification du produit. Les résultats historiques des 15 paires Draw.io/SVG contrôlées le 19 novembre 2026 demeurent datés : les schémas exclusivement pédagogiques ont été transférés dans Notion avec leurs sources. L'affichage sur les appareils réels n'est pas certifié par les tests automatisés. Voir [schémas techniques](docs/diagrams/README.md) et [contrat applicatif](docs/contrat-applicatif.md).
 
 ## Historique : application v1 (Flask)
 
 Les preuves v1 restent dans [legacy](legacy/). Le [statut détaillé antérieur à la V26](https://github.com/mathiasseguincadiche/OpsDesk/blob/d2a8e9e204b1bb797c26b1e1c927b9ec4fe166b1/STATUS.md) conserve toutes les observations historiques et leurs périmètres, dont la [recette du socle](evidence/qualification/2026-11-19-socle.txt). Aucun résultat ancien n'est transféré à un nouveau code sans contrôle.
 
-## Apprentissage
-
-Aucun exercice personnel validé. Les niveaux L0 à L3 et A0 à A3 restent à établir sur preuves personnelles. Commencer par l'exercice 01 ; suivre les [règles de preuve](docs/preuves.md) et le [parcours](docs/parcours-apprentissage.md).
