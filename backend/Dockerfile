@@ -39,6 +39,9 @@ RUN /usr/local/bin/python -m pip uninstall -y pip
 COPY --from=build /opt/venv /opt/venv
 WORKDIR /app
 COPY --chown=10001:10001 app ./app
+# Migrations nécessaires à l'exécution et au contrôle du schéma de production.
+COPY --chown=10001:10001 alembic.ini ./alembic.ini
+COPY --chown=10001:10001 migrations ./migrations
 
 USER 10001
 EXPOSE 8000
