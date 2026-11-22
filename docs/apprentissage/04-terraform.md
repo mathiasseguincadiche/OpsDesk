@@ -19,6 +19,10 @@ Des machines créées à la main ne se refont pas à l'identique. Terraform remp
 - Le fournisseur `dmacvicar/libvirt` change beaucoup entre 0.8 et 0.9 : on fixe une version et on lit la documentation de cette version.
 - Décision à prendre et à inscrire au registre avant de coder : image cloud et cloud-init, ou ISO et Kickstart.
 
+## Comprendre le mécanisme et ses limites
+
+**Lire un plan comme une décision de changement.** Supposons qu'après une modification innocente, Terraform propose `-/+` pour une VM. Cela annonce un remplacement de ressource gérée, pas une simple mise à jour. Avant toute action, repère l'attribut qui impose le remplacement, vérifie l'identité de la cible et les volumes concernés, puis compare à l'intention initiale. **Limite :** un `No changes` ne couvre ni les ressources hors du state ni la disponibilité du service.
+
 ## Ce qu'il faut obtenir
 
 | VM | vCPU | Mémoire | Disques | Adresse |
