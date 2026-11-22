@@ -44,13 +44,13 @@ Chaque secret accepte une forme `*_FILE` qui lit sa valeur dans un fichier : c'e
 
 L'application ne peut pas se protéger seule. Les décisions suivantes sont prises au [registre](architecture.md#décisions-retenues) et doivent être mises en œuvre et contrôlées sur l'infrastructure cible :
 
-- **Réseau** : seul le port 8080 ouvert aux utilisateurs ; 8000 ouvert à la supervision seulement ; 5432 jamais publié ; firewalld actif.
-- **Système** : SELinux en mode `Enforcing` ; SSH par clé, sans mot de passe ni connexion `root`.
+- **Réseau** : les utilisateurs accèdent au frontal HTTPS ; les interfaces API, base de données et métriques restent internes ou filtrées. Le plan de ports et de filtrage détaillé n'est pas public.
+- **Système** : durcissement Linux, contrôle des identités administratives et accès de récupération indépendants.
 - **Exécution** : Docker Engine, dont le démon tourne en root. Personne n'est dans le groupe `docker` (qui vaut root) : administration par `sudo`, tracée. Le socket Docker n'est monté dans aucun conteneur et l'API Docker n'écoute pas sur le réseau. Les images API et frontend s’exécutent sans root ; PostgreSQL utilise son mécanisme de démarrage et de changement d’utilisateur. `no-new-privileges` est activé sur les trois services.
 - **Pare-feu et SELinux face à Docker** : Docker écrit ses propres règles de filtrage (zone firewalld `docker`) ; l'exposition réelle d'un port se prouve depuis une autre machine. SELinux ne s'applique aux conteneurs que si le démon l'active (`selinux-enabled`).
 - **Secrets** : fichiers lisibles par le seul conteneur qui les lit, montés par le bloc `secrets:` de Compose ; jamais dans le fichier Compose, ni dans Git, ni en clair dans les rôles Ansible.
 - **Images** : analyse Trivy dans la CI, avec une règle écrite pour les vulnérabilités graves.
-- **Sauvegardes** : copies hors du serveur, avec une clé SSH limitée à ce seul usage.
+- **Sauvegardes** : copies externes chiffrées, droits de transfert restreints et restaurations vérifiées ; détails conservés hors dépôt public.
 
 ## Limites connues
 
@@ -59,7 +59,7 @@ L'application ne peut pas se protéger seule. Les décisions suivantes sont pris
 - Limitation Nginx par adresse IP du pair, complétée par un compteur de connexions PostgreSQL commun à l'API directe et au navigateur (10 tentatives par adresse normalisée sur deux minutes, verrouillage temporaire). Des attaques distribuées utilisant des adresses différentes et le déni de service par verrouillage ciblé restent des risques ; revoir les IP de confiance et le filtrage réseau avant exposition.
 - Pas d'authentification à deux facteurs ni de renouvellement automatique du jeton. Le navigateur utilise désormais un cookie de session `HttpOnly` `SameSite=Strict` (et `Secure` en production) ainsi qu'un cookie CSRF signé lié à la session. Les scripts peuvent toujours utiliser l'authentification Bearer. Une campagne navigateur et TLS réelle reste obligatoire avant exposition.
 - Pas de HTTPS dans l’application : il se termine devant elle. Un frontal TLS privé et des règles de filtrage doivent être définis et vérifiés avant déploiement. Ce contrôle reste à réaliser.
-- Le port 8000 ouvert à `srv-k3s` donne accès à toute l'API, pas seulement à `/metrics` (risque ouvert à traiter avant le déploiement).
+- Une collecte de métriques mal isolée pourrait exposer d'autres routes applicatives : le contrôle des frontières réseau est un prérequis non encore qualifié sur les VM.
 - Uvicorn accepte par défaut les en-têtes de proxy uniquement de `127.0.0.1` ; `FORWARDED_ALLOW_IPS` doit désigner les proxys effectivement contrôlés. Ne jamais définir `*` sur une cible ouverte.
 - Les images API, frontend et PostgreSQL sont visées par un [scan Trivy automatisé](../.github/workflows/image-security.yml). Les alertes HIGH/CRITICAL sur les images **utilisées** font maintenant échouer la CI ; le comparatif d'image amont reste visible. [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) est clôturée après résultats 0/0 sur les images exécutées, sans que cela constitue une homologation.
 
