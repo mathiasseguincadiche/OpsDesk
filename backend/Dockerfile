@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
-# OpsDesk API — image multi-étapes, non-root, au format OCI (Docker, Kubernetes).
+# API OpsDesk : base Alpine minimale, compilation et exécution séparées, utilisateur non-root.
 
-FROM docker.io/library/python:3.13-slim AS build
+FROM docker.io/library/python:3.13-alpine AS build
 ENV PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1
 WORKDIR /build
 COPY requirements.txt .
@@ -11,7 +11,7 @@ RUN python -m venv /opt/venv \
  && /opt/venv/bin/pip check \
  && /opt/venv/bin/python -m pip uninstall -y pip
 
-FROM docker.io/library/python:3.13-slim AS runtime
+FROM docker.io/library/python:3.13-alpine AS runtime
 ARG APP_VERSION=2.0.0
 ARG APP_REVISION=dev
 LABEL org.opencontainers.image.title="opsdesk-api" \
@@ -29,12 +29,11 @@ ENV PATH="/opt/venv/bin:$PATH" \
     FORWARDED_ALLOW_IPS=127.0.0.1 \
     PORT=8000
 
-# Appliquer les correctifs Debian disponibles lors de la construction.
-# Une analyse régulière reste nécessaire : certains correctifs peuvent manquer.
-RUN apt-get update \
- && apt-get upgrade -y --no-install-recommends \
- && rm -rf /var/lib/apt/lists/* \
- && useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin opsdesk
+# Appliquer les correctifs Alpine disponibles et créer un utilisateur non privilégié.
+# L'image de build utilise le même système musl pour les roues Python natives.
+RUN apk upgrade --no-cache \
+ && addgroup -g 10001 -S opsdesk \
+ && adduser -S -D -H -u 10001 -G opsdesk opsdesk
 # Supprimer pip de l'image d'exécution : les dépendances sont déjà installées.
 RUN /usr/local/bin/python -m pip uninstall -y pip
 COPY --from=build /opt/venv /opt/venv
