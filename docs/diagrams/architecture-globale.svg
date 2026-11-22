@@ -4,6 +4,7 @@
 <desc id="desc">Architecture cible Fedora KVM avec Terraform local, trois VM Rocky, HTTPS, GHCR privé, sauvegardes Borg, K3s et supervision. Infrastructure non déployée.</desc>
 <defs><marker id="arr-0" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 7 4 L 1 7 Z" fill="#356CE5"/></marker><marker id="arr-1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 7 4 L 1 7 Z" fill="#108B81"/></marker><marker id="arr-2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 7 4 L 1 7 Z" fill="#7557D8"/></marker><marker id="arr-3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 7 4 L 1 7 Z" fill="#B46B17"/></marker><marker id="arr-4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 7 4 L 1 7 Z" fill="#354965"/></marker></defs>
 <rect x="0" y="0" width="1400" height="910" fill="#F5F8FC"/>
+<rect x="47" y="321" width="1306" height="514" rx="22" ry="22" fill="#EFF4FA" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
 <rect x="0" y="0" width="1400" height="120" rx="0" ry="0" fill="#FFFFFF" stroke="none" stroke-width="1.25"/>
 <rect x="55" y="34" width="245" height="29" rx="10" ry="10" fill="#E8F0FF" stroke="none" stroke-width="1.25"/>
 <text x="177.5" y="52.6" fill="#356CE5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">OPS DESK  /  ARCHITECTURE V2</text>
@@ -25,7 +26,7 @@
 <polyline points="1110,277 1110,331 1180,331 1180,366" fill="none" stroke="#7557D8" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 7" marker-end="url(#arr-2)"/>
 <rect x="1137" y="297" width="170" height="25" rx="8" ry="8" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="0.7"/>
 <text x="1222" y="313.6" fill="#7557D8" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">Pull HTTPS sortant</text>
-<rect x="47" y="321" width="1306" height="514" rx="22" ry="22" fill="#EFF4FA" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
+
 <text x="72" y="359.7" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">HÔTE FEDORA 45  ·  KVM / LIBVIRT</text>
 <text x="821" y="356.2" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="15" font-weight="600" text-anchor="start">Réseau NAT opsdesk-lan  ·  192.168.150.0/24</text>
 <rect x="72" y="386" width="290" height="357" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>

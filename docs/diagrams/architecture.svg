@@ -4,6 +4,7 @@
 <desc id="desc">Architecture cible Fedora KVM avec Terraform local, trois VM Rocky, HTTPS, GHCR privé, sauvegardes Borg, K3s et supervision. Infrastructure non déployée.</desc>
 <defs><marker id="arr-0" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 7 4 L 1 7 Z" fill="#356CE5"/></marker><marker id="arr-1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 7 4 L 1 7 Z" fill="#108B81"/></marker><marker id="arr-2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 7 4 L 1 7 Z" fill="#7557D8"/></marker><marker id="arr-3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 7 4 L 1 7 Z" fill="#B46B17"/></marker><marker id="arr-4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 7 4 L 1 7 Z" fill="#354965"/></marker></defs>
 <rect x="0" y="0" width="1740" height="1200" fill="#F5F8FC"/>
+<rect x="35" y="302" width="1670" height="822" rx="22" ry="22" fill="#EFF4FA" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
 <rect x="0" y="0" width="1740" height="124" rx="0" ry="0" fill="#FFFFFF" stroke="none" stroke-width="1.25"/>
 <rect x="55" y="29" width="263" height="29" rx="10" ry="10" fill="#E8F0FF" stroke="none" stroke-width="1.25"/>
 <text x="186.5" y="47.6" fill="#356CE5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">OPS DESK  /  ARCHITECTURE V2</text>
@@ -25,7 +26,7 @@
 <polyline points="1435,258 1435,352" fill="none" stroke="#7557D8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 7" marker-end="url(#arr-2)"/>
 <rect x="1458" y="289" width="187" height="25" rx="8" ry="8" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="0.7"/>
 <text x="1551.5" y="305.6" fill="#7557D8" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">Pull HTTPS / digest</text>
-<rect x="35" y="302" width="1670" height="822" rx="22" ry="22" fill="#EFF4FA" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
+
 <text x="63" y="337.7" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="start">HÔTE FEDORA 45  ·  opsdesk-lan 192.168.150.0/24</text>
 <text x="1200" y="333.8" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" font-weight="600" text-anchor="start">Rocky Linux 10.2  ·  SELinux Enforcing / firewalld</text>
 <rect x="64" y="377" width="380" height="301" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25" stroke-dasharray="8 6"/>
@@ -64,15 +65,15 @@
 <rect x="494" y="526" width="208" height="147" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="509" y="543" width="5" height="113" rx="3" ry="3" fill="#356CE5" stroke="none" stroke-width="1.25"/>
 <text x="525" y="559.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">NGINX / REACT</text>
-<text x="525" y="590.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">HTTPS :443  ·  seul accès navigateur</text>
+<text x="525" y="590.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">HTTPS :443  ·  frontal</text>
 <rect x="742" y="526" width="205" height="147" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="757" y="543" width="5" height="113" rx="3" ry="3" fill="#7557D8" stroke="none" stroke-width="1.25"/>
 <text x="773" y="559.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">FastAPI</text>
-<text x="773" y="590.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">API :8000  ·  réseau Compose uniquement</text>
+<text x="773" y="590.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Port 8000  ·  interne</text>
 <rect x="986" y="526" width="198" height="147" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="1001" y="543" width="5" height="113" rx="3" ry="3" fill="#108B81" stroke="none" stroke-width="1.25"/>
 <text x="1017" y="559.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">PostgreSQL 17</text>
-<text x="1017" y="590.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">DB :5432  ·  aucune publication hôte</text>
+<text x="1017" y="590.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Port 5432  ·  interne</text>
 <polyline points="702,600 742,600" fill="none" stroke="#356CE5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arr-0)"/>
 <rect x="694" y="569" width="84" height="25" rx="8" ry="8" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="0.7"/>
 <text x="736" y="585.6" fill="#356CE5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">/api</text>
@@ -90,7 +91,7 @@
 <rect x="986" y="714" width="198" height="130" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="1001" y="731" width="5" height="96" rx="3" ry="3" fill="#108B81" stroke="none" stroke-width="1.25"/>
 <text x="1017" y="747.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">Stockage</text>
-<text x="1017" y="778.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Volume PostgreSQL persistant</text>
+<text x="1017" y="778.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Volume PG persistant</text>
 <rect x="494" y="879" width="690" height="106" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="509" y="896" width="5" height="72" rx="3" ry="3" fill="#356CE5" stroke="none" stroke-width="1.25"/>
 <text x="525" y="912.9" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="700" text-anchor="start">MÉTRIQUES PRIVÉES</text>
@@ -118,13 +119,13 @@
 <text x="1306" y="887.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Même digest  ·  k6</text>
 <rect x="1461" y="823" width="172" height="120" rx="14" ry="14" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <rect x="1476" y="840" width="5" height="86" rx="3" ry="3" fill="#108B81" stroke="none" stroke-width="1.25"/>
-<text x="1492" y="856.5" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" font-weight="700" text-anchor="start">PostgreSQL test</text>
+<text x="1492" y="856.5" fill="#172640" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" font-weight="700" text-anchor="start">PostgreSQL</text>
 <text x="1492" y="887.5" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" text-anchor="start">Base indépendante</text>
 <polyline points="444,525 472,525" fill="none" stroke="#356CE5" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 7" marker-end="url(#arr-0)"/>
 <polyline points="444,856 472,856" fill="none" stroke="#7557D8" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 7" marker-end="url(#arr-2)"/>
 <polyline points="1210,932 1224,932 1224,623 1235,623" fill="none" stroke="#356CE5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 7" marker-end="url(#arr-0)"/>
-<rect x="1213" y="687" width="105" height="25" rx="8" ry="8" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="0.7"/>
-<text x="1265.5" y="703.6" fill="#356CE5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">Scrape</text>
+
+
 <text x="73" y="1109.2" fill="#617189" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="15" font-weight="600" text-anchor="start">Frontières VM : cibles à créer   ·   Pointillés : flux d&apos;exploitation futurs   ·   Aucune exposition directe de :8000 / :5432</text>
 <rect x="67" y="1138" width="1606" height="39" rx="9" ry="9" fill="#FFFFFF" stroke="#CAD5E5" stroke-width="1.25"/>
 <text x="83" y="1161.8" fill="#354965" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" font-weight="600" text-anchor="start">L&apos;application V2 est testée en CI · Les rôles Terraform/Ansible, flux TLS, sauvegardes Borg, K3s et notifications restent à valider sur les VM</text>
