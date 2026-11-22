@@ -20,13 +20,13 @@ jobs:
           persist-credentials: false
       - name: Install SVG renderer
         run: python3 -m pip install --user cairosvg==2.7.1
-      - name: Rasterize both Architecture V2 diagrams
+      - name: Rasterize only the public global Architecture V2 diagram
         run: |
           mkdir -p diagram-previews
           python3 - <<'PY'
           from pathlib import Path
           import cairosvg
-          for name in ("architecture-globale", "architecture"):
+          for name in ("architecture-globale",):
               src = Path("docs/diagrams") / f"{name}.svg"
               out = Path("diagram-previews") / f"{name}.png"
               cairosvg.svg2png(url=str(src), write_to=str(out))
@@ -37,7 +37,7 @@ jobs:
       - name: Attach rasterized previews (not deployment evidence)
         uses: actions/upload-artifact@v4
         with:
-          name: architecture-v2-svg-previews
+          name: architecture-globale-public-preview
           path: diagram-previews/
           if-no-files-found: error
           retention-days: 14
