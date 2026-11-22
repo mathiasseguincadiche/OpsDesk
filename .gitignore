@@ -52,6 +52,7 @@ secrets/
 *.db
 .ruff_cache/
 frontend/dist/
+*.tsbuildinfo
 .claude/
 
 # Plans Terraform enregistrés : peuvent contenir des données sensibles.
