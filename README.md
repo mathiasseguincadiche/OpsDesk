@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="docs/images/opsdesk-hero.svg" alt="OpsDesk : concevoir, automatiser et exploiter une infrastructure Linux — identité graphique du laboratoire, non une preuve de déploiement." width="100%">
-</p>
-
 # OpsDesk
 
 **Ingénierie DevOps / InfraOps — construire et exploiter l'infrastructure d'une application de tickets IT.**
