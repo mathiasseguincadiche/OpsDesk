@@ -19,6 +19,7 @@ Le présent dossier documente le **produit** : son contrat, son architecture, sa
 
 ## Qualifier et faire évoluer
 
+- [CI applicative](ci-applicative.md) — tests API, build frontend et smoke sur runners jetables.
 - [État réel](../STATUS.md) — avancement, contrôles effectués et limites.
 - [Preuves techniques](preuves.md) — comment interpréter les rapports et reproduire les contrôles.
 - [Feuille de route technique](../ROADMAP.md) — composants à construire, jalons et conditions de réception.

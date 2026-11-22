@@ -1,0 +1,115 @@
+name: Application quality (no deployment)
+
+# Vérifier le socle fourni sur chaque changement applicatif, sans publier ni déployer.
+on:
+  pull_request:
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'compose.yaml'
+      - '.env.example'
+      - 'scripts/smoke.py'
+      - 'scripts/check_auth_throttle.py'
+      - '.github/workflows/application-quality.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'compose.yaml'
+      - '.env.example'
+      - 'scripts/smoke.py'
+      - 'scripts/check_auth_throttle.py'
+      - '.github/workflows/application-quality.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: API — tests SQLite et PostgreSQL
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: opsdesk_test
+          POSTGRES_USER: opsdesk
+          POSTGRES_PASSWORD: ci-only-password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U opsdesk -d opsdesk_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 15
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Installer les dépendances de test
+        run: python -m pip install -r requirements-dev.txt
+      - name: Vérifier la qualité du code
+        run: python -m ruff check app tests
+      - name: Tester l'API avec SQLite
+        env:
+          TEST_DATABASE_URL: 'sqlite:///:memory:'
+        run: python -m pytest -q tests
+      - name: Tester l'API avec PostgreSQL 17
+        env:
+          TEST_DATABASE_URL: 'postgresql+psycopg://opsdesk:ci-only-password@127.0.0.1:5432/opsdesk_test'
+        run: python -m pytest -q tests
+
+  frontend:
+    name: Interface — typecheck et build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Installer les dépendances verrouillées
+        run: npm ci --no-audit --no-fund
+      - name: Vérifier TypeScript et construire l'interface
+        run: npm run build
+
+  compose:
+    name: Conteneurs — build, sonde et parcours HTTP
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Vérifier le schéma Docker Compose
+        run: docker compose config -q
+      - name: Construire et démarrer la pile jetable
+        run: docker compose up -d --build --wait --wait-timeout 180
+      - name: Rejouer le parcours métier de démonstration
+        run: python3 scripts/smoke.py
+      - name: Vérifier la limitation des tentatives de connexion
+        run: python3 scripts/check_auth_throttle.py
+      - name: Afficher les journaux si une étape a échoué
+        if: failure()
+        run: docker compose logs --no-color --tail=100
+      - name: Supprimer les données jetables
+        if: always()
+        run: docker compose down -v --remove-orphans

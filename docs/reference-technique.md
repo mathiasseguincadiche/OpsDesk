@@ -41,7 +41,7 @@ Les noms sont ceux des services de `compose.yaml` ; Compose nomme les conteneurs
 
 - **Configuration par variables d'environnement.** Chaque secret accepte aussi la forme `*_FILE` (`DB_PASSWORD_FILE`, `JWT_SECRET_FILE`, `ADMIN_PASSWORD_FILE`), lue depuis un fichier : c'est la forme attendue des secrets de Compose et de Kubernetes.
 - **L'API attend la base** au démarrage (30 tentatives espacées de 2 secondes), puis crée le schéma et le premier administrateur. L'opération est rejouable sans effet, et un verrou consultatif PostgreSQL évite les conflits quand plusieurs instances démarrent ensemble.
-- **L'API ne garde aucun état en mémoire** (sessions par jeton JWT) : plusieurs instances peuvent tourner côte à côte, à condition de partager le même `JWT_SECRET`. Il est obligatoire quand `ENVIRONMENT=production`.
+- **Sessions JWT sans état côté serveur** : plusieurs instances peuvent fonctionner avec le même `JWT_SECRET`. Chaque jeton est lié au hachage courant du mot de passe par HMAC : après un changement de mot de passe, les anciens jetons sont rejetés et l'utilisateur doit se reconnecter. `JWT_SECRET` est obligatoire en production.
 - **Le frontend résout l'adresse de l'API à chaque requête**, toutes les 10 secondes au plus (`resolver` de nginx). Il démarre même si l'API n'est pas encore là, et suit sa nouvelle adresse quand elle est recréée. L'adresse vient de `BACKEND_URL` (par défaut `http://backend:8000`).
 - **En-têtes de sécurité** : politique de sécurité du contenu (CSP) stricte, `X-Frame-Options`, `nosniff`. Images non-root, ports non privilégiés.
 
@@ -54,9 +54,9 @@ Les noms sont ceux des services de `compose.yaml` ; Compose nomme les conteneurs
 | `JWT_SECRET` | aléatoire en développement | Secret de signature des jetons, 32 caractères au minimum |
 | `JWT_EXPIRE_MINUTES` | `720` | Durée d'une session |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | `admin@opsdesk.local` / — | Premier administrateur, créé si aucun n'existe |
-| `SEED_DEMO_DATA` | `true` | Données de démonstration si la base est vide |
+| `SEED_DEMO_DATA` | `true` | Données fictives uniquement en développement ; **obligatoirement `false` en production (sinon démarrage refusé)** |
 | `ALLOW_REGISTRATION` | `true` | Inscription libre depuis la page de connexion |
-| `ENVIRONMENT` | `development` | `production` exige JWT (32 caractères au moins), admin et DB (sauf `DATABASE_URL` explicite), distincts et non factices |
+| `ENVIRONMENT` | `development` | `production` exige des secrets distincts, non factices et `SEED_DEMO_DATA=false` |
 | `LOG_LEVEL` / `LOG_FORMAT` | `INFO` / `json` | Journaux (`json` ou `text`) |
 | `DB_POOL_SIZE` | `5` | Taille du pool de connexions |
 | `CORS_ORIGINS` | vide | Origines autorisées si le frontend est servi sur un autre domaine |

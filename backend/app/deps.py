@@ -1,6 +1,7 @@
 """FastAPI dependencies: database session and authenticated user."""
 from __future__ import annotations
 
+import hmac
 from typing import Annotated
 
 import jwt
@@ -10,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from .db import get_db
 from .models import User
-from .security import decode_access_token
+from .security import decode_access_token, password_fingerprint
 
 bearer = HTTPBearer(auto_error=False)
 
@@ -34,6 +35,9 @@ def current_user(
         raise unauthorized from None
     user = db.get(User, user_id)
     if user is None or not user.is_active:
+        raise unauthorized
+    # Un changement de mot de passe invalide les anciens jetons sur toutes les instances.
+    if not hmac.compare_digest(str(payload.get("pwd", "")), password_fingerprint(user.password_hash)):
         raise unauthorized
     return user
 

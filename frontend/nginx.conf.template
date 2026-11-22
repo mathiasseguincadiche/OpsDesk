@@ -1,5 +1,13 @@
 # OpsDesk frontend — nginx (non-root, port 8080).
 # Au démarrage, envsubst remplace ${BACKEND_URL} par l'adresse réelle de l'API.
+# Limiter par adresse IP les rafales de connexion et d'inscription.
+# Avec un proxy frontal, contrôler son adresse de confiance avant d'utiliser real_ip.
+map $uri $opsdesk_auth_limit_key {
+    default "";
+    ~^/api/auth/(login|register)$ $binary_remote_addr;
+}
+limit_req_zone $opsdesk_auth_limit_key zone=opsdesk_auth:10m rate=10r/m;
+
 server {
     listen 8080;
     listen [::]:8080;
@@ -24,6 +32,9 @@ server {
 
     # Transmettre à l'API les routes métier, les sondes et la version.
     location ~ ^/(api|health|version)(/|$) {
+        # Les autres routes conservent une clé vide et ne sont pas limitées.
+        limit_req zone=opsdesk_auth burst=10 nodelay;
+        limit_req_status 429;
         set $backend "${BACKEND_URL}";
         proxy_pass $backend;
         proxy_http_version 1.1;

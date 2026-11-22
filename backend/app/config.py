@@ -98,6 +98,9 @@ def _require_production_secret(name: str, minimum: int = 1) -> str:
 
 
 def _validate_production_settings(settings: Settings) -> None:
+    # Fail closed : un compte de démonstration possède un mot de passe public.
+    if settings.seed_demo_data:
+        raise RuntimeError("SEED_DEMO_DATA doit être désactivé (false) en production.")
     jwt = _require_production_secret("JWT_SECRET", minimum=32)
     admin = _require_production_secret("ADMIN_PASSWORD")
     if jwt == admin:

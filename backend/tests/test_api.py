@@ -130,7 +130,10 @@ def test_user_admin(client, admin, user):
 def test_change_password(client, user):
     assert client.put("/api/auth/me/password", headers=user, json={"current_password": "bad", "new_password": "NewPass1234"}).status_code == 400
     assert client.put("/api/auth/me/password", headers=user, json={"current_password": "UserPass123", "new_password": "NewPass1234"}).status_code == 204
-    login(client, "user@test.local", "NewPass1234")
+    # Tous les anciens jetons deviennent invalides dès ce changement.
+    assert client.get("/api/auth/me", headers=user).status_code == 401
+    fresh = login(client, "user@test.local", "NewPass1234")
+    assert client.get("/api/auth/me", headers=fresh).status_code == 200
 
 
 def test_demo_seed(client):

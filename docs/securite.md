@@ -1,6 +1,6 @@
 # Sécurité d'OpsDesk
 
-Ce document dit ce que l'application protège, comment, et ce qu'elle laisse à l'infrastructure. Mise à jour : 19 novembre 2026 (Martinique), version 2.0.0, recette de stabilisation sur runner.
+Ce document dit ce que l'application protège, comment, et ce qu'elle laisse à l'infrastructure. Mise à jour : 22 novembre 2026 (Martinique), version 2.0.0, recette de stabilisation historique et nouvelle CI applicative sur runner.
 
 ## Le cadre
 
@@ -16,6 +16,8 @@ OpsDesk est un service de laboratoire : **données fictives, aucune exposition s
 | Changement de statut abusif | Cycle de vie et droits par rôle vérifiés côté serveur ; sinon `403` ou `409` | `backend/app/workflow.py` |
 | Mots de passe volés en base | Empreinte PBKDF2-SHA256, sel aléatoire, 390 000 itérations par défaut ; jamais de mot de passe en clair | `backend/app/security.py` |
 | Compte compromis | Un administrateur peut désactiver un compte : il ne peut plus se connecter, et ses jetons sont refusés | `routers/users.py`, `deps.py` |
+| Mot de passe changé | Les anciens JWT sont rejetés grâce à une empreinte HMAC liée au hachage actuel du mot de passe | `backend/app/security.py`, `backend/app/deps.py` |
+| Rafale de connexions | Le frontend Nginx limite par IP les requêtes de connexion/inscription (HTTP `429`), sur son propre point d'entrée | `frontend/nginx.conf.template` |
 | Données invalides ou démesurées | Validation de chaque champ (longueurs, valeurs permises) ; sinon `422` | `backend/app/schemas.py` |
 | Injection SQL | Requêtes construites par SQLAlchemy, toujours paramétrées | `backend/app/` |
 | Fuite d'informations par les erreurs | Erreurs internes réduites à « Erreur interne du serveur. » ; détail seulement dans les journaux | `backend/app/main.py` |
@@ -34,7 +36,7 @@ Les refus (`401`, `403`, compte désactivé, visibilité par rôle) sont couvert
 | `JWT_SECRET` | Signature des jetons | 32 caractères au moins ; **obligatoire** quand `ENVIRONMENT=production` ; le changer déconnecte tout le monde |
 | `ADMIN_PASSWORD` | Premier administrateur | Utilisé une seule fois, à la création du compte |
 
-En mode `production`, les valeurs prédéfinies de démonstration, les secrets manquants et la réutilisation d'un secret sont refusés pour les variables JWT, admin et DB (hors `DATABASE_URL`, dont les identifiants restent à contrôler séparément). La pile locale de référence démarre sans `.env` en mode `development`, avec des valeurs publiques et des comptes fictifs. Ses ports sont liés à la boucle locale ; ne pas l'exposer sur le réseau. Désactiver `SEED_DEMO_DATA` et `ALLOW_REGISTRATION` pour une cible non démonstrative.
+En mode `production`, les valeurs prédéfinies de démonstration, les secrets manquants et la réutilisation d'un secret sont refusés pour les variables JWT, admin et DB (hors `DATABASE_URL`, dont les identifiants restent à contrôler séparément). La pile locale de référence démarre sans `.env` en mode `development`, avec des valeurs publiques et des comptes fictifs. Ses ports sont liés à la boucle locale ; ne pas l'exposer sur le réseau. En mode `production`, `SEED_DEMO_DATA=true` provoque désormais **un refus de démarrage** : définir explicitement `SEED_DEMO_DATA=false`. Désactiver aussi `ALLOW_REGISTRATION` si l'inscription libre n'est pas nécessaire.
 
 Chaque secret accepte une forme `*_FILE` qui lit sa valeur dans un fichier : c'est la forme attendue des secrets de Compose et de Kubernetes. La règle est de ne placer aucun secret réel dans les images ni dans le dépôt (un scan ponctuel limité à la v2 a été exécuté ; il ne couvre pas l'historique Git ni les futurs secrets d'infrastructure) : `.env` et les dossiers `secrets/` sont exclus par `.gitignore`, seul `.env.example` est versionné ; la configuration Compose de référence utilise des valeurs publiques de démonstration, jamais des secrets réels.
 
@@ -53,12 +55,12 @@ L'application ne peut pas se protéger seule. Les décisions suivantes sont pris
 ## Limites connues
 
 - Le [scan final](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44649917348) des images exécutées indique 47 HIGH sur l'API (11 CVE Debian distinctes, aucune version corrigée indiquée), zéro occurrence sur le frontend, et 1 CRITICAL + 26 HIGH sur PostgreSQL dans le binaire `gosu`. Le retrait de pip de l'image d'exécution a supprimé les cinq HIGH Python observées précédemment. L'analyse complémentaire de `gosu` par govulncheck ne détecte aucun symbole vulnérable utilisé ; ce constat ne constitue ni une garantie d'innocuité ni une suppression des alertes Trivy. PostgreSQL officiel est conservé. Aucun secret détecté dans le périmètre scanné (hors historique Git). [Suivi #51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) ; [preuves](../STATUS.md). Les correctifs amont devront être intégrés lorsqu'ils seront disponibles.
-- Pas de limitation du nombre de tentatives de connexion.
-- Pas d'authentification à deux facteurs ni de renouvellement automatique du jeton.
+- Limitation Nginx par adresse IP du pair, vérifiée sur la pile locale : elle ne protège pas un accès direct à l'API et ne remplace pas un dispositif multi-instance. Revoir les IP de confiance en présence d'un frontal.
+- Pas d'authentification à deux facteurs ni de renouvellement automatique du jeton. Les JWT restent conservés dans `localStorage` ; le modèle d'authentification/cookies/CSRF doit être revu avant toute exposition publique.
 - Pas de HTTPS dans l’application : il se termine devant elle. Un frontal TLS privé et des règles de filtrage doivent être définis et vérifiés avant déploiement. Ce contrôle reste à réaliser.
 - Le port 8000 ouvert à `srv-k3s` donne accès à toute l'API, pas seulement à `/metrics` (risque ouvert à traiter avant le déploiement).
 
-Ces limites interdisent une exposition sur Internet en l'état ; elles sont acceptables pour un laboratoire aux données fictives.
+Ces limites interdisent une exposition sur Internet en l'état ; elles sont acceptables pour un laboratoire isolé aux données fictives. Le traitement de la chaîne de production est suivi dans [#68](https://github.com/mathiasseguincadiche/OpsDesk/issues/68).
 
 ## Historique
 
