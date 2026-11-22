@@ -24,6 +24,6 @@ Avant une démonstration vivante, vérifier l’identité, l’accessibilité et
 - Qu’arrive-t-il si live passe mais ready échoue ?
 - Pourquoi un rollback de l’image ne restaure-t-il pas les tickets ?
 - Comment relier ce qui est servi à un commit et à une image précise ?
-- Pourquoi reprendre Terraform/Ansible/K3s dans plusieurs projets ? Parce qu’un besoin se retrouve dans plusieurs contextes ; adapter cibles, paramètres, droits, contrôles et reprise vaut mieux qu’une diversité décorative.
+- Comment les compétences acquises dans OpsDesk sont-elles transférables ? En distinguant les principes réutilisables (IaC, idempotence, observabilité, reprise) des paramètres propres au laboratoire (réseau, versions, droits, stockage). La transférabilité se démontre en adaptant une procédure à une nouvelle cible, pas en citant seulement les outils.
 
 [État réel](../STATUS.md) · [Architecture](architecture.md) · [Preuves](preuves.md)
