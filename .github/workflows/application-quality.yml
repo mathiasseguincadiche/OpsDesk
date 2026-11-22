@@ -132,7 +132,7 @@ jobs:
           python3 -m venv /tmp/opsdesk-e2e
           /tmp/opsdesk-e2e/bin/python -m pip install playwright==1.65.2
           /tmp/opsdesk-e2e/bin/python -m playwright install --with-deps chromium
-      - name: Vérifier la vraie interface : cookies, CSRF, tickets et déconnexion
+      - name: "Vérifier la vraie interface : cookies, CSRF, tickets et déconnexion"
         run: /tmp/opsdesk-e2e/bin/python scripts/check_browser_e2e.py
       - name: Joindre les captures navigateur
         if: always()
