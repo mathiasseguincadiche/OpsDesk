@@ -1,0 +1,74 @@
+name: One-time purge of historical detailed-diagram artifacts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/privacy-purge-architecture-artifacts.yml
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  purge-legacy-architecture-previews:
+    if: github.repository == 'mathiasseguincadiche/OpsDesk' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Delete only archived combined Architecture V2 previews
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from urllib.request import Request, urlopen
+
+          repo = os.environ['REPO']
+          token = os.environ['GH_TOKEN']
+          assert repo == 'mathiasseguincadiche/OpsDesk'
+          api = f'https://api.github.com/repos/{repo}'
+          headers = {
+              'Authorization': f'Bearer {token}',
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+
+          def call(path, method='GET'):
+              request = Request(api + path, headers=headers, method=method)
+              with urlopen(request, timeout=30) as response:
+                  payload = response.read()
+                  return json.loads(payload) if payload else None
+
+          def list_artifacts():
+              artifacts = []
+              for page in range(1, 101):
+                  result = call(f'/actions/artifacts?per_page=100&page={page}')
+                  batch = result.get('artifacts', [])
+                  artifacts.extend(batch)
+                  if len(batch) < 100:
+                      return artifacts
+              raise RuntimeError('Unexpectedly many pages; manual review required')
+
+          target_name = 'architecture-v2-svg-previews'
+          matching = [
+              a for a in list_artifacts()
+              if a.get('name') == target_name and not a.get('expired', False)
+          ]
+          print(f'Targeted historical preview artifacts: {len(matching)}')
+          for artifact in matching:
+              ident = int(artifact['id'])
+              call(f'/actions/artifacts/{ident}', method='DELETE')
+              print(f'Deleted historical preview artifact {ident}')
+
+          remaining = [
+              a['id'] for a in list_artifacts()
+              if a.get('name') == target_name and not a.get('expired', False)
+          ]
+          if remaining:
+              raise SystemExit(f'Failed to purge {len(remaining)} historical preview artifacts')
+          print(f'Verified: no remaining {target_name} artifacts')
+          PY
