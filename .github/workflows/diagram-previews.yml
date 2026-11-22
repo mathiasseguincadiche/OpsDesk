@@ -1,0 +1,43 @@
+name: Architecture V2 — SVG previews
+
+on:
+  pull_request:
+    paths:
+      - "docs/diagrams/**"
+      - ".github/workflows/diagram-previews.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install SVG renderer
+        run: python3 -m pip install --user cairosvg==2.7.1
+      - name: Rasterize both Architecture V2 diagrams
+        run: |
+          mkdir -p diagram-previews
+          python3 - <<'PY'
+          from pathlib import Path
+          import cairosvg
+          for name in ("architecture-globale", "architecture"):
+              src = Path("docs/diagrams") / f"{name}.svg"
+              out = Path("diagram-previews") / f"{name}.png"
+              cairosvg.svg2png(url=str(src), write_to=str(out))
+              if out.stat().st_size < 1500:
+                  raise SystemExit(f"PNG de faible taille : {out}")
+              print(f"{out}: {out.stat().st_size} bytes")
+          PY
+      - name: Attach rasterized previews (not deployment evidence)
+        uses: actions/upload-artifact@v4
+        with:
+          name: architecture-v2-svg-previews
+          path: diagram-previews/
+          if-no-files-found: error
+          retention-days: 14
