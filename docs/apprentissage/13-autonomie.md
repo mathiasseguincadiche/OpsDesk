@@ -21,6 +21,10 @@ Suivre une fiche guidée prouve qu'on sait exécuter. En poste, personne ne donn
 
 Toute aide est déclarée : A0 (documentation officielle seulement), A1 (ressources générales), A2 (indice ciblé), A3 (solution partielle comprise et adaptée). Une aide déclarée ne disqualifie pas ; une aide cachée retire sa valeur à la preuve.
 
+## Comprendre le mécanisme et ses limites
+
+**Ce qui distingue autonomie et répétition.** Réussir une procédure déjà guidée prouve une exécution dans un contexte connu. Face à une contrainte nouvelle, expliciter les inconnues, comparer des options, prévoir l'échec et vérifier le comportement réel démontre davantage. **Limite :** une auto-évaluation, même étayée, ne remplace pas la vérification séparée prévue pour L3.
+
 ## Ce qu'il faut obtenir
 
 Une tâche jamais faite, parmi celles-ci ou de taille comparable :
