@@ -43,10 +43,11 @@ jobs:
         run: docker compose config -q
       - name: Construire les images et récupérer PostgreSQL
         run: |
-          docker compose build backend frontend
+          docker compose build backend frontend db
+          # L'image officielle reste scannée pour comparaison, sans l'exécuter en CI.
           docker pull docker.io/library/postgres:17-alpine
           mkdir -p scan-results
-          for ref in localhost/opsdesk-api:2.0.0 localhost/opsdesk-frontend:2.0.0 docker.io/library/postgres:17-alpine; do
+          for ref in localhost/opsdesk-api:2.0.0 localhost/opsdesk-frontend:2.0.0 localhost/opsdesk-db:17-alpine-secure docker.io/library/postgres:17-alpine; do
             echo "$ref" >> scan-results/identifiants-images.txt
             docker image inspect --format '{{.Id}} | {{json .RepoDigests}}' "$ref" >> scan-results/identifiants-images.txt
           done
@@ -60,11 +61,12 @@ jobs:
           trivy --version
           trivy image --scanners vuln --image-src docker --severity HIGH,CRITICAL --format json --output scan-results/api.json localhost/opsdesk-api:2.0.0
           trivy image --scanners vuln --image-src docker --severity HIGH,CRITICAL --format json --output scan-results/frontend.json localhost/opsdesk-frontend:2.0.0
-          trivy image --scanners vuln --image-src docker --severity HIGH,CRITICAL --format json --output scan-results/postgresql.json docker.io/library/postgres:17-alpine
+          trivy image --scanners vuln --image-src docker --severity HIGH,CRITICAL --format json --output scan-results/postgresql.json localhost/opsdesk-db:17-alpine-secure
+          trivy image --scanners vuln --image-src docker --severity HIGH,CRITICAL --format json --output scan-results/postgresql-amont.json docker.io/library/postgres:17-alpine
       - name: Valider la structure JSON, signaler les risques et écrire le résumé
         run: |
           python3 -m unittest discover -s scripts -p 'test_summarize_image_scans.py'
-          python3 scripts/summarize_image_scans.py scan-results/api.json scan-results/frontend.json scan-results/postgresql.json --output scan-results/resume.md
+          python3 scripts/summarize_image_scans.py scan-results/api.json scan-results/frontend.json scan-results/postgresql.json scan-results/postgresql-amont.json --output scan-results/resume.md
       - name: Conserver les rapports et les identifiants exacts
         if: always()
         uses: actions/upload-artifact@v4
