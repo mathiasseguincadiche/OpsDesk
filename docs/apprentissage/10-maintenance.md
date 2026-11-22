@@ -17,6 +17,10 @@ Un service vit longtemps après sa mise en service : correctifs, redémarrages, 
 - Le retour arrière applicatif redéploie l'image précédente mais ne restaure pas les données. Vérifier la compatibilité du schéma avant le changement ; si elle n'est pas établie, prévoir une procédure de migration/reprise spécifique et ne pas improviser une restauration en écrasant les écritures.
 - `dnf needs-restarting -r` dit si un redémarrage est nécessaire après les mises à jour.
 
+## Comprendre le mécanisme et ses limites
+
+**Mesurer l'effet plutôt que la commande.** Un `dnf upgrade` terminé sans erreur ne démontre pas le retour des utilisateurs au service. Pendant une maintenance préparée, relève une sonde depuis une autre machine, puis vérifie `/version` et un ticket témoin. La durée d'indisponibilité mesurée dépend de la fréquence de la sonde : documente cette résolution au lieu de présenter une précision trompeuse. **Limite :** revenir à l'image précédente ne remet pas la base à son état antérieur.
+
 ## Ce qu'il faut obtenir
 
 - **Maintenance 1** : mises à jour de Rocky Linux sur `srv-app`, redémarrage si nécessaire, retour du service sans intervention.
