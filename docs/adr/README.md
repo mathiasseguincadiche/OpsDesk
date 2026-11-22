@@ -1,27 +1,26 @@
-# Registre des décisions — OpsDesk Architecture V2
+# Registre public des décisions — OpsDesk Architecture V2
 
-**Architecture V2 : validée en conception le 22 novembre 2026.** L'ancienne cible était appelée « infrastructure V1 » ; cette nouvelle architecture la remplace. **Application OpsDesk V2** désigne le socle existant : la version applicative et la version d'architecture ne sont pas interchangeables.
+**Sept décisions validées en conception.** Elles décrivent les choix d'ingénierie et leurs compromis sans révéler les paramètres précis du laboratoire.
 
-| ADR | Choix validé |
+| Décision | Sujet |
 | --- | --- |
-| [ADR-01](ADR-01-terraform-libvirt-state.md) | Terraform sur Fedora, libvirt et état protégé |
-| [ADR-02](ADR-02-ci-ghcr-digests.md) | Livraison GHCR privée, trois images et digests immuables |
-| [ADR-03](ADR-03-administration-os.md) | SSH cloisonné, durcissement Rocky, SELinux et firewalld |
-| [ADR-04](ADR-04-reseau-tls.md) | Réseau privé, HTTPS, frontières et ports |
-| [ADR-05](ADR-05-k3s-observabilite.md) | K3s, copie d'essai, Prometheus/Grafana et k6 |
-| [ADR-06](ADR-06-sauvegardes-secrets.md) | Ansible Vault, réception restreinte et sauvegardes Borg chiffrées |
-| [ADR-07](ADR-07-perimetre-preuves.md) | Périmètre Architecture V2 et validation par preuves |
+| [ADR-01](ADR-01-terraform-libvirt-state.md) | Provisionnement local et état Terraform protégé |
+| [ADR-02](ADR-02-ci-ghcr-digests.md) | CI, registre privé et livraison immuable |
+| [ADR-03](ADR-03-administration-os.md) | Administration cloisonnée et durcissement Linux |
+| [ADR-04](ADR-04-reseau-tls.md) | Réseau privé, HTTPS et isolation des services |
+| [ADR-05](ADR-05-k3s-observabilite.md) | Kubernetes d'essai et supervision |
+| [ADR-06](ADR-06-sauvegardes-secrets.md) | Secrets, sauvegardes et restauration |
+| [ADR-07](ADR-07-perimetre-preuves.md) | Frontières de validation et publication responsable |
 
-## Compléments nécessaires
+## Compléments publics
 
-- [Matrice des flux V2](../architecture-v2-flux.md) : adresses, ports, origines autorisées, refus obligatoires.
-- [Plan de déploiement V2](../architecture-v2-deploiement.md) : phases 0 à 6 et quatre épreuves finales.
-- [Architecture applicative](../architecture.md) : fonctionnement du service déjà testé et distinction entre application et infrastructure.
-- [État vérifié](../../STATUS.md) : seul document qui précise ce qui a été exécuté réellement.
-- [Schémas Draw.io/SVG](../diagrams/README.md) : deux vues V2 construites à partir de l'implantation graphique V1, avec sources éditables et exports SVG correspondants ; le contrôle graphique natif final reste une étape de recette, distincte de la validation des ADR.
+- [Schéma global V2](../diagrams/architecture-globale.svg) et [source Draw.io](../diagrams/architecture-globale.drawio).
+- [Principes de flux](../architecture-v2-flux.md) : frontières et politiques générales.
+- [Phases 0 à 6](../architecture-v2-deploiement.md) : enchaînement et preuves sans procédures sensibles.
+- [Statut des réalisations](../../STATUS.md).
 
-## Frontières de responsabilité
+## Répartition des informations
 
-GitHub héberge produit, code d'infrastructure, décisions, procédures et preuves. Notion conserve les cours, exercices, corrigés, évaluations et « Installation des outils ». Aucun nouveau contenu pédagogique n'est importé dans GitHub.
+GitHub publie le code applicatif, les preuves expurgées, les principes des ADR et la **vue globale**. Le détail d'exploitation, le schéma technique personnel, les adresses et règles réseau, les sauvegardes et les inventaires sont conservés séparément dans un espace Notion personnel **sans lien public**.
 
-**Aucune phase d'infrastructure n'est réputée déployée par la seule acceptation de ces ADR.** Le déploiement, les opérations destructives et les changements réseau réclament des autorisations et preuves distinctes.
+Une architecture validée en conception n'est pas un laboratoire déployé ou audité.
