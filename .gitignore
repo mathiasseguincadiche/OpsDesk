@@ -62,3 +62,7 @@ tfplan
 # Vue détaillée privée : conserver uniquement dans Notion, jamais dans GitHub
 /docs/diagrams/architecture.drawio
 /docs/diagrams/architecture.svg
+
+# Ancienne vue détaillée historique également réservée à Notion
+/legacy/diagrams/architecture-technique.drawio
+/legacy/diagrams/architecture-technique.svg
