@@ -26,6 +26,7 @@ ENV PATH="/opt/venv/bin:$PATH" \
     APP_VERSION=${APP_VERSION} \
     APP_REVISION=${APP_REVISION} \
     ENVIRONMENT=production \
+    FORWARDED_ALLOW_IPS=127.0.0.1 \
     PORT=8000
 
 # Appliquer les correctifs Debian disponibles lors de la construction.
@@ -45,4 +46,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=15s --timeout=3s --start-period=20s --retries=3 \
   CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2).status == 200 else 1)"
 
-CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --proxy-headers --forwarded-allow-ips='*' --no-server-header"]
+# Seuls les proxys explicitement désignés peuvent fournir des en-têtes de transfert.
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --proxy-headers --forwarded-allow-ips=\"${FORWARDED_ALLOW_IPS}\" --no-server-header"]
