@@ -18,7 +18,7 @@ Ce dossier rassemble les schémas **du produit et de son architecture**, pas les
 ## Convention et limites
 
 - Un cadre désigne une frontière (hôte, VM, réseau ou service) ; une flèche indique le sens du flux.
-- Sur les deux vues **Architecture V2**, les frontières de VM et les flux d'exploitation prévus sont en pointillés : ils ne sont **pas** exécutés sur Fedora/Rocky. Le socle applicatif a été contrôlé séparément sur runner ; les traits internes décrivent son chemin de données.
+- Sur les deux vues **Architecture V2**, les frontières des VM et les flux sont représentés **en traits continus**, avec des couleurs distinctes pour l'applicatif, l'administration, l'observabilité et les sauvegardes. Cette convention présente l'architecture cible validée ; elle ne prouve pas son déploiement sur Fedora/Rocky. Le socle applicatif a été contrôlé séparément sur runner.
 - Un schéma décrit une intention et une structure ; il ne prouve ni le déploiement ni la sécurité. Le [statut vérifié](../../STATUS.md) fait foi.
 - Le fichier `.drawio` est la source éditable. Modifier un SVG seul ne suffit pas à maintenir la paire cohérente.
 
