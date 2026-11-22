@@ -25,6 +25,7 @@ on:
       - 'scripts/smoke.py'
       - 'scripts/check_persistence_restore.sh'
       - 'scripts/check_auth_throttle.py'
+      - 'scripts/check_browser_e2e.py'
       - '.github/workflows/application-quality.yml'
   workflow_dispatch:
 
