@@ -43,6 +43,14 @@ def password_fingerprint(password_hash: str) -> str:
     ).hexdigest()
 
 
+def csrf_for_session(token: str) -> str:
+    """Signer un jeton CSRF lié à la session sans exposer sa valeur JWT."""
+    return hmac.new(
+        get_settings().jwt_secret.encode("utf-8"),
+        ("opsdesk-csrf:" + token).encode("utf-8"), hashlib.sha256,
+    ).hexdigest()
+
+
 def create_access_token(user_id: int, role: str, password_hash: str) -> tuple[str, int]:
     settings = get_settings()
     expires_in = settings.jwt_expire_minutes * 60

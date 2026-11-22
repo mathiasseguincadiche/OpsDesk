@@ -54,3 +54,5 @@ export interface Stats {
 }
 
 export interface TokenResponse { access_token: string; expires_in: number; user: User }
+
+export interface BrowserSessionResponse { expires_in: number; user: User }

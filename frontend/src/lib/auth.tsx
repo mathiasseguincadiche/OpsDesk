@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { api, setUnauthorizedHandler, tokenStore } from "./api";
-import type { TokenResponse, User } from "./types";
+import { api, setUnauthorizedHandler } from "./api";
+import type { BrowserSessionResponse, User } from "./types";
 
 interface AuthValue {
   user: User | null;
@@ -17,26 +17,25 @@ const AuthContext = createContext<AuthValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(Boolean(tokenStore.get()));
+  const [loading, setLoading] = useState(true);
   const queryClient = useQueryClient();
 
   const logout = useCallback(() => {
-    tokenStore.set(null);
+    // Le serveur efface les cookies HttpOnly même si la session a expiré.
+    void api<void>("/api/auth/browser/logout", { method: "POST" }).catch(() => undefined);
     setUser(null);
     queryClient.clear();
   }, [queryClient]);
 
   useEffect(() => {
     setUnauthorizedHandler(logout);
-    if (!tokenStore.get()) return;
     api<User>("/api/auth/me")
       .then(setUser)
-      .catch(() => tokenStore.set(null))
+      .catch(() => setUser(null))
       .finally(() => setLoading(false));
   }, [logout]);
 
-  const accept = (data: TokenResponse) => {
-    tokenStore.set(data.access_token);
+  const accept = (data: BrowserSessionResponse) => {
     queryClient.clear();
     setUser(data.user);
   };
@@ -46,9 +45,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       loading,
       logout,
-      login: async (email, password) => accept(await api<TokenResponse>("/api/auth/login", { method: "POST", body: { email, password } })),
+      login: async (email, password) => accept(await api<BrowserSessionResponse>("/api/auth/browser/login", { method: "POST", body: { email, password } })),
       register: async (full_name, email, password) =>
-        accept(await api<TokenResponse>("/api/auth/register", { method: "POST", body: { full_name, email, password } })),
+        accept(await api<BrowserSessionResponse>("/api/auth/browser/register", { method: "POST", body: { full_name, email, password } })),
       isStaff: user?.role === "agent" || user?.role === "admin",
       isAdmin: user?.role === "admin",
     }),

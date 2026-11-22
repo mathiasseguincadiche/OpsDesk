@@ -4,6 +4,8 @@ Ce registre retrace les changements documentaires, structurels et techniques **v
 
 ## Non publié
 
+- Sécurité navigateur : session JWT en cookie HttpOnly, protection CSRF liée au jeton, mode Secure en production, suppression de l'ancien stockage local, conservation du Bearer pour les scripts.
+
 - Image de démonstration PostgreSQL : dérivé minimal de `postgres:17-alpine`, substitution de `gosu` (Go vulnérable) par `su-exec` (outil C d'Alpine), avec scan comparatif et tests de restauration sur runner.
 
 - Qualité fonctionnelle : contrôle automatisé de `pg_dump` / `pg_restore` en base séparée, puis reconnexion de l'API après redémarrage sur runner jetable.
