@@ -27,6 +27,6 @@ Ce dossier rassemble les schémas **du produit et de son architecture**, pas les
 3. Exporter en SVG depuis Draw.io ; relire le résultat à taille normale et en thème clair/sombre.
 4. Conserver les deux fichiers et exécuter `python3 scripts/check_docs.py` depuis la racine.
 
-Le dossier `outils/` contient l'outillage de génération historique ; les fichiers Draw.io restent les sources de référence pour la maintenance des vues techniques.
+L'ancien générateur de schémas, mêlant vues techniques et pédagogiques, est [archivé dans Notion avec ses sources](https://app.notion.com/p/42065721fa18812e9541ff18d825885f). Les fichiers `.drawio` du présent dépôt restent les sources de référence pour la maintenance des vues techniques.
 
 Les contrôles automatiques valident les chemins, la syntaxe XML et la présence des sources. Ils ne certifient ni le rendu mobile ni la justesse des architectures.
