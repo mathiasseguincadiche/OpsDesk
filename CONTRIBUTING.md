@@ -21,13 +21,13 @@ python3 scripts/smoke.py
 docker compose down
 ```
 
-Les ports de démonstration sont liés à `127.0.0.1`. `docker compose down` conserve le volume de données ; **ne pas utiliser `down -v` sans intention explicite de supprimer la base**. Pour préparer les outils sur Fedora et Rocky, suivre le [guide du laboratoire](docs/laboratoire-fedora-kvm-rocky.md), avec inventaire avant installation.
+Les ports de démonstration sont liés à `127.0.0.1`. `docker compose down` conserve le volume de données ; **ne pas utiliser `down -v` sans intention explicite de supprimer la base**. Les installations propres au poste de l'apprenant sont documentées dans son espace Notion, hors du dépôt produit.
 
 - Code applicatif : exécuter les tests concernés, le typage et les contrôles décrits dans la [référence technique](docs/reference-technique.md). Fournir l'environnement et les versions.
 - Documentation et schémas : `python3 scripts/check_docs.py` ; relire également le rendu GitHub en clair, sombre et sur mobile.
 - InfraOps : ne pas prétendre qu'un plan, un lint ou une CI sur runner constitue un déploiement réussi sur Rocky. Exiger les [preuves et limites](docs/preuves.md).
 
-L'exercice personnel **08 — CI/CD avec GitHub Actions** reste à concevoir, exécuter et expliquer par l'apprenant. La vérification automatique de documentation ne livre pas cet exercice à sa place.
+Le workflow actuel vérifie les contrats documentaires ; il ne construit ni ne publie les images applicatives et ne déploie pas OpsDesk.
 
 ## Que fournir dans une pull request ?
 
@@ -43,7 +43,7 @@ Le [modèle de PR](.github/pull_request_template.md) rappelle ces contrôles. Un
 
 ## Où mettre la documentation ?
 
-La [charte du dépôt](docs/CHARTE_GITHUB.md) décrit les différentes familles de documents et leurs critères. Le README présente le projet, `docs/` explique l'architecture et l'exploitation, `evidence/` conserve les preuves versionnées et `STATUS.md` indique ce qui a réellement été vérifié.
+Le README présente le produit, `docs/` décrit son architecture et son exploitation, `evidence/` conserve les preuves techniques et `STATUS.md` indique les vérifications réellement effectuées. Les cours, modèles personnels et évaluations ne sont pas publiés dans le dépôt.
 
 ## Sécurité et divulgation
 
