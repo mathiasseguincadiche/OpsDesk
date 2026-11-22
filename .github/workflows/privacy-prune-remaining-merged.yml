@@ -1,0 +1,95 @@
+name: One-time prune of verified merged branches with old detailed diagrams
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/privacy-prune-remaining-merged.yml
+permissions:
+  contents: write
+  pull-requests: read
+jobs:
+  prune-verified-merged-branches:
+    if: github.repository == 'mathiasseguincadiche/OpsDesk' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Verify PR merge and SHA before deleting each explicit branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError
+          from urllib.parse import quote
+
+          repo = os.environ['REPO']
+          assert repo == 'mathiasseguincadiche/OpsDesk'
+          token = os.environ['GH_TOKEN']
+          root = 'https://api.github.com/repos/' + repo
+          headers = {
+              'Authorization': 'Bearer ' + token,
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          def api(path, method='GET'):
+              request = Request(root + path, headers=headers, method=method)
+              with urlopen(request, timeout=30) as response:
+                  body = response.read()
+                  return json.loads(body) if body else None
+          targets = [
+              "audit/charte-excellence-20261119",
+              "audit/infraops-coherence-20261119",
+              "audit/qualification-finale-20261119",
+              "chore/pin-verified-python-linter",
+              "database/alembic-baseline-20261122",
+              "dependabot/npm_and_yarn/frontend/react-router-dom-7.18.6",
+              "docs/application-v25",
+              "docs/compte-service-opsdesk",
+              "docs/derniere-recette-lecture",
+              "docs/final-security-evidence-20261122",
+              "docs/migration-docker-compose",
+              "docs/presentation-notion-controles",
+              "docs/refonte-editoriale-v26-20261122",
+              "docs/separer-notion-du-produit-20261122",
+              "docs/v26-conformite",
+              "feat/premium-github-readme",
+              "feat/repository-quality-governance",
+              "fix/audit-securite-ci-notion-20261122",
+              "fix/demarrage-local-simple",
+              "fix/production-migrations-container-20261122",
+              "fix/v26-stabilisation",
+              "security/api-alpine-base-20261122",
+              "security/browser-cookie-sessions-20261122",
+              "security/postgres-su-exec-cve-20261122",
+              "security/scan-images-proxy-trust-20261122",
+              "security/shared-auth-throttle-20261122",
+              "test/browser-e2e-security-20261122",
+              "test/persistence-restore-ci-20261122",
+          ]
+          pulls = api('/pulls?state=all&per_page=100')
+          if len(pulls) >= 100:
+              raise RuntimeError('PR list not exhaustive')
+          deleted = []
+          for name in targets:
+              matched = [p for p in pulls if p['head']['ref'] == name]
+              if not matched or any(not p.get('merged_at') for p in matched):
+                  raise RuntimeError('Branch not exclusively merged: ' + name)
+              path = '/git/refs/heads/' + quote(name, safe='/')
+              try:
+                  ref = api(path)
+              except HTTPError as exc:
+                  if exc.code == 404:
+                      print('Already absent: ' + name)
+                      continue
+                  raise
+              current_sha = ref['object']['sha']
+              if not any(p['head']['sha'] == current_sha for p in matched):
+                  raise RuntimeError('Branch HEAD differs from merged PR: ' + name)
+              api(path, 'DELETE')
+              print('Deleted merged branch: ' + name)
+              deleted.append(name)
+          print('Completed deletion of ' + str(len(deleted)) + ' verified merged branches')
+          PY
