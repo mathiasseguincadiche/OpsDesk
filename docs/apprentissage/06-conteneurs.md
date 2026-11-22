@@ -21,6 +21,10 @@
 - **Les secrets** passent par le bloc `secrets:` de Compose et les variables `*_FILE`, jamais dans le fichier Compose.
 - Les contraintes imposées par l'application et par Docker sont dans la [référence technique](../reference-technique.md#déployer-avec-docker-compose-sur-un-serveur).
 
+## Comprendre le mécanisme et ses limites
+
+**Pourquoi trois contrôles différents ?** Un conteneur `healthy` prouve seulement que sa sonde répond ; un `curl` depuis `srv-admin` prouve que cette origine atteint l'entrée HTTP ; un ticket relu après recréation atteste la persistance sur la cible observée. Aucun de ces contrôles, isolément, ne prouve la confidentialité des secrets ou le filtrage de toutes les sources. Pour les ports publiés par Docker, tester aussi depuis une machine qui ne devrait pas pouvoir se connecter.
+
 ## Ce qu'il faut obtenir
 
 1. **Les images** : construites sur `srv-app` à partir des sources avec un tag de version, tant que la CI ne publie rien (chemin temporaire prévu au registre). Après l'exercice 08, elles sont tirées de GHCR par digest.
