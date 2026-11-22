@@ -1,22 +1,11 @@
-const TOKEN_KEY = "opsdesk-token";
+// Les navigateurs utilisent des cookies de session HttpOnly, jamais localStorage.
+try { localStorage.removeItem("opsdesk-token"); } catch { /* ancien stockage indisponible */ }
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
     super(message);
   }
 }
-
-export const tokenStore = {
-  get: () => {
-    try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
-  },
-  set: (token: string | null) => {
-    try {
-      if (token) localStorage.setItem(TOKEN_KEY, token);
-      else localStorage.removeItem(TOKEN_KEY);
-    } catch { /* storage unavailable */ }
-  },
-};
 
 let onUnauthorized: (() => void) | null = null;
 export const setUnauthorizedHandler = (handler: () => void) => { onUnauthorized = handler; };
@@ -35,24 +24,33 @@ function buildUrl(path: string, query?: Query) {
   return url.pathname + url.search;
 }
 
+function csrfToken(): string | null {
+  const encoded = document.cookie.split("; ").find((item) => item.startsWith("opsdesk_csrf="));
+  return encoded ? decodeURIComponent(encoded.slice("opsdesk_csrf=".length)) : null;
+}
+
 export async function api<T>(path: string, options: { method?: string; body?: unknown; query?: Query } = {}): Promise<T> {
   const headers: Record<string, string> = { Accept: "application/json" };
-  const token = tokenStore.get();
-  if (token) headers.Authorization = `Bearer ${token}`;
+  const method = (options.method ?? "GET").toUpperCase();
+  if (!["GET", "HEAD", "OPTIONS"].includes(method)) {
+    const csrf = csrfToken();
+    if (csrf) headers["X-CSRF-Token"] = csrf;
+  }
   if (options.body !== undefined) headers["Content-Type"] = "application/json";
 
   let response: Response;
   try {
     response = await fetch(buildUrl(path, options.query), {
-      method: options.method ?? "GET",
+      method,
       headers,
+      credentials: "same-origin",
       body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
     });
   } catch {
     throw new ApiError(0, "Impossible de joindre le serveur. Vérifiez votre connexion.");
   }
 
-  if (response.status === 401 && token && !path.startsWith("/api/auth/login")) {
+  if (response.status === 401 && !path.startsWith("/api/auth/browser/")) {
     onUnauthorized?.();
   }
   if (response.status === 204) return undefined as T;

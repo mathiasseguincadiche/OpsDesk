@@ -145,3 +145,47 @@ def test_demo_seed(client):
     headers = login(client, "sophie.martin@opsdesk.local", "Demo1234!")
     stats = client.get("/api/stats", headers=headers).json()
     assert stats["total"] == 16 and stats["by_status"]["closed"] > 0
+
+def test_browser_cookie_session_csrf_and_logout(client):
+    response = client.post(
+        "/api/auth/browser/login",
+        json={"email": "admin@test.local", "password": "AdminPass123"},
+    )
+    assert response.status_code == 200, response.text
+    assert "access_token" not in response.json()
+    assert "httponly" in response.headers["set-cookie"].lower()
+    assert client.get("/api/auth/me").status_code == 200
+
+    # Aucun cookie ne suffit pour modifier les tickets sans en-tête CSRF.
+    assert client.post("/api/tickets", json={"title": "Test CSRF protégé"}).status_code == 403
+    assert client.post(
+        "/api/tickets", headers={"X-CSRF-Token": "incorrect"},
+        json={"title": "Test CSRF protégé"},
+    ).status_code == 403
+    csrf = client.cookies.get("opsdesk_csrf")
+    assert csrf
+    created = client.post(
+        "/api/tickets", headers={"X-CSRF-Token": csrf},
+        json={"title": "Test CSRF protégé"},
+    )
+    assert created.status_code == 201, created.text
+    assert client.post("/api/auth/browser/logout").status_code == 204
+    assert client.get("/api/auth/me").status_code == 401
+
+
+def test_browser_cookie_session_revoked_after_password_change(client):
+    response = client.post(
+        "/api/auth/browser/login",
+        json={"email": "admin@test.local", "password": "AdminPass123"},
+    )
+    assert response.status_code == 200
+    csrf = client.cookies.get("opsdesk_csrf")
+    assert client.put(
+        "/api/auth/me/password", headers={"X-CSRF-Token": csrf},
+        json={"current_password": "AdminPass123", "new_password": "AdminPass456"},
+    ).status_code == 204
+    assert client.get("/api/auth/me").status_code == 401
+    assert client.post("/api/auth/browser/logout").status_code == 204
+    assert client.post(
+        "/api/auth/browser/login", json={"email": "admin@test.local", "password": "AdminPass456"}
+    ).status_code == 200

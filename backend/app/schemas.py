@@ -84,6 +84,12 @@ class TokenOut(BaseModel):
     user: UserOut
 
 
+class BrowserSessionOut(BaseModel):
+    # L'API navigateur ne divulgue jamais le JWT au code JavaScript.
+    expires_in: int
+    user: UserOut
+
+
 class PasswordChangeIn(BaseModel):
     current_password: str = Field(min_length=1, max_length=128)
     new_password: Password
