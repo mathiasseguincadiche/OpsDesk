@@ -1,3 +1,5 @@
+# Vérifier les dépendances chaque mardi (heure Martinique).
+# Les propositions de mise à jour restent soumises à revue et tests.
 version: 2
 updates:
   - package-ecosystem: "pip"
