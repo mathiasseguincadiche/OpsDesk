@@ -17,6 +17,12 @@ Un service vit longtemps après sa mise en service : correctifs, redémarrages, 
 - Le retour arrière applicatif redéploie l'image précédente mais ne restaure pas les données. Vérifier la compatibilité du schéma avant le changement ; si elle n'est pas établie, prévoir une procédure de migration/reprise spécifique et ne pas improviser une restauration en écrasant les écritures.
 - `dnf needs-restarting -r` dit si un redémarrage est nécessaire après les mises à jour.
 
+## Cas voisin : un correctif sans changement de version applicative
+
+**Exemple fictif.** Une mise à jour de paquet système sur une machine de test ne modifie pas les images d'une application. Pourtant, si elle impose un redémarrage de la VM, l'application peut devenir momentanément indisponible. Le succès du gestionnaire de paquets et le retour du service sont deux résultats différents.
+
+**Méthode.** Fixer l'état initial (version, ticket témoin, santé, heure), les conditions d'arrêt, la sauvegarde et le retour arrière ; observer depuis **une autre machine** pendant l'intervention ; comparer ensuite les résultats. `dnf check-update` peut retourner `100` lorsque des mises à jour sont disponibles : ce code n'est pas, en soi, une panne. Les durées historiques de l'application ne garantissent aucune durée pour la VM Rocky.
+
 ## Ce qu'il faut obtenir
 
 - **Maintenance 1** : mises à jour de Rocky Linux sur `srv-app`, redémarrage si nécessaire, retour du service sans intervention.
@@ -31,7 +37,7 @@ Pour chacune, une **fiche d'intervention** d'une page écrite avant de commencer
 | Ce que tu vérifies | Résultat attendu |
 | --- | --- |
 | Sonde depuis `srv-admin` pendant le redémarrage de `srv-app` | Retour à `200` sans intervention |
-| `dnf check-update` sur `srv-app` | Code de retour 0 |
+| `dnf check-update` sur `srv-app` | Code `0` : aucune mise à jour ; code `100` : mises à jour disponibles ; code `1` : erreur à diagnostiquer. Voir le [manuel DNF](https://man7.org/linux/man-pages/man8/dnf.8.html). |
 | `/version` et digest après déploiement | Ceux publiés par la CI |
 | `/version` et digest après retour arrière | Exactement ceux de départ |
 | Ticket témoin | Relu à l'identique après chaque maintenance |

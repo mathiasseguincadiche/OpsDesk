@@ -4,7 +4,7 @@
 
 **Objectif.** Tester, construire, analyser et publier automatiquement chaque modification, et prouver que l'image qui tourne sur `srv-app` est exactement celle que la CI a vérifiée.
 
-**Durée estimée** : 4 à 6 heures. **Prérequis** : exercice 06 (images construites et déployées à la main). **État** : prévu, non vérifié ; aucun workflow dans le dépôt à ce jour.
+**Durée estimée** : 4 à 6 heures. **Prérequis** : exercice 06 (images construites et déployées à la main). **État** : chaîne personnelle de livraison prévue, non vérifiée. Un workflow de **qualité documentaire** existe déjà (`.github/workflows/docs-quality.yml`) ; il ne construit ni ne publie les images applicatives.
 
 ## Pourquoi
 
@@ -18,6 +18,12 @@ Un chemin manuel finit par laisser passer une version non testée, et personne n
 - Un tag peut être déplacé ; un **digest** (`sha256:…`) identifie le contenu d'une image de façon certaine.
 - Le `GITHUB_TOKEN` reçoit le minimum de droits, job par job (`packages: write` seulement pour publier).
 - Une vulnérabilité trouvée par Trivy se corrige, ou s'accepte par écrit avec une date de réexamen.
+
+## Cas voisin : distinguer un tag d'un contenu déployé
+
+**Exemple pédagogique fictif.** L'image `exemple/service:stable` peut pointer vers un contenu différent après une nouvelle publication ; un digest `sha256:…` fige l'identité d'un manifeste donné. Comparer seulement les chaînes de tags du registre et du serveur ne prouve donc pas que la même image s'exécute.
+
+**Raisonnement.** Identifier le commit testé, les artefacts construits, le résultat du scan, le digest publié et le digest réellement tiré puis exécuté. Séparer la réussite des tests, l'autorisation de publier et la décision de déployer. Une CI documentaire verte démontre la qualité de certains fichiers contrôlés, **pas une livraison applicative** ; aucune exécution GHCR personnelle ne doit être déduite de cet exemple.
 
 ## Ce qu'il faut obtenir
 

@@ -24,6 +24,6 @@ Avant une démonstration vivante, vérifier l’identité, l’accessibilité et
 - Qu’arrive-t-il si live passe mais ready échoue ?
 - Pourquoi un rollback de l’image ne restaure-t-il pas les tickets ?
 - Comment relier ce qui est servi à un commit et à une image précise ?
-- Pourquoi reprendre Terraform/Ansible/K3s dans plusieurs projets ? Parce qu’un besoin se retrouve dans plusieurs contextes ; adapter cibles, paramètres, droits, contrôles et reprise vaut mieux qu’une diversité décorative.
+- Comment transférer les pratiques Terraform, Ansible et K3s acquises dans OpsDesk vers un autre contexte ? Distinguer les principes réutilisables des paramètres propres aux VM, au réseau et au service étudiés.
 
 [État réel](../STATUS.md) · [Architecture](architecture.md) · [Preuves](preuves.md)

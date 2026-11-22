@@ -21,6 +21,12 @@
 - **Les secrets** passent par le bloc `secrets:` de Compose et les variables `*_FILE`, jamais dans le fichier Compose.
 - Les contraintes imposées par l'application et par Docker sont dans la [référence technique](../reference-technique.md#déployer-avec-docker-compose-sur-un-serveur).
 
+## Cas voisin : préserver les données en remplaçant un conteneur
+
+**Exemple explicatif, non exécuté.** Une application fictive écrit un document dans son système de fichiers interne : si le conteneur est recréé, le document risque de disparaître. Avec un volume correctement monté, le conteneur peut être remplacé tandis que les données restent dans un emplacement distinct. Un volume ne protège toutefois ni d'une suppression volontaire ni d'une défaillance du disque.
+
+**Méthode.** Distingue d'abord image, conteneur, volume et sauvegarde. Vérifie ensuite où les données sont réellement écrites, qui y a accès, comment le moteur redémarre les services et quelles règles filtrent les ports. Le fichier Compose de référence sert d'exemple de fonctionnement local ; **le Compose de production et le rôle Ansible restent ton livrable personnel**. Le maintien de SELinux et de firewalld est une contrainte, pas une option de dépannage.
+
 ## Ce qu'il faut obtenir
 
 1. **Les images** : construites sur `srv-app` à partir des sources avec un tag de version, tant que la CI ne publie rien (chemin temporaire prévu au registre). Après l'exercice 08, elles sont tirées de GHCR par digest.

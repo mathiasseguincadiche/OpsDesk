@@ -1,4 +1,6 @@
-# Provenance des références InfraOps
+# Inventaire historique des références InfraOps
+
+**Archive documentaire : ce fichier ne constitue ni un cours ni une procédure d'installation active.** Pour la documentation actuelle, commencer par le [parcours](apprentissage/README.md), le [laboratoire](laboratoire-fedora-kvm-rocky.md) et la [référence technique](reference-technique.md).
 
 Ces fichiers ont été préparés lors des essais historiques, avant la séparation entre l’application fournie et le travail personnel. Les notes antérieures indiquent une conservation locale aux chemins ci-dessous, pour consultation après tentative personnelle ou diagnostic ciblé. Ces fichiers InfraOps sont absents de `main` `51e1a489` contrôlé le 4 novembre 2026 ; la disponibilité de leurs originaux hors dépôt est **NON VÉRIFIÉE** à ce jour. Aucune exécution historique ne valide une compétence de l’apprenant.
 

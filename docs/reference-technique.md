@@ -2,6 +2,19 @@
 
 Ce document rassemble ce qu'il faut savoir pour exploiter, déployer ou faire évoluer OpsDesk : les points d'accès, la configuration, le déploiement avec Docker Compose, le développement local et les tests. Pour comprendre les choix qui ont mené à cette architecture, lire [l'architecture](architecture.md) ; pour l'état d'avancement, [STATUS.md](../STATUS.md).
 
+## Lire les résultats d'exploitation
+
+Une commande doit répondre à une question : sur quelle cible, avec quelle version, pour mesurer quoi ? Une observation positive ne prouve jamais davantage que ce que son contrôle couvre.
+
+| Résultat | Conclusion possible | Ce qui reste à faire |
+| --- | --- | --- |
+| Les conteneurs sont `healthy` | Leur sonde de santé répond ; celle de l'API vérifie ici la vie du processus | Consulter `/health/ready` pour la dépendance à PostgreSQL |
+| `/health/ready` répond `200` | L'API atteint la base à cet instant | Tester un scénario métier pour vérifier création et lecture |
+| `/version` annonce la bonne version | Le service répond avec une version déclarée | Relier commit, image et digest effectivement exécutés |
+| `/metrics` est accessible dans le réseau prévu | L'API expose ses mesures | Prouver collecte, durée de conservation et alertes séparément |
+
+Il s'agit d'une **grille d'interprétation**, pas de résultats obtenus sur le laboratoire. L'état réellement qualifié est dans [STATUS.md](../STATUS.md).
+
 ## Les trois services
 
 | Service | Image | Port | Rôle |

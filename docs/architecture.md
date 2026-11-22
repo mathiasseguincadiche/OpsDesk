@@ -110,6 +110,19 @@ Les deux ne se voient pas. K3s garde son propre moteur, containerd, et ne pilote
 
 Ces conditions ne sont pas des exigences supplémentaires pour le laboratoire : elles aident à défendre une décision et à reconnaître ses limites. Réexaminer Compose si un besoin de disponibilité, de placement sur plusieurs nœuds ou de gestion de flotte est démontré ; le K3s mono-nœud actuel ne résout pas à lui seul ces problèmes. Réexaminer le stockage des sauvegardes si la protection contre la perte du poste devient une exigence. Réexaminer le dimensionnement après mesures de charge, et l'état Terraform distant si plusieurs opérateurs doivent travailler ensemble. Dans chaque cas, comparer le risque, le bénéfice, le coût et une méthode de validation avant de modifier la cible. Aucun changement de stack n'est présumé.
 
+## Repères pour lire le registre
+
+Lire d'abord les décisions qui déterminent **où vivent le service et les données, qui prépare les machines, comment une version est livrée et comment revenir en arrière**. Ce tableau est un index, pas une deuxième source de vérité.
+
+| Question | Décision actuelle | Contrôle à prévoir |
+| --- | --- | --- |
+| Qui prépare l'environnement ? | Fedora et trois VM Rocky ; `srv-admin` pilote les deux autres | Inventaire libvirt, SSH, contrôle des frontières |
+| Comment tourne le service ? | Docker Engine/Compose sur `srv-app`, K3s uniquement sur la copie d'essai | Sondes, exposition des ports, parcours de ticket |
+| Comment limiter les privilèges ? | Administration Docker par `sudo`, SELinux et firewalld conservés | Droits, contextes et accès depuis sources autorisées/interdites |
+| Comment protéger les données ? | Volume, sauvegarde PostgreSQL hors VM, restauration isolée | Ticket témoin restauré, perte et délai mesurés |
+
+Pour chaque choix, chercher ensuite son **alternative, son coût, sa limite et sa condition de réexamen**. Les anciennes décisions restent conservées pour expliquer l'évolution du projet ; elles ne représentent plus la cible active.
+
 ## Décisions retenues
 
 « Retenu » est l'état d'une décision, pas la preuve de son exécution. Une décision remplacée reste présente, avec son état et la décision qui la remplace. Les décisions du 12 et du 13 novembre 2026 ont été prises avant toute réalisation : l'exercice 02 sert à les relire, les justifier et les vérifier.

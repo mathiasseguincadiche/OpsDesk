@@ -16,6 +16,18 @@ OpsDesk est un projet fil rouge : une application de gestion de tickets sert de 
 - **L'infrastructure est le sujet de mon apprentissage :** Fedora, KVM/libvirt, Rocky Linux, Terraform, Ansible, Docker Compose, GitHub Actions, K3s, observabilité et restauration. Les réalisations personnelles seront datées et vérifiées progressivement.
 - **L'état actuel est explicite :** le socle a été qualifié le 19 novembre 2026 sur un runner jetable ; les déploiements et exercices sur mes VM Rocky restent à réaliser. Voir [STATUS.md](STATUS.md) et la [provenance des travaux](docs/provenance.md).
 
+### Le défi d'infrastructure
+
+Le sujet n'est pas seulement de démarrer trois conteneurs : il faut apprendre à rendre le service **reproductible, observable, maintenable et restaurable**, en protégeant ses données. Chaque étape part d'un besoin technique, examine une décision et ses compromis, puis prévoit un contrôle concret. La [feuille de route](ROADMAP.md) montre le chemin ; le [statut](STATUS.md) dit ce qui est déjà vérifié.
+
+## Mon rôle dans ce projet
+
+**L'application** a été développée avec l'aide d'outils d'IA, puis relue, testée et conteneurisée. Elle me sert de service réaliste à exploiter.
+
+**Mon objectif professionnel : devenir ingénieur DevOps spécialisé dans l’automatisation des infrastructures (InfraOps).** L’application est un support, pas un projet de développement full stack. Mon objectif est de transformer un besoin applicatif en une infrastructure Linux reproductible : concevoir le réseau et le stockage, provisionner les machines, sécuriser et configurer les serveurs, déployer des artefacts versionnés, industrialiser la livraison, puis superviser, maintenir, diagnostiquer et restaurer le service. Dans ce parcours, j’apprends à écrire et tester le code d’infrastructure et les automatisations nécessaires ; je lis le code applicatif pour comprendre ses contraintes et collaborer avec le développement. Les exercices et leurs preuves distinguent le travail personnel du socle fourni.
+
+**Où j’en suis :** application et pile locale qualifiées le 19 novembre 2026 sur un runner jetable : tests SQLite et PostgreSQL, compilation, smoke HTTP, isolation des ports, reprise de l’API et de la base, persistance. L’infrastructure du laboratoire reste à construire personnellement. Voir les [preuves datées et leurs limites](STATUS.md).
+
 ## Aperçu de l'application
 
 <picture>
@@ -72,14 +84,6 @@ La démonstration utilise des données fictives et des ports accessibles uniquem
 | 🔜 Prévu | Supervision et sauvegarde | Prometheus, Grafana, `pg_dump` avec test de restauration |
 
 Les trois premières lignes décrivent le socle fourni et qualifié, pas des compétences personnelles déjà acquises. Les réalisations suivantes seront vérifiées au fil du parcours ; [STATUS.md](STATUS.md) sépare avancement et contrôle. Les preuves personnelles, distinctes, se consignent dans le suivi de formation.
-
-## Mon rôle dans ce projet
-
-**L'application** a été développée avec l'aide d'outils d'IA, puis relue, testée et conteneurisée. Elle me sert de service réaliste à exploiter.
-
-**Mon objectif professionnel : devenir ingénieur DevOps spécialisé dans l’automatisation des infrastructures (InfraOps).** L’application est un support, pas un projet de développement full stack. Mon objectif est de transformer un besoin applicatif en une infrastructure Linux reproductible : concevoir le réseau et le stockage, provisionner les machines, sécuriser et configurer les serveurs, déployer des artefacts versionnés, industrialiser la livraison, puis superviser, maintenir, diagnostiquer et restaurer le service. Dans ce parcours, j’apprends à écrire et tester le code d’infrastructure et les automatisations nécessaires ; je lis le code applicatif pour comprendre ses contraintes et collaborer avec le développement. Les exercices et leurs preuves distinguent le travail personnel du socle fourni.
-
-**Où j’en suis :** application et pile locale qualifiées le 19 novembre 2026 sur un runner jetable : tests SQLite et PostgreSQL, compilation, smoke HTTP, isolation des ports, reprise de l’API et de la base, persistance. L’infrastructure du laboratoire reste à construire personnellement. Voir les [preuves datées et leurs limites](STATUS.md).
 
 ## Ce que fait l'application
 

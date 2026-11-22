@@ -14,22 +14,49 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = (
-    "README.md",
-    "STATUS.md",
-    "ROADMAP.md",
-    "docs/README.md",
-    "docs/diagrams/README.md",
-    "CONTRIBUTING.md",
-    "SECURITY.md",
-    "CHANGELOG.md",
-    "docs/CHARTE_GITHUB.md",
-    "docs/templates/README-PROJET.md",
-    "docs/templates/ARCHITECTURE-ADR.md",
-    "docs/templates/RUNBOOK.md",
-    "docs/templates/PREUVE.md",
-    "docs/templates/RELEASE-NOTES.md",
-)
+def active_pages() -> list[Path]:
+    """Inspect current public Markdown; keep version-1 archives out of the active contract."""
+    roots = [ROOT, ROOT / "docs", ROOT / ".github", ROOT / "evidence"]
+    files: set[Path] = set()
+    for folder in roots:
+        if folder == ROOT:
+            files.update(folder.glob("*.md"))
+        elif folder.exists():
+            files.update(folder.rglob("*.md"))
+    return sorted(files)
+
+
+def heading_slug(title: str) -> str:
+    """Approximate GitHub heading IDs for the subset used in this repository."""
+    title = re.sub(r"<[^>]+>", "", title)
+    title = re.sub(r"`([^`]*)`", r"\1", title)
+    title = re.sub(r"\[([^]]+)\]\([^)]+\)", r"\1", title)
+    title = re.sub(r"[^\w\- ]", "", title.lower().strip(), flags=re.UNICODE)
+    return title.replace(" ", "-")
+
+
+def document_anchors(path: Path) -> set[str]:
+    """Collect heading slugs, duplicate suffixes and explicit HTML IDs."""
+    body = path.read_text(encoding="utf-8")
+    names = set(re.findall(r'<(?:a|h[1-6])\b[^>]*\bid=["\']([^"\']+)', body, re.I))
+    seen: dict[str, int] = {}
+    in_fence = False
+    for line in body.splitlines():
+        if line.lstrip().startswith(("```", "~~~")):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        match = re.match(r"^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$", line)
+        if match:
+            slug = heading_slug(match.group(1))
+            if slug:
+                count = seen.get(slug, 0)
+                names.add(f"{slug}-{count}" if count else slug)
+                seen[slug] = count + 1
+    return names
+
+
 MARKDOWN_LINK = re.compile(r"(?<!!)\[[^\]\n]*\]\(([^)\n]+)\)")
 MARKDOWN_IMAGE = re.compile(r"!\[([^\]\n]*)\]\(([^)\n]+)\)")
 HTML_ASSET = re.compile(r'(?:src|srcset|href)="([^"]+)"')
@@ -77,9 +104,39 @@ def validate_document_links(page: Path) -> list[str]:
             continue
         if not target.exists():
             errors.append(f"{page.relative_to(ROOT)}: missing target: {raw}")
+            continue
+        fragment = unquote(urlsplit(raw).fragment)
+        if fragment and target.is_file() and target.suffix.lower() == ".md":
+            if fragment not in document_anchors(target):
+                errors.append(f"{page.relative_to(ROOT)}: missing anchor: {raw}")
     for match in MARKDOWN_IMAGE.finditer(body):
         if not match.group(1).strip():
             errors.append(f"{page.relative_to(ROOT)}: image missing alt text")
+    return errors
+
+
+def check_editorial_contract() -> list[str]:
+    """Prevent known misleading claims, not certify literary quality."""
+    errors: list[str] = []
+    forbidden = {
+        "frontend/src/components/NewTicketModal.tsx": ("L'équipe support a été notifiée.",),
+        "frontend/src/pages/Users.tsx": ("Inviter un utilisateur",),
+        "frontend/src/components/Layout.tsx": ("Systèmes opérationnels",),
+        "docs/apprentissage/08-cicd.md": ("aucun workflow dans le dépôt à ce jour",),
+    }
+    for relative, claims in forbidden.items():
+        content = (ROOT / relative).read_text(encoding="utf-8")
+        for claim in claims:
+            if claim in content:
+                errors.append(f"{relative}: misleading or outdated claim: {claim}")
+    for number in range(1, 14):
+        matches = list((ROOT / "docs/apprentissage").glob(f"{number:02d}-*.md"))
+        if len(matches) != 1:
+            errors.append(f"exercise {number:02d}: expected exactly one statement")
+            continue
+        content = matches[0].read_text(encoding="utf-8")
+        if "## Cas voisin" not in content:
+            errors.append(f"{matches[0].relative_to(ROOT)}: missing distinct reasoning example")
     return errors
 
 
@@ -89,12 +146,9 @@ def check_repository() -> list[str]:
     for heading in REQUIRED:
         if heading not in readme:
             errors.append(f"README.md: required section missing: {heading}")
-    for item in PAGES:
-        document = ROOT / item
-        if not document.is_file():
-            errors.append(f"missing document: {item}")
-            continue
+    for document in active_pages():
         errors.extend(validate_document_links(document))
+    errors.extend(check_editorial_contract())
 
     for asset in ("docs/images/opsdesk-hero.svg", "docs/diagrams/architecture-globale.svg"):
         path = ROOT / asset
@@ -120,7 +174,7 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print("Documentation: required headings, links, SVG and diagram sources OK.")
+    print("Documentation: active Markdown links/anchors, editorial contracts, SVG and Draw.io sources OK.")
     print("NOTE: This is static validation only, not a visual review or InfraOps deployment.")
     return 0
 

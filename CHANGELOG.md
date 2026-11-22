@@ -4,6 +4,8 @@ Ce registre retrace les changements documentaires, structurels et techniques **v
 
 ## Non publié
 
+- Refonte éditoriale V26 : corrections des affirmations trompeuses, progression pédagogique, navigation et contrôles documentaires, sans qualifier l'infrastructure prévue.
+
 - Nouvelle présentation GitHub du README et illustration vectorielle de couverture.
 - Contrôle automatique de la documentation, des liens et des paires Draw.io/SVG (sans exécution de l'infrastructure).
 - Cadre de contribution, modèles d'issues/PR, politique de sécurité et charte GitHub.

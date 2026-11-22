@@ -20,6 +20,12 @@ Sans supervision, on apprend une panne par les utilisateurs, sans savoir depuis 
 - Si `srv-k3s` tombe, la supervision tombe avec.
 - **SLI** : mesure d'un comportement du service (par exemple la proportion de requêtes valides réussies). **SLO** : objectif chiffré pour cet indicateur sur une fenêtre définie. Une sonde verte ou une cible `up` ne constitue pas, seule, un SLI de disponibilité utilisateur ; un SLO de laboratoire n'est pas un SLA contractuel.
 
+## Cas voisin : une cible Prometheus est UP, mais l'utilisateur échoue
+
+**Situation fictive, non mesurée.** Prometheus parvient à lire `/metrics` sur une API dont une route métier renvoie des erreurs. `up = 1` signifie que le scrape a réussi ; cela ne suffit pas à dire que les utilisateurs peuvent créer et relire leurs tickets.
+
+**Méthode.** Choisir d'abord la question à répondre (proportion d'erreurs, latence, disponibilité de la base), puis la métrique, la fenêtre temporelle et le trafic à inclure. Un compteur brut cumule des événements : un débit exige un calcul sur une fenêtre. Une alerte doit être déclenchée **et observée revenir à la normale**, sur une copie isolée, avant de servir de preuve. Sans série mesurée, aucune valeur de SLI/SLO ne doit être inventée.
+
 ## Ce qu'il faut obtenir
 
 1. `node_exporter` sur `srv-app` et `srv-k3s`, port 9100 ouvert à `srv-k3s` seulement.

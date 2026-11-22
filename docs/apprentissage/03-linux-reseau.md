@@ -18,6 +18,12 @@ Tout le reste du projet passe par SSH : Terraform et Ansible partent de `srv-adm
 - On vérifie l'empreinte de la clé d'hôte à la première connexion, depuis la console de la VM.
 - SELinux reste en mode `Enforcing`, firewalld reste actif : on cherche la règle précise.
 
+## Cas voisin : une connexion réussit par adresse, pas par nom
+
+**Situation illustrative, non observée sur les VM.** Une machine de test répond à `ssh utilisateur@192.0.2.10`, mais `ssh utilisateur@serveur.test` échoue. Une hypothèse est la résolution du nom ; elle doit être confrontée à l'adresse réellement obtenue avant de modifier SSH. Si le nom désigne déjà la bonne adresse, chercher ailleurs : routage, écoute, filtrage ou identité.
+
+**Ce que montre chaque preuve.** Une résolution correcte ne garantit pas la route ; un `ping` positif ne garantit pas TCP/22 ; un port TCP joignable ne valide pas la clé d'hôte ni le compte. Relève les messages avant toute action, puis change **une seule couche**. Les adresses ci-dessus sont réservées à la documentation : elles ne désignent aucune VM du laboratoire.
+
 ## Ce qu'il faut obtenir
 
 1. Un réseau virtuel NAT `opsdesk-lan` en 192.168.150.0/24 sur l'hôte.

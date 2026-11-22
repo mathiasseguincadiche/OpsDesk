@@ -22,6 +22,12 @@ Sous pression, le réflexe est de tout redémarrer : les indices disparaissent e
 
 La première sonde en échec donne une piste, non une cause certaine.
 
+## Cas voisin : une sonde verte et une écriture impossible
+
+**Exemple de diagnostic fictif.** Un utilisateur charge la page, `/health/live` et `/health/ready` sont positifs, mais la création d'un ticket échoue. Ces signaux écartent certaines hypothèses (processus arrêté, base totalement injoignable au moment de la sonde), **pas** un défaut de droits, de validation, d'espace disque ou de transaction.
+
+**Raisonnement.** Reproduire avec un compte autorisé sur la cible d'essai, relever le code et le `request_id`, corréler le journal correspondant, tester une hypothèse à la fois puis vérifier un parcours métier complet. Une première piste compatible n'est pas une cause racine. Le scénario personnel de l'exercice doit rester inconnu jusqu'à l'évaluation ; cet exemple n'en est pas le corrigé.
+
 ## Ce qu'il faut obtenir
 
 Trois incidents différents, préparés par une autre personne sur une cible de test explicitement isolée (copie K3s ou instance Compose jetable configurée pour l'exercice). Vérifier le contexte, la sauvegarde restaurable, le moyen de revenir en arrière et l'accord avant toute perturbation. Les cartes Compose ne s'appliquent pas directement à K3s : choisir uniquement les cartes adaptées à la plateforme. Ne pas modifier le serveur principal ni les règles réseau de l'hôte. Pour chacun : le journal d'incident (commandes, sorties, heures), le temps jusqu'au diagnostic et jusqu'au rétablissement.

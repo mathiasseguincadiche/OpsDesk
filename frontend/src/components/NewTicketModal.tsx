@@ -28,7 +28,7 @@ export function NewTicketModal({ open, onClose }: { open: boolean; onClose: () =
     onSuccess: (ticket) => {
       queryClient.invalidateQueries({ queryKey: ["tickets"] });
       queryClient.invalidateQueries({ queryKey: ["stats"] });
-      toast.success(`Ticket #${ticket.id} créé`, { description: "L'équipe support a été notifiée." });
+      toast.success(`Ticket #${ticket.id} créé`, { description: "Le ticket est enregistré et visible par l'équipe support." });
       setTitle(""); setDescription(""); setPriority("normal"); setCategory("other");
       mutation.reset();
       onClose();

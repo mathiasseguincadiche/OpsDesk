@@ -23,6 +23,12 @@ Le schéma de référence est [l'architecture](../diagrams/architecture.svg) ; l
 
 Pour approfondir sans résoudre ton exercice de création et prise en charge : [diagramme de séquence d'une simple consultation](../diagrams/sequence-consultation.svg), à ouvrir en grand.
 
+## Cas voisin : comprendre une lecture sans modifier de ticket
+
+**Exemple illustratif, non exécuté.** Un collaborateur ouvre sa liste de demandes : le navigateur appelle une route `/api/tickets`, nginx relaie la requête, l'API vérifie l'identité et le droit de voir les tickets, puis interroge PostgreSQL. La réponse remonte sous forme de données que React affiche. Contrairement à la création d'un ticket, cette lecture ne doit pas modifier les informations métier.
+
+**Raisonnement à reproduire.** Pour chaque étape, demande-toi : quel composant parle, à qui, sur quel port, et quelle preuve distinguerait une panne d'affichage d'une panne de base ? Un statut HTTP `200` démontre que cette requête a abouti, mais ni la persistance après redémarrage ni les droits de tous les profils. Le livrable demandé plus bas porte sur **la création et la prise en charge** d'un autre ticket : ce cas voisin ne le résout pas.
+
 ## Ce qu'il faut obtenir
 
 Marie (collaboratrice) crée le ticket « Mon poste ne se connecte plus au VPN » ; Karim (support) le prend en charge.

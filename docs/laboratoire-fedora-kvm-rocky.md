@@ -6,6 +6,16 @@ Les noms retenus pour la suite (réseau `opsdesk-lan`, compte d’administration
 
 L’objectif est une première VM utilisable et comprise, `srv-admin`, puis deux autres VM créées depuis elle, puis les exercices du projet. La lecture du guide n’attribue aucun résultat personnel, niveau L0–L3 ou autonomie. Aucun Terraform, playbook Ansible, fichier Compose de production, manifeste K3s ou pipeline complet n’est fourni ici.
 
+## Comment utiliser ce guide sans se perdre
+
+Pour la première séance, commencer par les sections **1 à 6**, puis vérifier la réception en **section 8**. Revenir à la **section 7** au moment où une technologie doit réellement être installée ; la section 9 relie les résultats au parcours. Ne jamais exécuter plusieurs blocs comme un script unique.
+
+- **Outil déjà présent** : lire sa version et vérifier son fonctionnement ; ne pas le réinstaller simplement parce qu'il figure dans la liste.
+- **Contrôle en échec** : distinguer paquet absent, service arrêté, droits, réseau et incompatibilité avant de modifier la cible.
+- **Cible ou effet incertain** : rester en observation et demander une confirmation avant toute action.
+
+Les procédures d'**installation des outils** restent entièrement conservées dans ce document. Les exercices pointent vers elles au lieu de publier des commandes concurrentes.
+
 ## 1. Identifier les rôles avant de lancer une commande
 
 - **Fedora 45 / GNOME 51 est l’hôte physique.** Il porte le bureau, KVM, QEMU, libvirt et virt-manager. Terraform et Ansible ne sont pas installés sur Fedora : ils sont sur `srv-admin`.

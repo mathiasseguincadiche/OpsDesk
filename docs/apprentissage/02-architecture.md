@@ -18,6 +18,12 @@ Un choix qu'on ne sait pas expliquer ne se défend pas en entretien, et ne se co
 - Une décision « retenue » n'est pas « vérifiée » : rien n'est encore construit.
 - Une raison manquante s'écrit comme question ouverte ; on ne l'invente pas.
 
+## Cas voisin : comparer deux emplacements de journaux
+
+**Exemple de décision fictive, non appliquée à OpsDesk.** Un service d'essai peut garder ses journaux uniquement dans un conteneur, ou les envoyer vers une collecte externe. La première option est simple et peu coûteuse, mais peut perdre l'historique lors d'une suppression ; la seconde facilite la recherche entre plusieurs instances, au prix d'une dépendance et d'un stockage supplémentaires.
+
+**Méthode.** Formule le besoin (« retrouver un incident après recréation »), les alternatives, la conséquence d'une panne du collecteur et un contrôle mesurable (retrouver un identifiant de requête après recréation). Si tu ne connais ni le volume de logs ni la durée de conservation nécessaire, indique cette incertitude plutôt que d'inventer un SLO. Pour OpsDesk, les décisions à défendre restent celles de l'énoncé et du registre.
+
 ## Ce qu'il faut obtenir
 
 1. **Un tableau de cinq décisions**, avec les quatre réponses : trois serveurs Rocky Linux ; Docker Compose sur le serveur plutôt que Kubernetes ou Podman ; l'administration de Docker par `sudo` plutôt que par le groupe `docker` ; la sauvegarde `pg_dump` copiée hors des serveurs ; K3s pour une copie d'essai seulement.
