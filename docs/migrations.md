@@ -23,7 +23,7 @@ Les commandes doivent cibler la base attendue ; une commande validée sur runner
 4. Vérifier `python -m alembic check` puis tester l'application, la persistance et la reprise.
 5. Reproduire sur la cible choisie uniquement avec fenêtre de maintenance, sauvegarde qualifiée et plan de retour arrière.
 
-**Ne jamais lancer `alembic upgrade head` sur une base existante non estampillée** : la première révision tente de créer des tables déjà présentes. L'API refuse volontairement de démarrer en mode production si la révision attendue est absente ou divergente.
+**Ne jamais lancer `alembic upgrade head` sur une base existante non estampillée** : la première révision tente de créer des tables déjà présentes. L'API refuse volontairement de démarrer en mode production si la révision attendue est absente ou divergente. Les fichiers `alembic.ini` et `migrations/` sont intégrés à l'image Docker API (sans dépendre des sources du runner). Le [test de production en CI](../scripts/check_production_migrations.sh) vérifie l'échec avant migration, l'application des deux révisions et la création d'un administrateur dans une base PostgreSQL isolée.
 
 Les migrations futures sont relues manuellement (autogénération non fiable pour certaines contraintes). Le retour arrière de la première révision n'est volontairement pas destructif : en cas d'incident, restaurer la sauvegarde validée.
 

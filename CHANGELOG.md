@@ -4,6 +4,8 @@ Ce registre retrace les changements documentaires, structurels et techniques **v
 
 ## Non publié
 
+- Correction de l'image API : inclure Alembic et ses révisions dans le runtime non-root, avec test de migration et démarrage en mode production sur base PostgreSQL séparée.
+
 - API Python 3.13 Alpine (construction et exécution) : tests conservés, scan Trivy à 0 HIGH/CRITICAL sur les images utilisées et politique CI de refus.
 - Recette Chromium sur runner : connexion par cookie HttpOnly, contrôle CSRF, création de ticket, reconnexion après rechargement, déconnexion et affichage mobile.
 

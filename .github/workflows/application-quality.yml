@@ -11,6 +11,7 @@ on:
       - '.env.example'
       - 'scripts/smoke.py'
       - 'scripts/check_persistence_restore.sh'
+      - 'scripts/check_production_migrations.sh'
       - 'scripts/check_auth_throttle.py'
       - 'scripts/check_browser_e2e.py'
       - '.github/workflows/application-quality.yml'
@@ -24,6 +25,7 @@ on:
       - '.env.example'
       - 'scripts/smoke.py'
       - 'scripts/check_persistence_restore.sh'
+      - 'scripts/check_production_migrations.sh'
       - 'scripts/check_auth_throttle.py'
       - 'scripts/check_browser_e2e.py'
       - '.github/workflows/application-quality.yml'
@@ -127,6 +129,8 @@ jobs:
         run: python3 scripts/smoke.py
       - name: Restaurer une sauvegarde isolée et vérifier la persistance
         run: bash scripts/check_persistence_restore.sh
+      - name: Vérifier les migrations emballées dans l'image et le mode production
+        run: bash scripts/check_production_migrations.sh
       - name: Installer un navigateur Chromium jetable pour la recette E2E
         run: |
           python3 -m venv /tmp/opsdesk-e2e
