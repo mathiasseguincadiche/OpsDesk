@@ -14,6 +14,8 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
 def active_pages() -> list[Path]:
     """Inspect current public Markdown; keep version-1 archives out of the active contract."""
     roots = [ROOT, ROOT / "docs", ROOT / ".github", ROOT / "evidence"]
@@ -122,21 +124,17 @@ def check_editorial_contract() -> list[str]:
         "frontend/src/components/NewTicketModal.tsx": ("L'équipe support a été notifiée.",),
         "frontend/src/pages/Users.tsx": ("Inviter un utilisateur",),
         "frontend/src/components/Layout.tsx": ("Systèmes opérationnels",),
-        "docs/apprentissage/08-cicd.md": ("aucun workflow dans le dépôt à ce jour",),
     }
     for relative, claims in forbidden.items():
         content = (ROOT / relative).read_text(encoding="utf-8")
         for claim in claims:
             if claim in content:
                 errors.append(f"{relative}: misleading or outdated claim: {claim}")
-    for number in range(1, 14):
-        matches = list((ROOT / "docs/apprentissage").glob(f"{number:02d}-*.md"))
-        if len(matches) != 1:
-            errors.append(f"exercise {number:02d}: expected exactly one statement")
-            continue
-        content = matches[0].read_text(encoding="utf-8")
-        if "## Cas voisin" not in content:
-            errors.append(f"{matches[0].relative_to(ROOT)}: missing distinct reasoning example")
+    # La documentation du dépôt ne doit pas devenir une seconde base pédagogique.
+    for path in ("docs/apprentissage", "docs/templates", "docs/CHARTE_GITHUB.md",
+                 "docs/parcours-apprentissage.md", "docs/laboratoire-fedora-kvm-rocky.md"):
+        if (ROOT / path).exists():
+            errors.append(f"{path}: personal learning content must live in Notion")
     return errors
 
 
