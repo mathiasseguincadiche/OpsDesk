@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - 'backend/**'
+      - 'db/**'
       - 'frontend/**'
       - 'compose.yaml'
       - '.env.example'
@@ -16,6 +17,7 @@ on:
     branches: [main]
     paths:
       - 'backend/**'
+      - 'db/**'
       - 'frontend/**'
       - 'compose.yaml'
       - '.env.example'
