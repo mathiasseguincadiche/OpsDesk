@@ -1,5 +1,6 @@
 name: Documentation quality (no deployment)
 
+# Exécuter les contrôles uniquement si la documentation ou ses outils changent.
 on:
   pull_request:
     paths:
@@ -28,9 +29,12 @@ on:
       - '.github/workflows/docs-quality.yml'
   workflow_dispatch:
 
+# Droits minimaux : lecture seule, aucun déploiement.
 permissions:
   contents: read
 
+# Vérifie liens et ancres, fichiers SVG/Draw.io et contrats Python.
+# Ne valide ni une VM Rocky ni le rendu graphique sur un navigateur.
 jobs:
   docs-contract:
     runs-on: ubuntu-24.04
