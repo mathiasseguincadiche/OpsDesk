@@ -1,4 +1,4 @@
-"""Password hashing (PBKDF2-SHA256, stdlib only) and JWT access tokens."""
+"""Hachage PBKDF2-SHA256 des mots de passe et émission des jetons JWT."""
 from __future__ import annotations
 
 import base64
@@ -36,11 +36,21 @@ def verify_password(password: str, stored: str) -> bool:
     return hmac.compare_digest(candidate, expected)
 
 
-def create_access_token(user_id: int, role: str) -> tuple[str, int]:
+def password_fingerprint(password_hash: str) -> str:
+    """Lier une session au hachage actuel du mot de passe, sans divulguer ce hachage."""
+    return hmac.new(
+        get_settings().jwt_secret.encode("utf-8"), password_hash.encode("utf-8"), hashlib.sha256
+    ).hexdigest()
+
+
+def create_access_token(user_id: int, role: str, password_hash: str) -> tuple[str, int]:
     settings = get_settings()
     expires_in = settings.jwt_expire_minutes * 60
     now = datetime.now(UTC)
-    payload = {"sub": str(user_id), "role": role, "iat": now, "exp": now + timedelta(seconds=expires_in)}
+    payload = {
+        "sub": str(user_id), "role": role, "pwd": password_fingerprint(password_hash),
+        "iat": now, "exp": now + timedelta(seconds=expires_in),
+    }
     token = jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
     return token, expires_in
 

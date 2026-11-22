@@ -1,7 +1,7 @@
-"""Schema creation, first administrator and optional demo data.
+"""Initialiser le schéma, le premier administrateur et les données fictives éventuelles.
 
-Runs at every start and is idempotent. On PostgreSQL an advisory lock makes it
-safe when several replicas start at the same time (Kubernetes rollout).
+L'initialisation est répétable. Sous PostgreSQL, un verrou consultatif protège
+les démarrages simultanés de plusieurs instances.
 """
 from __future__ import annotations
 
@@ -71,6 +71,9 @@ def _init_lock():
 
 def init_database() -> None:
     settings = get_settings()
+    # Ne jamais créer de comptes à mot de passe public sur une cible de production.
+    if settings.environment == "production" and settings.seed_demo_data:
+        raise RuntimeError("SEED_DEMO_DATA doit être désactivé (false) en production.")
     with _init_lock():
         Base.metadata.create_all(engine)
         with SessionLocal() as db:

@@ -14,7 +14,7 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 
 def _token_for(user: User) -> TokenOut:
-    token, expires_in = create_access_token(user.id, user.role)
+    token, expires_in = create_access_token(user.id, user.role, user.password_hash)
     return TokenOut(access_token=token, expires_in=expires_in, user=UserOut.model_validate(user))
 
 

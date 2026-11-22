@@ -23,7 +23,7 @@ function Section({ title, description, children }: { title: string; description:
 }
 
 export function ProfilePage() {
-  const { user, isStaff } = useAuth();
+  const { user, isStaff, logout } = useAuth();
   const { dark, toggle } = useTheme();
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
@@ -31,7 +31,7 @@ export function ProfilePage() {
   const { data: stats } = useQuery({ queryKey: ["stats"], queryFn: () => api<Stats>("/api/stats") });
   const change = useMutation({
     mutationFn: () => api("/api/auth/me/password", { method: "PUT", body: { current_password: current, new_password: next } }),
-    onSuccess: () => { toast.success("Mot de passe modifié"); setCurrent(""); setNext(""); setConfirm(""); },
+    onSuccess: () => { toast.success("Mot de passe modifié. Reconnectez-vous."); setCurrent(""); setNext(""); setConfirm(""); logout(); },
   });
   const mismatch = confirm.length > 0 && confirm !== next;
   const submit = (e: FormEvent) => { e.preventDefault(); if (!mismatch) change.mutate(); };

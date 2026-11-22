@@ -1,4 +1,4 @@
-"""Configuration guardrails, without logging or connecting to a database."""
+"""Garde-fous de configuration, sans accès à la base de données."""
 import pytest
 
 from app.config import Settings, _validate_production_settings
@@ -13,7 +13,7 @@ def production_settings(monkeypatch):
     }.items():
         monkeypatch.delenv(f"{name}_FILE", raising=False)
         monkeypatch.setenv(name, value)
-    return Settings(environment="production", database_url=None)
+    return Settings(environment="production", database_url=None, seed_demo_data=False)
 
 
 @pytest.mark.parametrize("name", ["JWT_SECRET", "ADMIN_PASSWORD", "DB_PASSWORD"])
@@ -45,4 +45,15 @@ def test_file_precedence(monkeypatch, production_settings, tmp_path):
 
 
 def test_valid_secrets(production_settings):
+    _validate_production_settings(production_settings)
+
+
+def test_demo_data_forbidden_in_production(production_settings):
+    production_settings.seed_demo_data = True
+    with pytest.raises(RuntimeError, match="SEED_DEMO_DATA"):
+        _validate_production_settings(production_settings)
+
+
+def test_demo_data_disabled_allows_other_production_checks(production_settings):
+    assert production_settings.seed_demo_data is False
     _validate_production_settings(production_settings)
