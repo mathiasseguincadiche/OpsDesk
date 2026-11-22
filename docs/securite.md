@@ -40,23 +40,23 @@ Chaque secret accepte une forme `*_FILE` qui lit sa valeur dans un fichier : c'e
 
 ## Ce qui revient à l'infrastructure
 
-L'application ne peut pas se protéger seule. Les décisions suivantes sont prises au [registre](architecture.md#décisions-retenues) et se construisent dans le [parcours](apprentissage/README.md) :
+L'application ne peut pas se protéger seule. Les décisions suivantes sont prises au [registre](architecture.md#décisions-retenues) et doivent être mises en œuvre et contrôlées sur l'infrastructure cible :
 
 - **Réseau** : seul le port 8080 ouvert aux utilisateurs ; 8000 ouvert à la supervision seulement ; 5432 jamais publié ; firewalld actif.
 - **Système** : SELinux en mode `Enforcing` ; SSH par clé, sans mot de passe ni connexion `root`.
 - **Exécution** : Docker Engine, dont le démon tourne en root. Personne n'est dans le groupe `docker` (qui vaut root) : administration par `sudo`, tracée. Le socket Docker n'est monté dans aucun conteneur et l'API Docker n'écoute pas sur le réseau. Les images API et frontend s’exécutent sans root ; PostgreSQL utilise son mécanisme de démarrage et de changement d’utilisateur. `no-new-privileges` est activé sur les trois services.
 - **Pare-feu et SELinux face à Docker** : Docker écrit ses propres règles de filtrage (zone firewalld `docker`) ; l'exposition réelle d'un port se prouve depuis une autre machine. SELinux ne s'applique aux conteneurs que si le démon l'active (`selinux-enabled`).
 - **Secrets** : fichiers lisibles par le seul conteneur qui les lit, montés par le bloc `secrets:` de Compose ; jamais dans le fichier Compose, ni dans Git, ni en clair dans les rôles Ansible.
-- **Images** : analyse Trivy dans la CI, avec une règle écrite pour les vulnérabilités graves (exercice 08).
-- **Sauvegardes** : copies hors du serveur, avec une clé SSH limitée à ce seul usage (exercice 11).
+- **Images** : analyse Trivy dans la CI, avec une règle écrite pour les vulnérabilités graves.
+- **Sauvegardes** : copies hors du serveur, avec une clé SSH limitée à ce seul usage.
 
 ## Limites connues
 
 - Le [scan final](https://github.com/mathiasseguincadiche/OpsDesk/actions/runs/44649917348) des images exécutées indique 47 HIGH sur l'API (11 CVE Debian distinctes, aucune version corrigée indiquée), zéro occurrence sur le frontend, et 1 CRITICAL + 26 HIGH sur PostgreSQL dans le binaire `gosu`. Le retrait de pip de l'image d'exécution a supprimé les cinq HIGH Python observées précédemment. L'analyse complémentaire de `gosu` par govulncheck ne détecte aucun symbole vulnérable utilisé ; ce constat ne constitue ni une garantie d'innocuité ni une suppression des alertes Trivy. PostgreSQL officiel est conservé. Aucun secret détecté dans le périmètre scanné (hors historique Git). [Suivi #51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) ; [preuves](../STATUS.md). Les correctifs amont devront être intégrés lorsqu'ils seront disponibles.
 - Pas de limitation du nombre de tentatives de connexion.
 - Pas d'authentification à deux facteurs ni de renouvellement automatique du jeton.
-- Pas de HTTPS dans l’application : il se termine devant elle. L’atelier DNS/TLS de l’exercice 06 le met en pratique sur une cible privée, sans exposer le laboratoire. Ce contrôle reste à réaliser.
-- Le port 8000 ouvert à `srv-k3s` donne accès à toute l'API, pas seulement à `/metrics` (question ouverte relevée à l'exercice 02).
+- Pas de HTTPS dans l’application : il se termine devant elle. Un frontal TLS privé et des règles de filtrage doivent être définis et vérifiés avant déploiement. Ce contrôle reste à réaliser.
+- Le port 8000 ouvert à `srv-k3s` donne accès à toute l'API, pas seulement à `/metrics` (risque ouvert à traiter avant le déploiement).
 
 Ces limites interdisent une exposition sur Internet en l'état ; elles sont acceptables pour un laboratoire aux données fictives.
 
