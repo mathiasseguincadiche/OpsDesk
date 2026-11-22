@@ -18,6 +18,10 @@ Une vingtaine de commandes tapées à la main ne se rejouent pas de mémoire tro
 - Les modules `command` et `shell` répondent `changed` à chaque fois, sauf condition (`creates`, `changed_when`).
 - Terraform crée les machines, Ansible les configure, Docker Engine et Compose y font tourner l'application.
 
+## Comprendre le mécanisme et ses limites
+
+**Lire le second passage avec discernement.** `changed=0` indique que les tâches exécutées ne déclarent aucun changement ; cela ne garantit ni la justesse des règles réseau ni la santé de l'application. Imagine un service `active` dont le port est inaccessible : le playbook peut être idempotent et l'exploitation incorrecte. Il faut donc associer la vérification d'état à une observation depuis la source réellement autorisée.
+
 ## Ce qu'il faut obtenir
 
 L'état voulu sur `srv-app`, préparé pour l'exercice 06 :
