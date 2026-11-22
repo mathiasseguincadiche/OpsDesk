@@ -189,3 +189,38 @@ def test_browser_cookie_session_revoked_after_password_change(client):
     assert client.post(
         "/api/auth/browser/login", json={"email": "admin@test.local", "password": "AdminPass456"}
     ).status_code == 200
+
+
+def test_login_throttle_shared_by_database_and_reset_after_success(client):
+    from datetime import UTC, datetime, timedelta
+
+    from app.auth_throttle import MAX_ATTEMPTS, throttle_key
+    from app.db import SessionLocal
+    from app.models import LoginThrottle
+
+    payload = {"email": "admin@test.local", "password": "incorrect"}
+    for _ in range(MAX_ATTEMPTS):
+        assert client.post("/api/auth/login", json=payload).status_code == 401
+    limited = client.post("/api/auth/login", json=payload)
+    assert limited.status_code == 429
+    assert int(limited.headers["Retry-After"]) > 0
+    # Même un bon mot de passe doit attendre : l'accès direct ne contourne pas le compteur.
+    assert client.post(
+        "/api/auth/browser/login",
+        json={"email": "admin@test.local", "password": "AdminPass123"},
+    ).status_code == 429
+
+    # Une autre session SQLAlchemy voit le compteur (pas de variable locale par processus).
+    with SessionLocal() as db:
+        row = db.get(LoginThrottle, throttle_key("admin@test.local"))
+        assert row is not None and row.attempt_count > MAX_ATTEMPTS
+        row.window_started_at = datetime.now(UTC) - timedelta(minutes=10)
+        row.blocked_until = datetime.now(UTC) - timedelta(seconds=1)
+        db.commit()
+
+    assert client.post(
+        "/api/auth/login",
+        json={"email": "admin@test.local", "password": "AdminPass123"},
+    ).status_code == 200
+    with SessionLocal() as db:
+        assert db.get(LoginThrottle, throttle_key("admin@test.local")) is None

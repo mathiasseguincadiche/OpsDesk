@@ -4,6 +4,8 @@ Ce registre retrace les changements documentaires, structurels et techniques **v
 
 ## Non publié
 
+- Authentification : compteur de tentatives HMAC partagé via PostgreSQL, refus HTTP 429 également en accès direct à l'API, inscriptions publiques interdites en production.
+
 - Sécurité navigateur : session JWT en cookie HttpOnly, protection CSRF liée au jeton, mode Secure en production, suppression de l'ancien stockage local, conservation du Bearer pour les scripts.
 
 - Image de démonstration PostgreSQL : dérivé minimal de `postgres:17-alpine`, substitution de `gosu` (Go vulnérable) par `su-exec` (outil C d'Alpine), avec scan comparatif et tests de restauration sur runner.

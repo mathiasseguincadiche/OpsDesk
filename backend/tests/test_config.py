@@ -13,7 +13,7 @@ def production_settings(monkeypatch):
     }.items():
         monkeypatch.delenv(f"{name}_FILE", raising=False)
         monkeypatch.setenv(name, value)
-    return Settings(environment="production", database_url=None, seed_demo_data=False)
+    return Settings(environment="production", database_url=None, seed_demo_data=False, allow_registration=False)
 
 
 @pytest.mark.parametrize("name", ["JWT_SECRET", "ADMIN_PASSWORD", "DB_PASSWORD"])
@@ -67,3 +67,9 @@ def test_unversioned_schema_refused_by_production():
     Base.metadata.create_all(engine)
     with pytest.raises(RuntimeError, match="Alembic"):
         _require_migrated_schema()
+
+
+def test_public_registration_refused_in_production(production_settings):
+    production_settings.allow_registration = True
+    with pytest.raises(RuntimeError, match="ALLOW_REGISTRATION"):
+        _validate_production_settings(production_settings)

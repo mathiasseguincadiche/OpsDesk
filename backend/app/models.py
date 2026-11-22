@@ -100,3 +100,13 @@ class TicketEvent(Base):
 
     ticket: Mapped[Ticket] = relationship(back_populates="events")
     actor: Mapped[User] = relationship(lazy="joined")
+
+
+class LoginThrottle(Base):
+    """Compteur partagé des tentatives de connexion, sans e-mail en clair."""
+
+    __tablename__ = "login_throttle"
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    attempt_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    window_started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
+    blocked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

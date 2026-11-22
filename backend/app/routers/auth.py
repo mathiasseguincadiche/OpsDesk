@@ -4,6 +4,7 @@ from __future__ import annotations
 from fastapi import APIRouter, HTTPException, Response, status
 from sqlalchemy import func, select
 
+from ..auth_throttle import clear_login_attempts, reserve_login_attempt
 from ..config import get_settings
 from ..deps import DB, CurrentUser
 from ..models import User, utcnow
@@ -20,6 +21,8 @@ def _token_for(user: User) -> TokenOut:
 
 
 def _authenticate(payload: LoginIn, db: DB) -> User:
+    # Protection persistante et commune aux réplicas, même en accès direct à l'API.
+    reserve_login_attempt(db, payload.email)
     user = db.scalar(select(User).where(func.lower(User.email) == payload.email))
     if user is None or not verify_password(payload.password, user.password_hash):
         LOGINS.labels("failure").inc()
@@ -28,6 +31,7 @@ def _authenticate(payload: LoginIn, db: DB) -> User:
         LOGINS.labels("disabled").inc()
         raise HTTPException(status.HTTP_403_FORBIDDEN, "Ce compte est désactivé.")
     user.last_login_at = utcnow()
+    clear_login_attempts(db, payload.email)
     db.commit()
     LOGINS.labels("success").inc()
     return user
