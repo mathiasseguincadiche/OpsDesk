@@ -50,7 +50,7 @@ Les [extraits datés des journaux](../evidence/qualification/2026-11-19-socle.tx
 
 ## Recette d'une modification documentaire
 
-Pour une évolution significative, constater le problème, expliquer son impact, proposer la correction et vérifier son bénéfice plutôt que refaire un document pour sa seule apparence. Sur les deux supports, examiner quatre situations de lecture : découverte (finalité, statut et accès au parcours), apprentissage (prérequis, exercice, contrôle), recherche ciblée (commande ou preuve accessible), analyse approfondie (contrat, choix, compromis, limites). Vérifier les liens, la terminologie et la correspondance avec le code ; contrôler les rendus et sources lorsque les schémas changent. Indiquer les vérifications non réalisées. Voir également [les sources de vérité](parcours-apprentissage.md#où-se-trouve-quoi).
+Pour une évolution significative, constater le problème, expliquer son impact, proposer la correction et vérifier son bénéfice plutôt que refaire un document pour sa seule apparence. Sur les deux supports, examiner quatre situations de lecture : découverte (finalité, statut et accès au parcours), apprentissage (prérequis, exercice, contrôle), recherche ciblée (commande ou preuve accessible), analyse approfondie (contrat, choix, compromis, limites). Vérifier les liens, la terminologie et la correspondance avec le code ; contrôler les rendus et sources lorsque les schémas changent. Indiquer les vérifications non réalisées. Voir également [les sources de vérité](provenance.md#une-source-de-vérité-par-sujet).
 
 ### Périmètre d'une recette de lecture
 
