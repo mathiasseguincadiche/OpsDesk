@@ -44,6 +44,10 @@ Le [run de CI 45006326819](https://github.com/mathiasseguincadiche/OpsDesk/actio
 
 Il s'agit d'un test sur runner, non d'une sauvegarde hors serveur ou d'un plan de reprise personnel testé sur les VM Rocky ; les RPO et RTO ne sont pas qualifiés.
 
+## Architecture V2 — décisions validées, réalisation non commencée
+
+Le 22 novembre 2026, **Architecture OpsDesk V2** remplace la précédente cible d'infrastructure. Les [sept ADR](docs/adr/README.md), [flux](docs/architecture-v2-flux.md) et [phases 0 à 6](docs/architecture-v2-deploiement.md) sont acceptés **en conception**, non vérifiés sur des VM Fedora/Rocky. Terraform doit être lancé **depuis l'hôte Fedora**, la cible serveur doit utiliser **HTTPS**, GHCR reste **privé**, les secrets passent par **Ansible Vault**, les sauvegardes externes utilisent **Borg chiffré**, et Grafana Alerting notifie par **e-mail**. Les schémas hérités nécessitent un nouvel export Draw.io/SVG. Ne pas confondre cette validation documentaire avec une réalisation d'infrastructure.
+
 ## Infrastructure
 
 | Élément | Avancement | Contrôle |

@@ -5,7 +5,10 @@ Le présent dossier documente le **produit** : son contrat, son architecture, sa
 ## Comprendre le produit
 
 - [Contrat applicatif](contrat-applicatif.md) — besoins métier, utilisateurs, API, stockage et critères de réception.
-- [Architecture et décisions](architecture.md) — composants, réseaux, alternatives et compromis.
+- [Architecture applicative](architecture.md) — composants, architecture antérieure et fonctionnement du produit.
+- [Architecture V2 : sept ADR](adr/README.md) — décisions validées de la nouvelle cible Fedora/KVM/Rocky.
+- [Architecture V2 : matrice des flux](architecture-v2-flux.md) — réseaux, ports, origines permises et refus attendus.
+- [Architecture V2 : déploiement 0 à 6](architecture-v2-deploiement.md) — prérequis, étapes et quatre épreuves de validation.
 - [Schémas techniques](diagrams/README.md) — présentation, flux, frontières et sources Draw.io.
 - [Provenance](provenance.md) — origine du socle, contributions et limites.
 
