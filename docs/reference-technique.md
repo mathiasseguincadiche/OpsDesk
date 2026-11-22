@@ -52,6 +52,7 @@ Les noms sont ceux des services de `compose.yaml` ; Compose nomme les conteneurs
 | `DATABASE_URL` | — | URL complète de la base (prioritaire sur les `DB_*`) |
 | `DB_HOST` / `DB_PORT` / `DB_NAME` / `DB_USER` / `DB_PASSWORD` | `localhost` / `5432` / `opsdesk` / `opsdesk` / — | Connexion à PostgreSQL |
 | `JWT_SECRET` | aléatoire en développement | Secret de signature des jetons, 32 caractères au minimum |
+| `FORWARDED_ALLOW_IPS` | `127.0.0.1` | Seuls les proxys explicitement désignés peuvent transmettre leurs en-têtes à Uvicorn ; vérifier le frontal avant déploiement. Ne pas utiliser `*` |
 | `JWT_EXPIRE_MINUTES` | `720` | Durée d'une session |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | `admin@opsdesk.local` / — | Premier administrateur, créé si aucun n'existe |
 | `SEED_DEMO_DATA` | `true` | Données fictives uniquement en développement ; **obligatoirement `false` en production (sinon démarrage refusé)** |

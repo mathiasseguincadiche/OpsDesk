@@ -59,6 +59,8 @@ L'application ne peut pas se protéger seule. Les décisions suivantes sont pris
 - Pas d'authentification à deux facteurs ni de renouvellement automatique du jeton. Les JWT restent conservés dans `localStorage` ; le modèle d'authentification/cookies/CSRF doit être revu avant toute exposition publique.
 - Pas de HTTPS dans l’application : il se termine devant elle. Un frontal TLS privé et des règles de filtrage doivent être définis et vérifiés avant déploiement. Ce contrôle reste à réaliser.
 - Le port 8000 ouvert à `srv-k3s` donne accès à toute l'API, pas seulement à `/metrics` (risque ouvert à traiter avant le déploiement).
+- Uvicorn accepte par défaut les en-têtes de proxy uniquement de `127.0.0.1` ; `FORWARDED_ALLOW_IPS` doit désigner les proxys effectivement contrôlés. Ne jamais définir `*` sur une cible ouverte.
+- Les images API, frontend et PostgreSQL sont visées par un [scan Trivy automatisé](../.github/workflows/image-security.yml). Les alertes HIGH/CRITICAL restent affichées et suivies dans [#51](https://github.com/mathiasseguincadiche/OpsDesk/issues/51) : la réussite technique du scan ne constitue pas une homologation.
 
 Ces limites interdisent une exposition sur Internet en l'état ; elles sont acceptables pour un laboratoire isolé aux données fictives. Le traitement de la chaîne de production est suivi dans [#68](https://github.com/mathiasseguincadiche/OpsDesk/issues/68).
 

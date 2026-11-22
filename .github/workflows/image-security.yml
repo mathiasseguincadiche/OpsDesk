@@ -1,0 +1,75 @@
+name: Image security audit (reports, no deployment)
+
+# Les trois images réellement utilisées sont scannées, y compris chaque semaine.
+# Les alertes HIGH/CRITICAL restent visibles ; une erreur de scan échoue.
+on:
+  pull_request:
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'compose.yaml'
+      - '.github/workflows/image-security.yml'
+      - 'scripts/summarize_image_scans.py'
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'compose.yaml'
+      - '.github/workflows/image-security.yml'
+      - 'scripts/summarize_image_scans.py'
+  schedule:
+    - cron: '23 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: image-security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scan-images:
+    name: Trivy — API, frontend et PostgreSQL
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Extraire les Dockerfiles de la révision à vérifier
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Vérifier la définition Compose
+        run: docker compose config -q
+      - name: Construire les images et récupérer PostgreSQL
+        run: |
+          docker compose build backend frontend
+          docker pull docker.io/library/postgres:17-alpine
+          mkdir -p scan-results
+          for ref in localhost/opsdesk-api:2.0.0 localhost/opsdesk-frontend:2.0.0 docker.io/library/postgres:17-alpine; do
+            echo "$ref" >> scan-results/identifiants-images.txt
+            docker image inspect --format '{{.Id}} | {{json .RepoDigests}}' "$ref" >> scan-results/identifiants-images.txt
+          done
+      - name: Installer Trivy en version explicite
+        uses: aquasecurity/setup-trivy@e07451d2e059ed86c2870430ea286b3a9e0bf241
+        with:
+          version: v0.76.2
+          cache: true
+      - name: Scanner sans ignorer les alertes non corrigées
+        run: |
+          trivy --version
+          trivy image --scanners vuln --image-src docker --severity HIGH,CRITICAL --format json --output scan-results/api.json localhost/opsdesk-api:2.0.0
+          trivy image --scanners vuln --image-src docker --severity HIGH,CRITICAL --format json --output scan-results/frontend.json localhost/opsdesk-frontend:2.0.0
+          trivy image --scanners vuln --image-src docker --severity HIGH,CRITICAL --format json --output scan-results/postgresql.json docker.io/library/postgres:17-alpine
+      - name: Valider la structure JSON, signaler les risques et écrire le résumé
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_summarize_image_scans.py'
+          python3 scripts/summarize_image_scans.py scan-results/api.json scan-results/frontend.json scan-results/postgresql.json --output scan-results/resume.md
+      - name: Conserver les rapports et les identifiants exacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-images-${{ github.sha }}
+          path: scan-results/
+          if-no-files-found: error
+          retention-days: 30
