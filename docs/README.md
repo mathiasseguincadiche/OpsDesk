@@ -12,6 +12,7 @@ Le présent dossier documente le **produit** : son contrat, son architecture, sa
 ## Installer et exploiter
 
 - [Démarrage local](demarrage.md) — prérequis, commandes de lancement, vérifications et arrêt.
+- [Migrations PostgreSQL](migrations.md) — versionner et qualifier le schéma avant exploitation.
 - [Référence technique](reference-technique.md) — variables, ports, sondes, métriques et tests.
 - [Exploitation courante](exploitation-day2.md) — contrôles, maintenance et diagnostic.
 - [Reprise](reprise.md) — sauvegarde, diagnostic et restauration des tickets.

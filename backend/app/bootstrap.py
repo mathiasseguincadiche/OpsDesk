@@ -9,8 +9,9 @@ import logging
 import random
 from contextlib import contextmanager
 from datetime import timedelta
+from pathlib import Path
 
-from sqlalchemy import func, select, text
+from sqlalchemy import func, inspect, select, text
 
 from .config import get_settings
 from .db import Base, SessionLocal, engine
@@ -69,13 +70,37 @@ def _init_lock():
             conn.commit()
 
 
+def _require_migrated_schema() -> None:
+    """Refuser un schéma de production qui n'a pas été versionné."""
+    from alembic.config import Config
+    from alembic.script import ScriptDirectory
+
+    root = Path(__file__).resolve().parents[1]
+    config = Config(str(root / "alembic.ini"))
+    expected = ScriptDirectory.from_config(config).get_current_head()
+    if not inspect(engine).has_table("alembic_version"):
+        raise RuntimeError(
+            "Révision Alembic absente : sauvegarder, auditer le schéma et le migrer ou "
+            "l'estampiller avec validation explicite."
+        )
+    with engine.connect() as conn:
+        actual = conn.execute(text("SELECT version_num FROM alembic_version")).scalars().all()
+    if actual != [expected]:
+        raise RuntimeError(f"Schéma non conforme : révision Alembic {actual}, attendue {expected}.")
+
+
 def init_database() -> None:
     settings = get_settings()
     # Ne jamais créer de comptes à mot de passe public sur une cible de production.
     if settings.environment == "production" and settings.seed_demo_data:
         raise RuntimeError("SEED_DEMO_DATA doit être désactivé (false) en production.")
     with _init_lock():
-        Base.metadata.create_all(engine)
+        if settings.environment == "production":
+            # Une production ne modifie jamais automatiquement les tables.
+            _require_migrated_schema()
+        else:
+            # La démonstration locale conserve le démarrage rapide.
+            Base.metadata.create_all(engine)
         with SessionLocal() as db:
             if not db.scalar(select(func.count()).select_from(User).where(User.role == "admin")):
                 db.add(
