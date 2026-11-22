@@ -72,3 +72,94 @@ jobs:
               raise SystemExit(f'Failed to purge {len(remaining)} historical preview artifacts')
           print(f'Verified: no remaining {target_name} artifacts')
           PY
+
+  prune-merged-architecture-head-branches:
+    if: github.repository == 'mathiasseguincadiche/OpsDesk' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Delete only verified merged historical architecture head branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from urllib.error import HTTPError
+          from urllib.parse import quote
+          from urllib.request import Request, urlopen
+
+          repo = os.environ['REPO']
+          assert repo == 'mathiasseguincadiche/OpsDesk'
+          token = os.environ['GH_TOKEN']
+          api = f'https://api.github.com/repos/{repo}'
+          headers = {
+              'Authorization': f'Bearer {token}',
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+
+          def call(path, method='GET'):
+              req = Request(api + path, method=method, headers=headers)
+              with urlopen(req, timeout=30) as response:
+                  body = response.read()
+                  return json.loads(body) if body else None
+
+          candidates = [
+              "docs/architecture-v2-adrs-plan-20261122",
+              "docs/architecture-v2-diagrams-20261122",
+              "fix/architecture-v2-legends-20261122",
+              "fix/architecture-v2-traits-continus-20261122",
+              "fix/restore-v1-diagram-layout-v2-20261122",
+              "style/architecture-v2-gemini-finition-complete-20261122",
+              "privacy/global-architecture-only-20261122",
+              "privacy/sanitize-public-infra-docs-20261122",
+              "docs/schema-technique-architecture-cible",
+              "docs/refonte-schema-technique",
+              "docs/schemas-systeme-graphique",
+              "docs/refonte-schemas",
+              "docs/schemas-drawio-v12",
+              "docs/schemas-lisibilite",
+              "docs/phases-ordre-de-dependance",
+              "docs/opsdesk-v11-lab-diagram-20261110",
+              "docs/refonte-schema-presentation",
+              "docs/statut-schemas-controles",
+              "docs/controles-schemas",
+              "docs/vitrine-v24",
+          ]
+          pulls = call('/pulls?state=all&per_page=100')
+          if len(pulls) >= 100:
+              raise RuntimeError('PR list reached page limit; review before pruning')
+          removed = []
+          skipped = []
+          for name in candidates:
+              linked = [p for p in pulls if p.get('head', {}).get('ref') == name]
+              # Every listed branch must belong to merged PRs; open or
+              # unverified branches are skipped rather than deleted.
+              if not linked or any(not p.get('merged_at') for p in linked):
+                  skipped.append((name, 'not confirmed exclusively merged'))
+                  continue
+              path = '/git/refs/heads/' + quote(name, safe='/')
+              try:
+                  call(path)
+              except HTTPError as exc:
+                  if exc.code == 404:
+                      print(f'Already absent: {name}')
+                      continue
+                  raise
+              try:
+                  call(path, method='DELETE')
+                  removed.append(name)
+                  print(f'Deleted merged architecture branch: {name}')
+              except HTTPError as exc:
+                  skipped.append((name, f'DELETE HTTP {exc.code}'))
+          print(f'Branch cleanup: removed={len(removed)} skipped={len(skipped)}')
+          for name, reason in skipped:
+              print(f'Needs review: {name} ({reason})')
+          # Failure is reported when access denied; do not force-delete.
+          if skipped:
+              raise SystemExit('Some selected merged branches need separate review')
+          PY
