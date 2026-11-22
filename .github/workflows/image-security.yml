@@ -1,11 +1,13 @@
 name: Image security audit (reports, no deployment)
 
 # Les trois images réellement utilisées sont scannées, y compris chaque semaine.
-# Les alertes HIGH/CRITICAL restent visibles ; une erreur de scan échoue.
+# Les images retenues sont refusées si Trivy signale HIGH ou CRITICAL.
+# L'image PostgreSQL officielle reste scannée uniquement pour comparaison.
 on:
   pull_request:
     paths:
       - 'backend/**'
+      - 'db/**'
       - 'frontend/**'
       - 'compose.yaml'
       - '.github/workflows/image-security.yml'
@@ -14,6 +16,7 @@ on:
     branches: [main]
     paths:
       - 'backend/**'
+      - 'db/**'
       - 'frontend/**'
       - 'compose.yaml'
       - '.github/workflows/image-security.yml'
@@ -63,22 +66,22 @@ jobs:
           trivy image --scanners vuln --image-src docker --severity HIGH,CRITICAL --format json --output scan-results/frontend.json localhost/opsdesk-frontend:2.0.0
           trivy image --scanners vuln --image-src docker --severity HIGH,CRITICAL --format json --output scan-results/postgresql.json localhost/opsdesk-db:17-alpine-secure
           trivy image --scanners vuln --image-src docker --severity HIGH,CRITICAL --format json --output scan-results/postgresql-amont.json docker.io/library/postgres:17-alpine
-      - name: Bloquer les CVE CRITICAL dans l'image PostgreSQL retenue
+      - name: Refuser les CVE HIGH et CRITICAL dans les trois images exécutées
         run: |
           python3 - <<'PY'
           import json
           from pathlib import Path
 
-          report = json.loads(Path("scan-results/postgresql.json").read_text(encoding="utf-8"))
-          critical = [
-              (finding.get("VulnerabilityID"), result.get("Target"))
-              for result in report.get("Results", [])
-              for finding in result.get("Vulnerabilities", []) or []
-              if finding.get("Severity") == "CRITICAL"
-          ]
-          if critical:
-              raise SystemExit(f"CVE critiques résiduelles PostgreSQL : {critical}")
-          print("Aucune CVE CRITICAL signalée dans l'image PostgreSQL dérivée.")
+          findings = []
+          for name in ("api", "frontend", "postgresql"):
+              report = json.loads(Path(f"scan-results/{name}.json").read_text(encoding="utf-8"))
+              for result in report.get("Results", []):
+                  for item in result.get("Vulnerabilities", []) or []:
+                      if item.get("Severity") in ("HIGH", "CRITICAL"):
+                          findings.append((name, item.get("Severity"), item.get("VulnerabilityID")))
+          if findings:
+              raise SystemExit(f"Images retenues non conformes à la règle HIGH/CRITICAL : {findings[:30]}")
+          print("PASS : zéro HIGH et zéro CRITICAL sur les trois images retenues.")
           PY
       - name: Valider la structure JSON, signaler les risques et écrire le résumé
         run: |
