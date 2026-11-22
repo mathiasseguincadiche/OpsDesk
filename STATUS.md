@@ -46,7 +46,7 @@ Il s'agit d'un test sur runner, non d'une sauvegarde hors serveur ou d'un plan d
 
 ## Architecture V2 — décisions validées, réalisation non commencée
 
-Le 22 novembre 2026, **Architecture OpsDesk V2** remplace la précédente cible d'infrastructure. Les [sept ADR](docs/adr/README.md), [flux](docs/architecture-v2-flux.md) et [phases 0 à 6](docs/architecture-v2-deploiement.md) sont acceptés **en conception**, non vérifiés sur des VM Fedora/Rocky. Terraform doit être lancé **depuis l'hôte Fedora**, la cible serveur doit utiliser **HTTPS**, GHCR reste **privé**, les secrets passent par **Ansible Vault**, les sauvegardes externes utilisent **Borg chiffré**, et Grafana Alerting notifie par **e-mail**. Les schémas hérités nécessitent un nouvel export Draw.io/SVG. Ne pas confondre cette validation documentaire avec une réalisation d'infrastructure.
+Le 22 novembre 2026, **Architecture OpsDesk V2** remplace la précédente cible d'infrastructure. Les [sept ADR](docs/adr/README.md), [flux](docs/architecture-v2-flux.md) et [phases 0 à 6](docs/architecture-v2-deploiement.md) sont acceptés **en conception**, non vérifiés sur des VM Fedora/Rocky. Terraform doit être lancé **depuis l'hôte Fedora**, la cible serveur doit utiliser **HTTPS**, GHCR reste **privé**, les secrets passent par **Ansible Vault**, les sauvegardes externes utilisent **Borg chiffré**, et Grafana Alerting notifie par **e-mail**. Les schémas **architecture globale** et **architecture détaillée** disposent de sources Draw.io et SVG révisés pour la V2 ; leur inspection graphique native et les tests de terrain restent à réaliser. Ne pas confondre cette validation documentaire avec une réalisation d'infrastructure.
 
 ## Infrastructure
 

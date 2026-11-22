@@ -4,28 +4,28 @@ Ce dossier rassemble les schémas **du produit et de son architecture**, pas les
 
 ## Vues disponibles
 
-**Attention :** les schémas d'infrastructure existants reflètent une **cible antérieure**. Les nouvelles décisions **Architecture V2** sont définies par les [sept ADR](../adr/README.md), la [matrice de flux](../architecture-v2-flux.md) et le [plan de déploiement](../architecture-v2-deploiement.md). Les paires `.drawio` / `.svg` devront être mises à jour et inspectées graphiquement dans un lot séparé **avant** de présenter les vues comme Architecture V2. Les schémas existants ne sont pas des preuves de déploiement.
+**Architecture V2 :** les paires **architecture globale** et **architecture détaillée** sont actualisées avec les nouvelles responsabilités (Terraform sur Fedora), HTTPS, GHCR privé, Borg, K3s et réseaux internes. Les autres quatre paires documentent l'application et ses usages et sont conservées. Les décisions de référence sont les [sept ADR](../adr/README.md), la [matrice des flux](../architecture-v2-flux.md) et le [plan phases 0 à 6](../architecture-v2-deploiement.md). Aucun de ces schémas n'est une preuve de déploiement ; une inspection graphique native finale des sources Draw.io reste nécessaire avant publication comme plan visuel certifié.
 
 | Schéma | Utilité |
 | --- | --- |
 | [Présentation](presentation.svg) ([source](presentation.drawio)) | Finalité du produit, acteurs et principaux composants |
 | [Présentation mobile](presentation-mobile.svg) ([source](presentation-mobile.drawio)) | Variante lisible sur petit écran |
-| [Architecture globale](architecture-globale.svg) ([source](architecture-globale.drawio)) | VM, réseaux et principaux échanges |
-| [Architecture détaillée](architecture.svg) ([source](architecture.drawio)) | Composants, ports, frontières et responsabilités |
+| [Architecture globale V2](architecture-globale.svg) ([source](architecture-globale.drawio)) | Vue synthétique : Fedora / Terraform, trois VM, HTTPS, GHCR privé, Borg et statut cible |
+| [Architecture détaillée V2](architecture.svg) ([source](architecture.drawio)) | Réseau, ports, frontières, Nginx/React, FastAPI, PostgreSQL, K3s et sauvegardes |
 | [Séquence de consultation](sequence-consultation.svg) ([source](sequence-consultation.drawio)) | Chemin d'une requête authentifiée |
 | [Diagnostic par couches](diagnostic-service.svg) ([source](diagnostic-service.drawio)) | Triage technique d'un incident de service |
 
 ## Convention et limites
 
 - Un cadre désigne une frontière (hôte, VM, réseau ou service) ; une flèche indique le sens du flux.
-- Le trait plein représente l'application et les flux réellement contrôlés ; les éléments pointillés représentent la cible InfraOps prévue, non réalisée.
+- Sur les deux vues **Architecture V2**, les frontières de VM et les flux d'exploitation prévus sont en pointillés : ils ne sont **pas** exécutés sur Fedora/Rocky. Le socle applicatif a été contrôlé séparément sur runner ; les traits internes décrivent son chemin de données.
 - Un schéma décrit une intention et une structure ; il ne prouve ni le déploiement ni la sécurité. Le [statut vérifié](../../STATUS.md) fait foi.
 - Le fichier `.drawio` est la source éditable. Modifier un SVG seul ne suffit pas à maintenir la paire cohérente.
 
 ## Modifier et vérifier un schéma
 
 1. Ouvrir le fichier `.drawio` correspondant dans diagrams.net / Draw.io.
-2. Vérifier ports, identités et flux auprès de [`compose.yaml`](../../compose.yaml), de la [référence technique](../reference-technique.md) et des [décisions](../architecture.md).
+2. Vérifier les ports et flux d'infrastructure auprès des [ADR V2](../adr/README.md) et de la [matrice V2](../architecture-v2-flux.md) ; distinguer `compose.yaml` **local** (`127.0.0.1:8080`) du futur Compose **serveur** (HTTPS :443).
 3. Exporter en SVG depuis Draw.io ; relire le résultat à taille normale et en thème clair/sombre.
 4. Conserver les deux fichiers et exécuter `python3 scripts/check_docs.py` depuis la racine.
 

@@ -44,6 +44,14 @@ class DocumentationContracts(unittest.TestCase):
         anchors = check_docs.document_anchors(ROOT / "docs/architecture.md")
         self.assertIn("décisions-retenues", anchors)
 
+    def test_v2_diagrams_sources_and_exports_synchronized(self) -> None:
+        # La vérification par appariement est incluse dans check_repository().
+        # Elle inspecte la structure XML et les textes des paires V2.
+        self.assertEqual([], check_docs.check_repository())
+        for name in ("architecture", "architecture-globale"):
+            self.assertTrue((ROOT / "docs" / "diagrams" / f"{name}.drawio").is_file())
+            self.assertTrue((ROOT / "docs" / "diagrams" / f"{name}.svg").is_file())
+
     def test_no_known_misleading_claims(self) -> None:
         self.assertEqual([], check_docs.check_editorial_contract())
 

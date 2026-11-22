@@ -1,16 +1,16 @@
 # Architecture d'OpsDesk — produit et historique
 
-**Architecture d'infrastructure V2 validée en conception :** consulter en priorité le [registre des sept ADR](adr/README.md), la [matrice des flux V2](architecture-v2-flux.md) et le [plan phases 0 à 6](architecture-v2-deploiement.md). Les décisions de déploiement plus anciennes conservées dans ce document sont **historiques et remplacées** lorsqu'elles contredisent ces ADR (par exemple Terraform dans `srv-admin`, HTTP :8080 pour la cible serveur, sauvegardes dans `~/sauvegardes`). Les schémas actuels représentent encore l'ancienne cible et seront remplacés en paire Draw.io/SVG ; voir [STATUS](../STATUS.md).
+**Architecture d'infrastructure V2 validée en conception :** consulter en priorité le [registre des sept ADR](adr/README.md), la [matrice des flux V2](architecture-v2-flux.md) et le [plan phases 0 à 6](architecture-v2-deploiement.md). Les décisions de déploiement plus anciennes conservées dans ce document sont **historiques et remplacées** lorsqu'elles contredisent ces ADR (par exemple Terraform dans `srv-admin`, HTTP :8080 pour la cible serveur, sauvegardes dans `~/sauvegardes`). Les [deux schémas d'architecture](diagrams/README.md) représentent désormais la cible V2 ; ils ne prouvent pas son déploiement. Les autres schémas du produit sont conservés ; voir [STATUS](../STATUS.md).
 
 OpsDesk est une application web en trois parties : une interface, une API et une base de données, chacune dans son conteneur. L'application (version 2) est construite et testée ; l'infrastructure qui doit la faire tourner sur trois machines Rocky Linux est décidée mais pas encore construite. Ce document explique le fonctionnement, puis justifie chaque choix, du plus visible au plus détaillé. L'état de chaque élément est tenu dans [STATUS.md](../STATUS.md) ; les détails d'exploitation sont dans la [référence technique](reference-technique.md).
 
 ## Vue d'ensemble
 
-[![Vue d'ensemble de l'architecture d'OpsDesk : sur l'hôte Fedora, un réseau privé relie trois machines prévues. Sur srv-app, nginx (port 8080) transmet /api à l'API, qui lit et écrit dans PostgreSQL, non publié. srv-admin pilote srv-app par SSH, Prometheus sur srv-k3s lit /metrics, et pg_dump copie la base hors de la VM.](diagrams/architecture-globale.svg)](diagrams/architecture.svg)
+[![Architecture V2 d'OpsDesk : Terraform et sauvegardes Borg sur Fedora, Ansible et k6 dans srv-admin, service principal HTTPS et conteneurs internes sur srv-app, copie K3s et Grafana/Prometheus sur srv-k3s. Cible non déployée.](diagrams/architecture-globale.svg)](diagrams/architecture.svg)
 
 [Voir le schéma détaillé](diagrams/architecture.svg) : les trois machines, Docker Engine et Compose sur `srv-app`, chaque flux typé avec son port, et ce qui est réalisé ou prévu.
 
-Le navigateur ne parle qu'au **frontend**. Celui-ci sert l'interface et relaie les appels à l'**API**, qui seule accède à la **base**. Sur le schéma, le trait plein montre l'application, testée en conteneurs locaux ; les pointillés montrent l'infrastructure prévue.
+Le navigateur ne parle qu'au **frontend**. Dans le **laboratoire local**, l'entrée est `127.0.0.1:8080`; dans l'**Architecture V2 serveur**, elle devient HTTPS :443, tandis que :8000 et :5432 restent internes. Nginx sert React et relaie les appels à FastAPI, qui seule accède à PostgreSQL. Les frontières des VM en pointillés sont **des éléments à construire**, tandis que les contrôles applicatifs actuels ont été exécutés sur des runners de CI, pas sur Rocky.
 
 ## Le trajet d'une requête
 
