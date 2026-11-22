@@ -8,7 +8,7 @@ Ce document dit d'où vient chaque partie du dépôt, et ce qui revient à la r�
 | --- | --- | --- |
 | Application v2 : `backend/`, `frontend/`, tests, Dockerfiles, `compose.yaml`, `scripts/smoke.py` | Produits avec l'aide d'un assistant d'IA, à partir d'une première version elle-même générée par IA | Fournis : support de l'apprentissage, pas une réalisation personnelle à mettre au CV comme développement |
 | Composants tiers : Python, FastAPI, SQLAlchemy, psycopg, React, Vite, Tailwind CSS, Recharts, nginx, PostgreSQL | Projets libres, sous leurs propres licences | La licence MIT du dépôt ne les remplace pas |
-| Documentation : README, architecture, référence technique, contrat applicatif, exercices, corrigés, évaluations | Rédigée avec l'aide d'un assistant d'IA, relue contre le code | Décisions validées par le propriétaire du projet |
+| Documentation produit : README, architecture, référence technique, contrat applicatif | Rédigée avec l'aide d'un assistant d'IA, relue contre le code | Décisions validées par le propriétaire du projet |
 | Schémas v2 (`docs/diagrams/`) | Dessinés pour le projet avec Draw.io, sans logo de produit | Sources `.drawio` et exports SVG versionnés |
 | Infrastructure : laboratoire, Terraform, Ansible, fichier Compose de production, CI, K3s, supervision, sauvegarde | **À concevoir, écrire, exécuter et expliquer soi-même** | Réalisation personnelle, à prouver exercice par exercice ; rien n'est réalisé à ce jour |
 | Données de démonstration | Fictives : noms, adresses et tickets inventés | Aucune donnée réelle |
@@ -38,10 +38,10 @@ Les fichiers d'infrastructure de la v1 (Dockerfile, Terraform et Ansible locaux,
 | Découvrir le projet | [README](../README.md) et [index documentaire](README.md) | Quand le périmètre ou l'état change |
 | Comprendre un choix | [Registre des décisions](architecture.md#décisions-retenues) | Après une vraie décision ; une raison inconnue n'est pas inventée |
 | Héberger ou exploiter l'application | [Contrat applicatif](contrat-applicatif.md) et [référence technique](reference-technique.md) | À chaque évolution de l'API ou de la configuration |
-| Apprendre | [Parcours](apprentissage/README.md) et centre de formation Notion | Dans le même changement que les notions concernées |
+| Formation personnelle | [Centre Notion](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223) | Hors du dépôt public ; cours, exercices et évaluations dans Notion |
 | Savoir ce qui est fait et vérifié | [STATUS.md](../STATUS.md) | À chaque nouveau contrôle, daté |
 | Lire une preuve | [Preuves](preuves.md) | Quand la méthode change |
-| Agir en incident | [Reprise](reprise.md#triage-court-avant-une-reprise-personnelle) | Après chaque exercice de reprise |
+| Agir en incident | [Reprise](reprise.md#triage-court-avant-une-reprise-personnelle) | Après chaque évolution effective de procédure |
 
 Avant de déplacer un fichier, recenser ses liens entrants.
 

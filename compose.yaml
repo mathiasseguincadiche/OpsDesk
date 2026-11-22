@@ -7,10 +7,10 @@
 #
 # Ce fichier est le livrable de l'application : il construit les images et prouve
 # qu'une version démarre. Le déploiement sur srv-app (images tirées de GHCR par
-# digest, secrets en fichiers, réglages du serveur) est l'exercice 06 du parcours.
+# digest, secrets en fichiers, réglages du serveur) suit une procédure distincte.
 name: opsdesk
 
-# Rotation des journaux : sans limite, le pilote json-file de Docker remplit le disque.
+# Limiter la taille et le nombre des journaux Docker pour éviter de remplir le disque.
 x-journaux: &journaux
   driver: json-file
   options:
@@ -106,6 +106,6 @@ volumes:
   db-data:
 
 networks:
-  # La base n'est que sur « backend » : nginx ne peut pas la joindre.
+  # Deux réseaux : nginx ne peut pas contacter directement PostgreSQL.
   backend:
   frontend:

@@ -23,7 +23,7 @@ Il s'agit d'une **grille d'interprétation**, pas de résultats obtenus sur le l
 | `backend` | `backend/Dockerfile` (Python 3.13, UID 10001) | 8000 | API FastAPI : authentification, tickets, statistiques, métriques |
 | `db` | `postgres:17-alpine` | 5432 | Stockage des comptes, tickets, commentaires et historique |
 
-Les noms sont ceux des services de `compose.yaml` ; Compose nomme les conteneurs `opsdesk-<service>-1`. Seul le frontend est destiné aux utilisateurs. L'API n'est pas exposée publiquement : nginx bloque `/metrics` sur l’entrée utilisateur. Dans la cible initiale, Prometheus lira le port 8000 ; l’exercice 09 prévoit ensuite une entrée privée limitée aux métriques, avec contrôle des sources et fermeture du port direct. Aucun Prometheus n’est encore connecté.
+Les noms sont ceux des services de `compose.yaml` ; Compose nomme les conteneurs `opsdesk-<service>-1`. Seul le frontend est destiné aux utilisateurs. L'API n'est pas exposée publiquement : nginx bloque `/metrics` sur l’entrée utilisateur. Dans la cible initiale, Prometheus lira le port 8000 ; l'architecture cible prévoit une entrée privée limitée aux métriques, avec contrôle des sources et fermeture du port direct. Aucun Prometheus n’est encore connecté.
 
 ## Points d'accès pour l'exploitation
 
@@ -65,7 +65,7 @@ Le frontend n'a qu'une variable : `BACKEND_URL`.
 
 ## Déployer avec Docker Compose sur un serveur
 
-`compose.yaml` est la pile de référence livrée avec l'application : il construit les images et prouve qu'une version démarre. Sur `srv-app`, le déploiement utilise un fichier Compose de production, à écrire à l'exercice 06, qui **tire** les images de GHCR par digest au lieu de les construire. Voici ce que l'application et Docker imposent à ce fichier et au serveur.
+`compose.yaml` est la pile de référence livrée avec l'application : il construit les images et prouve qu'une version démarre. Sur `srv-app`, le déploiement utilise un fichier Compose de production, à produire avant déploiement, qui **tire** les images de GHCR par digest au lieu de les construire. Voici ce que l'application et Docker imposent à ce fichier et au serveur.
 
 **Ce que l'application impose**
 
@@ -148,6 +148,6 @@ backend/       API FastAPI (app/), tests (tests/), Dockerfile
 frontend/      Interface React (src/), configuration nginx, Dockerfile
 scripts/       smoke.py : test de bout en bout d'un déploiement
 compose.yaml   Pile de référence : construit les images et démarre la pile
-docs/          Architecture, référence technique, laboratoire, parcours d'apprentissage
+docs/          Architecture, contrat applicatif, référence et exploitation technique
 legacy/        Version 1 (Flask), ses preuves et ses schémas, conservés pour référence
 ```

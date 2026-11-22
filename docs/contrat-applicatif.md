@@ -92,7 +92,7 @@ Sans conteneur, API sur SQLite et interface avec Vite : voir la section [Dévelo
 | Composant | Port | Protocole | Exposition attendue |
 | --- | --- | --- | --- |
 | `frontend` | 8080 | HTTP | Seule porte destinée aux utilisateurs |
-| `backend` | 8000 | HTTP | Pile locale : boucle locale uniquement ; cible serveur initiale : supervision autorisée, puis restriction aux métriques (exercice 09) |
+| `backend` | 8000 | HTTP | Pile locale : boucle locale uniquement ; cible serveur initiale : supervision autorisée, puis restriction aux métriques à mettre en œuvre |
 | `db` | 5432 | PostgreSQL | Jamais publié |
 
 Aucun port privilégié ; aucun TLS dans l'application : HTTPS, s'il est voulu, se termine devant elle.

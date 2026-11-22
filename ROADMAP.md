@@ -1,36 +1,31 @@
-# Feuille de route d’OpsDesk
+# Feuille de route technique — OpsDesk
 
-OpsDesk est le projet fil rouge unique du parcours. L’application est fournie ; l’infrastructure et son exploitation sont à construire, exercice après exercice. Aucun exercice d’infrastructure n’est réalisé à ce jour : tous les éléments ci-dessous sont au statut **Prévu**, et leur contrôle est **Non vérifié**. L’[état détaillé](STATUS.md) donne les preuves existantes.
+**Périmètre :** application de tickets et infrastructure Linux nécessaire à son exploitation. Cette feuille de route décrit des livrables techniques, **pas** un programme de formation ni des exercices. Les objectifs futurs sont indiqués **prévus / non vérifiés** ; voir [STATUS.md](STATUS.md).
 
-**Depuis le 18 novembre 2026, l’application fournie est la v2** : trois services (PostgreSQL, API FastAPI, frontend React servi par nginx), authentification par rôles, images non-root et sondes de santé. La cible de production est **Docker Engine et Docker Compose sur Rocky Linux, déployés par Ansible** (décision du 18 novembre 2026, qui remplace Podman et Quadlet) ; `compose.yaml` est la pile de référence qui construit les images. Les 13 énoncés actifs sont adaptés à la v2 et à Docker Compose ; les anciennes versions sont archivées. Les exercices d’infrastructure restent à réaliser et à vérifier personnellement.
+La version 2 fournit FastAPI, React/nginx et PostgreSQL, avec des images non-root, des sondes et une pile Compose locale. La cible serveur retenue est Docker Engine et Compose sur Rocky Linux, administrée depuis `srv-admin` et configurée par Ansible ; K3s est réservé à une copie d'essai, sans remplacement silencieux de cette cible. Voir [architecture](docs/architecture.md).
 
-## Étapes
+## Livrables par phase
 
-| N° | Étape | Phase | Exercice |
+| Phase | Livrable technique | Vérification attendue | État |
 | --- | --- | --- | --- |
-| 1 | Comprendre l’application et lire son contrat | Point de départ | [01](docs/apprentissage/01-application.md) |
-| 2 | Relire l’architecture retenue, justifier ressources, flux, accès et stockage, et la vérifier | Toutes | [02](docs/apprentissage/02-architecture.md) |
-| 3 | Préparer Linux, Rocky Linux, le réseau du laboratoire et `srv-admin`, la première VM | Phase 1 | [03](docs/apprentissage/03-linux-reseau.md) |
-| 4 | Écrire le Terraform depuis `srv-admin`, lire le plan, vérifier les VM `srv-app` et `srv-k3s` créées | Phase 1 | [04](docs/apprentissage/04-terraform.md) |
-| 5 | Écrire l’Ansible, contrôler les changements puis la seconde passe | Phase 1 | [05](docs/apprentissage/05-ansible.md) |
-| 6 | Déployer les trois conteneurs avec Docker Compose ; choisir volumes, réseaux, secrets et exposition des ports ; prouver SELinux, pare-feu et reprise au reboot ; vérifier un ticket | Phase 1 | [06](docs/apprentissage/06-conteneurs.md) |
-| 7 | Pratiquer K3s : ressources, sondes, stockage, mise à jour et diagnostic | Phase 3 | [07](docs/apprentissage/07-k3s.md) |
-| 8 | Construire la CI/CD à partir d’une livraison manuelle comprise | Phase 2 | [08](docs/apprentissage/08-cicd.md) |
-| 9 | Choisir des signaux utiles, construire la supervision, vérifier une alerte | Phase 3 | [09](docs/apprentissage/09-supervision.md) |
-| 10 | Préparer une maintenance et contrôler le service avant et après | Phase 3 | [10](docs/apprentissage/10-maintenance.md) |
-| 11 | Concevoir une sauvegarde et une restauration isolée ; vérifier les tickets | Phase 2 | [11](docs/apprentissage/11-sauvegarde-reprise.md) |
-| 12 | Diagnostiquer un cas nouveau et rétablir le service | Phase 3 | [12](docs/apprentissage/12-diagnostic.md) |
-| 13 | Refaire une tâche nouvelle et expliquer ses choix avec une aide limitée | Toutes | [13](docs/apprentissage/13-autonomie.md) |
+| Socle applicatif | API, interface, base, conteneurs et tests | Tests, smoke, persistance, version, ports | Réalisé ; [preuves datées](STATUS.md) |
+| 1 — Infrastructure | Trois VM Rocky sur Fedora/KVM, réseau privé, stockage et comptes | Identité des cibles, réseau, accès et protection vérifiés | Prévu, non vérifié |
+| 1 — Provisionnement | Déclaration Terraform des VM et de leur réseau | Plan expliqué, application contrôlée, seconde passe sans dérive | Prévu, non vérifié |
+| 1 — Configuration | Rôles Ansible et service Docker Compose sur `srv-app` | Idempotence, droits, SELinux, pare-feu, santé et ticket témoin | Prévu, non vérifié |
+| 2 — Livraison | Tests CI, scan Trivy et deux images immuables publiées dans GHCR | Provenance des digests, contrôle avant installation | Prévu, non vérifié |
+| 2 — Continuité | Sauvegardes hors VM, restauration isolée et retour arrière | Données relues, RPO/RTO observés sur cible connue | Prévu, non vérifié |
+| 3 — Observabilité | Métriques Prometheus, vues Grafana et alertes justifiées | Collecte, déclenchement et réception des alertes | Prévu, non vérifié |
+| 3 — Orchestration | Copie d'essai OpsDesk sur K3s | Déploiement, disponibilité, stockage et diagnostic | Prévu, non vérifié |
+| 3 — Exploitation | Maintenance, mise à jour, diagnostic et reprise | Procédure reproductible, indisponibilité mesurée, preuve métier | Prévu, non vérifié |
 
-Les phases regroupent les responsabilités ; elles ne fixent pas l’ordre strict des séances : **point de départ** (l’application et PostgreSQL tournent en local), **phase 1** préparer et automatiser (un serveur d’administration installé à la main, deux serveurs créés et configurés par du code depuis lui, l’application dans trois conteneurs décrits par Compose et lancés par Docker Engine), **phase 2** livrer et conserver (GitHub Actions, GHCR, analyse Trivy, déploiement par Ansible, sauvegarde, restauration), **phase 3** orchestrer et maintenir (K3s sur une copie d’essai de l’application, supervision, test de charge sur la copie). Ordre conseillé : 01 à 06, puis 08, 07, 11, 09, 10, 12 et 13. Les numéros restent stables. K3s précède la restauration isolée et la supervision. Docker Compose fait tourner le service réel ; K3s ne le pilote pas ([Docker Compose et K3s](docs/architecture.md#docker-compose-et-k3s)).
+## Décisions et contraintes
 
-## Principes
+- **Laboratoire cible :** Fedora 45 / KVM / libvirt avec `srv-admin`, `srv-app`, `srv-k3s` sous Rocky Linux 10.2 ; sans haute disponibilité.
+- **Exposition :** laboratoire privé et données fictives ; aucune mise en ligne publique sans nouvelle étude de sécurité.
+- **Déploiement :** le serveur principal utilise Compose ; K3s reste une copie d'essai.
+- **Changements à risque :** toute destruction, exposition réseau, utilisation d'une ressource payante ou restauration de données exige une analyse et une autorisation explicites.
+- **Sources de vérité :** le [registre des décisions](docs/architecture.md#décisions-retenues) décrit les choix ; [STATUS.md](STATUS.md) décrit les observations ; [evidence/](evidence/) conserve les preuves réelles.
 
-- Le laboratoire prévu est **Fedora 45 (hôte) → KVM, QEMU, libvirt → trois VM Rocky Linux 10.2 (invités)**. Les exercices 1 et 2 se font en lecture et en dessin ; la préparation technique suit le [guide du laboratoire](docs/laboratoire-fedora-kvm-rocky.md). Une version non vérifiée reste signalée, et Rocky Linux n’est pas remplacé en silence.
-- L’architecture retenue (trois serveurs Rocky Linux `srv-admin`, `srv-app` et `srv-k3s`, réseau `opsdesk-lan`, Docker Engine et Compose, sauvegarde, supervision) est dans le [registre des décisions](docs/architecture.md#décisions-retenues) et sur le [schéma technique](docs/diagrams/architecture.svg).
-- Les corrigés se lisent après une première tentative. Les anciennes solutions sont des références datées, pas des fichiers à recopier ([provenance](docs/provenance.md)).
-- Toute ressource payante, exposition réelle, destruction ou nettoyage demande son périmètre et un accord préalable.
-- GitHub est l’unique plateforme active. GitLab reste en l’état, à titre historique.
-- AWS est facultatif et dépend d’un budget et d’une autorisation.
+Les cours, préparations personnelles et évaluations sont maintenus **hors du dépôt produit**, dans le centre de formation Notion.
 
-[Parcours](docs/parcours-apprentissage.md) · [Contrat applicatif](docs/contrat-applicatif.md) · [État](STATUS.md)
+[Contrat applicatif](docs/contrat-applicatif.md) · [Architecture](docs/architecture.md) · [État](STATUS.md)

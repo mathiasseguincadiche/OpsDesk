@@ -1,8 +1,7 @@
-"""Application settings, read from environment variables.
+"""Configuration de l'API depuis les variables d'environnement.
 
-Every secret can be given either directly (``JWT_SECRET``) or through a file
-(``JWT_SECRET_FILE``), which is the convention used by Docker Compose secrets
-and Kubernetes secret volumes.
+Les secrets peuvent être fournis directement (JWT_SECRET) ou dans un fichier
+indiqué par JWT_SECRET_FILE, sans les inclure dans le code source.
 """
 from __future__ import annotations
 
@@ -17,7 +16,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 def _read_secret(name: str) -> str | None:
-    """Return ``$NAME`` or the content of the file pointed to by ``$NAME_FILE``."""
+    """Lire une variable d'environnement ou le fichier indiqué par *_FILE."""
     file_path = os.environ.get(f"{name}_FILE")
     if file_path:
         return Path(file_path).read_text(encoding="utf-8").strip()
@@ -34,7 +33,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     log_format: str = Field(default="json", description="json or text")
 
-    # Database: either a full DATABASE_URL, or the DB_* components.
+    # PostgreSQL : utiliser une URL complète ou les paramètres DB_* séparés.
     database_url: str | None = None
     db_host: str = "localhost"
     db_port: int = 5432
@@ -43,18 +42,18 @@ class Settings(BaseSettings):
     db_pool_size: int = 5
     db_connect_retries: int = 30
 
-    # Auth
+    # Authentification : durée des jetons et coût du hachage des mots de passe.
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 60 * 12
     password_hash_iterations: int = 390_000
     allow_registration: bool = True
 
-    # Bootstrap
+    # Démarrage : compte administrateur initial et données de démonstration.
     admin_email: str = "admin@opsdesk.local"
     admin_name: str = "Administrateur"
     seed_demo_data: bool = True
 
-    # HTTP
+    # HTTP : origines autorisées pour les requêtes des navigateurs.
     cors_origins: str = ""
 
     @property
@@ -83,8 +82,8 @@ class Settings(BaseSettings):
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
 
 
-# A missing JWT secret is tolerated in development (random per process) but
-# tokens are then invalidated at each restart and not shared between replicas.
+# En développement, un secret JWT manquant est créé temporairement.
+# Les jetons deviennent invalides au redémarrage et entre plusieurs réplicas.
 _JWT_SECRET = _read_secret("JWT_SECRET") or secrets.token_urlsafe(48)
 
 
@@ -107,8 +106,8 @@ def _validate_production_settings(settings: Settings) -> None:
         db = _require_production_secret("DB_PASSWORD")
         if db in (jwt, admin):
             raise RuntimeError("Les trois secrets doivent être distincts.")
-    # A complete DATABASE_URL is an alternative to DB_*; its credentials are
-    # managed independently and must be checked by the deployment operator.
+    # Si DATABASE_URL est définie, ses identifiants sont indépendants de DB_*.
+    # Vérifier leur protection et leurs droits avant un déploiement réel.
 
 
 @lru_cache

@@ -9,7 +9,7 @@ L'état daté de chaque élément est tenu dans [STATUS.md](../STATUS.md) : c'es
 - **Avancement** — qu'est-ce qui existe ? Prévu, En cours, Réalisé, Abandonné.
 - **Contrôle** — qu'a-t-on établi ? Vérifié, Échec constaté, Non vérifié.
 
-Un élément peut être **réalisé et non vérifié** (un playbook écrit, jamais rejoué), ou **réalisé avec échec constaté** (un scan qui trouve des vulnérabilités). « Exécuté » dit qu'une action a eu lieu, jamais qu'elle a réussi. Les niveaux personnels L0 à L3 du [parcours](apprentissage/README.md#preuve-et-progression-personnelles) sont une troisième information, distincte des deux autres.
+Un élément peut être **réalisé et non vérifié** (un playbook écrit, jamais rejoué), ou **réalisé avec échec constaté** (un scan qui trouve des vulnérabilités). « Exécuté » dit qu'une action a eu lieu, jamais qu'elle a réussi. Les niveaux de formation et l'auto-évaluation personnelle relèvent de Notion et ne constituent pas une preuve d'exploitation.
 
 ## Ce que contient une preuve
 
@@ -50,7 +50,7 @@ Les [extraits datés des journaux](../evidence/qualification/2026-11-19-socle.tx
 
 ## Recette d'une modification documentaire
 
-Pour une évolution significative, constater le problème, expliquer son impact, proposer la correction et vérifier son bénéfice plutôt que refaire un document pour sa seule apparence. Sur les deux supports, examiner quatre situations de lecture : découverte (finalité, statut et accès au parcours), apprentissage (prérequis, exercice, contrôle), recherche ciblée (commande ou preuve accessible), analyse approfondie (contrat, choix, compromis, limites). Vérifier les liens, la terminologie et la correspondance avec le code ; contrôler les rendus et sources lorsque les schémas changent. Indiquer les vérifications non réalisées. Voir également [les sources de vérité](parcours-apprentissage.md#où-se-trouve-quoi).
+Pour une évolution significative, constater le problème, expliquer son impact, proposer la correction et vérifier son bénéfice plutôt que refaire un document pour sa seule apparence. Sur les deux supports, examiner quatre situations de lecture : découverte (finalité, statut et accès au parcours), apprentissage (prérequis, exercice, contrôle), recherche ciblée (commande ou preuve accessible), analyse approfondie (contrat, choix, compromis, limites). Vérifier les liens, la terminologie et la correspondance avec le code ; contrôler les rendus et sources lorsque les schémas changent. Indiquer les vérifications non réalisées. Voir également [les sources de vérité](provenance.md#une-source-de-vérité-par-sujet).
 
 ### Périmètre d'une recette de lecture
 
@@ -58,7 +58,7 @@ Distinguer une relecture simulée des parcours, un rendu navigateur à largeur d
 
 ## Ce qui reste à prouver
 
-Toute l'infrastructure : machines virtuelles, configuration, déploiement Docker Compose, CI, K3s, supervision, sauvegarde et restauration, maintenance. Ce sont les exercices du [parcours](apprentissage/README.md) ; aucun n'est réalisé à ce jour, et un essai historique ne vaut pas réalisation personnelle.
+Toute l'infrastructure : machines virtuelles, configuration, déploiement Docker Compose, CI, K3s, supervision, sauvegarde et restauration, maintenance. Ces composants sont prévus mais non vérifiés sur le laboratoire cible ; un essai historique ne vaut pas réalisation sur la nouvelle infrastructure.
 
 ## Preuves de la version 1
 

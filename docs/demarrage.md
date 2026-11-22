@@ -1,6 +1,6 @@
 # Démarrer OpsDesk en local
 
-Ce guide lance OpsDesk sur un poste, en conteneurs, pour l'essayer ou le développer. Mise à jour : 18 novembre 2026, pour la version 2.0.0. Le déploiement sur serveur (Docker Engine et Compose sur Rocky Linux) est l'objet de l'[exercice 06](apprentissage/06-conteneurs.md).
+Ce guide lance OpsDesk sur un poste, en conteneurs, pour l'essayer ou le développer. Mise à jour : 18 novembre 2026, pour la version 2.0.0. Le déploiement sur serveur (Docker Engine et Compose sur Rocky Linux) est un jalon futur décrit dans la [feuille de route](../ROADMAP.md).
 
 ## Ce qu'il faut
 
@@ -60,7 +60,7 @@ Ouvrir enfin **http://localhost:8080** et cliquer sur un compte de démonstratio
 | `backend` | API FastAPI | `http://127.0.0.1:8000`, limité au poste (documentation : `/api/docs`) |
 | `db` | PostgreSQL 17 | Non publié |
 
-Les ports 8080 et 8000 de cette pile sont liés à `127.0.0.1`. Depuis une autre machine, la connexion doit échouer ; vérifier également les adresses de publication avec `docker compose ps`. Ne pas élargir cette exposition pour des comptes et données de démonstration. Le déploiement réseau sur `srv-app` relève de l’exercice 06.
+Les ports 8080 et 8000 de cette pile sont liés à `127.0.0.1`. Depuis une autre machine, la connexion doit échouer ; vérifier également les adresses de publication avec `docker compose ps`. Ne pas élargir cette exposition pour des comptes et données de démonstration. Le déploiement réseau sur `srv-app` relève d'une configuration d'infrastructure distincte.
 
 Les données sont dans un volume nommé : elles survivent à l'arrêt et à la recréation des conteneurs.
 
@@ -93,6 +93,6 @@ Pour modifier le code avec rechargement automatique (API sur SQLite, interface a
 
 ## Et ensuite
 
-- Comprendre ce qui tourne : [exercice 01](apprentissage/01-application.md) et [contrat applicatif](contrat-applicatif.md).
+- Comprendre les trois services : [contrat applicatif](contrat-applicatif.md) et [architecture](architecture.md).
 - Exploiter le service : [exploitation courante](exploitation-day2.md).
-- Construire l'infrastructure : [le parcours](apprentissage/README.md).
+- Préparer le déploiement serveur : [feuille de route](../ROADMAP.md) et [référence technique](reference-technique.md).

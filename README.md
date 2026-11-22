@@ -83,7 +83,7 @@ La démonstration utilise des données fictives et des ports accessibles uniquem
 | 🔜 Prévu | Livraison continue | GitHub Actions : tests, build, scan Trivy, publication |
 | 🔜 Prévu | Supervision et sauvegarde | Prometheus, Grafana, `pg_dump` avec test de restauration |
 
-Les trois premières lignes décrivent le socle fourni et qualifié, pas des compétences personnelles déjà acquises. Les réalisations suivantes seront vérifiées au fil du parcours ; [STATUS.md](STATUS.md) sépare avancement et contrôle. Les preuves personnelles, distinctes, se consignent dans le suivi de formation.
+Les trois premières lignes décrivent le socle fourni et qualifié, pas des compétences personnelles déjà acquises. Les prochaines mises en service seront contrôlées et datées ; [STATUS.md](STATUS.md) sépare avancement et contrôle. Les preuves personnelles, distinctes, se consignent dans le suivi de formation.
 
 ## Ce que fait l'application
 
@@ -94,7 +94,7 @@ Les trois premières lignes décrivent le socle fourni et qualifié, pas des com
 
 ## Documentation
 
-L'[index de la documentation](docs/README.md) regroupe tous les guides, exercices, procédures et preuves par besoin. Voici les accès principaux.
+L'[index technique](docs/README.md) regroupe les références nécessaires pour installer, comprendre, exploiter et maintenir OpsDesk.
 
 | Pour… | Lire |
 | --- | --- |
@@ -102,17 +102,14 @@ L'[index de la documentation](docs/README.md) regroupe tous les guides, exercice
 | Examiner ce que l'application exige de l'infrastructure | [Contrat applicatif](docs/contrat-applicatif.md) |
 | Exploiter, configurer, déployer, tester | [Référence technique](docs/reference-technique.md) · [Exploitation](docs/exploitation-day2.md) · [Reprise](docs/reprise.md) |
 | Examiner la sécurité, les résultats et leurs limites | [Sécurité](docs/securite.md) · [Preuves](docs/preuves.md) |
-| Préparer une démonstration technique | [Démonstration](docs/demonstration.md) |
-| Préparer le laboratoire Fedora, KVM et Rocky Linux | [Guide du laboratoire](docs/laboratoire-fedora-kvm-rocky.md) |
-| Suivre l'avancement et les preuves | [STATUS.md](STATUS.md) · [Feuille de route](ROADMAP.md) |
-| Apprendre pas à pas | [Les 13 exercices](docs/apprentissage/README.md), énoncés de référence pour la v2 · cours complet dans le centre de formation Notion (accès sur invitation) |
+| Suivre l'avancement et les preuves | [STATUS.md](STATUS.md) · [Feuille de route technique](ROADMAP.md) |
 | Consulter la version 1 | [`legacy/`](legacy/) |
 
 ## Contribuer ou reprendre le projet
 
-Pour signaler un bug ou proposer une modification, lire le [guide de contribution](CONTRIBUTING.md), la [politique de sécurité](SECURITY.md) et la [charte GitHub InfraOps](docs/CHARTE_GITHUB.md). Pour comprendre les versions, consulter le [journal des changements](CHANGELOG.md).
+Pour signaler un bug ou proposer une modification, lire le [guide de contribution](CONTRIBUTING.md), la [politique de sécurité](SECURITY.md). Pour comprendre les versions, consulter le [journal des changements](CHANGELOG.md).
 
-Lire d'abord le [contrat applicatif](docs/contrat-applicatif.md) et le [registre des décisions](docs/architecture.md#décisions-retenues). Pour signaler un problème, indiquer la version, la cible, les étapes de reproduction et les résultats attendus/observés, sans secret ni donnée personnelle. Pour proposer une correction, partir de `main` sur une branche dédiée, expliquer le besoin et les conséquences, vérifier le périmètre modifié et joindre les preuves dans une pull request. Si un changement touche la documentation ou un schéma, contrôler les liens, la cohérence avec le code et la source Draw.io ; ne pas transférer un ancien résultat à une nouvelle configuration. Les exercices restent des réalisations personnelles : différencier un exemple, une contribution et un acquis de formation.
+Lire d'abord le [contrat applicatif](docs/contrat-applicatif.md) et le [registre des décisions](docs/architecture.md#décisions-retenues). Pour signaler un problème, indiquer la version, la cible, les étapes de reproduction et les résultats attendus/observés, sans secret ni donnée personnelle. Pour proposer une correction, partir de `main` sur une branche dédiée, expliquer le besoin et les conséquences, vérifier le périmètre modifié et joindre les preuves dans une pull request. Si un changement touche la documentation ou un schéma, contrôler les liens, la cohérence avec le code et la source Draw.io ; ne pas transférer un ancien résultat à une nouvelle configuration. Le suivi d'apprentissage personnel reste distinct du dépôt public ; une procédure proposée n'est pas une opération exécutée.
 
 ## Licence et provenance
 

@@ -1,5 +1,7 @@
+# Convention de qualité Python : longueur de ligne et version cible.
 line-length = 120
 target-version = "py313"
 [lint]
 select = ["E", "F", "I", "B", "UP"]
+# Exceptions voulues : injection de dépendances FastAPI et lignes longues.
 ignore = ["B008", "E501"]
