@@ -8,13 +8,14 @@ Le workflow [Application quality (no deployment)](../.github/workflows/applicati
 | --- | --- | --- |
 | API | Ruff et tests avec SQLite **puis** PostgreSQL 17 sur runner Ubuntu | Aucun essai de déploiement Rocky |
 | Interface | Installation depuis `package-lock.json`, contrôle TypeScript et build Vite | Pas de recette ergonomique native ou E2E navigateur |
-| Conteneurs | `docker compose config`, construction, sondes, parcours HTTP fictif, sauvegarde `pg_dump`, restauration sur base isolée, redémarrage API et limitation de connexions | Exécution sur runner jetable, pas sur `srv-app` ni sur les données réelles |
+| Conteneurs | `docker compose config`, construction, sondes, parcours HTTP fictif, sauvegarde `pg_dump`, restauration isolée, redémarrage API, limitation de connexions et navigation réelle sous Chromium | Exécution sur runner jetable, pas sur `srv-app` ni sur les données réelles |
 
 Le [workflow documentaire](../.github/workflows/docs-quality.yml) reste indépendant : il vérifie les liens, les ancres, les sources Draw.io/SVG et les contrats documentaires.
 
 ### Précautions
 
 - Le smoke test `scripts/smoke.py` **crée et clôture un ticket fictif**. Il ne doit être exécuté que sur une base de test.
+- `scripts/check_browser_e2e.py` contrôle Chromium sur une pile éphémère : session HttpOnly, CSRF, ticket, rechargement, déconnexion et affichage mobile. Les captures d'écran du navigateur sont des preuves réelles du runner, pas des maquettes.
 - `scripts/check_persistence_restore.sh` crée temporairement une base `opsdesk_reprise_ci` dans le conteneur PostgreSQL du runner ; il vérifie la restauration sans écraser la base en service.
 - Le contrôle `scripts/check_auth_throttle.py` provoque volontairement des HTTP 429 : ne pas le lancer sur une instance partagée.
 - La pile Compose utilisée en CI est la configuration de **démonstration locale**. Ses mots de passe et données fictives ne sont jamais destinés à la production.

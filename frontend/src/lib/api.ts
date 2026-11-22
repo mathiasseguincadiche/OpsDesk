@@ -50,7 +50,7 @@ export async function api<T>(path: string, options: { method?: string; body?: un
     throw new ApiError(0, "Impossible de joindre le serveur. Vérifiez votre connexion.");
   }
 
-  if (response.status === 401 && !path.startsWith("/api/auth/browser/")) {
+  if (response.status === 401 && !path.startsWith("/api/auth/browser/") && path !== "/api/auth/me") {
     onUnauthorized?.();
   }
   if (response.status === 204) return undefined as T;
