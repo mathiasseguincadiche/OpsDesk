@@ -19,6 +19,10 @@ Un chemin manuel finit par laisser passer une version non testée, et personne n
 - Le `GITHUB_TOKEN` reçoit le minimum de droits, job par job (`packages: write` seulement pour publier).
 - Une vulnérabilité trouvée par Trivy se corrige, ou s'accepte par écrit avec une date de réexamen.
 
+## Comprendre le mécanisme et ses limites
+
+**Du commit au conteneur.** Une CI verte signifie que les contrôles programmés ont réussi sur leur cible, pas que la nouvelle version fonctionne sur `srv-app`. Distingue le commit source, les deux images construites, leurs digests de registre et ceux réellement utilisés par la cible. **Exemple de panne à analyser :** le déploiement reprend un tag existant mais mutable ; comment démontrer que ce n'est pas l'image testée ? La preuve attendue porte sur l'identité de l'artefact, pas sur son nom seulement.
+
 ## Ce qu'il faut obtenir
 
 1. À chaque pull request : tests de l'API sur PostgreSQL 17, `ruff`, typage et construction du frontend.
