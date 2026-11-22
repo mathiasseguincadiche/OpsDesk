@@ -35,11 +35,11 @@ MARKDOWN_IMAGE = re.compile(r"!\[([^\]\n]*)\]\(([^)\n]+)\)")
 HTML_ASSET = re.compile(r'(?:src|srcset|href)="([^"]+)"')
 REQUIRED = (
     "## Le projet en 30 secondes",
+    "## Mon rôle et ma démarche InfraOps",
     "## Aperçu de l'application",
     "## Démarrage rapide",
     "## Architecture",
     "## Ce que montre ce projet",
-    "## Mon rôle dans ce projet",
     "## Documentation",
 )
 
@@ -89,12 +89,29 @@ def check_repository() -> list[str]:
     for heading in REQUIRED:
         if heading not in readme:
             errors.append(f"README.md: required section missing: {heading}")
-    for item in PAGES:
+    # Les pages actives ne doivent pas échapper aux vérifications lors de leur création.
+    # Les archives legacy conservent leur contexte historique et sont auditées séparément.
+    active_pages = set(PAGES)
+    active_pages.update(
+        p.relative_to(ROOT).as_posix()
+        for p in (ROOT / "docs").rglob("*.md")
+        if "legacy" not in p.relative_to(ROOT).parts
+    )
+    for item in sorted(active_pages):
         document = ROOT / item
         if not document.is_file():
             errors.append(f"missing document: {item}")
             continue
         errors.extend(validate_document_links(document))
+
+    # Contrôler aussi quelques écarts éditoriaux incompatibles avec le code actuel.
+    stale_phrases = {
+        "docs/apprentissage/08-cicd.md": "aucun workflow dans le dépôt à ce jour",
+        "frontend/src/components/NewTicketModal.tsx": "L'équipe support a été notifiée.",
+    }
+    for name, phrase in stale_phrases.items():
+        if phrase in (ROOT / name).read_text(encoding="utf-8"):
+            errors.append(f"{name}: stale or unsupported editorial claim: {phrase}")
 
     for asset in ("docs/images/opsdesk-hero.svg", "docs/diagrams/architecture-globale.svg"):
         path = ROOT / asset
@@ -120,7 +137,7 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print("Documentation: required headings, links, SVG and diagram sources OK.")
+    print("Documentation: required headings, active docs links, SVG and diagram sources OK.")
     print("NOTE: This is static validation only, not a visual review or InfraOps deployment.")
     return 0
 
