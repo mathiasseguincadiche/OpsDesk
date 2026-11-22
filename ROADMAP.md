@@ -10,11 +10,11 @@ Le plan de référence détaillé est [Architecture V2 — phases 0 à 6](docs/a
 | --- | --- | --- | --- |
 | Application V2 (socle) | API, frontend, PostgreSQL, images, Alembic et CI | Voir les preuves existantes | Réalisé et testé en CI dans les limites de STATUS |
 | 0 — Fedora | Réseau NAT libvirt, image cloud, Terraform, state et stockage protégés | Réseau, droits et capacité hôte vérifiés | Prévu, non vérifié |
-| 1 — Administration | `srv-admin`, Ansible, Git, SSH, k6 depuis Terraform sur Fedora | Idempotence, accès SSH et sécurité du pilote | Prévu, non vérifié |
-| 2 — Serveurs | `srv-app` et `srv-k3s` Rocky, Ansible, SELinux/firewalld, disque séparé | Second passage Ansible, ports autorisés/refusés | Prévu, non vérifié |
+| 1 — Administration | Administration Linux automatisée, rôles séparés | Idempotence, accès SSH et sécurité du pilote | Prévu, non vérifié |
+| 2 — Serveurs | Provisionnement des machines et durcissement des services | Second passage Ansible, ports autorisés/refusés | Prévu, non vérifié |
 | 3 — Service | GHCR **privé**, trois images **par digest**, Compose serveur, TLS, Vault, Alembic | HTTPS réel, tickets, isolation DB/API et persistance | Prévu, non vérifié |
-| 4 — Reprise | Dumps 02:00, réception SSH limitée, Borg externe chiffré, state, 7 copies | Restauration isolée, ticket témoin et RPO/RTO mesurés | Prévu, non vérifié |
-| 5 — Supervision | K3s mono-nœud, copie d'essai, Prometheus, Grafana SMTP, k6 | Deux e-mails reçus, mesures/quotas et charge isolée | Prévu, non vérifié |
+| 4 — Reprise | Sauvegardes externes protégées et procédure de restauration confidentielle | Restauration isolée, ticket témoin et RPO/RTO mesurés | Prévu, non vérifié |
+| 5 — Supervision | Plateforme d'essai isolée, métriques, alertes et tests de charge | Deux e-mails reçus, mesures/quotas et charge isolée | Prévu, non vérifié |
 | 6 — Qualification | Idempotence, reconstruction jetable, reprise externe, charge/alertes | Quatre épreuves étayées par preuves datées | Prévu, non vérifié |
 
 ## Garanties de réalisation
