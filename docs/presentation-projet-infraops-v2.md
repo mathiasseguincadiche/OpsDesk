@@ -4,7 +4,7 @@
 
 ![Présentation du projet OpsDesk V2 — six étapes, phases A et B](images/opsdesk-presentation-du-projet.png)
 
-[Consulter également la vue globale d'architecture](diagrams/architecture-globale.svg) · [Ouvrir le visuel de présentation seul](images/opsdesk-presentation-du-projet.png)
+[Consulter également la vue globale d'architecture](diagrams/architecture-globale.png) · [Ouvrir le visuel de présentation seul](images/opsdesk-presentation-du-projet.png)
 
 ## Vue d'ensemble
 
@@ -42,4 +42,4 @@ Les six étapes sont **des objectifs de mise en œuvre**, et non six fonctionnal
 
 La table d'adressage complète, la matrice détaillée des flux, les clés, les comptes et les procédures d'exploitation personnelles restent exclusivement dans Notion.
 
-**Pour aller plus loin :** [Architecture V2 et ADR](adr/README.md) · [Vue globale publique](diagrams/architecture-globale.svg) · [Principes des flux](architecture-v2-flux.md) · [Phases 0 à 6](architecture-v2-deploiement.md) · [État réel](../STATUS.md).
+**Pour aller plus loin :** [Architecture V2 et ADR](adr/README.md) · [Vue globale publique](diagrams/architecture-globale.png) · [Principes des flux](architecture-v2-flux.md) · [Phases 0 à 6](architecture-v2-deploiement.md) · [État réel](../STATUS.md).

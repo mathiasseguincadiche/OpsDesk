@@ -14,7 +14,7 @@
 
 ## Compléments publics
 
-- [Schéma global V2](../diagrams/architecture-globale.svg) et [source Draw.io](../diagrams/architecture-globale.drawio).
+- [Schéma global V2](../diagrams/architecture-globale.png) et [source Draw.io](../diagrams/architecture-globale.drawio).
 - [Principes de flux](../architecture-v2-flux.md) : frontières et politiques générales.
 - [Phases 0 à 6](../architecture-v2-deploiement.md) : enchaînement et preuves sans procédures sensibles.
 - [Statut des réalisations](../../STATUS.md).
