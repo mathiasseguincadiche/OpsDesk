@@ -1,4 +1,4 @@
-name: Architecture V2 — SVG previews
+name: Architecture V2 — PNG preview
 
 on:
   pull_request:
@@ -18,26 +18,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Install SVG renderer
-        run: python3 -m pip install --user cairosvg==2.7.1
-      - name: Rasterize only the public global Architecture V2 diagram
-        run: |
-          mkdir -p diagram-previews
-          python3 - <<'PY'
-          from pathlib import Path
-          import cairosvg
-          for name in ("architecture-globale",):
-              src = Path("docs/diagrams") / f"{name}.svg"
-              out = Path("diagram-previews") / f"{name}.png"
-              cairosvg.svg2png(url=str(src), write_to=str(out))
-              if out.stat().st_size < 1500:
-                  raise SystemExit(f"PNG de faible taille : {out}")
-              print(f"{out}: {out.stat().st_size} bytes")
-          PY
-      - name: Attach rasterized previews (not deployment evidence)
+      - name: Attach the published PNG preview
         uses: actions/upload-artifact@v4
         with:
           name: architecture-globale-public-preview
-          path: diagram-previews/
+          path: docs/diagrams/architecture-globale.png
           if-no-files-found: error
           retention-days: 14

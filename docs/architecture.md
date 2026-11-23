@@ -1,12 +1,12 @@
 # Architecture d'OpsDesk — produit et historique
 
-**Architecture d'infrastructure V2 validée en conception :** consulter en priorité le [registre des sept ADR](adr/README.md), la [matrice des flux V2](architecture-v2-flux.md) et le [plan phases 0 à 6](architecture-v2-deploiement.md). Les décisions de déploiement plus anciennes conservées dans ce document sont **historiques et remplacées** lorsqu'elles contredisent ces ADR (par exemple Terraform dans `srv-admin`, HTTP :8080 pour la cible serveur, sauvegardes dans `~/sauvegardes`). Les [deux schémas d'architecture](diagrams/README.md) représentent désormais la cible V2 ; ils ne prouvent pas son déploiement. Les autres schémas du produit sont conservés ; voir [STATUS](../STATUS.md).
+**Architecture d'infrastructure V2 validée en conception :** consulter en priorité le [registre des sept ADR](adr/README.md), la [matrice des flux V2](architecture-v2-flux.md) et le [plan phases 0 à 6](architecture-v2-deploiement.md). Les décisions de déploiement plus anciennes conservées dans ce document sont **historiques et remplacées** lorsqu'elles contredisent ces ADR (par exemple Terraform dans `srv-admin`, HTTP :8080 pour la cible serveur, sauvegardes dans `~/sauvegardes`). La [vue globale](diagrams/README.md) décrit la cible V2. Les autres schémas du produit sont conservés ; voir [STATUS](../STATUS.md).
 
 OpsDesk est une application web en trois parties : une interface, une API et une base de données, chacune dans son conteneur. L'application (version 2) est construite et testée ; l'infrastructure qui doit la faire tourner sur trois machines Rocky Linux est décidée mais pas encore construite. Ce document explique le fonctionnement, puis justifie chaque choix, du plus visible au plus détaillé. L'état de chaque élément est tenu dans [STATUS.md](../STATUS.md) ; les détails d'exploitation sont dans la [référence technique](reference-technique.md).
 
 ## Vue d'ensemble
 
-[![Architecture V2 d'OpsDesk : Terraform et sauvegardes Borg sur Fedora, Ansible et k6 dans srv-admin, service principal HTTPS et conteneurs internes sur srv-app, copie K3s et Grafana/Prometheus sur srv-k3s. Cible non déployée.](diagrams/architecture-globale.svg)
+![Architecture V2 d'OpsDesk : Terraform et sauvegardes Borg sur Fedora, Ansible et k6 dans srv-admin, service principal HTTPS et conteneurs internes sur srv-app, copie K3s et Grafana/Prometheus sur srv-k3s. Cible non déployée.](diagrams/architecture-globale.png)
 
 **Publication :** seule la vue globale est publique. Les paramètres détaillés du laboratoire sont réservés à une page personnelle privée, hors GitHub.
 

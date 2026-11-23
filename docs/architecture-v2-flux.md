@@ -30,4 +30,4 @@ Les interfaces internes de données et de supervision ne sont pas accessibles di
 
 Les refus comme les autorisations devront être testés, avec des preuves expurgées avant publication. **Ce tableau ne constitue pas une configuration de pare-feu utilisable directement.**
 
-[Registre public des décisions](adr/README.md) · [Architecture globale](diagrams/architecture-globale.svg) · [État réel](../STATUS.md)
+[Registre public des décisions](adr/README.md) · [Architecture globale](diagrams/architecture-globale.png) · [État réel](../STATUS.md)
