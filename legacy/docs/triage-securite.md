@@ -1,7 +1,7 @@
 # OpsDesk — triage de sécurité applicative
 
 > [!NOTE]
-> **Archive de la version 1** d'OpsDesk (application Flask, sans authentification), déplacée dans `legacy/` le 18 novembre 2026. Elle n'est plus tenue à jour. Pour la version 2 : [l'architecture](../../docs/architecture.md), [la référence technique](../../docs/reference-technique.md) et [le parcours](../../docs/apprentissage/README.md).
+> **Archive de la version 1** d'OpsDesk (application Flask, sans authentification), déplacée dans `legacy/` le 18 novembre 2026. Elle n'est plus tenue à jour. Pour la version 2 : [l'architecture](../../docs/architecture.md), [la référence technique](../../docs/reference-technique.md) et [le parcours](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223).
 
 **Verdict global conservé : FAIL. Triage contextualisé : PARTIEL. Aucune autorisation d’exposition Internet ni acceptation du risque.** Ce document distingue l’application fournie et la sécurité de l’infrastructure que l’apprenant construira personnellement.
 

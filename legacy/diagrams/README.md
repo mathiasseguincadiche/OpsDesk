@@ -8,6 +8,6 @@ Les premiers schémas du projet ont servi à expérimenter différentes représe
 
 La **vue d'architecture technique historique**, son SVG, son Draw.io et l'ancienne matrice détaillée ont été transférés dans la documentation personnelle privée. Ils ne sont plus publiés dans l'arborescence active du dépôt.
 
-Pour l'architecture actuelle, consulter uniquement la [vue globale officielle](../../docs/diagrams/architecture-globale.svg) et les [ADR publics](../../docs/adr/README.md).
+Pour l'architecture actuelle, consulter uniquement la [vue globale officielle](../../docs/diagrams/architecture-globale.png) et les [ADR publics](../../docs/adr/README.md).
 
 **Limite de confidentialité :** l'historique Git, les anciennes PR et les artefacts éventuellement conservés sur GitHub peuvent toujours contenir les fichiers précédemment publiés.

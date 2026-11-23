@@ -4,7 +4,7 @@ Ce dossier rassemble les schémas **du produit et de son architecture**, pas les
 
 ## Vues disponibles
 
-La **vue globale de l’architecture V2** présente Terraform sur Fedora, HTTPS, GHCR privé, Borg, K3s et les réseaux internes. Les quatre autres paires documentent l'application et ses usages et sont conservées. Les décisions de référence sont les [sept ADR](../adr/README.md), la [matrice des flux](../architecture-v2-flux.md) et le [plan phases 0 à 6](../architecture-v2-deploiement.md). Aucun de ces schémas n'est une preuve de déploiement ; une inspection graphique native finale des sources Draw.io reste nécessaire avant publication comme plan visuel certifié.
+La **vue globale de l’architecture V2** présente Terraform sur Fedora, HTTPS, GHCR privé, Borg, K3s et les réseaux internes. Les quatre autres paires documentent l'application et ses usages et sont conservées. Les décisions de référence sont les [sept ADR](../adr/README.md), la [principes des flux](../architecture-v2-flux.md) et le [plan phases 0 à 6](../architecture-v2-deploiement.md). Aucun de ces schémas n'est une preuve de déploiement ; une inspection graphique native finale des sources Draw.io reste nécessaire avant publication comme plan visuel certifié.
 
 | Schéma | Utilité |
 | --- | --- |

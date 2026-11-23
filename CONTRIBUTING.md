@@ -35,7 +35,7 @@ Le workflow actuel vérifie les contrats documentaires ; il ne construit ni ne p
 - Les chemins et comportements modifiés, avec lien à l'issue si applicable.
 - Les commandes **réellement exécutées**, sur quelle cible, à quel commit, et leurs résultats.
 - Les risques de sécurité, compatibilité, perte de données et un retour arrière approprié.
-- Pour les schémas : source `.drawio`, export `.svg` cohérent, légende et rendu vérifié.
+- Pour les schémas, conserver la source `.drawio`, une légende et le visuel publié. Vérifier le rendu du PNG de la vue globale et des SVG des autres schémas.
 - Pour les interfaces : capture **réelle**, expurgée, avec sa version et son contexte.
 - Les limites et validations restantes ; ne jamais transformer un résultat illustratif en preuve.
 

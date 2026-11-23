@@ -9,7 +9,7 @@ Ce document dit d'où vient chaque partie du dépôt, et ce qui revient à la r�
 | Application v2 : `backend/`, `frontend/`, tests, Dockerfiles, `compose.yaml`, `scripts/smoke.py` | Produits avec l'aide d'un assistant d'IA, à partir d'une première version elle-même générée par IA | Fournis : support de l'apprentissage, pas une réalisation personnelle à mettre au CV comme développement |
 | Composants tiers : Python, FastAPI, SQLAlchemy, psycopg, React, Vite, Tailwind CSS, Recharts, nginx, PostgreSQL | Projets libres, sous leurs propres licences | La licence MIT du dépôt ne les remplace pas |
 | Documentation produit : README, architecture, référence technique, contrat applicatif | Rédigée avec l'aide d'un assistant d'IA, relue contre le code | Décisions validées par le propriétaire du projet |
-| Schémas v2 (`docs/diagrams/`) | Dessinés pour le projet avec Draw.io, sans logo de produit | Sources `.drawio` et exports SVG versionnés |
+| Schémas v2 (`docs/diagrams/`) | Dessinés pour le projet avec Draw.io, sans logo de produit | Sources `.drawio` et visuels PNG ou SVG versionnés |
 | Infrastructure : laboratoire, Terraform, Ansible, fichier Compose de production, CI, K3s, supervision, sauvegarde | **À concevoir, écrire, exécuter et expliquer soi-même** | Réalisation à prouver par des résultats techniques datés ; rien n'est réalisé à ce jour |
 | Données de démonstration | Fictives : noms, adresses et tickets inventés | Aucune donnée réelle |
 
@@ -19,7 +19,7 @@ La bannière `docs/images/opsdesk-hero.svg` est une identité graphique
 éditoriale créée avec assistance IA pour faciliter la lecture. Elle ne
 représente ni une VM réellement créée ni le fonctionnement vérifié
 de l'architecture. Les diagrammes techniques conservent leurs
-sources `.drawio` et leurs exports SVG.
+sources `.drawio` et leurs visuels publiés.
 
 ## La version 1
 
