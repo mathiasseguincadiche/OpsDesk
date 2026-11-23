@@ -1,6 +1,6 @@
 # Schémas techniques d'OpsDesk
 
-Ce dossier rassemble les schémas **du produit et de son architecture**, pas les supports de formation personnelle. Chaque schéma technique conserve sa source modifiable `.drawio` et son export `.svg`. La vue globale V2 est publiée en PNG. Les schémas de cours ont été transférés au [wiki Notion](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223), avec leurs sources, sans supprimer les preuves historiques.
+Ce dossier rassemble les schémas **du produit et de son architecture**, pas les supports de formation personnelle. La [vue globale V2](architecture-globale.png) est publiée en PNG avec sa [source Draw.io](architecture-globale.drawio). Les autres schémas sont publiés en SVG. Les schémas de cours ont été transférés au [wiki Notion](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223), avec leurs sources, sans supprimer les preuves historiques.
 
 ## Vues disponibles
 
@@ -19,7 +19,7 @@ La **vue globale de l’architecture V2** présente Terraform sur Fedora, HTTPS,
 - Un cadre désigne une frontière (hôte, VM, réseau ou service) ; une flèche indique le sens du flux.
 - Sur la vue globale **Architecture V2**, les frontières des VM et les flux sont représentés **en traits continus**, avec des couleurs distinctes pour l'applicatif, l'administration, l'observabilité et les sauvegardes. Cette convention présente l'architecture cible validée ; elle ne prouve pas son déploiement sur Fedora/Rocky. Le socle applicatif a été contrôlé séparément sur runner.
 - Un schéma décrit une intention et une structure ; il ne prouve ni le déploiement ni la sécurité. Le [statut vérifié](../../STATUS.md) fait foi.
-- Le fichier `.drawio` est la source éditable. Modifier un SVG seul ne suffit pas à maintenir la paire cohérente.
+- Le fichier `.drawio` est la source éditable. Vérifier également le visuel publié après chaque modification.
 
 ## Conventions de lecture de la vue globale publique
 
@@ -35,8 +35,8 @@ La **vue globale de l’architecture V2** présente Terraform sur Fedora, HTTPS,
 
 1. Ouvrir le fichier `.drawio` correspondant dans diagrams.net / Draw.io.
 2. Vérifier la cohérence de la vue globale avec les [ADR V2 publics](../adr/README.md) et les [principes de flux](../architecture-v2-flux.md), sans publier les règles exactes du laboratoire.
-3. Exporter en SVG depuis Draw.io ; relire le résultat à taille normale et en thème clair/sombre.
-4. Conserver les deux fichiers et exécuter `python3 scripts/check_docs.py` depuis la racine.
+3. Vérifier le visuel publié à taille normale et en thèmes clair et sombre. Utiliser le PNG pour la vue globale et le SVG pour les autres schémas.
+4. Conserver la source et le visuel publié, puis exécuter `python3 scripts/check_docs.py` depuis la racine.
 
 L'ancien générateur de schémas, mêlant vues techniques et pédagogiques, est [archivé dans Notion avec ses sources](https://app.notion.com/p/42065721fa18812e9541ff18d825885f). Les fichiers `.drawio` restent disponibles pour les modifications.
 
