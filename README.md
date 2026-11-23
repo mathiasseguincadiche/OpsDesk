@@ -1,28 +1,44 @@
 # OpsDesk
 
-**Ingénierie DevOps / InfraOps — construire et exploiter l'infrastructure d'une application de tickets IT.**
+**Projet InfraOps pour apprendre à provisionner, déployer et exploiter une application de tickets IT.**
 
-OpsDesk est un projet fil rouge : une application de gestion de tickets sert de support pour apprendre à préparer Linux, automatiser l'infrastructure, livrer des services, les surveiller et tester leur reprise.
-
-**[Découvrir](#le-projet-en-30-secondes)** · **[Essayer](#démarrage-rapide)** · **[Comprendre l'architecture](#architecture)** · **[Examiner les preuves](STATUS.md)** · **[Parcourir la documentation](docs/README.md)**
+**[Voir le parcours](#le-projet-en-30-secondes)** · **[Comprendre l’architecture](#architecture)** · **[Essayer l’application](#démarrage-rapide)** · **[Vérifier l’avancement](STATUS.md)** · **[Consulter la documentation](#documentation)**
 
 ## Le projet en 30 secondes
 
-- **L'application est fournie :** backend FastAPI, frontend React/nginx et PostgreSQL ; son rôle est d'offrir un service réel à exploiter, pas de présenter le développement full stack comme une réalisation personnelle.
-- **L'infrastructure est le périmètre technique à réaliser :** Fedora, KVM/libvirt, Rocky Linux, Terraform, Ansible, Docker Compose, GitHub Actions, K3s, observabilité et restauration. Les réalisations personnelles seront datées et vérifiées progressivement.
-- **L'état actuel est explicite :** le socle applicatif a fait l'objet de validations GitHub Actions jusqu'au 22 novembre 2026 ; les déploiements et les essais sur mes VM Rocky restent à réaliser. Voir [STATUS.md](STATUS.md) et la [provenance des travaux](docs/provenance.md).
+OpsDesk fournit un service de tickets composé d’un frontend React/nginx, d’une API FastAPI et d’une base PostgreSQL. Il sert de support à un parcours d’ingénierie DevOps qui va du provisionnement Linux à la restauration des données.
+
+| En place | À réaliser |
+| --- | --- |
+| Pile applicative conteneurisée et qualifiée sur runner Ubuntu. La validation du 22 novembre 2026 couvre les tests, la compilation et le parcours HTTP. | Laboratoire Fedora/Rocky, déploiement automatisé, livraison des images, supervision et reprise sur les VM. |
+
+[![Parcours InfraOps OpsDesk V2 en six étapes](docs/images/opsdesk-presentation-du-projet.png)](docs/presentation-projet-infraops-v2.md)
+
+[Lire la présentation des six étapes](docs/presentation-projet-infraops-v2.md) · [Suivre la feuille de route](ROADMAP.md)
 
 ### Le défi d'infrastructure
 
-Le sujet n'est pas seulement de démarrer trois conteneurs : il faut rendre le service **reproductible, observable, maintenable et restaurable**, en protégeant ses données. Chaque étape part d'un besoin technique, examine une décision et ses compromis, puis prévoit un contrôle concret. La [feuille de route](ROADMAP.md) montre le chemin ; le [statut](STATUS.md) dit ce qui est déjà vérifié.
+Rendre le service reproductible, observable et restaurable. Chaque jalon associe un besoin, un choix technique et un contrôle à réaliser.
 
 ## Mon rôle dans ce projet
 
-**L'application** a été développée avec l'aide d'outils d'IA, puis relue, testée et conteneurisée. Elle me sert de service réaliste à exploiter.
+Je me forme à l’ingénierie DevOps, avec une spécialisation en automatisation des infrastructures. Mon périmètre couvre le réseau et le stockage, le provisionnement, la configuration, le déploiement et l’exploitation du laboratoire. Le socle applicatif a été développé avec l’aide d’outils d’IA, puis relu, testé et conteneurisé. [Provenance des travaux](docs/provenance.md) · [Preuves et limites](STATUS.md)
 
-**Mon objectif professionnel : devenir ingénieur DevOps spécialisé dans l’automatisation des infrastructures (InfraOps).** L’application est un support, pas un projet de développement full stack. Mon objectif est de transformer un besoin applicatif en une infrastructure Linux reproductible : concevoir le réseau et le stockage, provisionner les machines, sécuriser et configurer les serveurs, déployer des artefacts versionnés, industrialiser la livraison, puis superviser, maintenir, diagnostiquer et restaurer le service. Le périmètre comprend l'écriture et le contrôle du code d'infrastructure, ainsi que la compréhension des contraintes applicatives. [STATUS.md](STATUS.md) distingue strictement le socle fourni des réalisations personnelles vérifiées.
+## Architecture
 
-**Où j’en suis :** application et pile locale qualifiées le 19 novembre 2026 sur un runner jetable : tests SQLite et PostgreSQL, compilation, smoke HTTP, isolation des ports, reprise de l’API et de la base, persistance. L’infrastructure du laboratoire reste à construire personnellement. Voir les [preuves datées et leurs limites](STATUS.md).
+L’architecture V2 a été validée en conception le 22 novembre 2026. Dans cette cible, Terraform provisionne trois VM Rocky depuis l’hôte Fedora et Ansible pilote les déploiements depuis `srv-admin`, l’application Compose tourne sur `srv-app` et une copie d’essai isolée ainsi que la supervision tournent sur `srv-k3s`.
+
+<a href="docs/diagrams/architecture-globale.png"><img alt="Vue globale OpsDesk V2 avec l’hôte Fedora, trois VM Rocky, l’entrée HTTPS, les services internes, la supervision et les sauvegardes hors VM" src="docs/diagrams/architecture-globale.png"></a>
+
+[Ouvrir le schéma](docs/diagrams/architecture-globale.png) · [Sept ADR](docs/adr/README.md) · [Principes des flux](docs/architecture-v2-flux.md) · [Plan de déploiement](docs/architecture-v2-deploiement.md)
+
+### Pourquoi ces choix
+
+- **Docker Compose** décrit la pile du service principal. Nginx expose HTTPS sur le port 443 et relaie `/api` vers FastAPI. L’API et PostgreSQL communiquent sur le réseau interne.
+- **K3s** sert aux essais sur une copie isolée, où l’on peut tester de nouvelles versions et la charge sans perturber le service principal.
+- **Prometheus, Grafana et Borg** couvrent la supervision et la sauvegarde hors VM. La validation sur le laboratoire reste à réaliser.
+
+[Architecture et choix techniques](docs/architecture.md) · [Contrat applicatif](docs/contrat-applicatif.md)
 
 ## Aperçu de l'application
 
@@ -31,13 +47,15 @@ Le sujet n'est pas seulement de démarrer trois conteneurs : il faut rendre le s
   <img alt="Tableau de bord d'OpsDesk : tickets actifs, activité des 14 derniers jours, répartition par statut et tickets à traiter en priorité" src="docs/images/apercu-clair.png">
 </picture>
 
-<sub>Capture réelle de la version 2.0.0, prise le 18 novembre 2026 sur l'environnement local, avec les données de démonstration.</sub>
+<sub>Tableau de bord de la version 2.0.0 en local, capturé le 18 novembre 2026 avec des données fictives.</sub>
 
-La capture représente l'application fournie, avec des données fictives. Elle ne démontre pas le déploiement de mon infrastructure InfraOps.
+## Ce que fait l'application
+
+Le collaborateur ouvre et suit ses tickets. Le support les prend en charge et les résout. L’administrateur gère aussi les comptes. Les tickets passent d’ouvert à en cours, à résolu, puis à clôturé, avec réouverture possible. L’interface propose un suivi des échanges, un historique, des filtres et un tableau de bord.
 
 ## Démarrage rapide
 
-Prérequis : Git et Docker avec le plugin Compose.
+Installez Git et Docker avec le plugin Compose, puis lancez ces commandes.
 
 ```bash
 git clone https://github.com/mathiasseguincadiche/OpsDesk.git
@@ -45,77 +63,34 @@ cd OpsDesk
 docker compose up -d --build
 ```
 
-Ouvrez [http://localhost:8080](http://localhost:8080) une fois les conteneurs démarrés, puis choisissez un compte de démonstration. Aucune configuration préalable n'est nécessaire sur un dépôt fraîchement cloné.
+Ouvrez [http://localhost:8080](http://localhost:8080) et choisissez un compte de démonstration. Un clone neuf démarre avec les réglages par défaut. La pile locale utilise des données fictives et n’expose ses ports que sur votre poste. Exécutez `docker compose down` pour l’arrêter en conservant les tickets.
 
-Pour arrêter le projet sans perdre les tickets : `docker compose down`.
-
-La démonstration utilise des données fictives et des ports accessibles uniquement depuis votre poste. Pour les contrôles, les options de configuration ou un problème de démarrage, consultez le [guide de démarrage](docs/demarrage.md). Le déploiement sur serveur est traité séparément dans la [référence technique](docs/reference-technique.md#déployer-avec-docker-compose-sur-un-serveur).
-
-## Architecture
-
-**[Présentation publique de l'Architecture V2 : les six étapes InfraOps](docs/presentation-projet-infraops-v2.md)** — de la construction du laboratoire à sa supervision et à sa reprise. La table d'adressage et la matrice réseau détaillée restent dans Notion.
-
-[![Présentation graphique OpsDesk V2 — six étapes](docs/images/opsdesk-presentation-du-projet.png)](docs/presentation-projet-infraops-v2.md)
-
-*Architecture V2 validée en conception. Le déploiement du laboratoire reste à réaliser.*
-
-**Architecture V2 acceptée en conception le 22 novembre 2026** : [sept ADR](docs/adr/README.md), [matrice de flux](docs/architecture-v2-flux.md) et [plan de déploiement, phases 0 à 6](docs/architecture-v2-deploiement.md). Les VM et les flux de cette cible ne sont pas encore déployés. Le schéma ci-dessous présente la vue globale de cette architecture cible.
-
-<a href="docs/diagrams/architecture-globale.png"><img alt="Architecture OpsDesk V2 encore à construire : Terraform et Borg sur l'hôte Fedora ; trois VM Rocky srv-admin, srv-app et srv-k3s sur un réseau NAT privé ; serveur principal accessible en HTTPS 443, API et PostgreSQL internes, supervision, copie d'essai et GHCR privé." src="docs/diagrams/architecture-globale.png"></a>
-
-**En résumé :** la démonstration locale fonctionne sur `127.0.0.1:8080` ; dans la **cible Architecture V2**, le navigateur entrera uniquement en **HTTPS :443** sur Nginx. Celui-ci transmettra `/api` à FastAPI (:8000 interne), qui accédera à PostgreSQL (:5432 interne). Terraform sur Fedora provisionnera les VM, Ansible depuis `srv-admin` administrera `srv-app` et `srv-k3s`.
-
-[Voir la vue globale officielle](docs/diagrams/architecture-globale.png) · [Les choix techniques expliqués](docs/architecture.md)
-
-### Pourquoi ces choix
-
-| Choix | Raison | Limite assumée |
-| --- | --- | --- |
-| **Docker Engine + Compose** sur le serveur | Les outils de conteneurs les plus répandus en entreprise ; un fichier versionné décrit toute la pile, et Docker la relance au boot | Démon en root : le groupe `docker` vaut root, donc administration par `sudo`. Un seul serveur : pas de haute disponibilité |
-| **Trois conteneurs séparés** | Chaque partie se met à jour, se surveille et se redémarre indépendamment | Plus d'éléments à configurer qu'un seul conteneur |
-| **K3s sur une copie d'essai** | Apprendre Kubernetes sans risquer le service principal | La copie n'est pas le service réel |
+[Guide de démarrage](docs/demarrage.md) · [Déploiement sur serveur](docs/reference-technique.md#déployer-avec-docker-compose-sur-un-serveur)
 
 ## Ce que montre ce projet
 
-| État technique | Réalisation ou objectif | Où l'examiner |
-| --- | --- | --- |
-| ✅ Réalisé | Conteneurisation | [`backend/Dockerfile`](backend/Dockerfile), [`frontend/Dockerfile`](frontend/Dockerfile) : images multi-étapes, non-root ; [`compose.yaml`](compose.yaml) : sondes, réseaux séparés, rotation des journaux |
-| ✅ Réalisé | Qualification automatisée du socle | [CI applicative](docs/ci-applicative.md) : 30 tests SQLite, 30 tests PostgreSQL 17, build React et smoke Compose sur runner |
-| ✅ Réalisé | Sondes, métriques, journaux | `/health/live`, `/health/ready`, `/metrics` (Prometheus), journaux JSON : voir la [référence technique](docs/reference-technique.md#points-daccès-pour-lexploitation) |
-| 🔜 Prévu | Déploiement Docker Compose | Docker Engine sur Rocky Linux, SELinux et firewalld actifs, déployé par Ansible |
-| 🔜 Prévu | Infrastructure as Code | Terraform (libvirt) et Ansible depuis `srv-admin` |
-| 🔜 Prévu | Livraison continue des artefacts | Publication GHCR par digest, contrôles de vulnérabilités et déploiement Ansible (distincts de la CI de qualité existante) |
-| 🔜 Prévu | Supervision et sauvegarde | Prometheus, Grafana, `pg_dump` avec test de restauration |
-
-Les trois premières lignes décrivent le socle fourni et qualifié, pas des compétences personnelles déjà acquises. Les prochaines mises en service seront contrôlées et datées ; [STATUS.md](STATUS.md) sépare avancement et contrôle. Les preuves personnelles, distinctes, se consignent dans le suivi de formation.
-
-## Ce que fait l'application
-
-- **Trois rôles** : le collaborateur ouvre et suit ses demandes ; le support les prend en charge et les résout ; l'administrateur gère aussi les comptes.
-- **Un cycle de vie clair** : ouvert → en cours → résolu → clôturé, avec réouverture possible. Le demandeur confirme lui-même la résolution.
-- **Le suivi** : commentaires, historique de chaque changement, recherche, filtres.
-- **Un tableau de bord** : tickets actifs, activité sur 14 jours, charge de l'équipe.
+| Périmètre | État et preuves |
+| --- | --- |
+| Conteneurisation du socle | Images multi-étapes, exécution non-root et sondes dans les [Dockerfiles backend](backend/Dockerfile) et [frontend](frontend/Dockerfile) ainsi que dans [Compose](compose.yaml). |
+| Qualification applicative | 30 tests SQLite, 30 tests PostgreSQL, build frontend et contrôle HTTP Compose sur runner. [CI applicative](docs/ci-applicative.md) |
+| Exploitation applicative | Sondes, métriques Prometheus et journaux JSON. La reprise des conteneurs et la persistance ont été testées sur runner. [Points d’accès](docs/reference-technique.md#points-daccès-pour-lexploitation) · [Preuves](docs/preuves.md) |
+| Infrastructure personnelle | Provisionnement Terraform/Ansible, livraison GHCR par digest, exploitation Rocky, K3s, supervision et restauration à réaliser et à prouver sur le laboratoire. [État daté](STATUS.md) |
 
 ## Documentation
 
-L'[index technique](docs/README.md) regroupe les références nécessaires pour installer, comprendre, exploiter et maintenir OpsDesk.
-
 | Pour… | Lire |
 | --- | --- |
-| Comprendre le socle applicatif | [Architecture de l'application](docs/architecture.md) |
-| Examiner la nouvelle **Architecture V2** | [7 ADR](docs/adr/README.md) · [Flux](docs/architecture-v2-flux.md) · [Déploiement](docs/architecture-v2-deploiement.md) |
-| Examiner ce que l'application exige de l'infrastructure | [Contrat applicatif](docs/contrat-applicatif.md) |
-| Exploiter, configurer, déployer, tester | [Référence technique](docs/reference-technique.md) · [Exploitation](docs/exploitation-day2.md) · [Reprise](docs/reprise.md) |
-| Examiner la sécurité, les résultats et leurs limites | [Sécurité](docs/securite.md) · [Preuves](docs/preuves.md) |
-| Suivre l'avancement et les preuves | [STATUS.md](STATUS.md) · [Feuille de route technique](ROADMAP.md) |
-| Consulter la version 1 | [`legacy/`](legacy/) |
+| Explorer toutes les références | [Index de la documentation](docs/README.md) |
+| Exploiter, configurer et restaurer | [Référence technique](docs/reference-technique.md) · [Exploitation](docs/exploitation-day2.md) · [Reprise](docs/reprise.md) |
+| Examiner la sécurité et les résultats | [Sécurité](docs/securite.md) · [Preuves](docs/preuves.md) |
+| Consulter la version 1 | [Archives de la V1](legacy/) |
+
+La table d’adressage complète et la matrice de flux détaillée sont réservées au dossier privé Notion.
 
 ## Contribuer ou reprendre le projet
 
-Pour signaler un bug ou proposer une modification, lire le [guide de contribution](CONTRIBUTING.md), la [politique de sécurité](SECURITY.md). Pour comprendre les versions, consulter le [journal des changements](CHANGELOG.md).
-
-Lire d'abord le [contrat applicatif](docs/contrat-applicatif.md) et le [registre des décisions de l'Architecture V2](docs/adr/README.md). Pour signaler un problème, indiquer la version, la cible, les étapes de reproduction et les résultats attendus/observés, sans secret ni donnée personnelle. Pour proposer une correction, partir de `main` sur une branche dédiée, expliquer le besoin et les conséquences, vérifier le périmètre modifié et joindre les preuves dans une pull request. Si un changement touche la documentation ou un schéma, contrôler les liens, la cohérence avec le code et la source Draw.io ; ne pas transférer un ancien résultat à une nouvelle configuration. Le suivi d'apprentissage personnel reste distinct du dépôt public ; une procédure proposée n'est pas une opération exécutée.
+Consultez le [guide de contribution](CONTRIBUTING.md), la [politique de sécurité](SECURITY.md) et le [journal des changements](CHANGELOG.md). Pour proposer une correction, ouvrez une pull request depuis une branche dédiée et joignez les contrôles exécutés. Pour signaler un problème, indiquez la version et les étapes de reproduction, sans secret ni donnée personnelle.
 
 ## Licence et provenance
 
-Code sous licence [MIT](LICENSE). L'application a été développée avec l'assistance d'outils d'IA ; l'infrastructure et son exploitation constituent le travail personnel à réaliser et à prouver ; leur état réel est documenté dans [STATUS.md](STATUS.md). Les composants tiers (FastAPI, React, PostgreSQL, nginx…) conservent leurs propres licences. Détails : [provenance](docs/provenance.md).
+Code sous licence [MIT](LICENSE). Les composants tiers conservent leurs propres licences. [Provenance et attribution](docs/provenance.md)

@@ -45,13 +45,12 @@ class DocumentationContracts(unittest.TestCase):
         self.assertIn("décisions-retenues", anchors)
 
     def test_public_global_diagram_and_private_detail_exclusion(self) -> None:
-        # Publication: only the global architecture can appear in the public repo.
-        # The public SVG uses outlined text; native editable shapes are verified
-        # separately in check_repository(), not through SVG text comparisons.
         self.assertEqual([], check_docs.check_repository())
         folder = ROOT / "docs" / "diagrams"
-        for suffix in (".drawio", ".svg"):
+        for suffix in (".drawio", ".png"):
             self.assertTrue((folder / f"architecture-globale{suffix}").is_file())
+        self.assertFalse((folder / "architecture-globale.svg").exists())
+        for suffix in (".drawio", ".svg"):
             self.assertFalse((folder / f"architecture{suffix}").exists())
 
     def test_legacy_architecture_details_not_republished(self) -> None:

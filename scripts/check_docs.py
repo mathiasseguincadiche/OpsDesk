@@ -149,41 +149,41 @@ def check_repository() -> list[str]:
         errors.extend(validate_document_links(document))
     errors.extend(check_editorial_contract())
 
-    for asset in ("docs/images/opsdesk-hero.svg", "docs/diagrams/architecture-globale.svg"):
-        path = ROOT / asset
-        if not path.is_file():
-            errors.append(f"missing graphic: {asset}")
-            continue
-        try:
-            element = ET.parse(path).getroot()
-            if element.tag != "{http://www.w3.org/2000/svg}svg":
-                errors.append(f"{asset}: invalid SVG root")
-        except ET.ParseError as exc:
-            errors.append(f"{asset}: invalid XML: {exc}")
     diagram_folder = ROOT / "docs/diagrams"
-    for diagram in diagram_folder.glob("*.svg"):
-        source = diagram.with_suffix(".drawio")
-        if not source.is_file():
-            errors.append(f"{diagram.relative_to(ROOT)}: missing draw.io source")
-            continue
+    diagrams = sorted(diagram_folder.glob("*.svg"))
+    hero = ROOT / "docs/images/opsdesk-hero.svg"
+    for graphic in (hero, *diagrams):
         try:
-            exported = ET.parse(diagram).getroot()
-            if exported.tag != "{http://www.w3.org/2000/svg}svg":
-                errors.append(f"{diagram.relative_to(ROOT)}: invalid SVG root")
+            element = ET.parse(graphic).getroot()
+            if element.tag != "{http://www.w3.org/2000/svg}svg":
+                errors.append(f"{graphic.relative_to(ROOT)}: invalid SVG root")
+        except FileNotFoundError:
+            errors.append(f"{graphic.relative_to(ROOT)}: missing graphic")
         except ET.ParseError as exc:
-            errors.append(f"{diagram.relative_to(ROOT)}: invalid SVG XML: {exc}")
-            continue
+            errors.append(f"{graphic.relative_to(ROOT)}: invalid SVG XML: {exc}")
+
+    global_preview = diagram_folder / "architecture-globale.png"
+    try:
+        with global_preview.open("rb") as image:
+            if image.read(8) != b"\x89PNG\r\n\x1a\n":
+                errors.append(f"{global_preview.relative_to(ROOT)}: invalid PNG signature")
+    except FileNotFoundError:
+        errors.append(f"{global_preview.relative_to(ROOT)}: missing graphic")
+
+    global_source = global_preview.with_suffix(".drawio")
+    diagram_sources = {diagram.with_suffix(".drawio") for diagram in diagrams}
+    for source in sorted(diagram_sources | {global_source}):
         try:
             editable = ET.parse(source).getroot()
             if editable.tag != "mxfile":
                 errors.append(f"{source.relative_to(ROOT)}: invalid Draw.io root")
+        except FileNotFoundError:
+            errors.append(f"{source.relative_to(ROOT)}: missing Draw.io source")
+            continue
         except ET.ParseError as exc:
             errors.append(f"{source.relative_to(ROOT)}: invalid Draw.io XML: {exc}")
             continue
-        if diagram.stem == "architecture-globale":
-            # The chosen official SVG is vector artwork with outlined fonts,
-            # while the matching Draw.io is independently reconstructed as native
-            # editable shapes. Validate each without false SVG text comparison.
+        if source == global_source:
             cells = {cell.get("id"): cell for cell in editable.iter("mxCell")}
             for cell_id in (
                 "titre", "hote", "reseau", "srv-admin", "srv-app",
@@ -209,16 +209,6 @@ def check_repository() -> list[str]:
                     )
             if any(bad in source_labels for bad in ("http :8080", "qemu+ssh")):
                 errors.append(f"{source.relative_to(ROOT)}: obsolete public label")
-
-            paths = list(exported.iter("{http://www.w3.org/2000/svg}path"))
-            if len(paths) < 50 or exported.get("viewBox") != "0 0 760.000000 660.000000":
-                errors.append(
-                    f"{diagram.relative_to(ROOT)}: unexpected global reference rendering"
-                )
-            if list(exported.iter("{http://www.w3.org/2000/svg}image")):
-                errors.append(
-                    f"{diagram.relative_to(ROOT)}: raster image embedded in SVG"
-                )
 
     for private_file in ("architecture.drawio", "architecture.svg"):
         if (diagram_folder / private_file).exists():
@@ -262,7 +252,7 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print("Documentation: active Markdown links/anchors, editorial contracts, SVG and Draw.io sources OK.")
+    print("Documentation: active Markdown links/anchors, editorial contracts, PNG, SVG and Draw.io sources OK.")
     print("NOTE: This is static validation only, not a visual review or InfraOps deployment.")
     return 0
 
