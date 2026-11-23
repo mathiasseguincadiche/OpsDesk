@@ -2,7 +2,11 @@
 
 > **Cible validée en conception, non encore déployée dans le laboratoire Fedora/Rocky.** Cette présentation décrit l'enchaînement attendu des travaux ; [STATUS.md](../STATUS.md) reste la source de vérité pour les réalisations, tests et preuves déjà obtenus.
 
-![Vue globale publique de l'architecture OpsDesk V2](diagrams/architecture-globale.svg)
+![Présentation du projet OpsDesk V2 — six étapes, phases A et B](images/presentation-projet-v2.svg)
+
+*Présentation graphique corrigée selon le PNG approuvé. Le format SVG embarque ce PNG ; il garantit le rendu mais ne fournit pas d'objets vectoriels éditables. Architecture cible, non déployée.*
+
+[Consulter également la vue globale d'architecture](diagrams/architecture-globale.svg) · [Ouvrir le visuel de présentation seul](images/presentation-projet-v2.svg)
 
 ## Vue d'ensemble
 
@@ -38,6 +42,6 @@ La présentation est structurée en **deux phases complémentaires et six étape
 
 Les six étapes sont **des objectifs de mise en œuvre**, et non six fonctionnalités déjà réalisées ou certifiées. Le socle applicatif fourni a ses propres validations sur runner ; les déploiements Fedora/Rocky et leur qualification personnelle restent à documenter séparément.
 
-Cette page est une **présentation publique volontairement synthétique**. Les plans d'adressage, matrices de flux détaillées, clés, comptes, chemins internes et procédures d'exploitation personnelles n'appartiennent pas à ce dépôt public.
+Cette page reste une **présentation publique**. Le visuel contient une indication de plage réseau privée du laboratoire, mais ne publie pas la table d'adressage complète ni la matrice détaillée des flux. Les clés, comptes et procédures d'exploitation personnelles restent exclusivement dans Notion.
 
 **Pour aller plus loin :** [Architecture V2 et ADR](adr/README.md) · [Vue globale publique](diagrams/architecture-globale.svg) · [Principes des flux](architecture-v2-flux.md) · [Phases 0 à 6](architecture-v2-deploiement.md) · [État réel](../STATUS.md).
