@@ -53,7 +53,11 @@ La démonstration utilise des données fictives et des ports accessibles uniquem
 
 ## Architecture
 
-**[Présentation publique de l'Architecture V2 : les six étapes InfraOps](docs/presentation-projet-infraops-v2.md)** — de la construction du laboratoire à sa supervision et à sa reprise, sans divulguer les paramètres d'exploitation personnels.
+**[Présentation publique de l'Architecture V2 : les six étapes InfraOps](docs/presentation-projet-infraops-v2.md)** — de la construction du laboratoire à sa supervision et à sa reprise. La table d'adressage et la matrice réseau détaillée restent dans Notion.
+
+[![Présentation graphique OpsDesk V2 — six étapes](docs/images/presentation-projet-v2.svg)](docs/presentation-projet-infraops-v2.md)
+
+*Visuel corrigé fidèle au PNG validé : SVG de présentation contenant une image PNG, non une source Draw.io éditable. Architecture cible non encore déployée.*
 
 **Architecture V2 acceptée en conception le 22 novembre 2026** : [sept ADR](docs/adr/README.md), [matrice de flux](docs/architecture-v2-flux.md) et [plan de déploiement, phases 0 à 6](docs/architecture-v2-deploiement.md). Les VM et les flux de cette cible ne sont pas encore déployés. Les deux schémas d'architecture ci-dessous ont été révisés pour **Architecture V2** (sources éditables Draw.io + SVG) ; ils restent des **schémas de conception, pas des captures d'un déploiement**.
 
