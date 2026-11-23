@@ -33,7 +33,7 @@ on:
 permissions:
   contents: read
 
-# Vérifie liens et ancres, fichiers SVG/Draw.io et contrats Python.
+# Vérifie les liens, les visuels PNG et SVG, les sources Draw.io et les contrats Python.
 # Ne valide ni une VM Rocky ni le rendu graphique sur un navigateur.
 jobs:
   docs-contract:

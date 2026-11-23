@@ -1,7 +1,7 @@
 # Versions et périmètres
 
 > [!NOTE]
-> **Archive de la version 1** d'OpsDesk (application Flask, sans authentification), déplacée dans `legacy/` le 18 novembre 2026. Elle n'est plus tenue à jour. Pour la version 2 : [l'architecture](../../docs/architecture.md), [la référence technique](../../docs/reference-technique.md) et [le parcours](../../docs/apprentissage/README.md).
+> **Archive de la version 1** d'OpsDesk (application Flask, sans authentification), déplacée dans `legacy/` le 18 novembre 2026. Elle n'est plus tenue à jour. Pour la version 2 : [l'architecture](../../docs/architecture.md), [la référence technique](../../docs/reference-technique.md) et [le parcours](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223).
 
 **les versions et configurations d’infrastructure ci-dessous décrivent l’antériorité historique.** Le [contrat applicatif](../../docs/contrat-applicatif.md) distingue combinaison testée, paramètres et besoins à satisfaire par l’apprenant. La source actuellement testée est identifiée par ses hashes dans `evidence/qualification/application-tests.json`, sans faux SHA publié.
 

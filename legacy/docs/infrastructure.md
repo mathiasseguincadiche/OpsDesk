@@ -14,6 +14,6 @@ Les exercices et schémas V1 ne prouvent pas le déploiement de l'Architecture V
 
 ## Références publiques
 
-- [Architecture globale V2](../../docs/diagrams/architecture-globale.svg)
+- [Architecture globale V2](../../docs/diagrams/architecture-globale.png)
 - [État réel des validations](../../STATUS.md)
 - [Provenance du projet](../../docs/provenance.md)

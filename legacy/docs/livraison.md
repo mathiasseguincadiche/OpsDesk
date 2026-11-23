@@ -1,13 +1,13 @@
 # Livrer une évolution : développeur et opérateur
 
 > [!NOTE]
-> **Archive de la version 1** d'OpsDesk (application Flask, sans authentification), déplacée dans `legacy/` le 18 novembre 2026. Elle n'est plus tenue à jour. Pour la version 2 : [l'architecture](../../docs/architecture.md), [la référence technique](../../docs/reference-technique.md) et [le parcours](../../docs/apprentissage/README.md).
+> **Archive de la version 1** d'OpsDesk (application Flask, sans authentification), déplacée dans `legacy/` le 18 novembre 2026. Elle n'est plus tenue à jour. Pour la version 2 : [l'architecture](../../docs/architecture.md), [la référence technique](../../docs/reference-technique.md) et [le parcours](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223).
 
-> **HISTORIQUE — référence non exécutable depuis le dépôt courant.** Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), `compose.yaml` et `Dockerfile` sont absents. Les blocs de commandes conservent les anciennes instructions pour comprendre l’essai Ubuntu/WSL ; ils ne sont pas prêts à copier et ne lancent pas le laboratoire personnel. Les versions et résultats qui suivent sont historiques. [Parcours actif](../../docs/apprentissage/README.md) · [Pré-checks Fedora/KVM/Rocky](../../docs/laboratoire-fedora-kvm-rocky.md).
+> **HISTORIQUE — référence non exécutable depuis le dépôt courant.** Au contrôle de `main` du 4 novembre 2026 (`51e1a489`), `compose.yaml` et `Dockerfile` sont absents. Les blocs de commandes conservent les anciennes instructions pour comprendre l’essai Ubuntu/WSL ; ils ne sont pas prêts à copier et ne lancent pas le laboratoire personnel. Les versions et résultats qui suivent sont historiques. [Parcours actif](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223) · [Pré-checks Fedora/KVM/Rocky](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223).
 
 ## Référence historique — laboratoire de développement
 
-Les procédures et résultats ci-dessous datent des essais historiques ; ils ne sont pas relancés. Les configurations et opérations InfraOps sont à réaliser personnellement ([contrat applicatif](../../docs/contrat-applicatif.md), [provenance](../../docs/provenance.md)). Les niveaux techniques de ce texte suivent un ancien barème et ne sont pas les niveaux personnels du [parcours](../../docs/parcours-apprentissage.md). Les preuves de reprise récentes sont datées dans [STATUS](../../STATUS.md).
+Les procédures et résultats ci-dessous datent des essais historiques ; ils ne sont pas relancés. Les configurations et opérations InfraOps sont à réaliser personnellement ([contrat applicatif](../../docs/contrat-applicatif.md), [provenance](../../docs/provenance.md)). Les niveaux techniques de ce texte suivent un ancien barème et ne sont pas les niveaux personnels du [parcours](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223). Les preuves de reprise récentes sont datées dans [STATUS](../../STATUS.md).
 
 ## Contrat simple
 

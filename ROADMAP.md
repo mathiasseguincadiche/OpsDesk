@@ -2,7 +2,7 @@
 
 **Statut : conception Architecture V2 validée le 22 novembre 2026 ; implémentation infrastructure non vérifiée.** Le socle **Application OpsDesk V2** existe et a été testé ; aucun résultat des runners ne vaut déploiement Fedora/KVM/Rocky.
 
-Le plan de référence détaillé est [Architecture V2 — phases 0 à 6](docs/architecture-v2-deploiement.md), avec [sept ADR](docs/adr/README.md), [matrice réseau](docs/architecture-v2-flux.md) et [STATUS](STATUS.md) pour les preuves réellement disponibles.
+Le plan de référence détaillé est [Architecture V2 — phases 0 à 6](docs/architecture-v2-deploiement.md), avec [sept ADR](docs/adr/README.md), [principes des flux](docs/architecture-v2-flux.md) et [STATUS](STATUS.md) pour les preuves réellement disponibles.
 
 ## Jalons d'implémentation
 
