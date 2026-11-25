@@ -1,4 +1,4 @@
-name: Architecture V2 — PNG preview
+name: Architecture V3 — SVG preview
 
 on:
   pull_request:
@@ -18,10 +18,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Attach the published PNG preview
+      - name: Attach the published SVG preview
         uses: actions/upload-artifact@v4
         with:
           name: architecture-globale-public-preview
-          path: docs/diagrams/architecture-globale.png
+          path: docs/diagrams/architecture-globale-v3.svg
           if-no-files-found: error
           retention-days: 14

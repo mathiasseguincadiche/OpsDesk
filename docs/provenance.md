@@ -47,6 +47,6 @@ Avant de déplacer un fichier, recenser ses liens entrants.
 
 ## Vocabulaire
 
-- **Hôte** : le poste Fedora. **Invité** : une des trois VM Rocky Linux (`srv-admin`, `srv-app`, `srv-k3s`).
+- **Hôte** : le poste Fedora. **Invité** : une des trois VM Rocky Linux (`srv-ops`, `srv-app`, `srv-k3s`).
 - **Application** : le programme fourni. **Infrastructure personnelle** : ce que l'on construit soi-même. **Référence historique** : un essai daté de la version 1.
 - **Réalisé** : l'élément existe. **Vérifié** : un contrôle daté et traçable l'a confirmé. **L3** : une tâche nouvelle réussie et vérifiée séparément.

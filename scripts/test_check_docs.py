@@ -51,6 +51,8 @@ class DocumentationContracts(unittest.TestCase):
             self.assertTrue((folder / f"architecture-globale{suffix}").is_file())
         self.assertFalse((folder / "architecture-globale.svg").exists())
         for suffix in (".drawio", ".svg"):
+            self.assertTrue((folder / f"architecture-globale-v3{suffix}").is_file())
+        for suffix in (".drawio", ".svg"):
             self.assertFalse((folder / f"architecture{suffix}").exists())
 
     def test_legacy_architecture_details_not_republished(self) -> None:
