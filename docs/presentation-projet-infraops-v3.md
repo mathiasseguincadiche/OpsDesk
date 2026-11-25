@@ -28,6 +28,8 @@ La présentation est structurée en **deux phases complémentaires et six étape
 | **5. Tester et superviser** | Exécuter une copie d'essai indépendante du service principal ; collecter des métriques et tester les alertes et la charge sans impacter le service | K3s pour l’essai ; Prometheus, Grafana et Blackbox Exporter sur srv-ops ; k6 à la demande depuis Fedora |
 | **6. Sauvegarder hors des VM** | Protéger les données applicatives, conserver des copies indépendantes et démontrer une restauration contrôlée | Export PostgreSQL, transfert restreint, stockage externe et Borg |
 
+Le parcours d’apprentissage repose exclusivement sur Fedora et les trois VM de l’architecture : aucun serveur d’exercice ou de charge supplémentaire.
+
 ## Principes transversaux
 
 - **Cloisonnement :** laboratoire privé, responsabilités distinctes, services internes non exposés directement aux utilisateurs.

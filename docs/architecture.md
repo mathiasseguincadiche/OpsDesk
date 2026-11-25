@@ -88,6 +88,8 @@ Les décisions de l'Architecture V3 prévoient un hôte de virtualisation Linux,
 
 La **vue globale** montre ces responsabilités. Les paramètres d'adressage, ports, comptes, droits et procédures d'exploitation sont conservés dans le dossier technique personnel.
 
+Le laboratoire existant sert aussi aux exercices : srv-ops pour les bases Linux/SSH avant son provisionnement définitif, srv-k3s pour les essais et la reconstruction contrôlée. Pas de quatrième VM prévue ; la restauration de données s’effectue dans une base distincte.
+
 Les étapes publiques se lisent ainsi : provisionnement reproductible, configuration des machines, livraison traçable, sauvegardes externes, copie d'essai isolée et qualification par des preuves. Voir le [plan de réalisation](architecture-v3-deploiement.md).
 
 ## Docker Compose et K3s
