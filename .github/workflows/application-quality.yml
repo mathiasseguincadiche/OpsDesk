@@ -140,7 +140,7 @@ jobs:
         run: /tmp/opsdesk-e2e/bin/python scripts/check_browser_e2e.py
       - name: Joindre les captures navigateur
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: opsdesk-browser-e2e-${{ github.sha }}
           path: e2e-artifacts/
