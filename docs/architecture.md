@@ -1,6 +1,6 @@
 # Architecture d'OpsDesk — produit et historique
 
-**Architecture d'infrastructure V3 validée en conception :** consulter en priorité le [registre des sept ADR](adr/README.md), la [principes des flux V3](architecture-v3-flux.md) et le [plan phases 0 à 10](architecture-v3-deploiement.md). Les décisions de déploiement plus anciennes conservées dans ce document sont **historiques et remplacées** lorsqu'elles contredisent ces ADR (par exemple Terraform dans `srv-admin`, HTTP :8080 pour la cible serveur, sauvegardes dans `~/sauvegardes`). La [vue globale](diagrams/README.md) décrit la cible V3. Les autres schémas du produit sont conservés ; voir [STATUS](../STATUS.md).
+**Architecture d'infrastructure V3 validée en conception :** consulter en priorité le [registre des sept ADR](adr/README.md), les [principes des flux V3](architecture-v3-flux.md) et le [plan phases 0 à 10](architecture-v3-deploiement.md). Les décisions de déploiement plus anciennes conservées dans ce document sont **historiques et remplacées** lorsqu'elles contredisent ces ADR (par exemple Terraform dans `srv-admin`, HTTP :8080 pour la cible serveur, sauvegardes dans `~/sauvegardes`). La [vue globale](diagrams/README.md) décrit la cible V3. Les autres schémas du produit sont conservés ; voir [STATUS](../STATUS.md).
 
 OpsDesk est une application web en trois parties : une interface, une API et une base de données, chacune dans son conteneur. L'application (version 2) est construite et testée ; l'infrastructure qui doit la faire tourner sur trois machines Rocky Linux est décidée mais pas encore construite. Ce document explique le fonctionnement, puis justifie chaque choix, du plus visible au plus détaillé. L'état de chaque élément est tenu dans [STATUS.md](../STATUS.md) ; les détails d'exploitation sont dans la [référence technique](reference-technique.md).
 
@@ -97,7 +97,7 @@ Les étapes publiques se lisent ainsi : provisionnement reproductible, configura
 L'application tourne deux fois, sur deux serveurs indépendants.
 
 - **Sur `srv-app`, avec Docker Engine et Compose (phase 4) :** c'est le service réel. Un fichier Compose décrit les trois conteneurs, leurs réseaux, le volume de la base et leurs sondes. systemd démarre le service `docker` au boot ; la politique de redémarrage `unless-stopped` relance ensuite les conteneurs, y compris après un arrêt imprévu. La sauvegarde et la restauration portent sur cette base.
-- **Sur `srv-k3s`, avec K3s (phase 7) :** K3s tire les mêmes images sur GHCR et en fait tourner une copie d'essai, avec sa propre base de test (données fictives, non sauvegardées). On y apprend ce qu'un orchestrateur ajoute : sondes, redémarrage, retrait du trafic, mise à jour progressive.
+- **Sur `srv-k3s`, avec K3s (phase 7) :** K3s tire les mêmes images sur GHCR et en fait tourner une copie d'essai, avec sa propre base de test (données fictives, distinctes ; sauvegarde ponctuelle et restauration vérifiée avant un exercice de reconstruction). On y apprend ce qu'un orchestrateur ajoute : sondes, redémarrage, retrait du trafic, mise à jour progressive.
 
 Les deux ne se voient pas. K3s garde son propre moteur, containerd, et ne pilote que ce qu'il lance lui-même : Docker n'y joue aucun rôle. Prometheus sur `srv-admin` collecte les métriques autorisées ; Blackbox Exporter vérifie les points d’entrée HTTPS. Les images sont les mêmes (format OCI), donc ce qui s'apprend avec Compose (ports, volumes, variables, secrets, sondes) se retrouve dans K3s, sous d'autres noms.
 
@@ -112,7 +112,7 @@ Les deux ne se voient pas. K3s garde son propre moteur, containerd, et ne pilote
 
 ## Conditions de réexamen
 
-Ces conditions ne sont pas des exigences supplémentaires pour le laboratoire : elles aident à défendre une décision et à reconnaître ses limites. Réexaminer Compose si un besoin de disponibilité, de placement sur plusieurs nœuds ou de gestion de flotte est démontré ; le K3s mono-nœud actuel ne résout pas à lui seul ces problèmes. Réexaminer le stockage des sauvegardes si la protection contre la perte du poste devient une exigence. Réexaminer le dimensionnement après mesures de charge, et l'état Terraform distant si plusieurs opérateurs doivent travailler ensemble. Dans chaque cas, comparer le risque, le bénéfice, le coût et une méthode de validation avant de modifier la cible. Aucun changement de stack n'est présumé.
+Ces conditions ne sont pas des exigences supplémentaires pour le laboratoire : elles aident à défendre une décision et à reconnaître ses limites. Réexaminer Compose si un besoin de disponibilité, de placement sur plusieurs nœuds ou de gestion de flotte est démontré ; le K3s mono-nœud actuel ne résout pas à lui seul ces problèmes. Vérifier l’indépendance du support externe Borg et la restauration après perte du poste ; une copie sur le même disque ne suffit pas. Réexaminer le dimensionnement après mesures de charge, et l'état Terraform distant si plusieurs opérateurs doivent travailler ensemble. Dans chaque cas, comparer le risque, le bénéfice, le coût et une méthode de validation avant de modifier la cible. Aucun changement de stack n'est présumé.
 
 ## Repères pour lire le registre
 

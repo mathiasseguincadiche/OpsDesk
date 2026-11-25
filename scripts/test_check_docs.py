@@ -55,6 +55,12 @@ class DocumentationContracts(unittest.TestCase):
         for suffix in (".drawio", ".svg"):
             self.assertFalse((folder / f"architecture{suffix}").exists())
 
+    def test_presentation_v3_has_editable_source(self) -> None:
+        folder = ROOT / "docs" / "images"
+        self.assertTrue((folder / "opsdesk-presentation-v3.drawio").is_file())
+        self.assertTrue((folder / "opsdesk-presentation-v3.svg").is_file())
+        self.assertEqual([], check_docs.check_repository())
+
     def test_legacy_architecture_details_not_republished(self) -> None:
         folder = ROOT / "legacy" / "diagrams"
         for suffix in (".drawio", ".svg"):

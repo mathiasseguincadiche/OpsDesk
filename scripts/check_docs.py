@@ -152,7 +152,8 @@ def check_repository() -> list[str]:
     diagram_folder = ROOT / "docs/diagrams"
     diagrams = sorted(diagram_folder.glob("*.svg"))
     hero = ROOT / "docs/images/opsdesk-hero.svg"
-    for graphic in (hero, *diagrams):
+    presentation = ROOT / "docs/images/opsdesk-presentation-v3.svg"
+    for graphic in (hero, presentation, *diagrams):
         try:
             element = ET.parse(graphic).getroot()
             if element.tag != "{http://www.w3.org/2000/svg}svg":
@@ -172,6 +173,7 @@ def check_repository() -> list[str]:
 
     global_source = diagram_folder / "architecture-globale-v3.drawio"
     diagram_sources = {diagram.with_suffix(".drawio") for diagram in diagrams}
+    diagram_sources.add(presentation.with_suffix(".drawio"))
     for source in sorted(diagram_sources | {global_source}):
         try:
             editable = ET.parse(source).getroot()
@@ -183,6 +185,15 @@ def check_repository() -> list[str]:
         except ET.ParseError as exc:
             errors.append(f"{source.relative_to(ROOT)}: invalid Draw.io XML: {exc}")
             continue
+        if source == presentation.with_suffix(".drawio"):
+            try:
+                visible = ET.parse(presentation).getroot()
+                labels = {"".join(node.itertext()).strip() for node in visible.iter("{http://www.w3.org/2000/svg}text")}
+                source_values = {unescape(cell.get("value", "")).strip() for cell in editable.iter("mxCell")}
+                for label in sorted(labels - source_values):
+                    errors.append(f"{source.relative_to(ROOT)}: SVG label missing in editable source: {label}")
+            except (FileNotFoundError, ET.ParseError) as exc:
+                errors.append(f"{presentation.relative_to(ROOT)}: cannot compare labels: {exc}")
         if source == global_source:
             cells = {cell.get("id"): cell for cell in editable.iter("mxCell")}
             for cell_id in (
@@ -207,8 +218,18 @@ def check_repository() -> list[str]:
                     errors.append(
                         f"{source.relative_to(ROOT)}: missing public content {expected}"
                     )
-            if any(bad in source_labels for bad in ("http :8080", "qemu+ssh")):
+            if any(bad in source_labels for bad in ("http :8080", "qemu+ssh", "srv-ops", "srv-learning", "srv-loadtest")):
                 errors.append(f"{source.relative_to(ROOT)}: obsolete public label")
+
+    for graphic in (diagram_folder / "architecture-globale-v3.svg", presentation):
+        if graphic.exists():
+            content = graphic.read_text(encoding="utf-8").casefold()
+            for obsolete in ("srv-ops", "srv-learning", "srv-loadtest"):
+                if obsolete in content:
+                    errors.append(f"{graphic.relative_to(ROOT)}: obsolete V3 label {obsolete}")
+            for pattern in (r"192[.]168[.][0-9]{1,3}[.][0-9]{1,3}", r"qemu[+]ssh"):
+                if re.search(pattern, content):
+                    errors.append(f"{graphic.relative_to(ROOT)}: private infrastructure detail")
 
     for private_file in ("architecture.drawio", "architecture.svg"):
         if (diagram_folder / private_file).exists():

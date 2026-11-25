@@ -4,7 +4,7 @@
 
 ![Présentation du projet OpsDesk V3 — six étapes, phases A et B](images/opsdesk-presentation-v3.svg)
 
-[Consulter également la vue globale d'architecture](diagrams/architecture-globale-v3.svg) · [Ouvrir le visuel de présentation seul](images/opsdesk-presentation-v3.svg)
+[Consulter également la vue globale d'architecture](diagrams/architecture-globale-v3.svg) · [Ouvrir le visuel de présentation seul](images/opsdesk-presentation-v3.svg) · [Source Draw.io éditable](images/opsdesk-presentation-v3.drawio)
 
 ## Vue d'ensemble
 
@@ -25,7 +25,7 @@ La présentation est structurée en **deux phases complémentaires et six étape
 | Étape | Résultat recherché | Outils et responsabilités |
 | --- | --- | --- |
 | **4. Exécuter l'application** | Héberger les composants applicatifs séparés, isoler leurs échanges et conserver les données durablement | Docker Engine, Compose, nginx, FastAPI, PostgreSQL |
-| **5. Tester et superviser** | Exécuter une copie d'essai indépendante du service principal ; collecter des métriques et tester les alertes et la charge sans impacter le service | K3s pour l’essai ; Prometheus, Grafana et Blackbox Exporter sur srv-admin ; k6 à la demande depuis Fedora |
+| **5. Tester et superviser** | Exécuter une copie d'essai indépendante du service principal ; collecter des métriques et tester les alertes et la charge en vérifiant l’absence d’impact sur le service | K3s pour l’essai ; Prometheus, Grafana et Blackbox Exporter sur srv-admin ; k6 à la demande depuis Fedora |
 | **6. Sauvegarder hors des VM** | Protéger les données applicatives, conserver des copies indépendantes et démontrer une restauration contrôlée | Export PostgreSQL, transfert restreint, stockage externe et Borg |
 
 Le parcours d’apprentissage repose exclusivement sur Fedora et les trois VM de l’architecture : aucun serveur d’exercice ou de charge supplémentaire.

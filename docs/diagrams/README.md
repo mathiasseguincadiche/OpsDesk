@@ -1,10 +1,10 @@
 # Schémas techniques d'OpsDesk
 
-Ce dossier rassemble les schémas **du produit et de son architecture**, pas les supports de formation personnelle. La [vue globale V3](architecture-globale-v3.svg) est publiée en SVG avec sa [source Draw.io](architecture-globale-v3.drawio). Les autres schémas sont publiés en SVG. Les schémas de cours ont été transférés au [wiki Notion](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223), avec leurs sources, sans supprimer les preuves historiques.
+Ce dossier rassemble les schémas **du produit et de son architecture**, pas les supports de formation personnelle. La [vue globale V3](architecture-globale-v3.svg) est publiée en SVG avec sa [source Draw.io](architecture-globale-v3.drawio). Les autres schémas sont publiés en SVG. Le [visuel de présentation V3](../images/opsdesk-presentation-v3.svg) dispose aussi d’une [source Draw.io](../images/opsdesk-presentation-v3.drawio). Les schémas de cours ont été transférés au [wiki Notion](https://app.notion.com/p/3fc65721fa1881ad8325c8c4619c7223), avec leurs sources, sans supprimer les preuves historiques.
 
 ## Vues disponibles
 
-La **vue globale de l’architecture V3** présente Terraform et Ansible sur Fedora, supervision indépendante sur srv-admin, HTTPS, GHCR privé, Borg, K3s et les réseaux internes. Les quatre autres paires documentent l'application et ses usages et sont conservées. Les décisions de référence sont les [sept ADR](../adr/README.md), la [principes des flux](../architecture-v3-flux.md) et le [plan phases 0 à 10](../architecture-v3-deploiement.md). Aucun de ces schémas n'est une preuve de déploiement ; une inspection graphique native finale des sources Draw.io reste nécessaire avant publication comme plan visuel certifié.
+La **vue globale de l’architecture V3** présente Terraform et Ansible sur Fedora, supervision indépendante sur srv-admin, HTTPS, GHCR privé, Borg, K3s et les réseaux internes. Les quatre autres paires documentent l'application et ses usages et sont conservées. Les décisions de référence sont les [sept ADR](../adr/README.md), les [principes des flux](../architecture-v3-flux.md) et le [plan phases 0 à 10](../architecture-v3-deploiement.md). Aucun de ces schémas n'est une preuve de déploiement ; le workflow d’aperçu exporte les deux sources V3 avec Draw.io Desktop sur runner ; une inspection humaine des rendus reste nécessaire avant certification visuelle.
 
 | Schéma | Utilité |
 | --- | --- |
@@ -29,7 +29,7 @@ La **vue globale de l’architecture V3** présente Terraform et Ansible sur Fed
 - La copie d'essai et l'observabilité sont isolées du service principal ; leurs paramètres détaillés restent dans le dossier personnel.
 - Les métriques ne sont collectées que par les consommateurs autorisés ; le schéma public ne constitue pas une matrice réseau.
 - Les sauvegardes sont externalisées et protégées ; leurs paramètres et procédures de reprise restent personnels.
-- Le SVG fourni sert de visuel de référence sur GitHub. Le fichier Draw.io conserve une version éditable du schéma. Les ADR V3 documentent les décisions techniques.
+- Le SVG fourni sert de visuel de référence sur GitHub. Le workflow produit des PNG natifs séparés pour contrôler les sources et comparer leurs rendus ; il ne déclare pas une équivalence graphique automatique. Le fichier Draw.io conserve une version éditable du schéma. Les ADR V3 documentent les décisions techniques.
 
 ## Modifier et vérifier un schéma
 
