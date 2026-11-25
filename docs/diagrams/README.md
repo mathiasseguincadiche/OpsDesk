@@ -4,7 +4,7 @@ Ce dossier rassemble les schémas **du produit et de son architecture**, pas les
 
 ## Vues disponibles
 
-La **vue globale de l’architecture V3** présente Terraform et Ansible sur Fedora, supervision indépendante sur srv-ops, HTTPS, GHCR privé, Borg, K3s et les réseaux internes. Les quatre autres paires documentent l'application et ses usages et sont conservées. Les décisions de référence sont les [sept ADR](../adr/README.md), la [principes des flux](../architecture-v3-flux.md) et le [plan phases 0 à 10](../architecture-v3-deploiement.md). Aucun de ces schémas n'est une preuve de déploiement ; une inspection graphique native finale des sources Draw.io reste nécessaire avant publication comme plan visuel certifié.
+La **vue globale de l’architecture V3** présente Terraform et Ansible sur Fedora, supervision indépendante sur srv-admin, HTTPS, GHCR privé, Borg, K3s et les réseaux internes. Les quatre autres paires documentent l'application et ses usages et sont conservées. Les décisions de référence sont les [sept ADR](../adr/README.md), la [principes des flux](../architecture-v3-flux.md) et le [plan phases 0 à 10](../architecture-v3-deploiement.md). Aucun de ces schémas n'est une preuve de déploiement ; une inspection graphique native finale des sources Draw.io reste nécessaire avant publication comme plan visuel certifié.
 
 | Schéma | Utilité |
 | --- | --- |

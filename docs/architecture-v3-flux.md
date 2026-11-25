@@ -9,10 +9,10 @@
 | Fedora / navigateur | Principal et essai | HTTPS avec validation TLS |
 | Fedora / kubectl, Helm | K3s | API authentifiée, accès limité |
 | Fedora / k6 | Copie d’essai | HTTPS, cible autorisée, débit et durée bornés |
-| srv-ops / Prometheus | Exporteurs et métriques VM | Collecte filtrée, métriques séparées des routes métier |
-| srv-ops / Blackbox Exporter | HTTPS principal et essai | Sondes avec CA interne |
-| Fedora | Grafana sur srv-ops | Tunnel SSH direct, écoute locale |
-| srv-ops / Grafana Alerting | Relais SMTP autorisé | E-mail, TLS, secrets protégés |
+| srv-admin / Prometheus | Exporteurs et métriques VM | Collecte filtrée, métriques séparées des routes métier |
+| srv-admin / Blackbox Exporter | HTTPS principal et essai | Sondes avec CA interne |
+| Fedora | Grafana sur srv-admin | Tunnel SSH direct, écoute locale |
+| srv-admin / Grafana Alerting | Relais SMTP autorisé | E-mail, TLS, secrets protégés |
 | Frontend | API | Réseau interne |
 | API | PostgreSQL | Réseau interne, aucun port DB publié |
 | VM | GHCR privé et dépôts OS | Sortant, authentifié selon besoin |

@@ -46,7 +46,7 @@ Il s'agit d'un test sur runner, non d'une sauvegarde hors serveur ou d'un plan d
 
 ## Architecture V3 — décisions validées, réalisation non commencée
 
-Le 25 novembre 2026, **Architecture OpsDesk V3** remplace la V2 d’infrastructure du 22 novembre, sans changer l’application V2. [Sept ADR](docs/adr/README.md), [flux V3](docs/architecture-v3-flux.md) et [phases 0 à 10](docs/architecture-v3-deploiement.md) décrivent la cible : Terraform et Ansible sur Fedora, cloud-init minimal, inventaire issu des outputs, trois VM Rocky (`srv-app`, `srv-ops`, `srv-k3s`), supervision indépendante et k6 à la demande. HTTPS, GHCR privé par digest, Vault, Borg externe chiffré et notifications Grafana par e-mail sont conservés. Le parcours pédagogique est recentré sur ces trois VM ; aucune VM supplémentaire n’est prévue. Aucun provisionnement ni contrôle Fedora/Rocky n’a été effectué. Les schémas nécessitent une inspection native.
+Le 25 novembre 2026, **Architecture OpsDesk V3** remplace la V2 d’infrastructure du 22 novembre, sans changer l’application V2. [Sept ADR](docs/adr/README.md), [flux V3](docs/architecture-v3-flux.md) et [phases 0 à 10](docs/architecture-v3-deploiement.md) décrivent la cible : Terraform et Ansible sur Fedora, cloud-init minimal, inventaire issu des outputs, trois VM Rocky (`srv-app`, `srv-admin`, `srv-k3s`), supervision indépendante et k6 à la demande. HTTPS, GHCR privé par digest, Vault, Borg externe chiffré et notifications Grafana par e-mail sont conservés. Le parcours pédagogique est recentré sur ces trois VM ; aucune VM supplémentaire n’est prévue. Aucun provisionnement ni contrôle Fedora/Rocky n’a été effectué. Les schémas nécessitent une inspection native.
 
 ## Infrastructure
 

@@ -186,7 +186,7 @@ def check_repository() -> list[str]:
         if source == global_source:
             cells = {cell.get("id"): cell for cell in editable.iter("mxCell")}
             for cell_id in (
-                "titre", "hote", "reseau", "srv-ops", "srv-app",
+                "titre", "hote", "reseau", "srv-admin", "srv-app",
                 "srv-k3s", "terraform", "navigateur", "compose",
                 "web", "api", "postgres", "backup", "ghcr",
             ):
@@ -200,7 +200,7 @@ def check_repository() -> list[str]:
                 for cell in editable.iter("mxCell")
             ).casefold()
             for expected in (
-                "terraform", "ansible", "blackbox exporter", "https", "srv-ops", "srv-app",
+                "terraform", "ansible", "blackbox exporter", "https", "srv-admin", "srv-app",
                 "srv-k3s", "postgresql", "borg", "ghcr",
             ):
                 if expected not in source_labels:
