@@ -89,7 +89,7 @@ jobs:
           python3 scripts/summarize_image_scans.py scan-results/api.json scan-results/frontend.json scan-results/postgresql.json scan-results/postgresql-amont.json --output scan-results/resume.md
       - name: Conserver les rapports et les identifiants exacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: trivy-images-${{ github.sha }}
           path: scan-results/
