@@ -1,9 +1,9 @@
 # ADR-01 — Provisionnement local et état Terraform
 
-**Statut : validé en conception (Architecture V2).** La réalisation dans le laboratoire reste à qualifier.
+**Statut : validé en conception (Architecture V3).** La réalisation dans le laboratoire reste à qualifier.
 
 ## Décision
-L'hôte de virtualisation exécute directement Terraform et le provider adapté. L'administration des machines reste séparée du provisionnement de l'hyperviseur. L'état de l'infrastructure, potentiellement sensible, est conservé hors du dépôt public et protégé.
+L'hôte de virtualisation exécute directement Terraform et le provider adapté. Ansible s’exécute aussi sur Fedora, dans un environnement Python isolé ; les cycles restent distincts. Cloud-init amorce les VM (compte, clé publique, nom, prérequis minimaux). Des outputs filtrés génèrent l’inventaire hors Git ; attendre cloud-init et SSH avant Ansible. Aucune VM ne reçoit l’accès à libvirt. L'état de l'infrastructure, potentiellement sensible, est conservé hors du dépôt public et protégé.
 
 ## Justification
 Ce découplage évite de donner à une machine virtuelle les privilèges de l'hyperviseur et limite les dépendances circulaires au démarrage.

@@ -1,5 +1,7 @@
 # OpsDesk — Présentation du projet InfraOps (Architecture V2)
 
+> **Archive V2 — remplacée le 25 novembre 2026.** [Référence active](presentation-projet-infraops-v3.md). Les informations ci-dessous ne décrivent plus la cible.
+
 > **Cible validée en conception, non encore déployée dans le laboratoire Fedora/Rocky.** Cette présentation décrit l'enchaînement attendu des travaux ; [STATUS.md](../STATUS.md) reste la source de vérité pour les réalisations, tests et preuves déjà obtenus.
 
 ![Présentation du projet OpsDesk V2 — six étapes, phases A et B](images/opsdesk-presentation-du-projet.png)

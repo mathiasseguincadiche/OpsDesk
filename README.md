@@ -12,9 +12,9 @@ OpsDesk fournit un service de tickets composé d’un frontend React/nginx, d’
 | --- | --- |
 | Pile applicative conteneurisée et qualifiée sur runner Ubuntu. La validation du 22 novembre 2026 couvre les tests, la compilation et le parcours HTTP. | Laboratoire Fedora/Rocky, déploiement automatisé, livraison des images, supervision et reprise sur les VM. |
 
-[![Parcours InfraOps OpsDesk V2 en six étapes](docs/images/opsdesk-presentation-du-projet.png)](docs/presentation-projet-infraops-v2.md)
+[![Parcours InfraOps OpsDesk V3 en six étapes](docs/images/opsdesk-presentation-v3.svg)](docs/presentation-projet-infraops-v3.md)
 
-[Lire la présentation des six étapes](docs/presentation-projet-infraops-v2.md) · [Suivre la feuille de route](ROADMAP.md)
+[Lire la présentation des six étapes](docs/presentation-projet-infraops-v3.md) · [Suivre la feuille de route](ROADMAP.md)
 
 ### Le défi d'infrastructure
 
@@ -26,17 +26,17 @@ Je me forme à l’ingénierie DevOps, avec une spécialisation en automatisatio
 
 ## Architecture
 
-L’architecture V2 a été validée en conception le 22 novembre 2026. Dans cette cible, Terraform provisionne trois VM Rocky depuis l’hôte Fedora et Ansible pilote les déploiements depuis `srv-admin`, l’application Compose tourne sur `srv-app` et une copie d’essai isolée ainsi que la supervision tournent sur `srv-k3s`.
+L’architecture d’infrastructure V3 a été validée en conception le 25 novembre 2026. Fedora pilote Terraform et Ansible : trois VM Rocky sont provisionnées, amorcées par cloud-init puis configurées par SSH. `srv-app` héberge le service Compose, `srv-ops` la supervision indépendante et `srv-k3s` la copie d’essai. k6 s’exécute à la demande depuis Fedora. L’application reste en version 2.
 
-<a href="docs/diagrams/architecture-globale.png"><img alt="Vue globale OpsDesk V2 avec l’hôte Fedora, trois VM Rocky, l’entrée HTTPS, les services internes, la supervision et les sauvegardes hors VM" src="docs/diagrams/architecture-globale.png"></a>
+<a href="docs/diagrams/architecture-globale-v3.svg"><img alt="Vue globale OpsDesk V2 avec l’hôte Fedora, trois VM Rocky, l’entrée HTTPS, les services internes, la supervision et les sauvegardes hors VM" src="docs/diagrams/architecture-globale-v3.svg"></a>
 
-[Ouvrir le schéma](docs/diagrams/architecture-globale.png) · [Sept ADR](docs/adr/README.md) · [Principes des flux](docs/architecture-v2-flux.md) · [Plan de déploiement](docs/architecture-v2-deploiement.md)
+[Ouvrir le schéma](docs/diagrams/architecture-globale-v3.svg) · [Sept ADR](docs/adr/README.md) · [Principes des flux](docs/architecture-v3-flux.md) · [Plan de déploiement](docs/architecture-v3-deploiement.md)
 
 ### Pourquoi ces choix
 
 - **Docker Compose** décrit la pile du service principal. Nginx expose HTTPS sur le port 443 et relaie `/api` vers FastAPI. L’API et PostgreSQL communiquent sur le réseau interne.
 - **K3s** sert aux essais sur une copie isolée, où l’on peut tester de nouvelles versions et la charge sans perturber le service principal.
-- **Prometheus, Grafana et Borg** couvrent la supervision et la sauvegarde hors VM. La validation sur le laboratoire reste à réaliser.
+- **Prometheus, Grafana, Blackbox Exporter et Borg** couvrent la supervision et la sauvegarde hors VM. La validation sur le laboratoire reste à réaliser.
 
 [Architecture et choix techniques](docs/architecture.md) · [Contrat applicatif](docs/contrat-applicatif.md)
 

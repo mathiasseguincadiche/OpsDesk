@@ -1,6 +1,6 @@
 # ADR-07 — Périmètre de validation et publication maîtrisée
 
-**Statut : validé en conception (Architecture V2).**
+**Statut : validé en conception (Architecture V3).**
 
 ## Décision
 L'architecture cible est distincte du socle applicatif déjà testé. Les fonctionnalités d'infrastructure ne sont considérées comme réalisées que lorsqu'une preuve de déploiement, de sécurité et de restauration est disponible.

@@ -6,10 +6,10 @@ Le présent dossier documente le **produit** : son contrat, son architecture, sa
 
 - [Contrat applicatif](contrat-applicatif.md) — besoins métier, utilisateurs, API, stockage et critères de réception.
 - [Architecture applicative](architecture.md) — composants, architecture antérieure et fonctionnement du produit.
-- [Présentation du projet InfraOps — six étapes V2](presentation-projet-infraops-v2.md) — synthèse publique des objectifs de construction, livraison et exploitation.
-- [Architecture V2 : sept ADR](adr/README.md) — décisions validées de la nouvelle cible Fedora/KVM/Rocky.
-- [Architecture V2 : principes des flux](architecture-v2-flux.md) — échanges entre les services, accès prévus et refus attendus.
-- [Architecture V2 : déploiement 0 à 6](architecture-v2-deploiement.md) — prérequis, étapes et quatre épreuves de validation.
+- [Présentation du projet InfraOps — six étapes V3](presentation-projet-infraops-v3.md) — synthèse publique des objectifs de construction, livraison et exploitation.
+- [Architecture V3 : sept ADR](adr/README.md) — décisions validées de la nouvelle cible Fedora/KVM/Rocky.
+- [Architecture V3 : principes des flux](architecture-v3-flux.md) — échanges entre les services, accès prévus et refus attendus.
+- [Architecture V3 : déploiement 0 à 10](architecture-v3-deploiement.md) — prérequis, étapes et quatre épreuves de validation.
 - [Schémas techniques](diagrams/README.md) — présentation, flux, frontières et sources Draw.io.
 - [Provenance](provenance.md) — origine du socle, contributions et limites.
 

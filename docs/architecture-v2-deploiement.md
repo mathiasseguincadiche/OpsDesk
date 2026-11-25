@@ -1,5 +1,7 @@
 # OpsDesk — Architecture V2 : plan public de réalisation
 
+> **Archive V2 — remplacée le 25 novembre 2026.** [Référence active](architecture-v3-deploiement.md). Les informations ci-dessous ne décrivent plus la cible.
+
 **Architecture validée en conception ; laboratoire Fedora/Rocky non encore qualifié.**
 
 Ce document décrit l'**ordre des travaux et les preuves attendues**, sans publier la procédure opérationnelle. Les inventaires, commandes, ressources détaillées, plan d'adressage, accès, secrets et paramètres de sauvegarde restent dans le dossier technique personnel.

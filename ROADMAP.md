@@ -1,31 +1,21 @@
-# Feuille de route technique — OpsDesk Architecture V2
+# Feuille de route technique — OpsDesk Architecture V3
 
-**Statut : conception Architecture V2 validée le 22 novembre 2026 ; implémentation infrastructure non vérifiée.** Le socle **Application OpsDesk V2** existe et a été testé ; aucun résultat des runners ne vaut déploiement Fedora/KVM/Rocky.
+**Conception validée le 25 novembre 2026 ; infrastructure non réalisée et non vérifiée.** Application V2 inchangée ; preuves dans [STATUS](STATUS.md).
 
-Le plan de référence détaillé est [Architecture V2 — phases 0 à 6](docs/architecture-v2-deploiement.md), avec [sept ADR](docs/adr/README.md), [principes des flux](docs/architecture-v2-flux.md) et [STATUS](STATUS.md) pour les preuves réellement disponibles.
+| Phase | Livraison attendue | Contrôle de passage |
+| --- | --- | --- |
+| 0 — Fedora | Préparer KVM/libvirt, Git, outils et stockage | Versions, accès libvirt, capacité |
+| 1 — Fondamentaux | VM pédagogique temporaire, réseau, SSH | Diagnostic et suppression hors cible |
+| 2 — Provisionnement | Terraform, trois VM, cloud-init, outputs filtrés | Plan, apply, absence de dérive, SSH |
+| 3 — Configuration | Ansible depuis Fedora, durcissement et rôles | Refus/accès, SELinux, second passage changed=0 |
+| 4 — Service | Compose serveur HTTPS, migrations, persistance | Parcours métier, TLS, isolation API/DB |
+| 5 — Observabilité | Compose sur srv-ops, métriques et alertes | Collecte restreinte, deux e-mails reçus |
+| 6 — Livraison | CI, GHCR privé, images par digest | Artefact qualifié, promotion et rollback |
+| 7 — Kubernetes | Copie d’essai et données distinctes | Probes, quotas, TLS |
+| 8 — Performance | k6 borné depuis Fedora, VM temporaire optionnelle | p95, débit, erreurs, ressources, arrêt |
+| 9 — Exploitation | Maintenance, rollback, Borg | Restauration isolée, RPO/RTO |
+| 10 — Autonomie | Reconstruction jetable et incident inédit | Preuves datées, justification et contrôle séparé |
 
-## Jalons d'implémentation
+Chaque phase d’infrastructure est prévue, non vérifiée. Une sauvegarde initiale et un test de restauration précèdent toute modification risquée, sans attendre la phase 9. La première installation utilise des images identifiées ; les nouvelles versions sont ensuite testées sur K3s avant promotion. La CI actuelle qualifie le socle, sans publication ni déploiement. Aucun runner permanent lié au dépôt public sur Fedora. Les exercices, installations, corrigés et preuves personnelles restent dans Notion. Les solutions sont construites progressivement par l’apprenant.
 
-| Phase | Livraison technique attendue | Contrôle de passage | Statut |
-| --- | --- | --- | --- |
-| Application V2 (socle) | API, frontend, PostgreSQL, images, Alembic et CI | Voir les preuves existantes | Réalisé et testé en CI dans les limites de STATUS |
-| 0 — Fedora | Réseau NAT libvirt, image cloud, Terraform, state et stockage protégés | Réseau, droits et capacité hôte vérifiés | Prévu, non vérifié |
-| 1 — Administration | Administration Linux automatisée, rôles séparés | Idempotence, accès SSH et sécurité du pilote | Prévu, non vérifié |
-| 2 — Serveurs | Provisionnement des machines et durcissement des services | Second passage Ansible, ports autorisés/refusés | Prévu, non vérifié |
-| 3 — Service | GHCR **privé**, trois images **par digest**, Compose serveur, TLS, Vault, Alembic | HTTPS réel, tickets, isolation DB/API et persistance | Prévu, non vérifié |
-| 4 — Reprise | Sauvegardes externes protégées et procédure de restauration confidentielle | Restauration isolée, ticket témoin et RPO/RTO mesurés | Prévu, non vérifié |
-| 5 — Supervision | Plateforme d'essai isolée, métriques, alertes et tests de charge | Deux e-mails reçus, mesures/quotas et charge isolée | Prévu, non vérifié |
-| 6 — Qualification | Idempotence, reconstruction jetable, reprise externe, charge/alertes | Quatre épreuves étayées par preuves datées | Prévu, non vérifié |
-
-## Garanties de réalisation
-
-- **Une seule cible principale :** Docker Engine + Compose sur `srv-app`. K3s héberge uniquement une copie d'essai séparée et la supervision.
-- **Pas de double travail :** conserver les CI et les images applicatives déjà en place ; développer seulement les livraisons et déploiements non réalisés.
-- **Sécurité dès la première mise en service serveur :** TLS navigateur, secrets Vault, GHCR privé, digests, port API/DB non exposé, sauvegarde chiffrée externe.
-- **Reproductibilité :** Terraform depuis Fedora, Ansible depuis `srv-admin`, changements par PR et essais réels à chaque phase.
-- **Aucune preuve inventée :** un plan ou une PR verte n'équivalent pas à la qualification sur Rocky.
-- **Précaution :** aucune création/destruction de VM, migration de données existantes, modification réseau ou opération payante sans autorisation spécifique.
-
-Les cours, corrections, évaluations et l'installation des outils demeurent dans **Notion**, distincts des livrables GitHub.
-
-[Architecture V2](docs/adr/README.md) · [Flux](docs/architecture-v2-flux.md) · [Plan phases 0 à 6](docs/architecture-v2-deploiement.md) · [État](STATUS.md)
+[Plan V3](docs/architecture-v3-deploiement.md) · [ADR](docs/adr/README.md) · [Flux](docs/architecture-v3-flux.md) · [État](STATUS.md)
