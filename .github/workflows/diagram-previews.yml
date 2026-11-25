@@ -1,9 +1,16 @@
-name: Architecture V3 — SVG preview
+name: Architecture V3 — native Draw.io previews
 
 on:
   pull_request:
     paths:
       - "docs/diagrams/**"
+      - "docs/images/opsdesk-presentation-v3.*"
+      - ".github/workflows/diagram-previews.yml"
+  push:
+    branches: [main]
+    paths:
+      - "docs/diagrams/**"
+      - "docs/images/opsdesk-presentation-v3.*"
       - ".github/workflows/diagram-previews.yml"
   workflow_dispatch:
 
@@ -13,15 +20,43 @@ permissions:
 jobs:
   render:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - name: Attach the published SVG preview
+      - name: Install pinned Draw.io Desktop
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location --retry 3 \
+            https://github.com/jgraph/drawio-desktop/releases/download/v29.0.3/drawio-amd64-29.0.3.deb \
+            --output /tmp/drawio.deb
+          echo "aedb2d79403b93efa4081bf0cc416d45532a670544101e44598999ffa2f25c48  /tmp/drawio.deb" | sha256sum --check
+          sudo apt-get update -qq
+          sudo apt-get install -y /tmp/drawio.deb xvfb xauth
+      - name: Export the two editable V3 public diagrams
+        run: |
+          set -euo pipefail
+          mkdir -p native-previews
+          for source in docs/diagrams/architecture-globale-v3.drawio docs/images/opsdesk-presentation-v3.drawio; do
+            target="native-previews/$(basename "$source" .drawio).png"
+            timeout 90s xvfb-run -a drawio --no-sandbox --export --format png --output "$target" "$source"
+            test -s "$target"
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          for image in sorted(Path("native-previews").glob("*.png")):
+              if image.read_bytes()[:8] != b"\x89PNG\r\n\x1a\n":
+                  raise SystemExit(f"Invalid PNG: {image}")
+              print(f"Native export: {image} ({image.stat().st_size} bytes)")
+          PY
+      - name: Attach native exports and published SVG references
         uses: actions/upload-artifact@v7
         with:
-          name: architecture-globale-public-preview
-          path: docs/diagrams/architecture-globale-v3.svg
+          name: architecture-v3-public-previews
+          path: |
+            native-previews/*.png
+            docs/diagrams/architecture-globale-v3.svg
+            docs/images/opsdesk-presentation-v3.svg
           if-no-files-found: error
           retention-days: 14

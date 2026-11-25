@@ -4,6 +4,8 @@ Ce registre retrace les changements documentaires, structurels et techniques **v
 
 ## Non publié
 
+- Finitions V3 : cohérence de la sauvegarde d’essai, du statut de conception et des visuels publics ; source Draw.io de présentation et contrôles de rendu natif. Aucun changement de l’application ni de la topologie.
+
 - Simplification du parcours V3 : apprentissage sur Fedora et les trois VM définitives, première installation manuelle de srv-admin avant sa prise en charge Terraform, charge depuis Fedora et reconstruction contrôlée de srv-k3s. Aucune VM supplémentaire prévue ni déployée.
 
 - Architecture d’infrastructure V3 validée en conception : pilotage Fedora Terraform/Ansible, cloud-init, inventaire généré, supervision srv-admin, K3s d’essai et k6 borné. Application V2 inchangée ; aucune qualification réelle.
