@@ -1,5 +1,7 @@
 # OpsDesk — Architecture V2 : principes des flux publics
 
+> **Archive V2 — remplacée le 25 novembre 2026.** [Référence active](architecture-v3-flux.md). Les informations ci-dessous ne décrivent plus la cible.
+
 **Statut : validée en conception ; infrastructure du laboratoire non déployée.**
 
 Cette version publique décrit les **frontières fonctionnelles**, non les règles d'accès détaillées. La matrice complète, le plan d'adressage, les identités, les ports d'exploitation et les contrôles négatifs exacts sont dans le dossier technique personnel.

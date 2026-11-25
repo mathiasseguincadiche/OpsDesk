@@ -1,4 +1,4 @@
-# Registre public des décisions — OpsDesk Architecture V2
+# Registre public des décisions — OpsDesk Architecture V3
 
 **Sept décisions validées en conception.** Elles décrivent les choix d'ingénierie et leurs compromis sans révéler les paramètres précis du laboratoire.
 
@@ -8,15 +8,15 @@
 | [ADR-02](ADR-02-ci-ghcr-digests.md) | CI, registre privé et livraison immuable |
 | [ADR-03](ADR-03-administration-os.md) | Administration cloisonnée et durcissement Linux |
 | [ADR-04](ADR-04-reseau-tls.md) | Réseau privé, HTTPS et isolation des services |
-| [ADR-05](ADR-05-k3s-observabilite.md) | Kubernetes d'essai et supervision |
+| [ADR-05](ADR-05-k3s-observabilite.md) | Kubernetes d’essai et supervision indépendante |
 | [ADR-06](ADR-06-sauvegardes-secrets.md) | Secrets, sauvegardes et restauration |
 | [ADR-07](ADR-07-perimetre-preuves.md) | Frontières de validation et publication responsable |
 
 ## Compléments publics
 
-- [Schéma global V2](../diagrams/architecture-globale.png) et [source Draw.io](../diagrams/architecture-globale.drawio).
-- [Principes de flux](../architecture-v2-flux.md) : frontières et politiques générales.
-- [Phases 0 à 6](../architecture-v2-deploiement.md) : enchaînement et preuves sans procédures sensibles.
+- [Schéma global V3](../diagrams/architecture-globale-v3.svg) et [source Draw.io](../diagrams/architecture-globale-v3.drawio).
+- [Principes de flux](../architecture-v3-flux.md) : frontières et politiques générales.
+- [Phases 0 à 10](../architecture-v3-deploiement.md) : enchaînement et preuves sans procédures sensibles.
 - [Statut des réalisations](../../STATUS.md).
 
 ## Répartition des informations

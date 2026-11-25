@@ -4,6 +4,10 @@ Ce registre retrace les changements documentaires, structurels et techniques **v
 
 ## Non publié
 
+- Simplification du parcours V3 : apprentissage sur Fedora et les trois VM définitives, première installation manuelle de srv-admin avant sa prise en charge Terraform, charge depuis Fedora et reconstruction contrôlée de srv-k3s. Aucune VM supplémentaire prévue ni déployée.
+
+- Architecture d’infrastructure V3 validée en conception : pilotage Fedora Terraform/Ansible, cloud-init, inventaire généré, supervision srv-admin, K3s d’essai et k6 borné. Application V2 inchangée ; aucune qualification réelle.
+
 - Correction de l'image API : inclure Alembic et ses révisions dans le runtime non-root, avec test de migration et démarrage en mode production sur base PostgreSQL séparée.
 
 - API Python 3.13 Alpine (construction et exécution) : tests conservés, scan Trivy à 0 HIGH/CRITICAL sur les images utilisées et politique CI de refus.

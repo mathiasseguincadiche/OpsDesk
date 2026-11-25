@@ -44,9 +44,9 @@ Le [run de CI 45006326819](https://github.com/mathiasseguincadiche/OpsDesk/actio
 
 Il s'agit d'un test sur runner, non d'une sauvegarde hors serveur ou d'un plan de reprise personnel testé sur les VM Rocky ; les RPO et RTO ne sont pas qualifiés.
 
-## Architecture V2 — décisions validées, réalisation non commencée
+## Architecture V3 — décisions validées, réalisation non commencée
 
-Le 22 novembre 2026, **Architecture OpsDesk V2** remplace la précédente cible d'infrastructure. Les [sept ADR](docs/adr/README.md), [flux](docs/architecture-v2-flux.md) et [phases 0 à 6](docs/architecture-v2-deploiement.md) sont acceptés **en conception**, non vérifiés sur des VM Fedora/Rocky. Terraform doit être lancé **depuis l'hôte Fedora**, la cible serveur doit utiliser **HTTPS**, GHCR reste **privé**, les secrets passent par **Ansible Vault**, les sauvegardes externes utilisent **Borg chiffré**, et Grafana Alerting notifie par **e-mail**. Les schémas **architecture globale** et **architecture détaillée** disposent de sources Draw.io et SVG révisés pour la V2 ; leur inspection graphique native et les tests de terrain restent à réaliser. Ne pas confondre cette validation documentaire avec une réalisation d'infrastructure.
+Le 25 novembre 2026, **Architecture OpsDesk V3** remplace la V2 d’infrastructure du 22 novembre, sans changer l’application V2. [Sept ADR](docs/adr/README.md), [flux V3](docs/architecture-v3-flux.md) et [phases 0 à 10](docs/architecture-v3-deploiement.md) décrivent la cible : Terraform et Ansible sur Fedora, cloud-init minimal, inventaire issu des outputs, trois VM Rocky (`srv-app`, `srv-admin`, `srv-k3s`), supervision indépendante et k6 à la demande. HTTPS, GHCR privé par digest, Vault, Borg externe chiffré et notifications Grafana par e-mail sont conservés. Le parcours pédagogique est recentré sur ces trois VM ; aucune VM supplémentaire n’est prévue. Aucun provisionnement ni contrôle Fedora/Rocky n’a été effectué. Les schémas nécessitent une inspection native.
 
 ## Infrastructure
 
@@ -66,4 +66,3 @@ Le dépôt contient les contrats, procédures, schémas techniques et résultats
 ## Historique : application v1 (Flask)
 
 Les preuves v1 restent dans [legacy](legacy/). Le [statut détaillé antérieur à la V26](https://github.com/mathiasseguincadiche/OpsDesk/blob/d2a8e9e204b1bb797c26b1e1c927b9ec4fe166b1/STATUS.md) conserve toutes les observations historiques et leurs périmètres, dont la [recette du socle](evidence/qualification/2026-11-19-socle.txt). Aucun résultat ancien n'est transféré à un nouveau code sans contrôle.
-

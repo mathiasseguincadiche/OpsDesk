@@ -1,16 +1,16 @@
 # Architecture d'OpsDesk — produit et historique
 
-**Architecture d'infrastructure V2 validée en conception :** consulter en priorité le [registre des sept ADR](adr/README.md), la [principes des flux V2](architecture-v2-flux.md) et le [plan phases 0 à 6](architecture-v2-deploiement.md). Les décisions de déploiement plus anciennes conservées dans ce document sont **historiques et remplacées** lorsqu'elles contredisent ces ADR (par exemple Terraform dans `srv-admin`, HTTP :8080 pour la cible serveur, sauvegardes dans `~/sauvegardes`). La [vue globale](diagrams/README.md) décrit la cible V2. Les autres schémas du produit sont conservés ; voir [STATUS](../STATUS.md).
+**Architecture d'infrastructure V3 validée en conception :** consulter en priorité le [registre des sept ADR](adr/README.md), la [principes des flux V3](architecture-v3-flux.md) et le [plan phases 0 à 10](architecture-v3-deploiement.md). Les décisions de déploiement plus anciennes conservées dans ce document sont **historiques et remplacées** lorsqu'elles contredisent ces ADR (par exemple Terraform dans `srv-admin`, HTTP :8080 pour la cible serveur, sauvegardes dans `~/sauvegardes`). La [vue globale](diagrams/README.md) décrit la cible V3. Les autres schémas du produit sont conservés ; voir [STATUS](../STATUS.md).
 
 OpsDesk est une application web en trois parties : une interface, une API et une base de données, chacune dans son conteneur. L'application (version 2) est construite et testée ; l'infrastructure qui doit la faire tourner sur trois machines Rocky Linux est décidée mais pas encore construite. Ce document explique le fonctionnement, puis justifie chaque choix, du plus visible au plus détaillé. L'état de chaque élément est tenu dans [STATUS.md](../STATUS.md) ; les détails d'exploitation sont dans la [référence technique](reference-technique.md).
 
 ## Vue d'ensemble
 
-![Architecture V2 d'OpsDesk : Terraform et sauvegardes Borg sur Fedora, Ansible et k6 dans srv-admin, service principal HTTPS et conteneurs internes sur srv-app, copie K3s et Grafana/Prometheus sur srv-k3s. Cible non déployée.](diagrams/architecture-globale.png)
+![Architecture V3 : Terraform et Ansible sur Fedora, srv-app principal, srv-admin supervision, srv-k3s essai.](diagrams/architecture-globale-v3.svg)
 
 **Publication :** seule la vue globale est publique. Les paramètres détaillés du laboratoire sont réservés à une page personnelle privée, hors GitHub.
 
-Le navigateur ne parle qu'au **frontend**. Dans le **laboratoire local**, l'entrée est `127.0.0.1:8080`; dans l'**Architecture V2 serveur**, elle devient HTTPS :443, tandis que :8000 et :5432 restent internes. Nginx sert React et relaie les appels à FastAPI, qui seule accède à PostgreSQL. Les cadres continus décrivent la cible d'infrastructure validée ; les contrôles applicatifs actuels ont été exécutés sur des runners de CI, pas sur Rocky.
+Le navigateur ne parle qu'au **frontend**. Dans le **laboratoire local**, l'entrée est `127.0.0.1:8080`; dans l'**Architecture V3 serveur**, elle devient HTTPS :443, tandis que :8000 et :5432 restent internes. Nginx sert React et relaie les appels à FastAPI, qui seule accède à PostgreSQL. Les cadres continus décrivent la cible d'infrastructure validée ; les contrôles applicatifs actuels ont été exécutés sur des runners de CI, pas sur Rocky.
 
 ## Le trajet d'une requête
 
@@ -78,26 +78,28 @@ Si la base ne répond pas, l'API renvoie une erreur 503 explicite, et sa sonde `
 - **Problème** : pouvoir dire si le service fonctionne, et pourquoi il ne fonctionne pas.
 - **Choix** : deux sondes (`/health/live` : le processus répond ; `/health/ready` : la base répond), des métriques Prometheus sur `/metrics`, des journaux JSON avec un identifiant par requête.
 - **Pourquoi** : sans ces points d'accès, ni Docker, ni Kubernetes, ni Prometheus ne peuvent juger de l'état du service.
-- **Limites** : aucune supervision n'est encore branchée ; les alertes restent à construire (phase 3).
+- **Limites** : aucune supervision n'est encore branchée ; les alertes restent à construire (phase 5).
 
 </details>
 
 ## L'infrastructure cible (présentation publique)
 
-Les décisions de l'Architecture V2 prévoient un hôte de virtualisation Linux, une machine d'administration, une machine applicative sous Docker Compose et un environnement Kubernetes séparé pour l'observabilité et les essais. L'ensemble doit être construit progressivement par infrastructure as code et Ansible.
+Les décisions de l'Architecture V3 prévoient un hôte de virtualisation Linux, un poste de contrôle Terraform/Ansible sur Fedora, une VM applicative sous Compose, une VM d’observabilité indépendante et une VM Kubernetes réservée aux essais. L'ensemble doit être construit progressivement par infrastructure as code et Ansible.
 
 La **vue globale** montre ces responsabilités. Les paramètres d'adressage, ports, comptes, droits et procédures d'exploitation sont conservés dans le dossier technique personnel.
 
-Les étapes publiques se lisent ainsi : provisionnement reproductible, configuration des machines, livraison traçable, sauvegardes externes, copie d'essai isolée et qualification par des preuves. Voir le [plan de réalisation](architecture-v2-deploiement.md).
+Le laboratoire existant sert aussi aux exercices : srv-admin pour les bases Linux/SSH avant son provisionnement définitif, srv-k3s pour les essais et la reconstruction contrôlée. Pas de quatrième VM prévue ; la restauration de données s’effectue dans une base distincte.
+
+Les étapes publiques se lisent ainsi : provisionnement reproductible, configuration des machines, livraison traçable, sauvegardes externes, copie d'essai isolée et qualification par des preuves. Voir le [plan de réalisation](architecture-v3-deploiement.md).
 
 ## Docker Compose et K3s
 
 L'application tourne deux fois, sur deux serveurs indépendants.
 
-- **Sur `srv-app`, avec Docker Engine et Compose (phase 1) :** c'est le service réel. Un fichier Compose décrit les trois conteneurs, leurs réseaux, le volume de la base et leurs sondes. systemd démarre le service `docker` au boot ; la politique de redémarrage `unless-stopped` relance ensuite les conteneurs, y compris après un arrêt imprévu. La sauvegarde et la restauration portent sur cette base.
-- **Sur `srv-k3s`, avec K3s (phase 3) :** K3s tire les mêmes images sur GHCR et en fait tourner une copie d'essai, avec sa propre base de test (données fictives, non sauvegardées). On y apprend ce qu'un orchestrateur ajoute : sondes, redémarrage, retrait du trafic, mise à jour progressive.
+- **Sur `srv-app`, avec Docker Engine et Compose (phase 4) :** c'est le service réel. Un fichier Compose décrit les trois conteneurs, leurs réseaux, le volume de la base et leurs sondes. systemd démarre le service `docker` au boot ; la politique de redémarrage `unless-stopped` relance ensuite les conteneurs, y compris après un arrêt imprévu. La sauvegarde et la restauration portent sur cette base.
+- **Sur `srv-k3s`, avec K3s (phase 7) :** K3s tire les mêmes images sur GHCR et en fait tourner une copie d'essai, avec sa propre base de test (données fictives, non sauvegardées). On y apprend ce qu'un orchestrateur ajoute : sondes, redémarrage, retrait du trafic, mise à jour progressive.
 
-Les deux ne se voient pas. K3s garde son propre moteur, containerd, et ne pilote que ce qu'il lance lui-même : Docker n'y joue aucun rôle. Prometheus, sur `srv-k3s`, lit seulement `/metrics` par le réseau. Les images sont les mêmes (format OCI), donc ce qui s'apprend avec Compose (ports, volumes, variables, secrets, sondes) se retrouve dans K3s, sous d'autres noms.
+Les deux ne se voient pas. K3s garde son propre moteur, containerd, et ne pilote que ce qu'il lance lui-même : Docker n'y joue aucun rôle. Prometheus sur `srv-admin` collecte les métriques autorisées ; Blackbox Exporter vérifie les points d’entrée HTTPS. Les images sont les mêmes (format OCI), donc ce qui s'apprend avec Compose (ports, volumes, variables, secrets, sondes) se retrouve dans K3s, sous d'autres noms.
 
 | Couche | Sur `srv-app` | Sur `srv-k3s` |
 | --- | --- | --- |
@@ -106,7 +108,7 @@ Les deux ne se voient pas. K3s garde son propre moteur, containerd, et ne pilote
 | Ce qui fait tourner les conteneurs | containerd et runc, pilotés par `dockerd` | containerd et runc, pilotés par le kubelet |
 | Ce qui relance après un arrêt | La politique de redémarrage de Docker | Le kubelet et le Deployment |
 
-**Pourquoi K3s, alors ?** Une seule application sur un seul serveur n'en a pas besoin : Compose suffit. K3s est là pour pratiquer Kubernetes. Avec un seul nœud, il n'apporte pas de haute disponibilité, et la supervision qui y tourne s'arrête avec lui.
+**Pourquoi K3s, alors ?** Une seule application sur un seul serveur n'en a pas besoin : Compose suffit. K3s est là pour pratiquer Kubernetes. Avec un seul nœud, il n'apporte pas de haute disponibilité, mais srv-admin peut détecter sa panne. Les VM dépendent du même hôte.
 
 ## Conditions de réexamen
 
@@ -118,7 +120,7 @@ Lire d'abord les décisions qui déterminent **où vivent le service et les donn
 
 | Question | Décision actuelle | Contrôle à prévoir |
 | --- | --- | --- |
-| Qui prépare l'environnement ? | Fedora et trois VM Rocky ; `srv-admin` pilote les deux autres | Inventaire libvirt, SSH, contrôle des frontières |
+| Qui prépare l'environnement ? | Fedora et trois VM Rocky ; Terraform et Ansible pilotent les trois VM depuis Fedora | Inventaire libvirt, SSH, contrôle des frontières |
 | Comment tourne le service ? | Docker Engine/Compose sur `srv-app`, K3s uniquement sur la copie d'essai | Sondes, exposition des ports, parcours de ticket |
 | Comment limiter les privilèges ? | Administration Docker par `sudo`, SELinux et firewalld conservés | Droits, contextes et accès depuis sources autorisées/interdites |
 | Comment protéger les données ? | Volume, sauvegarde PostgreSQL hors VM, restauration isolée | Ticket témoin restauré, perte et délai mesurés |
@@ -134,13 +136,13 @@ Pour chaque choix, chercher ensuite son **alternative, son coût, sa limite et s
 | Application de tickets comme support InfraOps | Séparer développement applicatif et travail d'automatisation d'infrastructure | Socle qualifié sur runner |
 | Trois services applicatifs | Isoler frontend, API et PostgreSQL | Vérifié sur la pile locale |
 | Fedora, KVM/libvirt et trois VM Rocky | Construire un laboratoire reproductible | Validé en conception |
-| Terraform sur l'hôte, Ansible pour les VM | Séparer provisioning et configuration | À réaliser |
+| Terraform et Ansible sur Fedora, cloud-init minimal | Séparer provisioning et configuration | À réaliser |
 | Docker Engine et Compose pour le service principal | Déploiement simple et largement reproductible | À qualifier sur serveur |
-| K3s pour une copie d'essai et l'observabilité | Isoler la charge de test et apprendre Kubernetes | À réaliser |
+| K3s pour une copie d’essai ; observabilité indépendante sur srv-admin | Isoler la charge de test et apprendre Kubernetes | À réaliser |
 | HTTPS, secrets protégés, images immuables | Définir la sécurité dès le départ | À qualifier |
 | Sauvegardes hors VM et restauration mesurée | Prévoir une reprise contrôlée | À réaliser |
 
-Les décisions historiques détaillées ont été conservées hors du dépôt public ; les [sept ADR](adr/README.md) résument la cible actuelle et ses compromis. Cette synthèse évite de présenter comme valides des ports et procédures anciennes remplacées par l'Architecture V2.
+Les décisions historiques détaillées ont été conservées hors du dépôt public ; les [sept ADR](adr/README.md) résument la cible actuelle et ses compromis. Cette synthèse évite de présenter comme valides des ports et procédures anciennes remplacées par l'Architecture V3.
 
 ## Historique : la version 1 et l'essai Ubuntu/WSL
 

@@ -170,7 +170,7 @@ def check_repository() -> list[str]:
     except FileNotFoundError:
         errors.append(f"{global_preview.relative_to(ROOT)}: missing graphic")
 
-    global_source = global_preview.with_suffix(".drawio")
+    global_source = diagram_folder / "architecture-globale-v3.drawio"
     diagram_sources = {diagram.with_suffix(".drawio") for diagram in diagrams}
     for source in sorted(diagram_sources | {global_source}):
         try:
@@ -200,7 +200,7 @@ def check_repository() -> list[str]:
                 for cell in editable.iter("mxCell")
             ).casefold()
             for expected in (
-                "terraform", "https", "srv-admin", "srv-app",
+                "terraform", "ansible", "blackbox exporter", "https", "srv-admin", "srv-app",
                 "srv-k3s", "postgresql", "borg", "ghcr",
             ):
                 if expected not in source_labels:

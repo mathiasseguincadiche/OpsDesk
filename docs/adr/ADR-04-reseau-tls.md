@@ -1,6 +1,6 @@
 # ADR-04 — Réseau privé, HTTPS et isolation des services
 
-**Statut : validé en conception (Architecture V2).**
+**Statut : validé en conception (Architecture V3).**
 
 ## Décision
 Les machines du laboratoire appartiennent à un réseau privé. Les accès utilisateur au service cible passent par HTTPS ; les interfaces de données et d'administration ne sont pas exposées directement. Les accès de supervision sont limités aux consommateurs attendus.
