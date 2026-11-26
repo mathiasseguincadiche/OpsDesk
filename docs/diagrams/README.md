@@ -4,7 +4,7 @@ Ce dossier rassemble les schémas **du produit et de son architecture**, pas les
 
 ## Vues disponibles
 
-La **vue globale de l’architecture V3** présente Terraform et Ansible sur Fedora, supervision indépendante sur srv-admin, HTTPS, GHCR privé, Borg, K3s et les réseaux internes. Les quatre autres paires documentent l'application et ses usages et sont conservées. Les décisions de référence sont les [sept ADR](../adr/README.md), les [principes des flux](../architecture-v3-flux.md) et le [plan phases 0 à 10](../architecture-v3-deploiement.md). Aucun de ces schémas n'est une preuve de déploiement ; le workflow d’aperçu exporte les deux sources V3 avec Draw.io Desktop sur runner ; une inspection humaine des rendus reste nécessaire avant certification visuelle.
+La **vue globale de l’architecture V3** présente Terraform et Ansible sur Fedora, administration sur srv-admin, supervision et essais sous K3s, HTTPS, GHCR privé, Borg, K3s et les réseaux internes. Les quatre autres paires documentent l'application et ses usages et sont conservées. Les décisions de référence sont les [sept ADR](../adr/README.md), les [principes des flux](../architecture-v3-flux.md) et le [plan phases 0 à 10](../architecture-v3-deploiement.md). Aucun de ces schémas n'est une preuve de déploiement ; le workflow d’aperçu exporte les deux sources V3 avec Draw.io Desktop sur runner ; une inspection humaine des rendus reste nécessaire avant certification visuelle.
 
 | Schéma | Utilité |
 | --- | --- |
@@ -26,7 +26,7 @@ La **vue globale de l’architecture V3** présente Terraform et Ansible sur Fed
 - La vue globale V3 remplace le rendu V2, conservé pour l’historique. Les responsabilités relèvent des sept ADR V3.
 - Les cadres et les flux sont en **traits continus**. Bleu : applicatif ; turquoise : administration et pulls de conteneurs ; magenta : observabilité ; orange : sauvegarde ; vert : données.
 - La distribution des images utilise des connexions sortantes et ne nécessite pas d'accès SSH entrant de la CI.
-- La copie d'essai et l'observabilité sont isolées du service principal ; leurs paramètres détaillés restent dans le dossier personnel.
+- La copie d'essai et l'observabilité sous K3s sont isolées du service principal ; leurs paramètres détaillés restent dans le dossier personnel.
 - Les métriques ne sont collectées que par les consommateurs autorisés ; le schéma public ne constitue pas une matrice réseau.
 - Les sauvegardes sont externalisées et protégées ; leurs paramètres et procédures de reprise restent personnels.
 - Le SVG fourni sert de visuel de référence sur GitHub. Le workflow produit des PNG natifs séparés pour contrôler les sources et comparer leurs rendus ; il ne déclare pas une équivalence graphique automatique. Le fichier Draw.io conserve une version éditable du schéma. Les ADR V3 documentent les décisions techniques.
