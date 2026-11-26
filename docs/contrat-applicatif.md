@@ -186,7 +186,7 @@ Résultats attendus : tous les tests réussis, aucune erreur de typage ni de con
 
 ## 21. Ressources recommandées
 
-Non mesurées sous charge. Dimensionnement prévu pour la machine qui porte le service : 2 vCPU et 4 Go de mémoire (`srv-app`), avec un disque de données séparé de 10 Go pour la base. L'API tourne en un seul processus par conteneur ; on augmente la capacité en ajoutant des instances. La mesure sous charge est prévue avec k6, sur la copie d'essai.
+Non mesurées sous charge. Dimensionnement prévu pour la machine qui porte le service : 2 vCPU et 4 Go de mémoire (`srv-app`), avec les données PostgreSQL conservées dans le volume Docker nommé `db-data` sur le disque de la VM. Aucun disque supplémentaire n'est imposé par la cible V3 ; la capacité initiale est définie dans le référentiel du laboratoire et reste à confirmer lors de la qualification. L'API tourne en un seul processus par conteneur ; on augmente la capacité en ajoutant des instances. La mesure sous charge est prévue avec k6, sur la copie d'essai.
 
 ## 22. Contraintes de sécurité
 
