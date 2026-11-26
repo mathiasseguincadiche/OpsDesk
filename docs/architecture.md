@@ -6,7 +6,7 @@ OpsDesk est une application web en trois parties : une interface, une API et une
 
 ## Vue d'ensemble
 
-![Architecture V3 : Terraform et Ansible sur Fedora, srv-app principal, srv-admin supervision, srv-k3s essai.](diagrams/architecture-globale-v3.svg)
+![Architecture V3 : Terraform et Ansible sur Fedora, srv-app principal, srv-admin administration, srv-k3s supervision et essai.](diagrams/architecture-globale-v3.svg)
 
 **Publication :** seule la vue globale est publique. Les paramètres détaillés du laboratoire sont réservés à une page personnelle privée, hors GitHub.
 
@@ -84,11 +84,11 @@ Si la base ne répond pas, l'API renvoie une erreur 503 explicite, et sa sonde `
 
 ## L'infrastructure cible (présentation publique)
 
-Les décisions de l'Architecture V3 prévoient un hôte de virtualisation Linux, un poste de contrôle Terraform/Ansible sur Fedora, une VM applicative sous Compose, une VM d’observabilité indépendante et une VM Kubernetes réservée aux essais. L'ensemble doit être construit progressivement par infrastructure as code et Ansible.
+Les décisions de l'Architecture V3 prévoient un hôte de virtualisation Linux, un poste de contrôle Terraform/Ansible sur Fedora, une VM applicative sous Compose, une VM d’administration et une VM Kubernetes dédiée à la supervision et aux essais. L'ensemble doit être construit progressivement par infrastructure as code et Ansible.
 
 La **vue globale** montre ces responsabilités. Les paramètres d'adressage, ports, comptes, droits et procédures d'exploitation sont conservés dans le dossier technique personnel.
 
-Le laboratoire existant sert aussi aux exercices : srv-admin pour les bases Linux/SSH avant son provisionnement définitif, srv-k3s pour les essais et la reconstruction contrôlée. Pas de quatrième VM prévue ; la restauration de données s’effectue dans une base distincte.
+Le laboratoire existant sert aussi aux exercices : srv-admin pour les bases Linux/SSH, le diagnostic, kubectl, Helm et k6, srv-k3s pour les essais et la reconstruction contrôlée. Pas de quatrième VM prévue ; la restauration de données s’effectue dans une base distincte.
 
 Les étapes publiques se lisent ainsi : provisionnement reproductible, configuration des machines, livraison traçable, sauvegardes externes, copie d'essai isolée et qualification par des preuves. Voir le [plan de réalisation](architecture-v3-deploiement.md).
 
@@ -99,7 +99,7 @@ L'application tourne deux fois, sur deux serveurs indépendants.
 - **Sur `srv-app`, avec Docker Engine et Compose (phase 4) :** c'est le service réel. Un fichier Compose décrit les trois conteneurs, leurs réseaux, le volume de la base et leurs sondes. systemd démarre le service `docker` au boot ; la politique de redémarrage `unless-stopped` relance ensuite les conteneurs, y compris après un arrêt imprévu. La sauvegarde et la restauration portent sur cette base.
 - **Sur `srv-k3s`, avec K3s (phase 7) :** K3s tire les mêmes images sur GHCR et en fait tourner une copie d'essai, avec sa propre base de test (données fictives, distinctes ; sauvegarde ponctuelle et restauration vérifiée avant un exercice de reconstruction). On y apprend ce qu'un orchestrateur ajoute : sondes, redémarrage, retrait du trafic, mise à jour progressive.
 
-Les deux ne se voient pas. K3s garde son propre moteur, containerd, et ne pilote que ce qu'il lance lui-même : Docker n'y joue aucun rôle. Prometheus sur `srv-admin` collecte les métriques autorisées ; Blackbox Exporter vérifie les points d’entrée HTTPS. Les images sont les mêmes (format OCI), donc ce qui s'apprend avec Compose (ports, volumes, variables, secrets, sondes) se retrouve dans K3s, sous d'autres noms.
+Les deux ne se voient pas. K3s garde son propre moteur, containerd, et ne pilote que ce qu'il lance lui-même : Docker n'y joue aucun rôle. Prometheus dans K3s sur `srv-k3s` collecte les métriques autorisées ; Grafana fournit les tableaux de bord et les alertes. Les images sont les mêmes (format OCI), donc ce qui s'apprend avec Compose (ports, volumes, variables, secrets, sondes) se retrouve dans K3s, sous d'autres noms.
 
 | Couche | Sur `srv-app` | Sur `srv-k3s` |
 | --- | --- | --- |
@@ -108,7 +108,7 @@ Les deux ne se voient pas. K3s garde son propre moteur, containerd, et ne pilote
 | Ce qui fait tourner les conteneurs | containerd et runc, pilotés par `dockerd` | containerd et runc, pilotés par le kubelet |
 | Ce qui relance après un arrêt | La politique de redémarrage de Docker | Le kubelet et le Deployment |
 
-**Pourquoi K3s, alors ?** Une seule application sur un seul serveur n'en a pas besoin : Compose suffit. K3s est là pour pratiquer Kubernetes. Avec un seul nœud, il n'apporte pas de haute disponibilité, mais srv-admin peut détecter sa panne. Les VM dépendent du même hôte.
+**Pourquoi K3s, alors ?** Une seule application sur un seul serveur n'en a pas besoin : Compose suffit. K3s est là pour pratiquer Kubernetes. Avec un seul nœud, il n'apporte pas de haute disponibilité, et une panne complète du cluster peut rendre la supervision indisponible. Les VM dépendent du même hôte.
 
 ## Conditions de réexamen
 
@@ -121,7 +121,7 @@ Lire d'abord les décisions qui déterminent **où vivent le service et les donn
 | Question | Décision actuelle | Contrôle à prévoir |
 | --- | --- | --- |
 | Qui prépare l'environnement ? | Fedora et trois VM Rocky ; Terraform et Ansible pilotent les trois VM depuis Fedora | Inventaire libvirt, SSH, contrôle des frontières |
-| Comment tourne le service ? | Docker Engine/Compose sur `srv-app`, K3s uniquement sur la copie d'essai | Sondes, exposition des ports, parcours de ticket |
+| Comment tourne le service ? | Docker Engine/Compose sur `srv-app`, K3s pour la supervision et la copie d’essai | Sondes, exposition des ports, parcours de ticket |
 | Comment limiter les privilèges ? | Administration Docker par `sudo`, SELinux et firewalld conservés | Droits, contextes et accès depuis sources autorisées/interdites |
 | Comment protéger les données ? | Volume, sauvegarde PostgreSQL hors VM, restauration isolée | Ticket témoin restauré, perte et délai mesurés |
 
@@ -138,7 +138,7 @@ Pour chaque choix, chercher ensuite son **alternative, son coût, sa limite et s
 | Fedora, KVM/libvirt et trois VM Rocky | Construire un laboratoire reproductible | Validé en conception |
 | Terraform et Ansible sur Fedora, cloud-init minimal | Séparer provisioning et configuration | À réaliser |
 | Docker Engine et Compose pour le service principal | Déploiement simple et largement reproductible | À qualifier sur serveur |
-| K3s pour une copie d’essai ; observabilité indépendante sur srv-admin | Isoler la charge de test et apprendre Kubernetes | À réaliser |
+| K3s pour une copie d’essai et la supervision | Isoler la charge de test et apprendre Kubernetes | À réaliser |
 | HTTPS, secrets protégés, images immuables | Définir la sécurité dès le départ | À qualifier |
 | Sauvegardes hors VM et restauration mesurée | Prévoir une reprise contrôlée | À réaliser |
 

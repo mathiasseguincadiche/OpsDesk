@@ -8,7 +8,7 @@
 | [ADR-02](ADR-02-ci-ghcr-digests.md) | CI, registre privé et livraison immuable |
 | [ADR-03](ADR-03-administration-os.md) | Administration cloisonnée et durcissement Linux |
 | [ADR-04](ADR-04-reseau-tls.md) | Réseau privé, HTTPS et isolation des services |
-| [ADR-05](ADR-05-k3s-observabilite.md) | Kubernetes d’essai et supervision indépendante |
+| [ADR-05](ADR-05-k3s-observabilite.md) | Kubernetes : copie d’essai et supervision |
 | [ADR-06](ADR-06-sauvegardes-secrets.md) | Secrets, sauvegardes et restauration |
 | [ADR-07](ADR-07-perimetre-preuves.md) | Frontières de validation et publication responsable |
 

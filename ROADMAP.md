@@ -6,13 +6,13 @@
 | --- | --- | --- |
 | 0 — Fedora | Préparer KVM/libvirt, Git, outils et stockage | Versions, accès libvirt, capacité |
 | 1 — Fondamentaux | Première installation manuelle de srv-admin, réseau, SSH | Diagnostic, inventaire et compréhension des ressources |
-| 2 — Provisionnement | Terraform : reprise ou recréation contrôlée de srv-admin avant service, puis srv-app et srv-k3s ; cloud-init, outputs filtrés | Plan relu, apply, absence de dérive, SSH |
+| 2 — Provisionnement | Terraform : reprise ou recréation contrôlée de srv-admin avant les services, puis srv-app et srv-k3s ; cloud-init, outputs filtrés | Plan relu, apply, absence de dérive, SSH |
 | 3 — Configuration | Ansible depuis Fedora, durcissement et rôles | Refus/accès, SELinux, second passage changed=0 |
 | 4 — Service | Compose serveur HTTPS, migrations, persistance | Parcours métier, TLS, isolation API/DB |
-| 5 — Observabilité | Compose sur srv-admin, métriques et alertes | Collecte restreinte, deux e-mails reçus |
+| 5 — Kubernetes et observabilité | Installer K3s puis Prometheus/Grafana, métriques et alertes | Collecte restreinte, deux e-mails reçus |
 | 6 — Livraison | CI, GHCR privé, images par digest | Artefact qualifié, promotion et rollback |
-| 7 — Kubernetes | Copie d’essai et données distinctes | Probes, quotas, TLS |
-| 8 — Performance | k6 borné depuis Fedora vers srv-k3s | p95, débit, erreurs, ressources, arrêt |
+| 7 — Copie d’essai Kubernetes | Copie d’essai et données distinctes | Probes, quotas, TLS |
+| 8 — Performance | k6 borné depuis srv-admin vers srv-k3s | p95, débit, erreurs, ressources, arrêt |
 | 9 — Exploitation | Maintenance, rollback, Borg | Restauration isolée, RPO/RTO |
 | 10 — Autonomie | Reconstruction contrôlée d’une VM existante et incident inédit | Preuves datées, justification et contrôle séparé |
 
