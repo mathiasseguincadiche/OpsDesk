@@ -26,7 +26,7 @@ Je me forme à l’ingénierie DevOps, avec une spécialisation en automatisatio
 
 ## Architecture
 
-L’architecture d’infrastructure V3 a été validée en conception le 25 novembre 2026. Fedora pilote Terraform et Ansible : trois VM Rocky seront provisionnées, amorcées par cloud-init puis configurées par SSH. `srv-app` héberge le service Compose, `srv-admin` la supervision indépendante et `srv-k3s` la copie d’essai. k6 s’exécute à la demande depuis Fedora. L’application reste en version 2. Fedora et ces trois VM constituent également l’intégralité du laboratoire d’apprentissage : aucune VM supplémentaire n’est prévue.
+L’architecture d’infrastructure V3, validée en conception le 25 novembre 2026, est corrigée le 26 novembre : pilotage Fedora, administration srv-admin et supervision Kubernetes. Fedora pilote Terraform et Ansible : trois VM Rocky seront provisionnées, amorcées par cloud-init puis configurées par SSH. `srv-app` héberge le service Compose, `srv-admin` l’administration, le diagnostic et les tests k6 ; `srv-k3s` la copie d’essai et la supervision Kubernetes. L’application reste en version 2. Fedora et ces trois VM constituent également l’intégralité du laboratoire d’apprentissage : aucune VM supplémentaire n’est prévue.
 
 <a href="docs/diagrams/architecture-globale-v3.svg"><img alt="Vue globale OpsDesk V3 avec l’hôte Fedora, trois VM Rocky, l’entrée HTTPS, les services internes, la supervision et les sauvegardes hors VM" src="docs/diagrams/architecture-globale-v3.svg"></a>
 
@@ -35,8 +35,8 @@ L’architecture d’infrastructure V3 a été validée en conception le 25 nove
 ### Pourquoi ces choix
 
 - **Docker Compose** décrit la pile du service principal. Nginx expose HTTPS sur le port 443 et relaie `/api` vers FastAPI. L’API et PostgreSQL communiquent sur le réseau interne.
-- **K3s** sert aux essais sur une copie isolée, où l’on peut tester de nouvelles versions et la charge, en bornant les ressources et en vérifiant l’absence d’impact sur le service principal.
-- **Prometheus, Grafana, Blackbox Exporter et Borg** couvrent la supervision et la sauvegarde hors VM. La validation sur le laboratoire reste à réaliser.
+- **K3s** héberge la supervision et sert aux essais sur une copie isolée, où l’on peut tester de nouvelles versions et la charge, en bornant les ressources et en vérifiant l’absence d’impact sur le service principal.
+- **Prometheus et Grafana sous K3s, et Borg** couvrent la supervision et la sauvegarde hors VM. La validation sur le laboratoire reste à réaliser.
 
 [Architecture et choix techniques](docs/architecture.md) · [Contrat applicatif](docs/contrat-applicatif.md)
 

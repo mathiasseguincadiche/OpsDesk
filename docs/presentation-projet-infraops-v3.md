@@ -17,7 +17,7 @@ La présentation est structurée en **deux phases complémentaires et six étape
 | Étape | Résultat recherché | Outils et responsabilités |
 | --- | --- | --- |
 | **1. Provisionner l'infrastructure** | Créer un laboratoire reproductible avec un hôte Fedora, un réseau privé de virtualisation et trois VM Rocky Linux aux rôles distincts | Terraform sur l'hôte ; KVM/libvirt |
-| **2. Piloter et déployer** | Préparer les machines, appliquer le durcissement et livrer la configuration de façon traçable | Ansible et Git sur Fedora, cloud-init minimal, inventaire issu de Terraform |
+| **2. Piloter et déployer** | Préparer les machines, appliquer le durcissement et livrer la configuration de façon traçable | Ansible, Vault et Git sur Fedora, cloud-init minimal, inventaire issu de Terraform |
 | **3. Livrer les images** | Construire, analyser, versionner et distribuer des images d'application reproductibles | GitHub Actions, registre GHCR privé et références d'images immuables |
 
 ## Phase B — Exploitation, validation, supervision et sauvegardes
@@ -25,7 +25,7 @@ La présentation est structurée en **deux phases complémentaires et six étape
 | Étape | Résultat recherché | Outils et responsabilités |
 | --- | --- | --- |
 | **4. Exécuter l'application** | Héberger les composants applicatifs séparés, isoler leurs échanges et conserver les données durablement | Docker Engine, Compose, nginx, FastAPI, PostgreSQL |
-| **5. Tester et superviser** | Exécuter une copie d'essai indépendante du service principal ; collecter des métriques et tester les alertes et la charge en vérifiant l’absence d’impact sur le service | K3s pour l’essai ; Prometheus, Grafana et Blackbox Exporter sur srv-admin ; k6 à la demande depuis Fedora |
+| **5. Tester et superviser** | Exécuter une copie d'essai indépendante du service principal ; collecter des métriques et tester les alertes et la charge en vérifiant l’absence d’impact sur le service | K3s pour l’essai et la supervision Prometheus/Grafana ; k6 à la demande depuis srv-admin |
 | **6. Sauvegarder hors des VM** | Protéger les données applicatives, conserver des copies indépendantes et démontrer une restauration contrôlée | Export PostgreSQL, transfert restreint, stockage externe et Borg |
 
 Le parcours d’apprentissage repose exclusivement sur Fedora et les trois VM de l’architecture : aucun serveur d’exercice ou de charge supplémentaire.
