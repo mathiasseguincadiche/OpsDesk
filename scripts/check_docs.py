@@ -211,20 +211,20 @@ def check_repository() -> list[str]:
                 for cell in editable.iter("mxCell")
             ).casefold()
             for expected in (
-                "terraform", "ansible", "blackbox exporter", "https", "srv-admin", "srv-app",
+                "terraform", "ansible", "vault", "prometheus", "grafana", "kubectl", "helm", "k6", "https", "srv-admin", "srv-app",
                 "srv-k3s", "postgresql", "borg", "ghcr",
             ):
                 if expected not in source_labels:
                     errors.append(
                         f"{source.relative_to(ROOT)}: missing public content {expected}"
                     )
-            if any(bad in source_labels for bad in ("http :8080", "qemu+ssh", "srv-ops", "srv-learning", "srv-loadtest")):
+            if any(bad in source_labels for bad in ("http :8080", "qemu+ssh", "srv-ops", "srv-learning", "srv-loadtest", "blackbox exporter")):
                 errors.append(f"{source.relative_to(ROOT)}: obsolete public label")
 
     for graphic in (diagram_folder / "architecture-globale-v3.svg", presentation):
         if graphic.exists():
             content = graphic.read_text(encoding="utf-8").casefold()
-            for obsolete in ("srv-ops", "srv-learning", "srv-loadtest"):
+            for obsolete in ("srv-ops", "srv-learning", "srv-loadtest", "blackbox exporter"):
                 if obsolete in content:
                     errors.append(f"{graphic.relative_to(ROOT)}: obsolete V3 label {obsolete}")
             for pattern in (r"192[.]168[.][0-9]{1,3}[.][0-9]{1,3}", r"qemu[+]ssh"):
