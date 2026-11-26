@@ -24,21 +24,40 @@ La **vue globale de l’architecture V3** présente Terraform et Ansible sur Fed
 ## Conventions de lecture de la vue globale publique
 
 - La vue globale V3 remplace le rendu V2, conservé pour l’historique. Les responsabilités relèvent des sept ADR V3.
-- Les cadres et les flux sont en **traits continus**. Bleu : applicatif ; turquoise : administration et pulls de conteneurs ; magenta : observabilité ; orange : sauvegarde ; vert : données.
+- Les cadres et les flux sont en **traits continus**. Bleu : applicatif (HTTPS) ; turquoise : administration, provisionnement et pull des images ; magenta : observabilité ; orange : sauvegarde. La base de données est représentée par un cylindre. Le statut de conception figure dans le badge du schéma.
 - La distribution des images utilise des connexions sortantes et ne nécessite pas d'accès SSH entrant de la CI.
 - La copie d'essai et l'observabilité sous K3s sont isolées du service principal ; leurs paramètres détaillés restent dans le dossier personnel.
 - Les métriques ne sont collectées que par les consommateurs autorisés ; le schéma public ne constitue pas une matrice réseau.
 - Les sauvegardes sont externalisées et protégées ; leurs paramètres et procédures de reprise restent personnels.
-- Le SVG fourni sert de visuel de référence sur GitHub. Le workflow produit des PNG natifs séparés pour contrôler les sources et comparer leurs rendus ; il ne déclare pas une équivalence graphique automatique. Le fichier Draw.io conserve une version éditable du schéma. Les ADR V3 documentent les décisions techniques.
+- Le SVG publié est exporté directement depuis la source `.drawio` par Draw.io Desktop : les deux fichiers représentent le même schéma. Le workflow d'aperçu réexporte les sources en PNG natifs pour contrôler leur rendu.
 
 ## Modifier et vérifier un schéma
 
-1. Ouvrir le fichier `.drawio` correspondant dans diagrams.net / Draw.io.
+1. Ouvrir le fichier `.drawio` correspondant dans diagrams.net / Draw.io. Chaque texte, forme, icône et connecteur y est modifiable ; aucun schéma n'est une image collée.
 2. Vérifier la cohérence de la vue globale avec les [ADR V3 publics](../adr/README.md) et les [principes de flux](../architecture-v3-flux.md), sans publier les règles exactes du laboratoire.
-3. Vérifier le visuel publié à taille normale et en thèmes clair et sombre. Utiliser le SVG publié pour la vue globale et les autres schémas.
-4. Conserver la source et le visuel publié, puis exécuter `python3 scripts/check_docs.py` depuis la racine.
+3. Réexporter le SVG depuis la source, puis contrôler le visuel à taille normale et en thèmes clair et sombre.
+4. Conserver la source et le SVG ensemble, puis exécuter `python3 scripts/check_docs.py` depuis la racine.
 
-L'ancien générateur de schémas, mêlant vues techniques et pédagogiques, est [archivé dans Notion avec ses sources](https://app.notion.com/p/42065721fa18812e9541ff18d825885f). Les fichiers `.drawio` restent disponibles pour les modifications.
+### Régénérer les SVG depuis les sources Draw.io
+
+Le SVG publié n'est jamais modifié à la main : il est produit à partir du `.drawio` avec Draw.io Desktop, en thème clair et en texte vectoriel. La version de référence est celle du [workflow d'aperçu](../../.github/workflows/diagram-previews.yml), Draw.io Desktop 29.0.3.
+
+Sur Fedora, installer Draw.io Desktop (paquet RPM officiel publié sur GitHub par jgraph, ou Flatpak `com.jgraph.drawio.desktop` depuis Flathub), puis depuis la racine du dépôt :
+
+```bash
+# Paquet RPM : la commande s'appelle drawio
+DRAWIO=drawio
+# Flatpak : DRAWIO="flatpak run com.jgraph.drawio.desktop"
+
+for source in docs/diagrams/architecture-globale-v3.drawio docs/images/opsdesk-presentation-v3.drawio; do
+  $DRAWIO --export --format svg --svg-theme light --embed-svg-images \
+    --output "${source%.drawio}.svg" "$source"
+done
+```
+
+Sans session graphique (serveur, conteneur), préfixer la commande par `xvfb-run -a` (`sudo dnf install xorg-x11-server-Xvfb`). Deux exports successifs ne diffèrent que par les identifiants internes des dégradés ; le rendu est identique. L'option `--svg-theme light` fige les couleurs du schéma, qui garde son propre fond en thème sombre.
+
+Les générateurs ayant servi à produire les sources sont conservés dans l'espace Notion personnel avec les [anciens générateurs archivés](https://app.notion.com/p/42065721fa18812e9541ff18d825885f) ; les fichiers `.drawio` du dépôt restent la seule source à modifier.
 
 Les contrôles automatiques valident les chemins, la syntaxe XML et la présence des sources. Ils ne certifient ni le rendu mobile ni la justesse des architectures.
 

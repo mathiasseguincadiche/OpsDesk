@@ -4,6 +4,8 @@ Ce registre retrace les changements documentaires, structurels et techniques **v
 
 ## Non publié
 
+- Schémas publics V3 (26 novembre) : la présentation et la vue globale retrouvent l’identité graphique des visuels validés, avec le contenu V3 corrigé ; sources Draw.io entièrement éditables et SVG exportés depuis ces sources ; procédure de régénération documentée. Aucun changement de l’architecture, de l’application ni des workflows.
+
 - Correction du périmètre V3 (26 novembre) : retour à la supervision Kubernetes avec Prometheus/Grafana et copie d’essai sur srv-k3s ; srv-admin pour l’administration, kubectl/Helm et k6. Terraform, Ansible, Vault et Git sur Fedora. Les entrées V3 antérieures ci-dessous sont historiques. Aucun déploiement réel.
 
 - Finitions V3 : cohérence de la sauvegarde d’essai, du statut de conception et des visuels publics ; source Draw.io de présentation et contrôles de rendu natif. Aucun changement de l’application ni de la topologie.
